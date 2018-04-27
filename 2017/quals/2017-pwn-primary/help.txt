@@ -1,0 +1,1 @@
+Note: input is via stdin and capped at 4096 uint64_t values. Your goal is to read the flag from flag.txt.doc.exe

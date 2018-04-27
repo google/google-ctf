@@ -1,0 +1,16 @@
+a.b.c=1
+a.b.d="a"
+a.e=5
+f=9
+g=f+a
+g
+g=a
+h=a+f
+h
+h=a
+z.b=3
+z.e.a="z"
+z.e.b=4
+z.d=10
+y=z+a
+y

@@ -1,0 +1,13 @@
+a=1
+b=3
+c=a+b
+c
+d="abc"
+e=b+d
+e
+f="foo"
+g=f+d
+g
+a.b.c=8
+d=f+a.b.c
+d

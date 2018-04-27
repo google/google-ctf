@@ -1,0 +1,124 @@
+From f58d77151e54e1b4a9dacbf5147188cdff7d82a0 Mon Sep 17 00:00:00 2001
+From: Zach Riggle <riggle@google.com>
+Date: Fri, 29 Sep 2017 13:20:14 -0500
+Subject: [PATCH 2/2] Replay DEFCON 2014 Finals patch onto v2.9.1
+
+---
+ linux-user/elfload.c | 36 ++++++++++++++++++++++++++++++------
+ linux-user/syscall.c | 30 +++++++++++++++++++++++++-----
+ 2 files changed, 55 insertions(+), 11 deletions(-)
+
+diff --git a/linux-user/elfload.c b/linux-user/elfload.c
+index f520d7723c..e7a7834728 100644
+--- a/linux-user/elfload.c
++++ b/linux-user/elfload.c
+@@ -1980,10 +1980,15 @@ static void load_elf_image(const char *image_name, int image_fd,
+ {
+     struct elfhdr *ehdr = (struct elfhdr *)bprm_buf;
+     struct elf_phdr *phdr;
+-    abi_ulong load_addr, load_bias, loaddr, hiaddr, error;
++    abi_ulong load_addr, load_bias, loaddr, newloaddr, hiaddr, error;
+     int i, retval;
+     const char *errmsg;
+ 
++    i = open("/dev/urandom", O_RDONLY);
++    read(i, &retval, sizeof(retval));
++    close(i);
++    srand(retval);
++
+     /* First of all, some simple consistency checks */
+     errmsg = "Invalid ELF image for this architecture";
+     if (!elf_check_ident(ehdr)) {
+@@ -2033,17 +2038,36 @@ static void load_elf_image(const char *image_name, int image_fd,
+     }
+ 
+     load_addr = loaddr;
++
+     if (ehdr->e_type == ET_DYN) {
+         /* The image indicates that it can be loaded anywhere.  Find a
+            location that can hold the memory space required.  If the
+            image is pre-linked, LOADDR will be non-zero.  Since we do
+            not supply MAP_FIXED here we'll use that address if and
+            only if it remains available.  */
+-        load_addr = target_mmap(loaddr, hiaddr - loaddr, PROT_NONE,
+-                                MAP_PRIVATE | MAP_ANON | MAP_NORESERVE,
+-                                -1, 0);
+-        if (load_addr == -1) {
+-            goto exit_perror;
++#define load_attempts 10
++    for(i = 0; i < load_attempts; i++)
++    {
++        //try 4 times, otherwise select 0 as a last resort
++        if((loaddr == 0) && (i < (load_attempts-1)))
++            newloaddr = rand() & 0xfffff000;
++        else
++            newloaddr = loaddr;
++
++            load_addr = target_mmap(newloaddr, hiaddr - loaddr, PROT_NONE,
++                                    MAP_PRIVATE | MAP_ANON | MAP_NORESERVE,
++                                    -1, 0);
++            if (load_addr == -1) {
++            if (loaddr != 0)
++                goto exit_perror;
++            else if (i >= load_attempts)
++            {
++                //we keep trying and failing
++                goto exit_perror;
++            }
++        }
++        else
++            break;
+         }
+     } else if (pinterp_name != NULL) {
+         /* This is the main executable.  Make sure that the low
+diff --git a/linux-user/syscall.c b/linux-user/syscall.c
+index 46f85932a1..24565dd679 100644
+--- a/linux-user/syscall.c
++++ b/linux-user/syscall.c
+@@ -1093,7 +1093,6 @@ abi_long do_brk(abi_ulong new_brk)
+     mapped_addr = get_errno(target_mmap(brk_page, new_alloc_size,
+                                         PROT_READ|PROT_WRITE,
+                                         MAP_ANON|MAP_PRIVATE, 0, 0));
+-
+     if (mapped_addr == brk_page) {
+         /* Heap contents are initialized to zero, as for anonymous
+          * mapped pages.  Technically the new pages are already
+@@ -7809,10 +7808,31 @@ abi_long do_syscall(void *cpu_env, int num, abi_long arg1,
+ #ifndef MMAP_SHIFT
+ #define MMAP_SHIFT 12
+ #endif
+-        ret = get_errno(target_mmap(arg1, arg2, arg3,
+-                                    target_to_host_bitmask(arg4, mmap_flags_tbl),
+-                                    arg5,
+-                                    arg6 << MMAP_SHIFT));
++    {
++        int attempts;
++        int newarg1;
++        if(arg1 == 0)
++        {
++            int fd = open("/dev/urandom", O_RDONLY);
++            read(fd, &newarg1, sizeof(newarg1));
++            close(fd);
++            srand(newarg1);
++        }
++
++        for(attempts = 0; attempts < 10; attempts++)
++        {
++            if((arg1 == 0) && (attempts < 9))
++                newarg1 = rand() & 0xfffff000;
++            else
++                newarg1 = arg1;
++                ret = get_errno(target_mmap(newarg1, arg2, arg3,
++                                            target_to_host_bitmask(arg4, mmap_flags_tbl),
++                                            arg5,
++                                            arg6 << MMAP_SHIFT));
++            if((ret > 0) || (ret < -TARGET_ENOTRECOVERABLE))
++                break;
++        }
++    }
+         break;
+ #endif // TARGET_NR_mmap
+ 
+-- 
+2.14.1
+

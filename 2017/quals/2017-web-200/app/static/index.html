@@ -1,0 +1,40 @@
+<!--
+  Copyright 2018 Google LLC
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The X Sanitizer</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+    <link rel="stylesheet" type="text/css" href="style.css"></link>
+    <script src="main.js"></script>
+    <script src="sanitizer.js"></script>
+  </head>
+  <body>
+    <p>This is the demo page for our brand new and perfectly secure HTML sanitizer. With this sanitizer, <i>harmful scripts remove themselves</i>. If you can find a bypass, we will reward you with a valuable flag.</p>
+    <p>Here's how you can participate in the game. First, find a HTML payload that exfiltrates the 'flag' cookie from this page to your server. Next, submit your payload, and we will test it in our Chrome browser on this page. In our browser, we have set the 'flag' cookie to the secret value. If your solution is correct, you get the flag on your server.</p>
+    <p>Oh, and one more thing. There are no hidden files or APIs on the server, and the only non-static content is the solution submission logic.</p>
+    <h2>Input HTML code</h2>
+    <div id="input_form">
+    <textarea id="input"></textarea>
+    <button id="render">Sanitize and render</button>
+    <button id="submit">Submit solution</button>
+    </div>
+    <h2>Sanitized HTML</h2>
+    <xmp id="output_text"></xmp>
+    <h2>Rendered sanitized HTML</h2>
+    <div id="output_render"></div>
+  </body>
+</html>

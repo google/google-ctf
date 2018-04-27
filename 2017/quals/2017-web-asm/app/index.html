@@ -1,0 +1,348 @@
+<!--
+  Copyright 2018 Google LLC
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>wasm ide</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+    }
+    .label div::after {
+      content: '&label:';
+    }
+    .definitions div::after {
+      content: '$variable';
+    }
+    #program input:invalid {
+      border-bottom: 1px solid red;
+    }
+    #program input {
+      width: 100px;
+    }
+    #program {
+      counter-reset: mem;
+      background-color: darkblue;
+      color: white;
+      font-family: monospace;
+      padding: 10px;
+      font-weight: bolder;
+      text-transform: uppercase;
+    }
+    #program > div {
+      border: 1px solid white;
+      padding: 10px;
+      min-height: 50px;
+      padding-bottom: 30px;
+    }
+    #program > div > div:not(.noMemory) {
+      counter-increment: mem;
+      cursor: move;
+    }
+    #program .noMemory input {
+      color: yellow;
+      font-family: monospace;
+    }
+    #program > div > div {
+      padding: 2px 0;
+    }
+    #program > div > div::before {
+      content: counter(mem) ":\9\9";
+    }
+    #program [draggable] [data-drag="enter"] {
+      padding-top: 20px;
+    }
+    #program * {
+      text-transform: none;
+      background-color: darkblue;
+      color: lightgrey;
+      font-weight: bold;
+    }
+    #program label,#program input,#program select {
+      width: 100px;
+      display: inline-block;
+      margin-right: 10px;
+      border: 0 solid white;
+    }
+    #program input {
+      border-bottom: 1px solid white;
+    }
+    #panel {
+      background-color: lightgrey;
+      color: black;
+      font-family: monospace;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 5px;
+      margin: 5px;
+      outline: 1px solid lightgrey;
+      border: 2px solid black;
+    }
+    #panel [draggable], #panel [draggable] * {
+      cursor: move;
+    }
+    #panel > div > div {
+      padding: 5px;
+      border: 1px solid black;
+      margin: 2px;
+    }
+    #panel > .definitions > div {
+      background-color: green;
+    }
+    #panel > .label > div {
+      background-color: yellow;
+    }
+    #panel > .instructions > div {
+      background-color: white;
+    }
+    #panel > .buttons > div * {
+      font-weight: bolder;
+      font-family: monospace;
+      width: 100%;
+      border: 0;
+      outline: 0;
+    }
+    #panel > .buttons > div *::first-letter {
+      color: red;
+      text-transform: capitalize;
+    }
+    .asmui {
+      display: flex;
+    }
+    .asmui > .panel-container {
+      flex: 0 0 150px;
+      min-height: 200px;
+      min-width: 150px;
+      overflow-y: auto;
+      position: relative;
+    }
+    .asmui > .panel-container > #panel {
+      position: absolute;
+      width: 100px;
+    }
+    .asmui > #program {
+      flex: 1;
+      min-width: 670px;
+      min-height: 300px;
+      height: 90vh;
+      overflow-y: auto;
+    }
+    .footer {
+      background-color: #008484;
+      min-width: 100%;
+      font-family: monospace;
+      font-weight: bolder;
+      padding: 10px 0;
+      border: 2px solid white;
+    }
+    .footer p {
+      margin: 5px;
+    }
+    ::-webkit-scrollbar {
+      background-color: darkgrey;
+      border: 1px solid dimgrey;
+    }
+    ::-webkit-scrollbar:hover {
+      background-color: dimgrey;
+      border: 1px solid darkgrey;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: white;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body ondragend="asm=util=definition=instruction=false;">
+  <form method=POST action="/submit">
+    <input type=hidden name=challenge>
+    <input type=hidden name=program>
+    <input type=hidden name=debug disabled>
+    <input type="hidden" id="flag" value="CTF{_{{ flag }}_}">
+    <div class="asmui">
+      <div class="panel-container">
+        <div id="panel"
+             ondragover="event.preventDefault()"
+             ondrop="dragging.parentNode.removeChild(dragging)"
+             ondrag="dragging=event.target.cloneNode(true);util.id='';">
+          <div class="buttons">
+            <div>
+              <button onclick="try{
+                  asm=_compile([].map.call(self.program.childNodes, function(child) {
+                    if(child.nodeName=='#text')return child.nodeValue.replace(/^\s*|\s*$/g,'');
+                    return [].map.call(child.querySelectorAll('div'), function(div) {
+                      return [].map.call(div.querySelectorAll('label,input,select'), function(f) {
+                        return f.value || f.innerText;
+                      }).join(' ').replace(/^\s*|\s*$/g,'');
+                    }).join('\n');
+                  }).join('\n'));
+                  alert('Program compiled');
+                }catch(e){
+                  alert('Syntax error');
+                  console.error(e);
+                }">Compile</button>
+            </div>
+            <div>
+              <button onclick="if(self.asm){
+                  var oldShowUser = _showUser;
+                  _showUser = function() {};
+                  _runTests('', asm, 'debug'/*fake debug=1*/).then(function() {
+                    _showUser = oldShowUser;
+                    alert('Program completed');
+                  });
+                }else{
+                  alert('No program compiled');
+                }">Execute</button>
+            </div>
+            <div>
+              <select onchange="if(value) {
+                  if(self.asm){
+                    var sp = asm, sv = value;
+                    _runTests(value, asm).then(function(success) {
+                      if(success && confirm('Submit answer for verification?')) {
+                        form.elements.challenge.value = sv;
+                        form.elements.program.value = new Uint8Array(sp);
+                        form.submit();
+                      }
+                    });
+                  }else{
+                    alert('No program compiled');
+                  }
+                }
+                value='';">
+                <option selected value="">Run test</option>
+                <option value="hello_world">Hello, world.</option>
+                <option value="flag">Guess the Flag</option>
+                <option value="pow">pow</option>
+                <option value="fibonacci">Fibonacci</option>
+                <option value="primes">Primes</option>
+              </select>
+            </div>
+          </div>
+          <hr/>
+          <div class="definitions"
+               ondrag="util=dataUtil.cloneNode(definition=true)">
+            <div draggable="true"></div>
+          </div>
+          <div class="label"
+               ondrag="util=labelUtil.cloneNode(instruction=true)">
+            <div class="noMemory" draggable="true"></div>
+          </div>
+          <hr/>
+          <div class="instructions"
+               ondrag="util=codeUtil.cloneNode(instruction=true)">
+            <div draggable="true"><span><label>mov</label></span></div>
+            <div draggable="true"><span><label>cmp</label></span></div>
+            <hr/>
+            <div draggable="true"><span><label>jlz</label></span></div>
+            <div draggable="true"><span><label>jgz</label></span></div>
+            <div draggable="true"><span><label>jnz</label></span></div>
+            <div draggable="true"><span><label>jez</label></span></div>
+            <div draggable="true"><span><label>ret</label></span></div>
+            <hr/>
+            <div draggable="true"><span><label>add</label></span></div>
+            <div draggable="true"><span><label>sub</label></span></div>
+            <div draggable="true"><span><label>mul</label></span></div>
+            <div draggable="true"><span><label>div</label></span></div>
+            <div draggable="true"><span><label>mod</label></span></div>
+            <hr/>
+            <div draggable="true"><span><label>and</label></span></div>
+            <div draggable="true"><span><label>orr</label></span></div>
+            <div draggable="true"><span><label>xor</label></span></div>
+            <div draggable="true"><span><label>not</label></span></div>
+            <hr/>
+            <div draggable="true"><span><label>shl</label></span></div>
+            <div draggable="true"><span><label>shr</label></span></div>
+            <hr/>
+            <div draggable="true"><span><label>prt</label></span></div>
+            <div draggable="true"><span><label>get</label></span></div>
+          </div>
+        </div>
+      </div>
+      <div id="program"
+           ondragenter="event.target.dataset.drag='enter';"
+           ondragleave="event.target.dataset.drag='leave';"
+           ondragend="event.target.dataset.drag='exit';"
+           onchange="asm=null;symbolTable.innerHTML='';
+                    [].forEach.call(document.getElementsByClassName('symbol'), function(symbol){
+                      symbolTable.appendChild(new Option(symbol.value.replace(/:$/,'')));
+                    });"
+           ondrop="event.target.dataset.drag='drop';dragging.appendChild(util)">
+        .data
+        <div ondrag="definition=true;dragging=event.target;"
+             ondragover="definition&&event.preventDefault()"
+             ondrop="insertBefore(dragging, 'form' in event.target?event.target.parentNode.parentNode:null)">
+        </div>
+        <br/>
+        .code
+        <br/>
+        <div ondrag="instruction=true;dragging=event.target;"
+             ondragover="instruction&&event.preventDefault()"
+             ondrop="insertBefore(dragging, 'form' in event.target?event.target.parentNode.parentNode:null)">
+          <div draggable="true" class="noMemory"><span><input value="&amp;main:" readonly class="symbol"></span></div>
+        </div>
+      </div>
+      <div class="utils" style="display:none;">
+        <span id="dataUtil">
+          <input placeholder="$variable"
+                 pattern="[$]\w+"
+                 required="true"
+                 class="symbol">
+          <select onchange="style.counterIncrement=value+' '+(nextElementSibling.value-1||0);">
+            <option>string</option>
+            <option>int</option>
+            <option>float</option>
+            <option>mem</option>
+          </select>
+          <input onchange="previousElementSibling.style.counterIncrement=previousElementSibling.value+' '+(value-1||0);"
+                 pattern="\S+.*"
+                 required="true">
+        </span>
+        <span id="codeUtil">
+          <select>
+            <option value="">label</option>
+            <option>int</option>
+            <option>float</option>
+          </select>
+          <input pattern="[&amp;$]\w+|[0-9.]+"
+                 required="true"
+                 list="symbolTable">
+          <select>
+            <option value="">label</option>
+            <option>int</option>
+            <option>float</option>
+            <option>string</option>
+          </select>
+          <input required="true"
+                 list="symbolTable">
+        </span>
+        <span id="labelUtil">
+          <input placeholder="&amp;label:"
+                 pattern="&amp;\w+:"
+                 required="true"
+                 class="symbol">
+        </span>
+        <datalist id="symbolTable">
+          <option>&amp;main</option>
+        </datalist>
+      </div>
+    </div>
+    <div class="footer">{% for log in logs %}{% if log %}<p>{{ log }}</p>{% endif %}{% endfor %}</div>
+  </form>
+  <script src="/js/testcases.data.js"></script>
+  <script src="/js/index.min.js"></script>
+</body>
+</html>

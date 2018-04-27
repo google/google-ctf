@@ -1,0 +1,11 @@
+all:
+	objcopy --input binary --output pe-x86-64 --binary-architecture i386:x86-64 \
+      sky_palette.raw sky_palette.o
+	objcopy --input binary --output pe-x86-64 --binary-architecture i386:x86-64 \
+      font_cc0_mold_asalga.raw font_cc0_mold_asalga.o
+	g++ -Wall -Wextra hyperion_client.cc NetSock.cpp common.cc \
+	    sky_palette.o font_cc0_mold_asalga.o \
+	    -o hyperion_client -lSDL2 -lws2_32
+
+test: all
+	hyperion_client 192.168.2.198

@@ -1,0 +1,14 @@
+a.b.c=1
+d=a.b
+d
+c=1
+c=c
+c
+e.h=12345
+e.h=c
+e
+a.c.d=5
+a.e="2"
+a
+a.f.e.g=a.f
+a

@@ -1,0 +1,18 @@
+[package]
+name = "rubik"
+version = "0.1.0"
+authors = ["Mathias Svensson <idolf@pwnies.dk>"]
+
+[[bin]]
+name = "solve"
+
+[[bin]]
+name = "challenge"
+
+[dependencies]
+rand = "0.3"
+enum_primitive = "0.1"
+lazy_static = "0.2"
+maplit = "0.1"
+rust-crypto = "0.2"
+rustc-serialize = "0.3"

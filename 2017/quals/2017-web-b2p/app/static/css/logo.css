@@ -1,0 +1,91 @@
+/*
+ * Copyright 2018 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+
+.blue-border {
+  -webkit-text-stroke-color: #00F;
+  -webkit-text-stroke-width: 1px;
+  text-shadow: 0 0 5px #00F;
+}
+
+.blue-border-thin {
+  -webkit-text-stroke-color: 00F;
+  -webkit-text-stroke-width: 0.5px;
+  text-shadow: 0 0 1px #00F;
+}
+
+.bttf {
+  font-family: BTTF;
+  line-height: 100%;
+}
+
+.large {
+    font-size: 80pt;
+}
+
+.over > :first-child {
+  color: #F00;
+  -webkit-mask-image: -webkit-gradient(linear, left top,
+    left bottom, from(rgba(1,0,1,1)), to(rgba(0,1,0,0)));
+}
+
+.over > :last-child {
+  color: #F00;
+  -webkit-mask-image: -webkit-gradient(linear, left top,
+    left bottom, from(rgba(1,0,1,0)), to(rgba(0,1,0,1)));
+}
+
+.under {
+  color: #FF0;
+}
+
+
+.under, .over {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.logocontainer {
+  -webkit-perspective: 500;
+  -moz-transform: rotate(-10deg) skew(-18deg, 0deg);
+
+}
+
+.logocontainer > div {
+  overflow: visible;
+  -webkit-transform: rotateY(15deg);
+
+}
+
+.flex-logocontainer {
+  margin-top: 3%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logocontainer {
+  width: 30em;
+  height: 15em;
+  transform: perspective(600px) rotatey(30deg);
+}
+
+.delorean {
+    margin-left: -11em;
+}

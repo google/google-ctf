@@ -1,0 +1,69 @@
+<!--
+  Copyright 2018 Google LLC
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>~~Login~~</title>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #f5f5f5;
+      }
+      form {
+        margin-top: 10px;
+      }
+      .form-signin input {
+        font-size: 16px;
+        height: auto;
+        margin-bottom: 15px;
+        padding: 7px 9px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#">~Login~</a>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <script>
+        if(location.search) {
+          var div = document.currentScript.parentNode.appendChild(document.createElement('div'));
+          div.className = 'alert alert-danger';
+          div.role = 'alert';
+          div.appendChild(document.createTextNode(unescape(location.search.match(/e=(.*)/)[1])));
+        }
+      </script>
+      <form action="/login" method="post" class="form-signin">
+        <div>
+          <input name="user" pattern="admin" class="input-block-level" placeholder="username">
+          <input name="password"
+                 pattern="CTF[{]qu0t45[a-z0-9_]{16}www-[0-9A-Za-z_-]{64}[}]"
+                 type="password"
+                 placeholder="password"
+                 class="input-block-level">
+        </div>
+        <div><input type="submit" class="btn btn-large btn-primary" value="~Login~"></div>
+      </form>
+    </div>
+  </body>
+</html>

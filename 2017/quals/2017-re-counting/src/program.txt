@@ -1,0 +1,189 @@
+# Argument comes in at a.
+# Convention is that z is always zero, x is trash
+
+add b a
+# Check if b is less than 11. If so return 0.
+inc c
+inc c
+inc c
+inc c
+inc c
+inc c
+inc c
+inc c
+inc c
+inc c
+inc c
+call 1 lessthan
+decjmp a main_calc
+ret
+
+:main_calc
+call 1 totalhaillen
+clr c
+add c a
+call 1 fib
+ret
+
+# Calculates the sum of hailstone lengths from 1 to b.
+:totalhaillen
+clr c
+:totalhaillen_loop
+call 1 lenhailstone
+add c a
+decjmp b totalhaillen_ret
+jmp totalhaillen_loop
+
+:totalhaillen_ret
+clr a
+add a c
+ret
+
+# Counts length of hailstone sequence starting with b.
+:lenhailstone
+clr c
+
+:lenhailstone_loop
+call 1 copy
+clr d
+add d a
+# Check if at 1 yet.
+decjmp d lenhailstone_ret
+decjmp d lenhailstone_ret
+# It's not, so run a hailstone on it.
+call 1 hailstone
+inc c
+clr b
+add b a
+jmp lenhailstone_loop
+
+:lenhailstone_ret
+clr a
+add a c
+ret
+
+# Does a hailstone sequence iteration on b.
+:hailstone
+clr c
+call 1 copy
+add c a
+call 2 findhalf
+decjmp b hailstone_even
+
+# At this point, a contains n/2, b contains 1, c contains n.
+# So we need to triple c.
+clr a
+clr b
+add b c
+call 1 copy
+add c a
+call 1 copy
+add a b
+add a c
+inc a
+
+:hailstone_even
+# Since a contains half, we just quit.
+ret
+
+# Accepts arg in b, mod in c, outputs result in a.
+:fib
+call 1 copy
+clr d
+add d a
+
+# Now d and b contain arg, a clear.
+# If d is 0, return 0
+decjmp d fib_ret
+
+# If d is 1, return 1
+inc a
+decjmp d fib_ret
+
+# e will contain the result.
+# Now get fib(b - 1).
+decjmp b quit
+call 1 fib
+clr e
+add e a
+
+# Now get fib(b - 2).
+decjmp b quit
+call 1 fib
+add e a
+
+# Calculate mod. Move e to b.
+clr b
+add b e
+call 1 mod
+
+:fib_ret
+ret
+
+# Copies b into a
+:copy
+clr a
+add a b
+ret
+
+# Adds b and c into a
+:addtwo
+clr a
+add a b
+add a c
+ret
+
+# Finds half of c into a, rounded down. b contains 1 if c is odd, 0 if even.
+:findhalf
+clr a
+clr b
+:findhalf_loop
+decjmp c quit
+decjmp c findhalf_quit_odd
+inc a
+jmp findhalf_loop
+
+:findhalf_quit_odd
+inc b
+ret
+
+# Calculates b mod c, in a.
+:mod
+call 1 lessthan
+decjmp a mod_sub
+add a b
+ret
+:mod_sub
+call 1 subtract
+clr b
+add b a
+jmp mod
+
+# Returns 1 if b less than c
+:lessthan
+clr a
+decjmp c lessthan_false
+decjmp b lessthan_true
+jmp lessthan
+
+:lessthan_true
+inc a
+ret
+
+:lessthan_false
+ret
+
+# Subtracts c from b, puts result in a.
+# Fails if c greater than b.
+:subtract
+decjmp c subtract_ret
+decjmp b quit
+jmp subtract
+
+:subtract_ret
+clr a
+add a b
+ret
+
+:quit
+ret

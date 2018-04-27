@@ -1,0 +1,5 @@
+all:
+	g++ -fno-threadsafe-statics -fomit-frame-pointer -fno-stack-protector -std=c++11 -Wall -Wextra hyperion_server.cc NetSock.cpp common.cc -o hyperion_server -ggdb
+
+test: all
+	./hyperion_server

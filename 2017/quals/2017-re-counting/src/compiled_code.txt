@@ -1,0 +1,119 @@
+0 decjmp 0 1 2
+1 inc 1 0
+2 inc 2 3
+3 inc 2 4
+4 inc 2 5
+5 inc 2 6
+6 inc 2 7
+7 inc 2 8
+8 inc 2 9
+9 inc 2 10
+10 inc 2 11
+11 inc 2 12
+12 inc 2 13
+13 fra 1 108 14
+14 decjmp 0 119 15
+15 fra 1 20 16
+16 decjmp 2 16 17
+17 decjmp 0 18 19
+18 inc 2 17
+19 fra 1 64 119
+20 decjmp 2 20 21
+21 fra 1 29 22
+22 decjmp 0 23 24
+23 inc 2 22
+24 decjmp 1 25 26
+25 decjmp 25 0 21
+26 decjmp 0 26 27
+27 decjmp 2 28 119
+28 inc 0 27
+29 decjmp 2 29 30
+30 fra 1 84 31
+31 decjmp 3 31 32
+32 decjmp 0 33 34
+33 inc 3 32
+34 decjmp 3 35 42
+35 decjmp 3 36 42
+36 fra 1 45 37
+37 inc 2 38
+38 decjmp 1 38 39
+39 decjmp 0 40 41
+40 inc 1 39
+41 decjmp 25 0 30
+42 decjmp 0 42 43
+43 decjmp 2 44 119
+44 inc 0 43
+45 decjmp 2 45 46
+46 fra 1 84 47
+47 decjmp 0 48 49
+48 inc 2 47
+49 fra 2 92 50
+50 decjmp 1 51 119
+51 decjmp 0 51 52
+52 decjmp 1 52 53
+53 decjmp 2 54 55
+54 inc 1 53
+55 fra 1 84 56
+56 decjmp 0 57 58
+57 inc 2 56
+58 fra 1 84 59
+59 decjmp 1 60 61
+60 inc 0 59
+61 decjmp 2 62 63
+62 inc 0 61
+63 inc 0 119
+64 fra 1 84 65
+65 decjmp 3 65 66
+66 decjmp 0 67 68
+67 inc 3 66
+68 decjmp 3 69 119
+69 inc 0 70
+70 decjmp 3 71 119
+71 decjmp 1 72 119
+72 fra 1 64 73
+73 decjmp 4 73 74
+74 decjmp 0 75 76
+75 inc 4 74
+76 decjmp 1 77 119
+77 fra 1 64 78
+78 decjmp 0 79 80
+79 inc 4 78
+80 decjmp 1 80 81
+81 decjmp 4 82 83
+82 inc 1 81
+83 fra 1 99 119
+84 decjmp 0 84 85
+85 decjmp 1 86 119
+86 inc 0 85
+87 decjmp 0 87 88
+88 decjmp 1 89 90
+89 inc 0 88
+90 decjmp 2 91 119
+91 inc 0 90
+92 decjmp 0 92 93
+93 decjmp 1 93 94
+94 decjmp 2 95 119
+95 decjmp 2 96 98
+96 inc 0 97
+97 decjmp 25 0 94
+98 inc 1 119
+99 fra 1 108 100
+100 decjmp 0 101 103
+101 decjmp 1 102 119
+102 inc 0 101
+103 fra 1 113 104
+104 decjmp 1 104 105
+105 decjmp 0 106 107
+106 inc 1 105
+107 decjmp 25 0 99
+108 decjmp 0 108 109
+109 decjmp 2 110 119
+110 decjmp 1 111 112
+111 decjmp 25 0 108
+112 inc 0 119
+113 decjmp 2 114 116
+114 decjmp 1 115 119
+115 decjmp 25 0 113
+116 decjmp 0 116 117
+117 decjmp 1 118 119
+118 inc 0 117

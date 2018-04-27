@@ -1,0 +1,13 @@
+[package]
+name = "diffie"
+version = "1.0.0"
+
+[[bin]]
+name = "encrypt"
+path = "src/encrypt.rs"
+
+[dependencies]
+arrayref = "0.3.3"
+rand = "0.3.15"
+rust-crypto = "0.2.36"
+rustc-serialize = "0.3.22"

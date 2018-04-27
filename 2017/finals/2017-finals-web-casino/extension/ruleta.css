@@ -1,0 +1,210 @@
+/*
+ * Copyright 2018 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+
+body {
+  background: black;
+  color: white;
+}
+:visited, :link {color: white;}
+.game {
+  zoom: 1;
+  transform: perspective(1000px) rotatex(0) rotatez(0);
+  margin: 0;
+  transition-property: transform margin zoom;
+  transition-duration: 0.3s;
+  border: 20px solid #321;
+  background: green;
+  padding: 50px;
+  width: 75em;
+}
+#make3d:checked ~ div .game[data-spin] {
+  zoom: 0.7;
+  transform: perspective(1000px) rotatex(45deg) rotatez(45deg);
+  margin: -150px 50px;
+}
+#top10 {
+  position: fixed;
+  right: 0;
+  top: 0;
+  background-color: black;
+  color: gold;
+  overflow: hidden;
+  border: 1ex dotted gold;
+}
+#top10:hover {
+  opacity: 0.5;
+}
+.board table {
+  background: green;
+  border: 5px solid white;
+}
+.board .tile {
+  border: 1px solid white;
+  color: white;
+}
+.board .tile[data-lost="true"] {
+  background: red;
+  transition-property: background;
+  transition-duration: 0.5s;
+}
+.board .player {
+  width: 5em;
+}
+.board .player input {
+  width: 5em;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: white;
+}
+.board .player input::placeholder {
+  color: white;
+}
+.board .tile .label {
+  margin: 1ex;
+  cursor: hand;
+  text-align: center;
+  font-family: sans-serif;
+}
+.board .tile .label.circled {
+  transform: rotate(270deg);
+}
+.board .tile .label.circled {
+  border-radius: 2em;
+  padding: 0.5em;
+  width: 2ex;
+  height: 1em;
+  border: 1px solid white;
+}
+.board .tile .label.black {
+  background-color: black;
+}
+.board .tile .label.red {
+  background-color: red;
+}
+.board .tile .label.green {
+  background-color: green;
+}
+.board .tile:not([data-bet="0"])::after {
+  color: black;
+  font-weight: bold;
+  font-family: sans-serif;
+  font-size: small;
+  border-radius: 2em;
+  text-align: center;
+  display: block;
+  width: 2ex;
+  height: 1em;
+  padding: 0.5em;
+  content: attr(data-bet);
+  background: gold;
+  overflow: hidden;
+  position: absolute;
+  margin: -2.5em 0.5ex;
+  box-shadow: 0 0 5px black;
+  border: 0.5ex dashed black;
+}
+.board .tile[data-id="bank"]::after {
+  width: calc(100% - 1em);
+  position: static;
+  margin: 0;
+}
+.wheel {
+  float: right;
+  --cos-angle: 0.986361303; /*cos(360deg/38)*/;
+  --label-outline-size: 0.2ex;
+  --label-width: 1.5em;
+  --label-height: 1em;
+  --label-delta: calc(var(--label-width) - var(--label-height));
+  --wheel-diameter: calc((var(--label-width)*38)/3.141592);
+  --wheel-middle-x: calc(var(--wheel-diameter)/2 + var(--label-height));
+  font-family: serif;
+  font-size: large;
+  padding: calc(var(--wheel-diameter)/2) calc(var(--wheel-diameter) + var(--label-height));
+  rotate: 3600deg;
+  transition-property: rotate;
+  transform-origin: calc(var(--wheel-diameter)/2 + var(--label-height)) calc(var(--wheel-diameter)/2 + var(--label-width)/2);
+  width: 0;
+  height: calc(var(--label-width) + 5ex);
+  margin: calc(var(--label-height));
+  background: transparent;
+}
+.wheel::after {
+  --shadow-extra: calc(var(--label-height)*2 + 5ex);
+  --shadow-location-x: calc(-1*(var(--wheel-diameter) + var(--shadow-extra)/2));
+  --shadow-location-y: calc(-1*(var(--wheel-diameter)/2 + var(--label-width)/2 + var(--shadow-extra)/2));
+  content: '';
+  transform: translatex(var(--shadow-location-x)) translatey(var(--shadow-location-y));
+  position: absolute;
+  background: black;
+  height: calc(var(--wheel-diameter) + var(--shadow-extra));
+  width: calc(var(--wheel-diameter) + var(--shadow-extra));
+  display: block;
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 1;
+  box-shadow: 0 0 100px black;
+}
+.game[data-spin="true"] .wheel {
+  rotate: 0deg;
+  transition-property: rotate;
+  transition-duration: 10s;
+}
+.wheel .number {
+  color: white;
+  transform: rotate(calc(360deg/38));
+  transform-origin: 100% 100%;
+  height: var(--label-height);
+  line-height: var(--label-height);
+  margin-top: var(--label-delta);
+}
+.wheel .number .label {
+  transform: rotate(90deg);
+  transform-origin: 0 100%;
+  text-align: center;
+  vertical-align: middle;
+  height: var(--label-height);
+  line-height: var(--label-height);
+  width: var(--label-width);
+  outline: var(--label-outline-size) solid white;
+}
+.wheel .number.red > .label {
+  background: red;
+}
+.wheel .number.black > .label {
+  background: black;
+}
+.wheel .number.green > .label {
+  background: green;
+}
+.wheel .number > .label::after {
+  content: ' ';
+  display: block;
+  color: white;
+  text-shadow: 0 0 10px white;
+  height: calc(var(--wheel-diameter)/2);
+  background: linear-gradient(0deg, #ffd70010, #ffd7007f);
+  border-left: 0.01px solid #ffd7003f;
+}
+.wheel .number[data-ball="true"] > .label::after {
+  content: '\2b24';
+}
+.wheel .number.black > .label::after {
+  background: #A070307f;
+  border-left: 0.01px solid #ffd7007f;
+}

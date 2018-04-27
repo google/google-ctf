@@ -1,0 +1,245 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP 1408
+D CDA 8 bits
+K CDA
+$ENDCMP
+#
+$CMP AD620
+D Instrumentation amplifier
+K INSTRUMENTATION
+F analog-dev/AD620.pdf
+$ENDCMP
+#
+$CMP AD813
+D Ampli Op 3 state out
+K AmpliOp
+F AmpliOp.sch
+$ENDCMP
+#
+$CMP ADA4075
+D Very low noise audio op amp
+F http://www.analog.com/static/imported-files/data_sheets/ADA4075-2.pdf
+$ENDCMP
+#
+$CMP CA3130
+D Ampli Op Mos
+K AmpliOp Mos
+F AmpliOp.sch
+$ENDCMP
+#
+$CMP CA3140
+D Ampli Op Mos
+K AmpliOp Mos
+$ENDCMP
+#
+$CMP LF398
+D Sample & hold
+F ns/lf398.pdf
+$ENDCMP
+#
+$CMP LH0002H
+D High speed analog Buffer 
+K Buffer
+$ENDCMP
+#
+$CMP LM101H
+D Ampli Op
+K AmpliOp
+$ENDCMP
+#
+$CMP LM193
+D Dual Voltage Comparator
+K Comp
+F ns/lm193.pdf
+$ENDCMP
+#
+$CMP LM2902N
+D Quad Op amp.
+K AmpliOp
+F op_amps/lm324.pdf
+$ENDCMP
+#
+$CMP LM2903
+D Dual Voltage Comparator
+K Comp
+F ns/lm193.pdf
+$ENDCMP
+#
+$CMP LM293
+D Dual Voltage Comparator
+K Comp
+F ns/lm193.pdf
+$ENDCMP
+#
+$CMP LM311N
+D Voltage Comparator
+K comp
+$ENDCMP
+#
+$CMP LM318N
+D ampli Op
+K AmpliOp
+F op_amps/LM118.pdf
+$ENDCMP
+#
+$CMP LM319
+D Dual voltage comparator (high speed)
+K comp
+$ENDCMP
+#
+$CMP LM319H
+D Dual voltage comparator (high speed)
+K comp
+$ENDCMP
+#
+$CMP LM319N
+D Dual voltage comparator (high speed)
+K comp
+$ENDCMP
+#
+$CMP LM324
+D Quad Op amp.
+K AmpliOp
+F op_amps/lm324.pdf
+$ENDCMP
+#
+$CMP LM324AN
+D Quad Op amp.
+K AmpliOp
+F op_amps/lm324.pdf
+$ENDCMP
+#
+$CMP LM324N
+D Quad Op amp.
+K AmpliOp
+F op_amps/lm324.pdf
+$ENDCMP
+#
+$CMP LM339
+D Quad comparator.
+K Comp
+F op_amps/lm139.pdf
+$ENDCMP
+#
+$CMP LM358
+D Dual Op amp (low power)
+K ampliop
+F ns/lm158.pdf
+$ENDCMP
+#
+$CMP LM358N
+D Dual Op amp (low power)
+K ampliop
+F ns/lm158.pdf
+$ENDCMP
+#
+$CMP LM386
+D Audio Power Amp.
+K Audio Power
+$ENDCMP
+#
+$CMP LM393
+D Dual Voltage Comparator
+K Comp
+F ns/lm193.pdf
+$ENDCMP
+#
+$CMP LM555N
+F ns/lm555.pdf
+$ENDCMP
+#
+$CMP LM6161
+D Op Amp.
+K AmpliOp
+F AmpliOp.sch
+$ENDCMP
+#
+$CMP LM6261
+D Op Amp.
+K AmpliOp
+F AmpliOp.sch
+$ENDCMP
+#
+$CMP LM6361
+D Op Amp.
+K AmpliOp
+F AmpliOp.sch
+$ENDCMP
+#
+$CMP LM733CH
+D Differential Video amp
+K Video Diff
+$ENDCMP
+#
+$CMP LM741
+D Op amp
+K Ampliop
+F AmpliOp.sch
+$ENDCMP
+#
+$CMP LMC6062
+D Dual Op amp (low power)
+K ampliop
+F op_amps/lmc6062.pdf
+$ENDCMP
+#
+$CMP LMC6082
+D Dual Op amp (low power)
+K ampliop
+F op_amps/lmc6082.pdf
+$ENDCMP
+#
+$CMP MAX471
+D High-Side Current-Sense Amplifier
+F maxim/max471-max472.pdf
+$ENDCMP
+#
+$CMP MAX472
+D High-Side Current-Sense Amplifier
+F maxim/max471-max472.pdf
+$ENDCMP
+#
+$CMP MC33178
+D Dual Op amp (low power)
+K ampliop
+F onsemi/mc33178.pdf
+$ENDCMP
+#
+$CMP OP275
+D Dual Op amp (low power)
+K ampliop
+F analog-dev/op275.pdf
+$ENDCMP
+#
+$CMP TL071
+D Op amp.
+K AmpliOp
+F op_amps/tl071.pdf
+$ENDCMP
+#
+$CMP TL072
+D Dual Op amp (low power)
+K ampliop
+$ENDCMP
+#
+$CMP TL074
+D Quad Op amp. Mos
+K AmpliOp Mos
+$ENDCMP
+#
+$CMP TL081
+F op_amps/tl081.pdf
+$ENDCMP
+#
+$CMP TL082
+D Dual Op amp (Cmos)
+K ampliop
+$ENDCMP
+#
+$CMP TLC274
+D Quad Op amp. Mos
+K AmpliOp Mos
+$ENDCMP
+#
+#End Doc Library

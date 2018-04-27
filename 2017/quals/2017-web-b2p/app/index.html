@@ -1,0 +1,105 @@
+<!--
+  Copyright 2018 Google LLC
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Back to the Past</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/logo.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script src="/static/js/angular-recaptcha.min.js"></script>
+    <base href="/">
+</head>
+<body ng-app="b2tp" ng-cloak>
+	<div class="container">
+	    <div class="flex-logocontainer">
+		<div class="logocontainer">
+		    <div class="bttf large blue-border">
+			<div class="under">
+			    <span>BACK&lt;&nbsp;</span><br/>
+			    <span>&amp;PAST</span>
+			</div>
+			<div class="over">
+			    <span>BACK&lt;&nbsp;</span><br/>
+			    <span>&amp;PAST</span>
+			</div>
+		    </div>
+		</div>
+	    </div>
+	    <br><br>
+	    <div style="padding-top: 40px" ng-controller="DeloreanCtrl">
+		<form class="form-horizontal" role="form" method="post" action="#">
+		    <div class="panel margin-auto">
+			<div class="panel-row">
+			    <div class="panel-col">
+				<div class="date-label">MONTH</div>
+				<div class="date-container clickable" ng-click="setDate()">
+				    <div class="date-back">888</div>
+				    <div class="date-value">{{month_name(date_m)}}</div>
+				</div>
+			    </div>
+			    <div class="panel-col">
+				<div class="date-label">DAY</div>
+				<div class="date-container clickable" ng-click="setDate()">
+				    <div class="date-back">88</div>
+				    <div class="date-value">{{date_d}}</div>
+				</div>
+			    </div>
+			    <div class="panel-col">
+				<div class="date-label">YEAR</div>
+				<div class="date-container clickable" ng-click="setDate()">
+				    <div class="date-back">8888</div>
+				    <div class="date-value">{{date_y}}</div>
+				</div>
+			    </div>
+			</div>
+			<div class="panel-row">
+			    <div class="label2">DESTINATION TIME</div>
+			</div>
+			<div class="panel-row">
+			    <div class="panel-col">
+				<input type="text" name="website" id="website" ng-model="website" autocorrect="off">
+			    </div>
+			</div>
+			<div class="panel-row">
+			    <div class="panel-col">
+				<div class="label2">WEBSITE</div>
+			    </div>
+			</div>
+
+		    </div>
+
+		    <input type="hidden" name="d" value="{{date_d}}" >
+		    <input type="hidden" name="m" value="{{date_m}}">
+		    <input type="hidden" name="y" value="{{date_y}}">
+		</form>
+		<div class="centered" ng-if="reported && !headless">
+		    <iframe width="560" height="315" src="https://www.youtube.com/embed/DVyBG_aNFLE?rel=0&amp;showinfo=0&amp;autoplay=1" frameborder="0"></iframe>
+		</div>
+		<div class="wayback" wayback ng-if="!reported"></div>
+		<div class="report" ng-if="!reported">
+		    <div style="display: inline-block" vc-recaptcha key="'6LcxeyUUAAAAAMqNEX8G70MPY1xQwjkK3MbfEoru'" theme="dark"></div><br>
+		    <a ng-click="report()" href="#">Report this site at this date to the Time Police.</a><br>
+		</div>
+	    </div>
+	</div>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

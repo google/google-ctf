@@ -1,0 +1,19 @@
+{
+  "name": "frontend",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node main.js"
+  },
+  "engines" : {
+    "node" : ">=7.9.0"
+  },
+  "dependencies" : {
+    "httpdispatcher": "0.4.0",
+    "htmlparser2": "3.9.2",
+    "uuid": "latest",
+    "express-recaptcha": "~2.1.0",
+    "@google-cloud/datastore": "~1.0.0",
+    "@google-cloud/pubsub": "~0.11.0"
+  }
+}

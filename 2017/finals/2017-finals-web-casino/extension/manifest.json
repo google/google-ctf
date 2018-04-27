@@ -1,0 +1,10 @@
+{
+   "description": "Welcome to Flag Roulette!",
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnN1XhNKAO/lG7ZCTJh7Cf3LXE5GvUhu+ey+ZglNxR4N2LMqkv1fD12E/DBrav2Kgt+w2lcSKuT5drzST2vAw+34BymUI81wR+IJfEpujbc1T72d6y+9qDHelCaVQjIIW2AK/BVCRBa6skL3EBNaliJmsLwnehd1/+MfABc/VioDlXgUewxAYbLo9j/CbQC1Kui40P3LfDaaQYV1loEnU4KW+7hNPkwwgAd3B02sC803yYRfd30OcwlHG6Aiw2xNzvc7FqHJXh/rKuuRGYTmE20qR36OKJaPyLXeDYMr/toeiPOHNrDrr80tF9aAq33dSWGipU89x73XE9orqpwOcrQIDAQAB",
+   "manifest_version": 2,
+   "name": "Flag Roulette",
+   "permissions": [ "https://fcm.googleapis.com/*" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "0.9.2",
+   "web_accessible_resources": [ "index.html" ]
+}

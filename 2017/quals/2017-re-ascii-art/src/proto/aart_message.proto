@@ -1,0 +1,31 @@
+// Copyright 2018 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
+
+syntax = 'proto2';
+
+message AartMessage {
+  enum AartMessageType {
+    R_HELLO = 0;
+    R_CAPABILITIES = 1;
+    R_OPERATION = 2;
+    R_OPERATION_RESPONSE = 3;
+  }
+
+  // Identifies which field is filled in.
+  required AartMessageType type = 1;
+  required string client_id = 2;
+  required string content = 3;
+}

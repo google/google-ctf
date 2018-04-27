@@ -1,0 +1,23 @@
+[package]
+authors = ["Mathias Svensson <idolf@google.com>"]
+name = "crc-challenge"
+version = "1.0.0"
+
+[[bin]]
+name = "encrypt"
+path = "src/encrypt.rs"
+
+[[bin]]
+name = "decrypt"
+path = "src/decrypt.rs"
+
+[[bin]]
+name = "keygen"
+path = "src/keygen.rs"
+
+[dependencies]
+arrayref = "0.3.3"
+rand = "0.3.15"
+rust-crypto = "0.2.36"
+rust-gmp = "0.4.0"
+rustc-serialize = "0.3.22"

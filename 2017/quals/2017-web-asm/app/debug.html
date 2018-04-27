@@ -1,0 +1,125 @@
+<!--
+  Copyright 2018 Google LLC
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <meta http-equiv="content-security-policy" content="child-src 'self'; frame-src 'self';"/>
+    <style type="text/css">
+      body {
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #f5f5f5;
+      }
+      textarea {
+          font-family: consolas, courier, fixed;
+      }
+      iframe {
+        height: 1px;
+        width: 1px;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body onload="if(program.value) {
+                  /* running in bot mode */
+                  challenge.value={{ challenge }};
+                  _showUser=function(msg){
+                    setTimeout(function(){
+                      console.log(msg);
+                    },1);
+                  };
+                  setTimeout(test.click.bind(test),1e3);
+                } else {
+                  program.value=new Uint8Array(_compile(code.value));
+                }">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#">Web Assembly Sandbox</a>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      {% for log in logs %}
+        <div class="alert alert-info" role="alert">{{ log }}</div>
+      {% endfor %}
+      <form method=POST action="/submit">
+        <div>
+          <select id="challenge" name="challenge">
+              <option value="hello_world">Hello, world.</option>
+              <option value="flag">Guess the Flag</option>
+              <option value="pow">pow</option>
+              <option value="fibonacci">Fibonacci</option>
+              <option value="primes">Primes</option>
+          </select>
+          <input type="hidden" name="program" id="program" value="{{ program }}">
+          <textarea id="code" class="input-block-level" style="height: 600px;"
+                    onchange="program.value=new Uint8Array(_compile(code.value))">.data
+$text string >
+$times int 0
+$pi float 3.141592
+$foo float 0.0
+$reserved mem 256
+
+.code
+&main:
+get $text int 0
+get $times int 0
+mul $times int 1
+mov $reserved string >
+mov $foo &loop
+cmp $foo $pi
+mul $foo int 1
+jez &wrong $foo
+prt int 1 string ok
+ret $reserved int 0
+
+&wrong:
+prt int 2 string error!
+ret $text int 0
+
+&loop:
+add $text string !
+prt int 1 $text
+add $reserved $text
+sub $times int 1
+jgz &loop $times
+ret $pi int 0
+</textarea>
+        </div>
+        <div>
+            <input type="button" class="btn btn-large btn-primary" id="test" value="Test"
+                   onclick="_runTests(
+                              challenge.value,
+                              new Uint8Array(program.value.split(',')).buffer
+                            );">
+            <input type="button" class="btn btn-large btn-secondary" value="Help" onclick="
+                 location.replace('/help/help.pdf');
+            ">
+            <input type="submit" class="btn btn-large btn-secondary" value="Submit">
+        </div>
+      </form>
+      <!-- /?debug=1&flag=foo -->
+      <input type="hidden" id="flag" value="CTF{_{{ flag }}_}">
+      <script src="/js/testcases.data.js"></script>
+      <script src="/js/index.min.js"></script>
+    </div>
+  </body>
+</html>
+{% endautoescape %}
