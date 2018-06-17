@@ -17,6 +17,17 @@ limitations under the License.
 <html>
 <head>
   <script>if(top!=self)location='data:,'</script>
+  <script>
+    // Change this to your own!
+    var config = {
+      apiKey: "AIzaSyDcrn1aaIrAdAbKBG8WaaVDx2OawZ8kVYQ",
+      authDomain: "firepad-ctfpad.firebaseapp.com",
+      databaseURL: "https://firepad-ctfpad.firebaseio.com",
+      projectId: "firepad-ctfpad",
+      storageBucket: "firepad-ctfpad.appspot.com",
+      messagingSenderId: "930715579796"
+    };
+  </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CTFmate</title>
@@ -857,23 +868,6 @@ limitations under the License.
   <script src="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.min.js"></script>
   <script src="https://meet.jit.si/external_api.js"></script>
   <script>
-    var config = {
-      apiKey: "AIzaSyDcrn1aaIrAdAbKBG8WaaVDx2OawZ8kVYQ",
-      authDomain: "firepad-ctfpad.firebaseapp.com",
-      databaseURL: "https://firepad-ctfpad.firebaseio.com",
-      projectId: "firepad-ctfpad",
-      storageBucket: "firepad-ctfpad.appspot.com",
-      messagingSenderId: "930715579796"
-    };
-    // https://firebase.google.com/docs/database/web/start
-    var rules = {
-    	"rules":{
-    		"$secretid":{
-    			".read": true,
-    			".write": true
-			}
-		}
-	};
     firebase.initializeApp(config);
     function initPad(username) {
       var firepadRef = firebase.database().ref();
