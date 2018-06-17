@@ -1373,7 +1373,7 @@ limitations under the License.
         function uploadToGCS(files) {
         	var folder = firebase.storage().ref().child(teamSecretKey).child(title);
         	for(var i=0;i<files.length;i++) {
-        		folder.child(Math.random().toString(36)).child(files[i].name).put(files[i]).then(function(snap) {
+        		folder.child(Math.random().toString(36)).child(files[i].name).put(files[i], {contentDisposition: 'attachment'}).then(function(snap) {
         			return snap.ref.getDownloadURL().then(function(url) {
 		              sayChat('Uploaded ' + url, title);
 		              editor.session.insert({
