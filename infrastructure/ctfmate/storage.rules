@@ -1,0 +1,8 @@
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{team}/{task}/{random}/{filename} {
+      allow write: if request.resource.size < 64 * 1024 && request.auth != null;
+      allow read: if true;
+    }
+  }
+}
