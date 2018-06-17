@@ -1,0 +1,1617 @@
+<!--
+Copyright 2018 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <script>if(top!=self)location='data:,'</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CTFmate</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  <style id="ctfPadCustomStyles">
+  	.ctfpad-chat[data-filter=""] .ctfpad-chat-message-container:not([data-where=""]){
+    	display: none;
+    }
+  </style>
+  <style>
+    .ctfpad-radio.mdl-card {
+      background: #3E4EB8;
+    }
+    .ctfpad-radio > .mdl-card__actions {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .ctfpad-radio > .mdl-card__title {
+      align-items: flex-start;
+    }
+    .ctfpad-radio > .mdl-card__title > h4 {
+      margin-top: 0;
+    }
+    .ctfpad-radio > .mdl-card__actions {
+      display: flex;
+      box-sizing:border-box;
+      align-items: center;
+    }
+    .ctfpad-radio > .mdl-card__actions > .material-icons {
+      padding-right: 10px;
+    }
+    .ctfpad-radio * {
+      color: #fff;
+    }
+    .ctfpad-sidebar {
+      min-width: 240px;
+      overflow-x: hidden;
+    }
+    .ctfpad-sidebar .mdl-card {
+      width: 240px;
+      max-width: 240px;
+    }
+    .ctfpad-sidebar .ctfpad-chat .mdl-textfield {
+      max-width: calc(100% - 32px - 10px);
+      width: 100%;
+    }
+    .ctfpad-chat {
+      flex-grow: 1;
+    }
+    .ctfpad-chat-box, .ctfpad-chat-messages {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .ctfpad-chat-filler {
+      flex-grow: 1;
+    }
+    .ctfpad-chat-messages {
+      overflow-y: auto;
+      margin-bottom: 10px;
+      height: 0;
+      flex: 1 1 auto;
+      font-size: 13px;
+      overflow-x: hidden;
+    }
+    .ctfpad-chat-message-container{
+    	margin-left: 1em;
+        overflow-wrap: break-word;
+        margin-top: 1px;
+        white-space: pre-wrap;
+    }
+    .ctfpad-chat-message-container::before {
+    	display: block;
+        content: attr(data-who) ":\00A0";
+        font-size: small;
+        font-weight: bold;
+        text-decoration-line: underline;
+        text-decoration-color: inherit;
+        text-decoration-style: double;
+        border-left-width: 1em;
+        border-left-style: solid;
+        border-left-color: inherit;
+        padding-left: 1px;
+        margin-left: -1em;
+        margin-bottom: 1px;
+    }
+    .ctfpad-chat-message-container:nth-of-type(5n)::before {
+    	display: block!important;
+    }
+    .ctfpad-chat-message-container[data-show-nickname]::before {
+    	display: inline-block!important;
+        content: attr(data-who);
+        margin-right: 1ex;
+    }
+    .ctfpad-chat-message-container:hover::after {
+    	display: block;
+        content: attr(data-who) " " attr(data-where) "@" attr(data-when);
+        font-size: xx-small;
+    }
+    .ctfpad-chat-message-container[data-highlight="true"] {
+      background: lightgoldenrodyellow;
+    }
+    .ctfpad-quote-code {
+      color: darkred;
+      font-family: monospace;
+      outline: 1px solid palegoldenrod;
+      background-color: lightyellow;
+      display: inline-block;
+    }
+    .ctfpad-quote-bold {
+      font-weight: bold;
+    }
+    .ctfpad-quote-italics {
+      font-style: italic;
+    }
+    .ctfpad-quote-strike {
+      text-decoration: line-through;
+    }
+    .ctfpad-chat-input {
+    	max-width: calc(100% - 50px);
+        width: 100%;
+    }
+    .ctfpad-quote-emoji {
+      display: inline-block;
+    }
+    .ctfpad-chat-message-container:not(:hover) .ctfpad-quote-emoji {
+      transform: rotate(90deg);
+      transition: all 0.3s linear 1s;
+      color: black;
+      border: 1px solid #fcc21b;
+      background: #fcc21b;
+      border-radius: 2ex 1ex 1ex 2ex;
+      min-width: 3ex;
+      height: 3ex;
+      white-space: nowrap;
+      vertical-align: middle;
+      text-align: center;
+      font-size: x-small;
+      overflow: hidden;
+      line-height: 3ex;
+      font-weight: bold;
+      font-family: cursive;
+    }
+    .ctfpad-chat-message-container:not(:hover) .ctfpad-quote-emoji[data-hair] {
+    	border-left-color: black;
+        border-left-width: 1ex;
+    }
+    #taskView {
+      width: 100%;
+      height: calc(100vh - 56px);
+      display: flex;
+      flex-direction: column;
+    }
+    #taskView[data-chat-minimize="true"] #taskChatCard {
+      max-height: 60px;
+    }
+    #taskView[data-chat-minimize="true"] .ctfpad-chat-new {
+      display: none;
+    }
+    #taskView[data-chat-minimize="true"] .ctfpad-chat-box {
+      display: none;
+    }
+    #taskView[data-chat-fullscreen="true"] .firepad {
+    	display: none;
+    }
+    #taskView[data-chat-fullscreen="true"] .ctfpad-fullscreen-on {
+    	display: none;
+    }
+    #taskView[data-chat-fullscreen="false"] .ctfpad-fullscreen-off {
+    	display: none;
+    }
+    .ctfpad-task-alert-menu i {
+    	vertical-align: middle;
+    }
+    #taskView[data-done="true"] .ctfpad-task-view-done {
+      display: none;
+    }
+    #taskView[data-done="false"] .ctfpad-task-view-undo {
+      display: none;
+    }
+    #taskView[data-help="false"] .ctfpad-task-help-yes {
+      display: none;
+    }
+    #taskView[data-help="true"] .ctfpad-task-help-no {
+      display: none;
+    }
+    #taskView[data-almost="false"] .ctfpad-task-almost-yes {
+      display: none;
+    }
+    #taskView[data-almost="true"] .ctfpad-task-almost-no {
+      display: none;
+    }
+    .ctfpad-task-view-pad {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .ctfpad-task-view-pad > div {
+      width: 100%;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      min-height: 100%;
+      flex: 1 1 auto;
+      display: flex;
+    }
+    #task-firepad {
+      min-height: 100%;
+      width: 100%;
+    }
+    #team-firepad {
+      width: 100%;
+      height: 8em;
+      font-size: 20pt;
+    }
+    a.powered-by-firepad {
+      display: none;
+    }
+    .task-list {
+      flex-direction: row;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .ctfpad-task-chip i {
+    	vertical-align: middle;
+        display: none;
+    }
+    .ctfpad-task-chip[data-done="true"] .ctfpad-task-chip-done {
+    	display: inline-block;
+    }
+    .ctfpad-task-chip[data-help="true"] .ctfpad-task-chip-help {
+    	display: inline-block;
+    }
+    .ctfpad-task-chip[data-almost="true"] .ctfpad-task-chip-almost {
+    	display: inline-block;
+    }
+    .ctfpad-task-notification-toggle:checked ~ .ctfpad-task-notification-no {
+    	display: none;
+    }
+    .ctfpad-task-notification-toggle:not(:checked) ~ .ctfpad-task-notification-yes {
+    	display: none;
+    }
+    .ctfpad-team-mates {
+      margin: 0 10px;
+      max-width: calc(100% - 100px);
+      overflow-x: auto;
+      white-space: nowrap;
+      display: flex;
+    }
+    .ctfpad-team-mates::-webkit-scrollbar {
+      	height: 1ex;
+	}
+    .ctfpad-team-mates::-webkit-scrollbar-thumb {
+    	border: 1px solid white;
+	}
+    .ctfpad-mate-chip {
+    	margin: 0 5px;
+        flex: 0 0;
+    }
+    .ctfpad-mate-chip[data-icon="task"] {
+    	order: 1;
+    }
+    .ctfpad-mate-chip[data-icon="away"] {
+    	order: 2;
+    }
+    .ctfpad-mate-chip[data-icon="online"][data-radio="true"] {
+    	order: 1;
+    }
+    .ctfpad-mate-chip[data-icon="online"][data-radio="false"] {
+    	order: 2;
+    }
+    .ctfpad-mate-chip-icon {
+    	display: none;
+        vertical-align: text-bottom;
+        color: white;
+        text-shadow: 0 0 3px black;
+    }
+    .ctfpad-mate-chip[data-icon="online"][data-radio="true"] .ctfpad-mate-mic, .ctfpad-mate-chip[data-icon="online"][data-radio="false"] .ctfpad-mate-pen, .ctfpad-mate-chip[data-icon="task"] .ctfpad-mate-task, .ctfpad-mate-chip[data-icon="away"] .ctfpad-mate-away {
+    	display: inline;
+    }
+    .ctfpad-radio-buttons {
+      width: 100%;
+      margin: auto;
+      align-items: center;
+    }
+    #radioOn[data-muted="true"] .speaking {
+    	display: none;
+    }
+    #radioOn:not([data-muted="true"]) .muted {
+    	display: none;
+    }
+    .demo-card-square.mdl-card {
+      min-width: 100px;
+      min-height: 200px;
+      flex-grow: 1;
+      flex-shrink: 1;
+      flex-basis: 200px;
+      margin: 10px;
+    }
+    .demo-card-square > .mdl-card__title {
+      color: #fff;
+      background: #46B6AC;
+    }
+    .ctfpad-add-task {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      margin: 20px;
+      z-index: 100;
+    }
+    #loading {display: none;width: 100%;}
+    body[data-loading="true"] #loading {display: block;}
+    body[data-loading="true"] #loaded {display: none;}
+  </style>
+  <style>
+    .scene .koala {
+      bottom: 150%;
+      transition: none;
+    }
+    .scene[data-dropbear="true"] .koala {
+      bottom: -150%;
+      transition: all linear 5s;
+    }
+    .koala {
+      --koala-color: grey;
+      --koala-head-size: 50px;
+      --koala-head-angle: -30deg;
+      --koala-ear-size: calc(var(--koala-head-size)*0.3);
+      --koala-ear-position-x: -44%;
+      --koala-ear-position-y: -14%;
+      --koala-nose-size: calc(var(--koala-head-size)*0.5);
+      --koala-nose-width: 0.5;
+      --koala-nose-position: 20%;
+      --koala-mouth-size: calc(var(--koala-nose-size)*0.6);
+      --koala-mouth-position: 15%;
+      --koala-mouth-width: calc(var(--koala-head-size)*0.025);
+      --koala-body-height: calc(var(--koala-head-size)*0.9);
+      --koala-body-width: calc(var(--koala-head-size)*0.4);
+      --koala-arm-left-width: calc(var(--koala-head-size)*0.21);
+      --koala-arm-right-width: calc(var(--koala-head-size)*0.17);
+      --koala-arm-right-length: calc(var(--koala-head-size)*0.67);
+      --koala-arm-left-length: calc(var(--koala-head-size)*0.58);
+      --koala-finger-length: calc(var(--koala-head-size)*0.03);
+      --koala-finger-width: calc(var(--koala-head-size)*0.015);
+      --koala-leg-width: calc(var(--koala-head-size)*0.18);
+      --koala-leg-left-length: calc(var(--koala-head-size)*0.34);
+      --koala-leg-right-length: calc(var(--koala-head-size)*0.5);
+      left: 50%;
+      right: 50%;
+      position: fixed;
+      z-index: 1000;
+    }
+    .koala-head {
+      border: 1px solid white;
+      height: var(--koala-head-size);
+      width: var(--koala-head-size);
+      transform: translateX(calc(-0.5 * var(--koala-head-size))) rotate(var(--koala-head-angle));
+      transform-origin: 50% 100%;
+      background: var(--koala-color);
+    }
+    .koala-ear-right, .koala-ear-left {
+      border: var(--koala-ear-size) solid var(--koala-color);
+      height: 0;
+      width: 0;
+      border-radius: 100%;
+      margin: var(--koala-ear-position-y) var(--koala-ear-position-x);
+      z-index: 2;
+    }
+    .koala-ear-right {
+      float: right;
+    }
+    .koala-eye-right, .koala-eye-left {
+      position: absolute;
+      height: 0;
+      width: 0;
+      border: calc(var(--koala-nose-size)/20) solid black;
+      border-radius: 100%;
+      right: 22%;
+      bottom: 60%;
+    }
+    .koala-eye-left {
+      left: 22%;
+      bottom: 60%;
+    }
+    .koala-nose {
+      border: var(--koala-nose-size) solid transparent;
+      border-bottom-color: black;
+      border-radius: 100%;
+      height: 0;
+      width: 0;
+      transform: scale(var(--koala-nose-width), 1);
+      position: absolute;
+      bottom: var(--koala-nose-position);
+      left: calc(var(--koala-head-size)/2 - var(--koala-nose-size));
+    }
+    .koala-mouth {
+      height: 0;
+      width: 0;
+      width: var(--koala-mouth-size);
+      border: var(--koala-mouth-width) solid black;
+      border-right: 0;
+      border-left: 0;
+      position: absolute;
+      bottom: var(--koala-mouth-position);
+      left: calc(var(--koala-head-size)/2 - var(--koala-mouth-size)/2);
+    }
+    .koala-body {
+      background: var(--koala-color);
+      height: var(--koala-body-width);
+      width: var(--koala-body-height);
+      transform: skew(calc(90deg - var(--koala-head-angle)), 0) translateY(calc(-1*var(--koala-head-size)/4));
+      transform-origin: 0 0;
+      border: 1px solid white;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: -2;
+    }
+    .koala-arm-right, .koala-arm-left {
+      background: var(--koala-color);
+      position: absolute;
+      transform: skew(60deg);
+      z-index: -1;
+    }
+    .koala-arm-right {
+      height: var(--koala-arm-right-width);
+      width: var(--koala-arm-right-length);
+      bottom: 0;
+      right: 100%;
+      transform-origin: 100% 100%;
+    }
+    .koala-arm-left {
+      height: var(--koala-arm-left-length);
+      width: var(--koala-arm-left-width);
+      bottom: 100%;
+      left: 0;
+      transform-origin: 0 100%;
+    }
+    .koala-hand-right, .koala-hand-left, .koala-foot {
+      position: absolute;
+      display: flex;
+    }
+    .koala-hand-right {
+      right: 100%;
+      height: 100%;
+      flex-direction: column;
+    }
+    .koala-hand-left {
+      bottom: 100%;
+      width: 100%;
+      flex-direction: row;
+    }
+    .koala-leg-right, .koala-leg-left {
+      height: var(--koala-leg-width);
+      width: var(--koala-leg-right-length);
+      position: absolute;
+      background: var(--koala-color);
+      bottom: 0;
+      left: 100%;
+      transform: skew(60deg);
+      transform-origin: bottom left;
+    }
+    .koala-leg-left {
+      top: 0;
+      width: var(--koala-leg-left-length);
+    }
+    .koala-foot {
+      left: 100%;
+      height: 100%;
+      flex-direction: column;
+    }
+    .koala-finger {
+      border: var(--koala-finger-width) solid black;
+      background: black;
+    }
+    .koala-hand-right .koala-finger {
+      height: 0;
+      width: var(--koala-finger-length);
+      margin: auto 0;
+    }
+    .koala-hand-left .koala-finger {
+      height: var(--koala-finger-length);
+      width: 0;
+      margin: 0 auto;
+    }
+    .koala-foot .koala-finger {
+      height: 0;
+      width: var(--koala-finger-length);
+      margin: auto 0;
+    }
+    #fileElement {
+      position: absolute;
+      visibility: hidden;
+      height: 1;
+      width: 1;
+      top: 0;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.css" />
+</head>
+<body class="scene" data-loading="true">
+  <div class="koala">
+    <div class="koala-head">
+      <div class="koala-ear-right"></div>
+      <div class="koala-ear-left"></div>
+      <div class="koala-eye-right"></div>
+      <div class="koala-eye-left"></div>
+      <div class="koala-nose"></div>
+      <div class="koala-mouth"></div>
+    </div>
+    <div class="koala-body">
+      <div class="koala-chest"></div>
+      <div class="koala-arm-right">
+        <div class="koala-hand-right">
+          <div class="koala-finger"></div>
+          <div class="koala-finger"></div>
+          <div class="koala-finger"></div>
+        </div>
+      </div>
+      <div class="koala-arm-left">
+        <div class="koala-hand-left">
+          <div class="koala-finger"></div>
+          <div class="koala-finger"></div>
+          <div class="koala-finger"></div>
+        </div>
+      </div>
+      <div class="koala-leg-right">
+        <div class="koala-foot">
+          <div class="koala-finger"></div>
+          <div class="koala-finger"></div>
+          <div class="koala-finger"></div>
+        </div>
+      </div>
+      <div class="koala-leg-left">
+        <div class="koala-foot">
+          <div class="koala-finger"></div>
+          <div class="koala-finger"></div>
+          <div class="koala-finger"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="loading" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+  <div id="loaded" class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+      <div class="mdl-layout__header-row">
+        <div id="ctfpadTeamMates" class="ctfpad-team-mates"></div>
+        <div class="mdl-layout-spacer"></div>
+        <button id="inviteButtonMenu"
+                class="mdl-button mdl-js-button mdl-button--icon">
+          <i class="material-icons">person_add</i>
+        </button>
+        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="inviteButtonMenu">
+          <li onclick="inviteByEmail()" class="mdl-menu__item">Invite by email</li>
+          <li onclick="inviteByLink()" class="mdl-menu__item">Invite by link</li>
+        </ul>
+        <div class="mdl-tooltip" data-mdl-for="inviteButtonMenu">
+          Invite your mates to this team
+        </div>
+        <button onclick="timerDialog.showModal()" id="timerButton" class="mdl-button mdl-js-button mdl-button--icon">
+          <i class="material-icons">timer</i>
+        </button>
+        <div class="mdl-tooltip" data-mdl-for="timerButton">
+          Change the CTF countdown
+        </div>
+      </div>
+    </header>
+    <div class="mdl-layout__drawer ctfpad-sidebar">
+      <div class="ctfpad-radio mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title mdl-card--expand">
+          <h4>
+            <i class="material-icons">radio</i> Billabong!
+          </h4>
+        </div>
+        <div class="mdl-card__supporting-text">
+          Radio channel with all your mates<br/>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <div class="ctfpad-radio-buttons" id="radioOn" style="display: none;">
+            <button accesskey="m" onclick="radioMuteMicrophone()" class="speaking mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" id="muteMicrophone">
+              <i class="material-icons">mic_off</i>
+            </button>
+            <div class="mdl-tooltip mdl-tooltip--large mdl-tooltip--top" for="muteMicrophone">
+              Mute your microphone
+            </div>
+            <button accesskey="m" onclick="radioMuteMicrophone()" class="muted mdl-color--pink mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" id="unmuteMicrophone">
+              <i class="material-icons">mic_off</i>
+            </button>
+            <div class="mdl-tooltip mdl-tooltip--large mdl-tooltip--top" for="unmuteMicrophone">
+              Unmute your microphone
+            </div>
+            <button accesskey="h" onclick="endRadio()" class="mdl-button mdl-js-button mdl-button--fab mdl-color--pink mdl-js-ripple-effect" id="endRadio">
+              <i class="material-icons">call_end</i>
+            </button>
+            <div class="mdl-tooltip mdl-tooltip--large mdl-tooltip--top	" for="endRadio">
+              Disconnect from the call
+            </div>
+          </div>
+          <div class="ctfpad-radio-buttons" id="radioOff" style="display: flex;">
+            <button accesskey="v" onclick="startRadio()" class="mdl-button mdl-js-button mdl-button--fab mdl-color--teal mdl-js-ripple-effect" id="startRadio">
+              <i class="material-icons">call_start</i>
+            </button>
+            <div class="mdl-tooltip mdl-tooltip--large mdl-tooltip--top	" for="startRadio">
+              Join the call
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="chatCard" data-filter="" class="ctfpad-chat mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+          <h4>
+            <i class="material-icons">chat_bubble_outline</i> The Goss
+          </h4>
+        </div>
+        <div class="ctfpad-chat-box mdl-card__actions mdl-color-text--grey-600">
+          <div id="chatMessages" class="ctfpad-chat-messages">
+            <div class="ctfpad-chat-filler"></div>
+            <div id="endOfChat"></div>
+          </div>
+          <form class="ctfpad-chat-new" action="javascript:" onsubmit="chatMessage.value&&sayChat(chatMessage.value,'');chatMessage.value='';">
+            <div class="ctfpad-chat-input mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input accesskey="a" autocomplete="off" class="mdl-textfield__input" type="text" id="chatMessage">
+              <label class="mdl-textfield__label" for="chatMessage">Announce something</label>
+            </div>
+            <button onclick="this.form.submit()" class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
+              <i class="material-icons">announcement</i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <main class="mdl-layout__content">
+      <div class="page-content">
+        <button accesskey="t" onclick="newTaskDialog.showModal()"  class="ctfpad-add-task mdl-button mdl-js-ripple-effect mdl-js-button mdl-button--fab mdl-color--accent" id="addTaskButton">
+          <i class="material-icons mdl-color-text--white" role="presentation">add</i>
+        </button>
+        <div class="mdl-tooltip mdl-tooltip--top mdl-tooltip--large	" for="addTaskButton">
+          Add new task
+        </div>
+        <div><div id="team-firepad"></div></div>
+        <div class=task-list>
+          <div class="demo-card-square mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title mdl-card--expand">
+              <h2 class="mdl-card__title-text">Pending</h2>
+            </div>
+            <div class="mdl-card__supporting-text" id="taskListPending">
+            </div>
+          </div>
+          <div class="demo-card-square mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title mdl-card--expand">
+              <h2 class="mdl-card__title-text">Active</h2>
+            </div>
+            <div class="mdl-card__supporting-text" id="taskListActive">
+            </div>
+          </div>
+          <div class="demo-card-square mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title mdl-card--expand">
+              <h2 class="mdl-card__title-text">Done</h2>
+            </div>
+            <div class="mdl-card__supporting-text" id="taskListDone">
+            </div>
+          </div>
+        </div>
+        <div class="mdl-card mdl-shadow--2dp" id="taskView" style="display: none;" data-chat-fullscreen="false">
+          <div class="mdl-card__title">
+            <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="taskNotificationToggle" id="taskNotificationLabel">
+              <input type="checkbox" id="taskNotificationToggle" class="mdl-icon-toggle__input ctfpad-task-notification-toggle" onchange="window.taskFavorites[window.currentTask]=this.checked;return Notification.permission=='default'?Notification.requestPermission():true">
+              <i class="mdl-icon-toggle__label material-icons ctfpad-task-notification-no">favorite_border</i>
+              <i class="mdl-icon-toggle__label material-icons ctfpad-task-notification-yes">favorite</i>
+            </label>
+            <div class="mdl-tooltip mdl-tooltip--right mdl-tooltip--large	" for="taskNotificationLabel">
+              Follow this task
+            </div>
+            <h2 class="mdl-card__title-text" id="taskNameTitle"></h2>
+          </div>
+          <div class="mdl-card__supporting-text mdl-card--expand ctfpad-task-view-pad">
+            <div id="task-firepad"></div>
+            <div id="taskChatCard" data-filter=""  class="ctfpad-chat mdl-card mdl-shadow--2dp">
+              <div class="ctfpad-chat-box mdl-card__actions mdl-color-text--grey-600">
+                <div id="taskChatMessages" class="ctfpad-chat-messages">
+                  <div class="ctfpad-chat-filler"></div>
+                  <div id="endOfTaskChat"></div>
+                </div>
+              </div>
+              <form class="ctfpad-chat-new mdl-card__actions mdl-card--border" action="javascript:" onsubmit="taskChatMessage.value&&sayChat(taskChatMessage.value,window.currentTask);taskChatMessage.value='';">
+                <div class="ctfpad-chat-input mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input accesskey="c" autocomplete="off" class="mdl-textfield__input" type="text" onpaste="var text=event.clipboardData.getData('text');if(text.split(/\n/).length>1&&confirm('Paste multiple lines into chat?')){event.preventDefault();sayChat(text, window.currentTask);}" id="taskChatMessage">
+                  <label class="mdl-textfield__label" for="taskChatMessage">Say something</label>
+                </div>
+                <button onclick="this.form.submit()" class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect mdl-button--colored">
+                  <i class="material-icons">chat</i>
+                </button>
+              </form>
+              <div class="mdl-card__menu">
+                <button onclick="taskView.dataset.chatMinimize=taskView.dataset.chatMinimize!='true';taskEditor.resize();" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                  <i class="material-icons">minimize</i>
+                </button>
+                <button onclick="taskView.dataset.chatFullscreen=!JSON.parse(taskView.dataset.chatFullscreen)" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                  <i class="material-icons ctfpad-fullscreen-on">fullscreen</i>
+                  <i class="material-icons ctfpad-fullscreen-off">fullscreen_exit</i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="mdl-card__actions mdl-card--border">
+            <button onclick="attachFile()" class="mdl-button mdl-js-button mdl-button--icon" id="taskAttachButton">
+              <i class="material-icons">attach_file</i>
+            </button>
+            <div class="mdl-tooltip mdl-tooltip--large mdl-tooltip--right" for="taskAttachButton">
+              Upload a file to the pad
+            </div>
+            <button onclick="startTaskVideo()" class="mdl-button mdl-js-button mdl-button--icon" id="taskVideoButton">
+              <i class="material-icons">tv</i>
+            </button>
+            <div class="mdl-tooltip mdl-tooltip--large mdl-tooltip--right" for="taskVideoButton">
+              Join the telly for this task
+            </div>
+            <button onclick="confirm('Are you sure you want to give this task to the garbo?')&&deleteTask()" class="mdl-button mdl-js-button mdl-button--icon" id="taskDeleteButton">
+              <i class="material-icons">delete</i>
+            </button>
+            <div class="mdl-tooltip mdl-tooltip--large mdl-tooltip--right" for="taskDeleteButton">
+              Give it to the garbo
+            </div>
+            <button class="ctfpad-task-view-done mdl-button mdl-js-button mdl-button--icon" id="taskAlertButton">
+              <i class="material-icons">add_alert</i>
+            </button>
+            <div class="mdl-tooltip mdl-tooltip--large  mdl-tooltip--right" for="taskAlertButton">
+              Create an alert for this task
+            </div>
+            <ul class="mdl-menu mdl-menu--top-left mdl-js-menu mdl-js-ripple-effect ctfpad-task-alert-menu" for="taskAlertButton">
+              <li onclick="helpTask()" class="mdl-menu__item">
+                <i class="material-icons">help_outline</i> Need help? (
+                  <span class="ctfpad-task-help-yes">yes</span>
+                  <span class="ctfpad-task-help-no">no</span>
+                )
+              </li>
+              <li onclick="almostTask()" class="mdl-menu__item">
+                <i class="material-icons">error_outline</i> Almost done! (
+                  <span class="ctfpad-task-almost-yes">yes</span>
+                  <span class="ctfpad-task-almost-no">no</span>
+                )
+              </li>
+            </ul>
+          </div>
+          <div class="mdl-card__menu">
+            <button onclick="markTaskDone()" class="ctfpad-task-view-done mdl-button mdl-js-button mdl-button--icon" id="taskDoneButton">
+              <i class="material-icons">done</i>
+            </button>
+            <div class="mdl-tooltip mdl-tooltip--large" for="taskDoneButton">
+              Mark task as done
+            </div>
+            <button onclick="markTaskNotDone()" class="ctfpad-task-view-undo mdl-button mdl-js-button mdl-button--icon" id="taskUndoButton">
+              <i class="material-icons">undo</i>
+            </button>
+            <div class="mdl-tooltip mdl-tooltip--large" for="taskUndoButton">
+              Move task to pending
+            </div>
+            <button accesskey="x" onclick="closeTask()" class="mdl-button mdl-js-button mdl-button--icon" id="taskCloseButton">
+              <i class="material-icons">close</i>
+            </button>
+            <div class="mdl-tooltip mdl-tooltip--large" for="taskCloseButton">
+              Close task
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <dialog class="mdl-dialog" id="nickNameDialog">
+    <h4 class="mdl-dialog__title">Join team?</h4>
+    <form onsubmit="initPad(localStorage.nickName=nickName.value); nickNameDialog.close();" id="nickname-form" action="javascript:" class="mdl-dialog__content">
+      <p>
+        Your nickname will be shared with all current participants.
+      </p>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input required autofocus onfocus="if(value=='')value=localStorage.nickName||''" class="mdl-textfield__input" type="text" id="nickName" pattern="^\w+$">
+        <label class="mdl-textfield__label" for="nickName">Nickname (alphanumeric)</label>
+      </div>
+      <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="notificationsCheckbox">
+        <input type="checkbox" id="notificationsCheckbox" class="mdl-switch__input" onclick="if(Notification.permission!='granted')Notification.requestPermission();return true;">
+        <span class="mdl-switch__label">Desktop notifications</span>
+      </label>
+    </form>
+    <div class="mdl-dialog__actions">
+      <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" form="nickname-form">Enter</button>
+      <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.hash='';location.reload(true);">Create New</button>
+    </div>
+  </dialog>
+  <dialog class="mdl-dialog" id="newTaskDialog">
+    <h4 class="mdl-dialog__title">New Task</h4>
+    <form class="mdl-dialog__content" onsubmit="addTask(taskCategory.value, taskName.value);newTaskDialog.close();taskName.value='';" action="javascript:" id="create-task-form">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" list="taskCategories" id="taskCategory">
+        <label class="mdl-textfield__label" for="taskCategory">Category</label>
+      </div>
+      <datalist id="taskCategories">
+        <option value="pwn"/>
+        <option value="misc"/>
+        <option value="crypto"/>
+        <option value="web"/>
+        <option value="reversing"/>
+      </datalist>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" required type="text" id="taskName">
+        <label class="mdl-textfield__label" for="taskName">Task name</label>
+      </div>
+    </form>
+    <div class="mdl-dialog__actions">
+      <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" form="create-task-form">Create</button>
+      <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="newTaskDialog.close()">Cancel</button>
+    </div>
+  </dialog>
+  <dialog class="mdl-dialog" id="timerDialog">
+    <h4 class="mdl-dialog__title">Change countdown</h4>
+    <form class="mdl-dialog__content" id="countdown-form" onsubmit="startTimer(dateTimer.value, timeTimer.value); timerDialog.close()" action="javascript:">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="date" id="dateTimer">
+        <label class="mdl-textfield__label" for="dateTimer">Date</label>
+      </div>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="time" id="timeTimer">
+        <label class="mdl-textfield__label" for="timeTimer">Time</label>
+      </div>
+    </form>
+    <div class="mdl-dialog__actions">
+      <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" form="countdown-form">Start</button>
+      <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="timerDialog.close()">Cancel</button>
+    </div>
+  </dialog>
+  <div id="ctfpad-notification" class="mdl-js-snackbar mdl-snackbar">
+    <div class="mdl-snackbar__text"></div>
+    <button class="mdl-snackbar__action" type="button"></button>
+  </div>
+  <div id="ctfpadradio"></div>
+  <input type="file" id="fileElement" multiple/>
+  <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace.js"></script>
+  <script src="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.min.js"></script>
+  <script src="https://meet.jit.si/external_api.js"></script>
+  <script>
+    var config = {
+      apiKey: "AIzaSyDcrn1aaIrAdAbKBG8WaaVDx2OawZ8kVYQ",
+      authDomain: "firepad-ctfpad.firebaseapp.com",
+      databaseURL: "https://firepad-ctfpad.firebaseio.com",
+      projectId: "firepad-ctfpad",
+      storageBucket: "firepad-ctfpad.appspot.com",
+      messagingSenderId: "930715579796"
+    };
+    // https://firebase.google.com/docs/database/web/start
+    var rules = {
+    	"rules":{
+    		"$secretid":{
+    			".read": true,
+    			".write": true
+			}
+		}
+	};
+    firebase.initializeApp(config);
+    function initPad(username) {
+      var firepadRef = firebase.database().ref();
+      var urlParams = new URLSearchParams(location.hash.slice(1));
+      var teamSecretKey = urlParams.get('teamSecretKey');
+      if (teamSecretKey) {
+        firepadRef = firepadRef.child(teamSecretKey);
+      } else {
+        firepadRef = firepadRef.push();
+        urlParams.set('teamSecretKey', firepadRef.key);
+        location.hash = urlParams;
+      }
+      var timerRef = firepadRef.child('timer');
+      var timerTime = 0;
+      var timerNotified = false;
+      function updateTimer() {
+        var left = timerTime - new Date().getTime();
+        if (left <= 0) {
+          if (!timerNotified && timerTime) {
+            sendNotification(
+              'The CTF is over! Time to shut eye =D', {
+              	body: '¯\\_(ツ)_/¯',
+                requireInteraction: true
+              }, '');
+            timerNotified = true;
+          }
+          left = timerTime = 0;
+        }
+        var secs = (left/1e3%60)|0;
+        var mins = ((left/60e3)%60)|0;
+        var hours = (left/3600e3)|0;
+        if (timerTime) {
+        	document.title = `CTFmate: ${hours}h:${mins}m:${secs}s`;
+        }
+      }
+      setInterval(updateTimer, 1e3);
+      window.startTimer = function(dateString, timeString) {
+      	if(!dateString || !timeString)return;
+        var countdown = new Date(`${dateString} ${timeString}`);
+        firepadRef.child('timer').set(countdown.getTime());
+      };
+      timerRef.on('value', function(snap) {
+      	timerTime = snap.val();
+        timerNotified = false;
+        var datetime = new Date(timerTime);
+        var days = new Date(
+        	datetime.getFullYear(),
+            datetime.getMonth(),
+            datetime.getDate() + 1);
+        var seconds = datetime.getTime()-days.getTime();
+        document.getElementById('dateTimer').valueAsDate = days;
+        document.getElementById('timeTimer').valueAsNumber = seconds;
+      });
+      var lastTaskChecked = '';
+      function remindTakingNotes() {
+      	if (!window.currentTask) return;
+        if (window.currentTask == lastTaskChecked) {
+          notElem.MaterialSnackbar.showSnackbar({
+            message: 'Don\'t forget to leave some notes for this task ;)',
+          });
+        }
+      }
+      setInterval(remindTakingNotes, 600e3);
+      var chatRef = firepadRef.child('chat');
+      var taskListRef = firepadRef.child('tasks');
+      var taskFavorites = window.taskFavorites;
+      var userListRef = firepadRef.child('users');
+      var taskPadsRef = firepadRef.child('taskpads');
+      var myUserRef = userListRef.push();
+      myUserRef.onDisconnect().remove();
+      myUserRef.set({who: username, radio: false});
+      var userElems = {};
+      var avatarElems = {};
+      var nicknameKeys = {};
+      var userColors = {};
+      var repeatStyle = {};
+      var notElem = document.getElementById('ctfpad-notification');
+      var wasOffline = false;
+      var wasOnline = false;
+      var connectedRef = firebase.database().ref('.info/connected');
+      connectedRef.on('value', function(snap) {
+        if (snap.val() === true) {
+          console.log('Connected');
+          if (wasOnline && wasOffline) {
+          	if (confirm('Internet is back, reload page?')) {
+          		location.reload(true);
+            }
+          }
+          wasOnline = true;
+        } else {
+          wasOffline = true;
+          console.log('Lost internet connection');
+          if (wasOnline) {
+            notElem.MaterialSnackbar.showSnackbar({
+              message: 'You are currently offline',
+              timeout: 3600e3,
+              actionHandler: function() {
+                location.reload(true);
+              },
+              actionText: 'Reload'
+            });
+          }
+        }
+      });
+      var editor = ace.edit('team-firepad');
+      editor.session.setMode("ace/mode/markdown");
+      editor.getSession().setUseWrapMode(true);
+      editor.setShowPrintMargin(false);
+      editor.setOption('showGutter', false);
+      var firepad = Firepad.fromACE(firepadRef, editor, {
+        userId: myUserRef.key,
+        defaultText:
+`CTF Details
+===========
+*Scoreboard*
+ - http://...
+*Credentials*
+ - user/password
+`});
+      firepad.on('ready', function() {
+        document.body.dataset.loading = false;
+        document.getElementById('endOfChat').scrollIntoView();
+        localStorage.notificationsEnabled = document.getElementById('notificationsCheckbox').checked;
+      });
+      chatRef.on('child_added', function(entry) {
+        var chat = entry.val();
+        showChat(chat.what, chat.who, chat.when, chat.where, chat.color);
+      });
+      window.showChat = function(what, who, when, where, color) {
+        var div = document.createElement('div');
+        var endOfChat = document.getElementById('endOfChat');
+        var endOfTaskChat = document.getElementById('endOfTaskChat');
+        div.className = 'ctfpad-chat-message-container';
+        var quoteRegExp = /(?:(?<quote>```|`|\*\*|\*|~~|__|_)(?<text>[\s\S]*?)\k<quote>)/;
+        var linkRegExp = /(?<url>(?:\bhttps?:\/\/(?:[^\s@/?#\\]*@)?(?:[.\w[\]:-]+)|\bwww[.][\w.:-]+)(?:[\/?#][^\s()]*?(?:\([^\s)]*\)|[^\s])*?(?=[)]?[.,?)](?:\s|$)|(?:\s|$)))?)/;
+        var emojiRegExp = /(?<emoji>(?:^|\b(?=\w)|\B(?=\W))[(]?[=:;8x]['_`"]?[¬"'^vox-]?[{}]?[)(o|¦!DSXCP/\\*#@?](?=\s|$))/;
+        var formatRegExp = new RegExp([
+          quoteRegExp.source, linkRegExp.source, emojiRegExp.source
+        ].join('|'),'ig');
+        var whatNode = div.appendChild(document.createTextNode(what));
+        var ranges = [];
+        var quoteClass = {
+          '`': 'ctfpad-quote-code',
+          '```': 'ctfpad-quote-code',
+          '*': 'ctfpad-quote-italics',
+          '_': 'ctfpad-quote-italics',
+          '**': 'ctfpad-quote-bold',
+          '__': 'ctfpad-quote-bold',
+          '~~': 'ctfpad-quote-strike'
+        };
+        what.replace(formatRegExp,
+        (match, quotes='', text='', url, emoji, offset)=> {
+          ranges.unshift(document.createRange());
+          var start = offset + quotes.length;
+          var end = offset + match.length - quotes.length;
+          ranges[0].setStart(whatNode, start);
+          ranges[0].setEnd(whatNode, end);
+          ranges[0].quoteClass = quoteClass[quotes];
+          ranges[0].link = url;
+          ranges[0].emoji = emoji;
+        });
+        var quoteNodes = ranges.map(range=>{
+          if (range.link) {
+          	var a = document.createElement('a');
+            var url = range.link;
+            if (url.indexOf('www.') == 0) {
+            	url = '//' + url;
+            }
+            a.href = url;
+            a.target = '_blank';
+            range.surroundContents(a);
+          } else {
+            var span = document.createElement('span');
+            if (range.quoteClass) {
+            	span.className = range.quoteClass;
+                span.setAttribute('onclick', `var r=document.createRange(), s=getSelection();r.selectNode(this);s.removeAllRanges();s.addRange(r);`);
+            } else if (range.emoji) {
+            	if (range.emoji.indexOf('(') == 0) {
+                	span.dataset.hair = true;
+                }
+            	span.className = 'ctfpad-quote-emoji';
+            }
+            range.surroundContents(span);
+          }
+        });
+        div.style.textDecorationColor = color || 'transparent';
+        div.style.borderLeftColor = color || 'transparent';
+        div.dataset.who = who || 'CTFmate';
+        div.dataset.when = when?new Date(when).toLocaleString():'';
+        div.dataset.where = where||'';
+        div.dataset.color = color;
+        if (!repeatStyle[`${color}-${who}-${where}`]) {
+          repeatStyle[`${color}-${who}-${where}`] = true;
+          document.getElementById('ctfPadCustomStyles').sheet.insertRule(`.ctfpad-chat-message-container[data-who=${JSON.stringify(who)}][data-color=${JSON.stringify(color)}][data-where=${JSON.stringify(where)}] + .ctfpad-chat-message-container[data-who=${JSON.stringify(who)}][data-color=${JSON.stringify(color)}][data-where=${JSON.stringify(where)}]::before{display:none;}`);
+        }
+        var mentioned = (what.match(/@\w+/g)||[]).some(mention=>{
+          if(mention==`@${username}` || mention=='@everyone') {
+            sendNotification(
+            	`${who} mentioned you on #${where||'The Goss'}`,
+                {
+                	body: what,
+                    vibrate: [100],
+                    requireInteraction: true,
+                }, where);
+            return true;
+          }
+        });
+        var blacklist = [
+          'dropped a bear', 'rocked up', 'shot through', 'joined the telly', 'gave this task to the garbo'
+        ].indexOf(what);
+        if (blacklist > -1) {
+          div.dataset.showNickname = true;
+          document.body.dataset.dropbear = !blacklist;
+        } else if (!mentioned && taskFavorites[where] && who != username) {
+          sendNotification(`#${where}`, {
+            body: `${who}: ${what}`,
+            renotify: true,
+            tag: `${where}`
+          }, where);
+        }
+        div.dataset.highlight = mentioned;
+        document.getElementById('chatMessages').insertBefore(
+        	div.cloneNode(true), endOfChat);
+        document.getElementById('taskChatMessages').insertBefore(
+        	div.cloneNode(true), endOfTaskChat);
+        endOfChat.scrollIntoView();
+        endOfTaskChat.scrollIntoView();
+      };
+      window.sayChat = function(what, where) {
+        chatRef.push({
+          who: username,
+          what: what,
+          when: firebase.database.ServerValue.TIMESTAMP,
+          where: where||'',
+          color: userColors[myUserRef.key]
+        });
+      };
+      var audioContext = new AudioContext;
+      var oscillator = audioContext.createOscillator();
+      oscillator.frequency.value = 987.77;
+      var gain = audioContext.createGain();
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+      oscillator.start(audioContext.currentTime);
+      audioContext.suspend();
+      var beeping = false;
+      function beep() {
+        if(beeping)
+        	return;
+        beeping = true;
+        audioContext.resume();
+        gain.gain.exponentialRampToValueAtTime(
+        	1, audioContext.currentTime + 0.01);
+        gain.gain.exponentialRampToValueAtTime(
+        	0.001, audioContext.currentTime + 0.5);
+        setTimeout(_=>{
+          audioContext.suspend();
+          beeping = false;
+        },600);
+      }
+      window.sendNotification = function(title, options, where) {
+      	var notificationsEnabled = document.getElementById('notificationsCheckbox').checked;
+        var isFavorite = taskFavorites[where];
+        var hasPermission = Notification.permission == 'granted';
+        var isLoading = document.body.className == 'loading';
+        if (!hasPermission ||
+        	isLoading ||
+            (!notificationsEnabled && !isFavorite)) {
+        	console.log(
+            	'Silenced notification:',
+                where, title, options.body);
+            return;
+        }
+      	try { var notif = new Notification(title, options); } catch(e) {console.error(e);}
+        if (where && where != window.currentTask) {
+          taskElemsByName[where].dataset.badge = -~taskElemsByName[where].dataset.badge;
+        }
+		beep();
+      };
+      function updateFilter() {
+        var chatCard = document.getElementById('taskChatCard');
+        if(chatCard.hasAttribute('data-filter')) {
+        	chatCard.dataset.filter = window.currentTask||'';
+        }
+        var endOfChat = document.getElementById('endOfChat');
+        endOfChat.scrollIntoView();
+        var endOfTaskChat = document.getElementById('endOfTaskChat');
+        endOfTaskChat.scrollIntoView();
+      }
+      window.currentTask_ = '';
+      Object.defineProperty(window, 'currentTask', {
+        get: function() {
+        	return this.currentTask_;
+        },
+        set: function(t) {
+        	setTimeout(updateFilter, 1);
+            return this.currentTask_ = t;
+        }
+      });
+      var taskNames = {};
+      window.addTask = function(category, name) {
+      	var title = category + ':' + name;
+        if (taskNames[title]) {
+          return showChat(
+          	'Error: Task already exists: `'+title+'`', '', '', 'broadcast');
+        }
+        taskListRef.push({
+          category: category,
+          name: name,
+          taskpad: taskPadsRef.push().key,
+          done: false,
+          help: false,
+          almost: false
+        });
+        sayChat('added task `' + title + '`', '');
+      };
+      var taskElemsByName = {};
+      window.showTask = function(task, entryRef, title) {
+        try {window.closeTask();}catch(e){}
+        window.currentTask = title;
+        delete taskElemsByName[title].dataset.badge;
+        document.getElementById('taskNotificationToggle').checked = taskFavorites[title];
+        var taskView = document.getElementById('taskView');
+        var taskpad = task.taskpad;
+        var taskUsersRef = entryRef.child('users');
+        var active = taskUsersRef.push();
+        active.onDisconnect().remove();
+        active.set({user: myUserRef.key});
+        var padRef = taskPadsRef.child(taskpad);
+        var div = document.getElementById('task-firepad');
+        var editor = ace.edit('task-firepad');
+        editor.session.setMode("ace/mode/markdown");
+        editor.getSession().setUseWrapMode(true);
+        editor.setShowPrintMargin(false);
+        editor.setOption('showGutter', false);
+        editor.focus();
+        window.taskEditor = editor;
+        var firepad = Firepad.fromACE(padRef, editor, {
+          userId: myUserRef.key,
+          defaultText: 
+`## Description
+
+
+
+## Notes
+
+
+`});
+        var taskTitle = document.getElementById('taskNameTitle');
+        var newTitle = taskTitle.cloneNode(false);
+        newTitle.appendChild(document.createTextNode(title));
+        taskTitle.parentNode.replaceChild(newTitle, taskTitle);
+        document.getElementById('taskView').style.display = 'flex';
+        document.getElementById('taskView').setAttribute(
+        	'data-done', task.done);
+        document.getElementById('taskView').setAttribute(
+        	'data-help', task.help);
+        document.getElementById('taskView').setAttribute(
+        	'data-almost', task.almost);
+        sayChat('is hacking `' + title + '`');
+        document.getElementById('taskView').scrollIntoView();
+        var mapping = {};
+        function getUserKey(entry) {
+        	var value = entry.val();
+            if (!value) value = mapping[entry.key];
+            mapping[entry.key] = value;
+            return value.user;
+        }
+        function updateIconOnline(entry) {
+        	var userKey = getUserKey(entry);
+            setUserIcons({[userKey]:'task'});
+        }
+        function updateIconOffline(entry) {
+        	var userKey = getUserKey(entry);
+            setUserIcons({[userKey]:'away'});
+        }
+        setUserIcons({'default':'away'});
+        taskUsersRef.on('child_added', updateIconOnline);
+        taskUsersRef.on('child_removed', updateIconOffline);
+        window.closeTask = function() {
+          window.currentTask = '';
+          active.onDisconnect().cancel();
+          active.remove();
+          taskUsersRef.off();
+          setUserIcons({'default':'online'});
+          document.getElementById('taskView').style.display = 'none';
+          firepad.dispose();
+          div.parentElement.replaceChild(div.cloneNode(false), div);
+          sayChat('stopped hacking `' + title + '`', '');
+        };
+        window.deleteTask = function() {
+          closeTask();
+          entryRef.remove();
+          sayChat('gave this task to the garbo', title);
+          sayChat('gave task `' + title + '` to the garbo', '');
+        };
+        window.markTaskDone = function() {
+          var flag = prompt('What is the flag?', '');
+          if (flag == undefined) return;
+          if(flag) {
+          	editor.session.insert({
+            	row: editor.session.getLength(), column: 0
+            }, '\n## Flag\n' + flag + '\n');
+          }
+          closeTask();
+          entryRef.child('done').set(true);
+          sayChat('task pwnd! `' + title + '`', '');
+          var reactions = ['Ace!', 'Bonza!', 'Reaper!', 'U-Beaut!'];
+          sayChat(
+          	reactions[Math.floor(Math.random()*reactions.length)] +
+            '! task pwnd!' + (flag?' flag was: `'+flag+'`':''), title);
+        };
+        window.markTaskNotDone = function() {
+          closeTask();
+          entryRef.child('done').set(false);
+          sayChat('task undone :( `' + title + '`', '');
+          sayChat('task undone :( ', title);
+        };
+        window.startTaskVideo = function() {
+          try{endRadio();}catch(e){}
+          open('https://meet.jit.si/CTFmate-task-'+taskpad);
+          sayChat('joined the telly for `' + title + '`', '');
+          sayChat('joined the telly', title);
+        };
+        window.helpTask = function() {
+        	entryRef.child('help').set(
+            	taskView.dataset.help=task.help=!task.help);
+            notElem.MaterialSnackbar.showSnackbar({
+              message: !task.help?'Not asking for help':'Asking for help',
+              timeout: 2000,
+              actionHandler: function() {
+                entryRef.child('help').set(
+                  taskView.dataset.help=task.help=!task.help);
+              },
+              actionText: 'Undo'
+            });
+        };
+        window.almostTask = function() {
+        	entryRef.child('almost').set(
+            	taskView.dataset.almost=task.almost=!task.almost);
+            notElem.MaterialSnackbar.showSnackbar({
+              message: !task.almost?'Not almost done :(':'Almost done!',
+              timeout: 2000,
+              actionHandler: function() {
+              	entryRef.child('almost').set(
+            		taskView.dataset.almost=task.almost=!task.almost);
+              },
+              actionText: 'Undo'
+            });
+        };
+        var github = new firebase.auth.GithubAuthProvider();
+        github.addScope('gist');
+        var githubToken = localStorage.getItem('githubToken');
+        function getGithubToken() {
+          firebase.auth().signInWithPopup(github).then(function(res) {
+            githubToken = res.credential.accessToken;
+            localStorage.setItem('githubToken', githubToken);
+          });
+        }
+        function readBlob(blob) {
+          return new Promise(function (res, rej) {
+            var reader = new FileReader();
+            reader.addEventListener("loadend", function() {
+              var decoder = new TextDecoder('utf-8', {fatal: true});
+              try {
+              	res([blob.name, decoder.decode(reader.result)]);
+              } catch(e) {
+              	rej(e);
+              }
+            });
+            reader.readAsArrayBuffer(blob);
+          });
+        }
+        function uploadToGithub(files) {
+          var filenames = [];
+          var payload = {
+            "description": "CTFmate " + title,
+            "public": false,
+            "files": files.reduce(function(dict, f) {
+              filenames.push(f[0]);
+              dict[f[0]] = {content:f[1]};
+              return dict;
+            }, {})
+          };
+          fetch(
+            'https://api.github.com/gists',
+            {
+              method: 'POST',
+              body: JSON.stringify(payload),
+              headers: {
+                Authorization: 'token ' + githubToken,
+                'Content-Type': 'application/json'
+              }
+            })
+            .then(function(res){return res.json()})
+            .then(function(json){
+              sayChat('Uploaded ' + filenames + ' ' + json.html_url, title);
+              editor.session.insert({
+                row: editor.session.getLength(), column: 0
+              }, '\n' + json.html_url + '#' + filenames);
+            });
+        }
+        function uploadToGCS(files) {
+        	var folder = firebase.storage().ref().child(teamSecretKey).child(title);
+        	for(var i=0;i<files.length;i++) {
+        		folder.child(Math.random().toString(36)).child(files[i].name).put(files[i]).then(function(snap) {
+        			return snap.ref.getDownloadURL().then(function(url) {
+		              sayChat('Uploaded ' + url, title);
+		              editor.session.insert({
+		                row: editor.session.getLength(), column: 0
+		              }, '\n' + url);
+        			});
+        		}).catch(function(e){
+        			showChat('Error: Upload error =(', '', '', title);
+        		});
+        	}
+        }
+        function uploadFile(elem) {
+          var files = [];
+          var size = 0;
+          for(var i=0;i<elem.files.length;i++) {
+            size += elem.files[i].size;
+            if (size>65536) {
+              showChat(
+                'Error: Sorry mate, max upload is 64KB', '', '', title);
+              return;
+            }
+            files.push(readBlob(elem.files[i]));
+          }
+          return Promise.all(files).then(uploadToGithub).catch(function() {
+          	uploadToGCS(elem.files);
+          });
+        }
+        window.attachFile = function() {
+          if (!githubToken) {
+            getGithubToken();
+          } else {
+            fileElement.click();
+            fileElement.onchange = function() {
+              if (fileElement.files.length) {
+                uploadFile(fileElement).then(function() {
+                  fileElement.value = '';
+                });
+              }
+            };
+          }
+        };
+      };
+      var taskElems = {};
+      taskListRef.on('child_added', function(entry) {
+        var task = entry.val();
+        var users = entry.child('users');
+        var title = task.category + ':' + task.name;
+        taskNames[title] = true;
+        var div = taskElems[entry.key] = document.createElement('span');
+        taskElemsByName[title] = div;
+        div.dataset.done = task.done;
+        div.dataset.help = task.help;
+        div.dataset.almost = task.almost;
+        div.dataset.title = title;
+        div.className = 'mdl-chip mdl-chip--contact mdl-badge mdl-badge--overlap ctfpad-task-chip';
+        var category = div.appendChild(document.createElement('span'));
+        category.className = 'mdl-chip__contact mdl-color--teal mdl-color-text--white';
+        category.appendChild(document.createTextNode(task.category));
+        var text = div.appendChild(document.createElement('span'));
+        text.className = 'mdl-chip__text';
+        text.appendChild(document.createTextNode(title));
+        var done = text.appendChild(document.createElement('i'));
+        var help = text.appendChild(document.createElement('i'));
+        var almost = text.appendChild(document.createElement('i'));
+        done.className += 'material-icons ctfpad-task-chip-done';
+        help.className += 'material-icons ctfpad-task-chip-help';
+        almost.className += 'material-icons ctfpad-task-chip-almost';
+        done.innerHTML = 'flag';
+        help.innerHTML = 'help_outline';
+        almost.innerHTML = 'error_outline';
+        var taskState = task.done?'Done':users.numChildren()?'Active':'Pending';
+        document.getElementById('taskList'+taskState).appendChild(div);
+        div.onclick = function() {
+          showTask(task, entry.ref, title);
+        };
+        document.getElementById('ctfPadCustomStyles').sheet.insertRule(`.ctfpad-chat[data-filter=${JSON.stringify(title)}] .ctfpad-chat-message-container:not([data-where=${JSON.stringify(title)}]){display:none;}`);
+      });
+      taskListRef.on('child_changed', function (entry) {
+        var task = entry.val();
+        var users = entry.child('users');
+        var title = task.category + ':' + task.name;
+        var div = taskElems[entry.key];
+        div.dataset.done = task.done;
+        if (String(task.help) != div.dataset.help && task.help) {
+        	showChat('Asking for help', '', '', title);
+        	showChat('Asking for help with `' + title + '`');
+        }
+        div.dataset.help = task.help;
+        if (String(task.almost) != div.dataset.almost && task.almost) {
+        	showChat('Almost done', '', '', title);
+            showChat('Almost done with `' + title + '`');
+        }
+        div.dataset.almost = task.almost;
+        var taskState = task.done?'Done':users.numChildren()?'Active':'Pending';
+        document.getElementById('taskList'+taskState).appendChild(div);
+        div.onclick = function() {
+          showTask(task, entry.ref, title);
+        };
+      });
+      taskListRef.on('child_removed', function(entry) {
+        var task = entry.val();
+        var div = taskElems[entry.key];
+        div.parentElement.removeChild(div);
+        taskNames[div.dataset.title] = false;
+      });
+      function getUserKeyForName(nick) {
+      	return nicknameKeys[nick] || myUserRef.key;
+      }
+      userListRef.on('child_added', function(entry) {
+        var user = entry.val();
+        nicknameKeys[entry.key] = user.who;
+        userColors[entry.key] = user.color;
+        var div = userElems[entry.key] = document.createElement('span');
+        div.dataset.who = user.who || '';
+        div.dataset.radio = user.radio;
+        div.dataset.icon = 'online';
+        div.className = 'mdl-chip mdl-chip--contact ctfpad-mate-chip';
+        var mic = document.createElement('i');
+        mic.className = 'material-icons ctfpad-mate-chip-icon ctfpad-mate-mic';
+        mic.innerHTML = 'mic';
+        var pen = document.createElement('i');
+        pen.className = 'material-icons ctfpad-mate-chip-icon ctfpad-mate-pen';
+        pen.innerHTML = 'mode_edit';
+        var task = document.createElement('i');
+        task.className = 'material-icons ctfpad-mate-chip-icon ctfpad-mate-task';
+        task.innerHTML = 'visibility';
+        var away = document.createElement('i');
+        away.className = 'material-icons ctfpad-mate-chip-icon ctfpad-mate-away';
+        away.innerHTML = 'visibility_off';
+        var online = document.createElement('span');
+        online.className = 'ctfpad-mate-chip-icon ctfpad-mate-online';
+        online.appendChild(
+        	document.createTextNode(div.dataset.who.charAt()));
+        var avatar = div.appendChild(document.createElement('span'));
+        avatar.className = 'mdl-chip__contact';
+        avatar.appendChild(mic);
+        avatar.appendChild(pen);
+        avatar.appendChild(task);
+        avatar.appendChild(away);
+        avatar.appendChild(online);
+        avatar.style.backgroundColor = user.color;
+        avatarElems[entry.key] = avatar;
+        var text = div.appendChild(document.createElement('span'));
+        text.className = 'mdl-chip__text';
+        text.appendChild(document.createTextNode(user.who));
+        document.getElementById('ctfpadTeamMates').appendChild(div);
+        if(entry.key != myUserRef.key) {
+          showChat('rocked up', user.who);
+        }
+      });
+      userListRef.on('child_changed', function(entry) {
+        var user = entry.val();
+        var div = userElems[entry.key];
+        div.dataset.radio = user.radio;
+        var avatar = avatarElems[entry.key];
+        avatar.style.backgroundColor = user.color;
+      });
+      userListRef.on('child_removed', function(entry) {
+        var div = userElems[entry.key];
+        div.parentElement.removeChild(div);
+        showChat('shot through', div.dataset.who);
+      });
+      window.startRadio = function() {
+        sayChat('joined the Billabong!');
+        var api = new JitsiMeetExternalAPI("meet.jit.si", {
+          roomName: "CTFmate-"+firepadRef.key,
+          width: 0,
+          height: 0,
+          parentNode: document.getElementById('ctfpadradio'),
+          configOverwrite: {
+            startAudioOnly: true,
+            disableDesktopSharing: true,
+            enableRecording: false,
+            disableThirdPartyRequests: true,
+          },
+          interfaceConfigOverwrite: {
+            DISPLAY_WELCOME_PAGE_CONTENT: false,
+            AUTHENTICATION_ENABLE: false,
+            TOOLBAR_BUTTONS: [],
+            SETTINGS_SECTIONS: [],
+            MOBILE_APP_PROMO: false,
+            RANDOM_AVATAR_URL_PREFIX: 'data:,'
+          },
+          onload: function() {
+            document.getElementById('radioOff').style.display='none';
+            document.getElementById('radioOn').style.display='flex';
+          }
+        });
+        myUserRef.child('radio').set(true);
+        api.executeCommand('displayName', username);
+        api.addEventListener('audioMuteStatusChanged', function(state) {
+        	radioOn.dataset.muted = state.muted;
+        });
+        window.radioMuteMicrophone = function() {
+          api.executeCommand('toggleAudio');
+        };
+        window.endRadio = function() {
+          sayChat('left the Billabong. Cheerio!');
+          myUserRef.child('radio').set(false);
+          api.executeCommand('hangup');
+          document.getElementById('radioOff').style.display='flex';
+          document.getElementById('radioOn').style.display='none';
+          api.dispose();
+        };
+      };
+      function getLink() {
+      	return location.href;
+      };
+      window.inviteByEmail = function() {
+      	var params = new URLSearchParams();
+        params.set('subject', 'G\'day! Join my team on CTFmate');
+        params.set('body', 'CTFmate is a collaboration tool for playing CTF competitions.\n\nTo join my team on CTFmate click here\n\n\t' + getLink());
+      	open('mailto:?'+params);
+      };
+      window.inviteByLink = function() {
+      	prompt('Share this link with all your mates:', getLink());
+      };
+      window.setUserIcons = function(obj) {
+      	Object.keys(userElems).forEach(key=>{
+        	userElems[key].dataset.icon = obj[key] || obj.default || userElems[key].dataset.icon;
+        });
+      };
+    }
+    function init() {
+      document.getElementById('notificationsCheckbox').checked = localStorage.notificationsEnabled && JSON.parse(localStorage.notificationsEnabled);
+      window.taskFavorites = localStorage.taskFavorites?JSON.parse(localStorage.taskFavorites):{};
+      window.onbeforeunload = function() {
+		localStorage.taskFavorites = JSON.stringify(window.taskFavorites);
+      };
+      document.getElementById('nickNameDialog').showModal();
+    }
+    addEventListener('load', init);
+  </script>
+</body>
+</html>
