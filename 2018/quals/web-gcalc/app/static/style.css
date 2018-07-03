@@ -1,0 +1,100 @@
+/*
+ * Copyright 2018 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+body {
+    overflow: hidden;
+}
+
+.header {
+    margin-bottom: 100px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.btn {
+    padding-left: 2px;
+    padding-right: 2px;
+    margin: 4px 4px 4px 4px;
+    border-style: solid;
+    border-width: 1px;
+    color: #222;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.num {
+    background-color: #f3f3f3 !important;
+    border-color: #dedede !important;
+}
+
+.ot {
+    background-color: #d3d3d3 !important;
+    border-color: #c6c6c6 !important;
+}
+
+.eq {
+    color: #fefefe;
+    font-weight: bold;
+    background-color: #4a8cf6 !important;
+    font-size: 20px;
+}
+
+#screen {
+    border-width: 1px;
+    border-style: solid;
+    /*width: 100%;*/
+    width: 380px;
+    padding-left: 4px;
+    padding-right: 4px;
+    user-select: none;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#result {
+    /*box-sizing: border-box;
+    width: 95%;
+    margin-left: 4px;*/
+    font-size: 30px;
+    float: right;
+}
+
+.sp {
+    width: 4px;
+}
+
+.w100 {
+    width: 100%;
+}
+
+a.pm:link, a.pm:visited, a.pm:hover {
+    color: #888;
+    font-size: 11px;
+    text-decoration:none;
+}
+
+.footer {
+    width: 100%;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.footer p {
+    color: #888;
+    font-size: 11px;
+    margin-top: 6px;
+}

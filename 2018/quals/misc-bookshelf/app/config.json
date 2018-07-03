@@ -1,0 +1,7 @@
+{
+  "GCLOUD_PROJECT": "ctf-web-kuqo48d",
+  "DATA_BACKEND": "datastore",
+  "CLOUD_BUCKET": "ctf-books",
+  "FLAG": "CTF{1892b0d8bc93d7e4ca98975f47f8c7d8}",
+  "AUTH": "ae616fed111bafb4f031fb61cac8ce53"
+}

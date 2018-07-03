@@ -1,0 +1,45 @@
+<!--
+Copyright 2018 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html ng-app="demo">
+  <head></head>
+  <body ng-controller="paramsController" style="width:600px; margin:auto; margin-top:100px;">
+    <h1>[[title]]</h1>
+    <div>[[subtitle]]</div>
+    <hr/>
+    <div ng-if="userQuery">
+      <div ng-if="!i18n.word(userQuery)">
+        [[not_found]]
+      </div>
+      <div ng-if="i18n.word(userQuery)">
+        [[in_lang_query_is_spelled]]
+      </div>
+    </div>
+    <div ng-if="!userQuery">
+      [[input_query]]<br/>
+      <form action="/" style="margin-top:10px;">
+        <table>
+          <tr>
+            <td><label for="word">[[original_word]]:</label></td>
+            <td><input type="text" id="word" name="query" /></td>
+          </tr>
+        </table>
+      <input type="text" name="lang" hidden value="[[lang]]">
+      <button type="submit" style="padding:8px;width:200px;">[[translate]]</button>
+      </form>
+    </div>
+    <div my-include="static/footer.html"></div>
+  </body>
+</html>

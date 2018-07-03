@@ -1,0 +1,14 @@
+{
+  "lang": "fr",
+  "translate": "Traduire",
+  "not_found": "Je ne connais pas ce mot, désolé.",
+  "in_lang_query_is_spelled": "En francais, <b>{{userQuery}}</b> s'écrit <b ng-bind=\"i18n.word(userQuery)\"></b>.",
+  "input_query": "Quel mot anglais voulez-vous traduire en français ? <br/>Quelques exemples : <a href=\"?query=cloud%20computing&amp;lang=fr\">cloud computing</a>, <a href=\"?query=upload&amp;lang=fr\">to upload</a>",
+  "title": "Application de traduction de termes techniques entre français et anglais",
+  "subtitle": "Dans notre contexte actuel de multipolarisation des puissances, l'internationalisation est critique au bon entendement transfrontalier des travailleurs des TIC.",
+  "upload": "téléverser",
+  "cloud computing": "informatique en nuage",
+  "hashtag": "mot-dièse",
+  "email": "courriel",
+  "original_word": "Mot à traduire"
+}

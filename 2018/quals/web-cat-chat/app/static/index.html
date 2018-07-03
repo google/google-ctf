@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!--
+Copyright 2018 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Cat Chat</title>
+  <script src="/catchat.js"></script>
+  <!-- Modify recaptcha id here, and add secret in admin.js -->
+  <script src="https://www.google.com/recaptcha/api.js?render=6LeB410UAAAAAGkmQanWeqOdR6TACZTVypEEXHcu"></script>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+<body>
+  <div id="panel">
+    <div id="conversation">
+      <p>Welcome to Cat Chat! This is your brand new room where you can discuss anything related to cats. You have been assigned a random nick name that you can change any time.</p>
+      <p>Rules:</p>
+      <p>- You may invite anyone to this chat room. Just share the URL.</p>
+      <p>- Dog talk is strictly forbidden. If you see anyone talking about dogs, please report the incident, and the admin will take the appropriate steps. This usually means that the admin joins the room, listens to the conversation for a brief period and bans anyone who mentions dogs.</p>
+      <p>Commands you can use: (just type a message starting with slash to invoke commands)</p>
+      <p>- `/name YourNewName` - Change your nick name to YourNewName.</p>
+      <p>- `/report` - Report dog talk to the admin.</p>
+      <!--
+        Admin commands:
+        - `/secret asdfg` - Sets the admin password to be sent to the server with each command for authentication. It's enough to set it once a year, so no need to issue a /secret command every time you open a chat room.
+        - `/ban UserName` - Bans the user with UserName from the chat (requires the correct admin password to be set).
+      -->
+      <p>Btw, the core of the chat engine is open source! You can download the source code <a href="/server.js">here</a>.</p>
+      <p style="margin-bottom: 5em">Alright, have fun!</p>
+    </div>
+    <input id="messagebox" autofocus>
+  </div>
+</body>
+</html>

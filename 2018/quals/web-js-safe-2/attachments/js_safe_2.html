@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<!--
+Copyright 2018 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<title>JS safe v2.0 - the leading localStorage based safe solution with military grade JS anti-debug technology</title>
+<!--
+Advertisement:
+Looking for a hand-crafted, browser based virtual safe to store your most
+interesting secrets? Look no further, you have found it. You can order your own
+by sending a mail to js_safe@example.com. When ordering, please specify the
+password you'd like to use to open and close the safe. We'll hand craft a
+unique safe just for you, that only works with your password of choice.
+-->
+<style>
+body {
+  text-align: center;
+}
+input {
+  font-size: 200%;
+  margin-top: 5em;
+  text-align: center;
+  width: 26em;
+}
+#result {
+  margin-top: 8em;
+  font-size: 300%;
+  font-family: monospace;
+  font-weight: bold;
+}
+body.granted>#result::before {
+  content: "Access Granted";
+  color: green;
+}
+body.denied>#result::before {
+  content: "Access Denied";
+  color: red;
+}
+#content {
+  display: none;
+}
+body.granted #content {
+  display: initial;
+}
+/*
+Source and license of the animation CSS code:
+
+https://davidwalsh.name/css-cube
+
+Copyright (c) 2013 David Walsh
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+.wrap {
+  display: inline-block;
+  margin-top: 50px;
+  perspective: 800px;
+  perspective-origin: 50% 100px;
+}
+.cube {
+  position: relative;
+  width: 200px;
+  transform-style: preserve-3d;
+}
+.back {
+  transform: translateZ(-100px) rotateY(180deg);
+}
+.right {
+  transform: rotateY(-270deg) translateX(100px);
+  transform-origin: top right;
+}
+.left {
+  transform: rotateY(270deg) translateX(-100px);
+  transform-origin: center left;
+}
+.top {
+  transform: rotateX(-90deg) translateY(-100px);
+  transform-origin: top center;
+}
+.bottom {
+  transform: rotateX(90deg) translateY(100px);
+  transform-origin: bottom center;
+}
+.front {
+  transform: translateZ(100px);
+}
+@keyframes spin {
+  from { transform: rotateY(0); }
+  to { transform: rotateY(360deg); }
+}
+.cube {
+  animation: spin 20s infinite linear;
+}
+.cube div {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: rgba(0, 0, 0, 0.51);
+  box-shadow: inset 0 0 60px white;
+  font-size: 20px;
+  text-align: center;
+  line-height: 200px;
+  color: rgba(0,0,0,0.5);
+  font-family: sans-serif;
+  text-transform: uppercase;
+}
+</style>
+<script>
+function x(х){ord=Function.prototype.call.bind(''.charCodeAt);chr=String.fromCharCode;str=String;function h(s){for(i=0;i!=s.length;i++){a=((typeof a=='undefined'?1:a)+ord(str(s[i])))%65521;b=((typeof b=='undefined'?0:b)+a)%65521}return chr(b>>8)+chr(b&0xFF)+chr(a>>8)+chr(a&0xFF)}function c(a,b,c){for(i=0;i!=a.length;i++)c=(c||'')+chr(ord(str(a[i]))^ord(str(b[i%b.length])));return c}for(a=0;a!=1000;a++)debugger;x=h(str(x));source=/Ӈ#7ùª9¨M¤À.áÔ¥6¦¨¹.ÿÓÂ.Ö£JºÓ¹WþÊmãÖÚG¤¢dÈ9&òªћ#³­1᧨/;source.toString=function(){return c(source,x)};try{console.log('debug',source);with(source)return eval('eval(c(source,x))')}catch(e){}}
+</script>
+<script>
+function open_safe() {
+  keyhole.disabled = true;
+  password = /^CTF{([0-9a-zA-Z_@!?-]+)}$/.exec(keyhole.value);
+  if (!password || !x(password[1])) return document.body.className = 'denied';
+  document.body.className = 'granted';
+  password = Array.from(password[1]).map(c => c.charCodeAt());
+  encrypted = JSON.parse(localStorage.content || '');
+  content.value = encrypted.map((c,i) => c ^ password[i % password.length]).map(String.fromCharCode).join('')
+}
+function save() {
+  plaintext = Array.from(content.value).map(c => c.charCodeAt());
+  localStorage.content = JSON.stringify(plaintext.map((c,i) => c ^ password[i % password.length]));
+}
+</script>
+</head>
+<body>
+<div>
+  <input id="keyhole" autofocus onchange="open_safe()" placeholder="🔑">
+</div>
+<div class="wrap">
+  <div class="cube">
+    <div class="front"></div>
+    <div class="back"></div>
+    <div class="top"></div>
+    <div class="bottom"></div>
+    <div class="left"></div>
+    <div class="right"></div>
+  </div>
+</div>
+<div id="result">
+</div>
+<div>
+  <input id="content" onchange="save()">
+</div>
+</body>
+</html>

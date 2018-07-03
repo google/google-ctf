@@ -1,0 +1,93 @@
+/*
+ * Copyright 2018 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.pad {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.form-signin {
+    max-width: 300px;
+    padding: 19px 29px 29px;
+    margin: 0 auto 20px;
+    border: 1px solid #e5e5e5;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+.form-signin input[type="text"],
+.form-signin input[type="password"] {
+    font-size: 16px;
+    height: auto;
+    margin-bottom: 15px;
+    padding: 7px 9px;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: red;
+    opacity: 1; /* Firefox */
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #575757;
+}
+
+#post_txt {
+    width: 300px;
+}
+
+.username {
+    float: right;
+}
+
+.no {
+    float: left;
+    color: #8eecdf;
+}
+
+.error p {
+    text-align: center;
+}
+
+.hero-unit.error {
+    background-color: #FF0000;
+    box-shadow: 0 0 0 4px #FF0000
+}
+
+.p_avatar {
+    float: right;
+}
+
+.preview {
+    position: absolute;
+    margin-left: 15px;
+    display: inline;
+}
+
+.report {
+    float: right;
+    bottom: 25px;
+    text-align: right;
+    position: relative;
+    color: #000084;
+}
+
+.report a {
+    color: #000084;
+    
+}

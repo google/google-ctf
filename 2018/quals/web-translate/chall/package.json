@@ -1,0 +1,13 @@
+{
+ "name": "ctfssr",
+ "version": "0.0.1",
+ "main": "./srcs/index.js",
+ "dependencies": {
+  "domino": "=2.0.2",
+  "express": "=4.16.3",
+  "vm2": "=3.6.0",
+  "memcached-promisify": "latest",
+  "uuid": "latest",
+  "cookie-parser": "latest"
+ }
+}

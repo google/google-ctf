@@ -1,0 +1,81 @@
+{
+  "name": "nodejs-getting-started",
+  "version": "1.0.0",
+  "description": "End to end sample for running Node.js applications on Google Cloud Platform",
+  "repository": "https://github.com/GoogleCloudPlatform/nodejs-getting-started",
+  "private": true,
+  "scripts": {
+    "start": "node app.js",
+    "test": "repo-tools test app && ava -t 30s --tap test/*.test.js",
+    "e2e": "repo-tools test deploy && E2E_TESTS=True ava -t 30s --tap test/*.test.js",
+    "cover": "nyc --cache npm test; nyc report --reporter=html",
+    "init-cloudsql": "node books/model-cloudsql.js"
+  },
+  "author": "Google Inc.",
+  "contributors": [
+    {
+      "name": "Jon Wayne Parrott",
+      "email": "jonwayne@google.com"
+    },
+    {
+      "name": "Jonathan Simon",
+      "email": "jbsimon@google.com"
+    },
+    {
+      "name": "Jason Dobry",
+      "email": "jdobry@google.com"
+    },
+    {
+      "name": "Ace Nassri",
+      "email": "anassri@google.com"
+    }
+  ],
+  "cloud-repo-tools": {
+    "requiresKeyFile": true,
+    "requiresProjectId": true,
+    "test": {
+      "app": {
+        "args": [
+          "app.js"
+        ],
+        "msg": "Bookshelf - Node.js on Google Cloud Platform"
+      }
+    }
+  },
+  "license": "Apache-2.0",
+  "semistandard": {
+    "globals": [
+      "after",
+      "afterEach",
+      "before",
+      "beforeEach",
+      "describe",
+      "it"
+    ]
+  },
+  "dependencies": {
+    "@google-cloud/datastore": "1.3.4",
+    "@google-cloud/storage": "1.6.0",
+    "body-parser": "1.18.2",
+    "express": "4.16.2",
+    "lodash": "4.17.5",
+    "mongodb": "3.0.2",
+    "multer": "1.3.0",
+    "mysql": "2.15.0",
+    "nconf": "0.10.0",
+    "prompt": "1.0.0",
+    "pug": "2.0.0-rc.4",
+    "uglify-js": "3.3.12",
+    "cookie-parser": "latest",
+    "uuid": "latest"
+  },
+  "devDependencies": {
+    "@google-cloud/nodejs-repo-tools": "2.2.1",
+    "ava": "0.25.0",
+    "proxyquire": "1.8.0",
+    "sinon": "4.3.0"
+  },
+  "engines": {
+    "node": ">=4.3.2"
+  }
+}

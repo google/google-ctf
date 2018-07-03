@@ -1,0 +1,15 @@
+{
+  "lang": "en",
+  "translate": "Translate",
+  "not_found": "I don't know that word, sorry.",
+  "in_lang_query_is_spelled": "In french, <b>{{userQuery}}</b> is spelled <b ng-bind=\"i18n.word(userQuery)\"></b>.",
+  "input_query": "What French word do you want to translate into English?<br/>A few examples: <a href=\"?query=informatique%20en%20nuage&amp;lang=en\">informatique en nuage</a>, <a href=\"?query=téléverser&amp;lang=en\">téléverser</a>",
+  "title": "Translation utility for technical terms in French and English",
+  "subtitle": "In the current pluri-polarized great powers context, internationalization is the key for good trans-border understanding between tech workers.",
+  "informatique en nuage": "cloud computing",
+  "mot-dièse": "hashtag",
+  "courriel": "email",
+  "téléverser": "upload",
+  "ordiphone": "smartphone",
+  "original_word": "Word to translate"
+}
