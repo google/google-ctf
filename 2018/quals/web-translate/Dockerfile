@@ -35,9 +35,6 @@ ADD chall /usr/local/chall
 RUN chown -R root:root /usr/local/chall
 RUN chmod -R 0655 /usr/local/chall
 
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-RUN chmod a+r /etc/supervisor/conf.d/supervisord.conf
-
 # Setup npm
 WORKDIR /usr/local/chall
 RUN npm install
