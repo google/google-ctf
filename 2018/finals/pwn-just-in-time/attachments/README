@@ -1,0 +1,20 @@
+This challenge will be scored at 5:30PM on Sunday in a live event.
+
+Rules:
+* To submit an exploit for this challenge, put a single html file on a USB thumb
+  drive we provide to you and bring it to the organizer table.
+* The exploit submission deadline is Sunday 5pm.
+* You can try out your exploit in an event on Sunday at 5pm on a laptop running
+  the attached virtualbox image.
+* We will run your exploit using python3 -m http.server. The VM will have no
+  access to the internet.
+* You have 3 minutes to make it work, however during this time you will only be
+  allowed to reload the exploit/restart the Browser.
+* An attempt counts as successful if you can run /usr/bin/gnome-calculator. It
+  has to be visible on the screen.
+* The order of teams is decided based on the submission time during the event.
+* If you send us multiple exploits, only the last submission counts.
+
+You can download the virtualbox image here:
+https://storage.googleapis.com/gctf-2018-attachments/68ab4db4a177ae835361d8b3d9522f672ac6386e4a348acdf8db64f2bf360d0d
+We will use the snapshot "Challenge" to try out your exploit.

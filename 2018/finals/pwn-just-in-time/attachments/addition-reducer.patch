@@ -1,0 +1,185 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index c6a58776cd..14c56d2910 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -1699,6 +1699,8 @@ v8_source_set("v8_base") {
+     "src/compiler/dead-code-elimination.cc",
+     "src/compiler/dead-code-elimination.h",
+     "src/compiler/diamond.h",
++    "src/compiler/duplicate-addition-reducer.cc",
++    "src/compiler/duplicate-addition-reducer.h",
+     "src/compiler/effect-control-linearizer.cc",
+     "src/compiler/effect-control-linearizer.h",
+     "src/compiler/escape-analysis-reducer.cc",
+diff --git a/src/compiler/duplicate-addition-reducer.cc b/src/compiler/duplicate-addition-reducer.cc
+new file mode 100644
+index 0000000000..59e8437f3d
+--- /dev/null
++++ b/src/compiler/duplicate-addition-reducer.cc
+@@ -0,0 +1,71 @@
++// Copyright 2018 Google LLC
++//
++// Licensed under the Apache License, Version 2.0 (the "License");
++// you may not use this file except in compliance with the License.
++// You may obtain a copy of the License at
++//
++//      http://www.apache.org/licenses/LICENSE-2.0
++//
++// Unless required by applicable law or agreed to in writing, software
++// distributed under the License is distributed on an "AS IS" BASIS,
++// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++// See the License for the specific language governing permissions and
++// limitations under the License.
++#include "src/compiler/duplicate-addition-reducer.h"
++
++#include "src/compiler/common-operator.h"
++#include "src/compiler/graph.h"
++#include "src/compiler/node-properties.h"
++
++namespace v8 {
++namespace internal {
++namespace compiler {
++
++DuplicateAdditionReducer::DuplicateAdditionReducer(Editor* editor, Graph* graph,
++                     CommonOperatorBuilder* common)
++    : AdvancedReducer(editor),
++      graph_(graph), common_(common) {}
++
++Reduction DuplicateAdditionReducer::Reduce(Node* node) {
++  switch (node->opcode()) {
++    case IrOpcode::kNumberAdd:
++      return ReduceAddition(node);
++    default:
++      return NoChange();
++  }
++}
++
++Reduction DuplicateAdditionReducer::ReduceAddition(Node* node) {
++  DCHECK_EQ(node->op()->ControlInputCount(), 0);
++  DCHECK_EQ(node->op()->EffectInputCount(), 0);
++  DCHECK_EQ(node->op()->ValueInputCount(), 2);
++
++  Node* left = NodeProperties::GetValueInput(node, 0);
++  if (left->opcode() != node->opcode()) {
++    return NoChange();
++  }
++
++  Node* right = NodeProperties::GetValueInput(node, 1);
++  if (right->opcode() != IrOpcode::kNumberConstant) {
++    return NoChange();
++  }
++
++  Node* parent_left = NodeProperties::GetValueInput(left, 0);
++  Node* parent_right = NodeProperties::GetValueInput(left, 1);
++  if (parent_right->opcode() != IrOpcode::kNumberConstant) {
++    return NoChange();
++  }
++
++  double const1 = OpParameter<double>(right->op());
++  double const2 = OpParameter<double>(parent_right->op());
++  Node* new_const = graph()->NewNode(common()->NumberConstant(const1+const2));
++
++  NodeProperties::ReplaceValueInput(node, parent_left, 0);
++  NodeProperties::ReplaceValueInput(node, new_const, 1);
++
++  return Changed(node);
++}
++
++}  // namespace compiler
++}  // namespace internal
++}  // namespace v8
+diff --git a/src/compiler/duplicate-addition-reducer.h b/src/compiler/duplicate-addition-reducer.h
+new file mode 100644
+index 0000000000..7285f1ae3e
+--- /dev/null
++++ b/src/compiler/duplicate-addition-reducer.h
+@@ -0,0 +1,60 @@
++/*
++ * Copyright 2018 Google LLC
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++#ifndef V8_COMPILER_DUPLICATE_ADDITION_REDUCER_H_
++#define V8_COMPILER_DUPLICATE_ADDITION_REDUCER_H_
++
++#include "src/base/compiler-specific.h"
++#include "src/compiler/graph-reducer.h"
++#include "src/globals.h"
++#include "src/machine-type.h"
++
++namespace v8 {
++namespace internal {
++namespace compiler {
++
++// Forward declarations.
++class CommonOperatorBuilder;
++class Graph;
++
++class V8_EXPORT_PRIVATE DuplicateAdditionReducer final
++    : public NON_EXPORTED_BASE(AdvancedReducer) {
++ public:
++  DuplicateAdditionReducer(Editor* editor, Graph* graph,
++                      CommonOperatorBuilder* common);
++  ~DuplicateAdditionReducer() final {}
++
++  const char* reducer_name() const override { return "DuplicateAdditionReducer"; }
++
++  Reduction Reduce(Node* node) final;
++
++ private:
++  Reduction ReduceAddition(Node* node);
++
++  Graph* graph() const { return graph_;}
++  CommonOperatorBuilder* common() const { return common_; };
++
++  Graph* const graph_;
++  CommonOperatorBuilder* const common_;
++
++  DISALLOW_COPY_AND_ASSIGN(DuplicateAdditionReducer);
++};
++
++}  // namespace compiler
++}  // namespace internal
++}  // namespace v8
++
++#endif  // V8_COMPILER_DUPLICATE_ADDITION_REDUCER_H_
+diff --git a/src/compiler/pipeline.cc b/src/compiler/pipeline.cc
+index 5717c70348..8cca161ad5 100644
+--- a/src/compiler/pipeline.cc
++++ b/src/compiler/pipeline.cc
+@@ -27,6 +27,7 @@
+ #include "src/compiler/constant-folding-reducer.h"
+ #include "src/compiler/control-flow-optimizer.h"
+ #include "src/compiler/dead-code-elimination.h"
++#include "src/compiler/duplicate-addition-reducer.h"
+ #include "src/compiler/effect-control-linearizer.h"
+ #include "src/compiler/escape-analysis-reducer.h"
+ #include "src/compiler/escape-analysis.h"
+@@ -1301,6 +1302,8 @@ struct TypedLoweringPhase {
+                                data->jsgraph()->Dead());
+     DeadCodeElimination dead_code_elimination(&graph_reducer, data->graph(),
+                                               data->common(), temp_zone);
++    DuplicateAdditionReducer duplicate_addition_reducer(&graph_reducer, data->graph(),
++                                              data->common());
+     JSCreateLowering create_lowering(&graph_reducer, data->dependencies(),
+                                      data->jsgraph(), data->js_heap_broker(),
+                                      data->native_context(), temp_zone);
+@@ -1318,6 +1321,7 @@ struct TypedLoweringPhase {
+                                          data->js_heap_broker(), data->common(),
+                                          data->machine(), temp_zone);
+     AddReducer(data, &graph_reducer, &dead_code_elimination);
++    AddReducer(data, &graph_reducer, &duplicate_addition_reducer);
+     AddReducer(data, &graph_reducer, &create_lowering);
+     AddReducer(data, &graph_reducer, &constant_folding_reducer);
+     AddReducer(data, &graph_reducer, &typed_optimization);

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!--
+Copyright 2018 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<title>JS safe v3.0 - the leading localStorage based safe solution with military grade JS anti-debug technology</title>
+<!--
+Advertisement:
+Looking for a hand-crafted, browser based virtual safe to store your most
+interesting secrets? Look no further, you have found it. You can order your own
+by sending a mail to js_safe@example.com. When ordering, please specify the
+password you'd like to use to open and close the safe. We'll hand craft a
+unique safe just for you, that only works with your password of choice.
+-->
+<style>
+body {
+  text-align: center;
+}
+input {
+  font-size: 200%;
+  margin-top: 5em;
+  text-align: center;
+  width: 26em;
+}
+#result {
+  margin-top: 8em;
+  font-size: 300%;
+  font-family: monospace;
+  font-weight: bold;
+}
+body.granted>#result::before {
+  content: "Access Granted";
+  color: green;
+}
+body.denied>#result::before {
+  content: "Access Denied";
+  color: red;
+}
+#content {
+  display: none;
+}
+body.granted #content {
+  display: initial;
+}
+.wrap {
+  display: inline-block;
+  margin-top: 50px;
+  perspective: 800px;
+  perspective-origin: 50% 100px;
+}
+.cube {
+  position: relative;
+  width: 200px;
+  transform-style: preserve-3d;
+}
+.back {
+  transform: translateZ(-100px) rotateY(180deg);
+}
+.right {
+  transform: rotateY(-270deg) translateX(100px);
+  transform-origin: top right;
+}
+.left {
+  transform: rotateY(270deg) translateX(-100px);
+  transform-origin: center left;
+}
+.top {
+  transform: rotateX(-90deg) translateY(-100px);
+  transform-origin: top center;
+}
+.bottom {
+  transform: rotateX(90deg) translateY(100px);
+  transform-origin: bottom center;
+}
+.front {
+  transform: translateZ(100px);
+}
+@keyframes spin {
+  from { transform: rotateY(0); }
+  to { transform: rotateY(360deg); }
+}
+.cube {
+  animation: spin 20s infinite linear;
+}
+.cube div {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: rgba(0, 0, 0, 0.51);
+  box-shadow: inset 0 0 60px white;
+  font-size: 20px;
+  text-align: center;
+  line-height: 200px;
+  color: rgba(0,0,0,0.5);
+  font-family: sans-serif;
+  text-transform: uppercase;
+}
+</style>
+<script>
+eval(String.fromCharCode(102, 117, 110, 99, 116, 105, 111, 110, 32, 120, 40, 121, 41, 123, 111, 114, 100, 61, 70, 117, 110, 99, 116, 105, 111, 110, 46, 112, 114, 111, 116, 111, 116, 121, 112, 101, 46, 99, 97, 108, 108, 46, 98, 105, 110, 100, 40, 39, 39, 46, 99, 104, 97, 114, 67, 111, 100, 101, 65, 116, 41, 59, 99, 104, 114, 61, 83, 116, 114, 105, 110, 103, 46, 102, 114, 111, 109, 67, 104, 97, 114, 67, 111, 100, 101, 59, 102, 117, 110, 99, 116, 105, 111, 110, 32, 100, 40, 97, 44, 98, 44, 99, 41, 123, 102, 117, 110, 99, 116, 105, 111, 110, 32, 98, 121, 116, 101, 108, 105, 115, 116, 40, 120, 41, 123, 105, 102, 40, 116, 121, 112, 101, 111, 102, 32, 120, 61, 61, 39, 102, 117, 110, 99, 116, 105, 111, 110, 39, 41, 123, 120, 61, 120, 46, 116, 111, 83, 116, 114, 105, 110, 103, 40, 41, 59, 120, 61, 120, 46, 115, 108, 105, 99, 101, 40, 120, 46, 105, 110, 100, 101, 120, 79, 102, 40, 39, 47, 42, 39, 41, 43, 50, 44, 120, 46, 108, 97, 115, 116, 73, 110, 100, 101, 120, 79, 102, 40, 39, 42, 47, 39, 41, 41, 125, 105, 102, 40, 116, 121, 112, 101, 111, 102, 32, 120, 61, 61, 39, 115, 116, 114, 105, 110, 103, 39, 41, 114, 101, 116, 117, 114, 110, 32, 120, 46, 115, 112, 108, 105, 116, 40, 39, 39, 41, 46, 109, 97, 112, 40, 120, 61, 62, 111, 114, 100, 40, 120, 41, 41, 59, 105, 102, 40, 116, 121, 112, 101, 111, 102, 32, 120, 61, 61, 39, 111, 98, 106, 101, 99, 116, 39, 41, 114, 101, 116, 117, 114, 110, 32, 120, 125, 97, 61, 98, 121, 116, 101, 108, 105, 115, 116, 40, 97, 41, 59, 98, 61, 98, 121, 116, 101, 108, 105, 115, 116, 40, 98, 41, 59, 102, 111, 114, 40, 118, 97, 114, 32, 105, 61, 48, 59, 105, 33, 61, 97, 46, 108, 101, 110, 103, 116, 104, 59, 105, 43, 43, 41, 123, 100, 101, 98, 117, 103, 103, 101, 114, 59, 99, 61, 40, 99, 124, 124, 39, 39, 41, 43, 99, 104, 114, 40, 97, 91, 105, 93, 94, 98, 91, 105, 37, 98, 46, 108, 101, 110, 103, 116, 104, 93, 41, 125, 114, 101, 116, 117, 114, 110, 32, 101, 118, 97, 108, 40, 39, 101, 118, 97, 108, 40, 99, 41, 39, 41, 125, 118, 97, 114, 32, 100, 97, 116, 97, 61, 120, 61, 62, 47, 42, 28, 1, 78, 15, 18, 89, 21, 87, 95, 95, 88, 1, 4, 11, 105, 91, 2, 13, 84, 72, 77, 2, 79, 65, 19, 16, 83, 64, 30, 76, 19, 84, 7, 12, 83, 67, 21, 76, 11, 6, 65, 25, 1, 76, 31, 10, 73, 64, 28, 1, 20, 67, 31, 3, 18, 8, 87, 72, 88, 6, 75, 75, 16, 71, 25, 0, 95, 5, 95, 0, 18, 87, 77, 90, 21, 5, 123, 91, 101, 6, 126, 107, 84, 70, 126, 121, 83, 6, 84, 108, 97, 43, 91, 123, 77, 37, 99, 73, 71, 46, 111, 31, 28, 123, 61, 66, 20, 53, 53, 87, 24, 45, 97, 10, 82, 32, 108, 84, 85, 41, 120, 85, 27, 5, 101, 79, 95, 63, 103, 87, 65, 121, 96, 85, 122, 98, 97, 90, 108, 40, 127, 82, 68, 51, 47, 68, 30, 108, 41, 92, 23, 113, 58, 23, 31, 105, 56, 68, 64, 107, 100, 90, 25, 120, 17, 12, 12, 118, 61, 100, 80, 34, 250, 18, 11, 60, 114, 68, 27, 99, 111, 31, 80, 125, 115, 22, 93, 35, 127, 78, 100, 44, 121, 68, 69, 62, 122, 89, 73, 55, 68, 14, 88, 251, 46, 75, 77, 67, 99, 20, 7, 58, 3, 119, 90, 90, 63, 48, 79, 66, 112, 109, 120, 16, 109, 8, 103, 60, 101, 15, 20, 70, 105, 14, 55, 98, 88, 8, 109, 115, 122, 31, 205, 48, 106, 81, 95, 119, 109, 2, 88, 125, 116, 65, 71, 47, 111, 102, 24, 97, 54, 57, 5, 97, 119, 72, 25, 62, 97, 15, 64, 52, 42, 86, 71, 34, 102, 1, 7, 121, 55, 13, 22, 123, 42, 85, 11, 63, 103, 68, 83, 44, 32, 88, 6, 122, 124, 13, 74, 34, 61, 95, 31, 106, 109, 23, 76, 115, 36, 1, 89, 57, 48, 2, 70, 116, 48, 11, 12, 36, 103, 29, 20, 37, 40, 71, 14, 97, 36, 20, 75, 50, 97, 13, 94, 99, 103, 82, 25, 43, 33, 83, 86, 34, 59, 79, 66, 124, 42, 79, 94, 76, 108, 17, 71, 38, 98, 115, 89, 56, 32, 74, 117, 13, 126, 57, 86, 14, 126, 53, 83, 9, 125, 49, 63, 2, 93, 113, 112, 13, 10, 78, 21, 30, 92, 28, 7, 17, 95, 78, 72, 45, 18, 111, 72, 26, 51, 36, 72, 8, 52, 100, 98, 29, 6, 73, 109, 10, 42, 71, 85, 56, 32, 76, 89, 110, 123, 25, 11, 51, 115, 87, 3, 38, 127, 79, 87, 123, 53, 66, 90, 37, 50, 75, 78, 36, 124, 103, 83, 62, 56, 93, 81, 38, 38, 27, 86, 36, 29, 0, 87, 43, 11, 74, 73, 35, 35, 81, 25, 53, 121, 14, 31, 45, 112, 19, 12, 102, 120, 11, 14, 53, 39, 9, 82, 43, 126, 26, 39, 125, 107, 20, 11, 21, 55, 64, 204, 99, 108, 94, 68, 53, 124, 1, 89, 110, 55, 31, 69, 103, 58, 65, 73, 63, 3, 78, 79, 53, 34, 92, 76, 40, 46, 85, 114, 127, 63, 153, 24, 58, 42, 33, 85, 101, 96, 88, 53, 6, 61, 56, 9, 65, 40, 32, 70, 28, 31, 114, 91, 121, 0, 94, 83, 126, 115, 36, 95, 127, 80, 0, 110, 121, 10, 17, 76, 110, 170, 82, 92, 32, 56, 21, 91, 115, 63, 31, 66, 48, 32, 77, 89, 23, 127, 3, 0, 72, 98, 3, 65, 57, 126, 92, 87, 126, 39, 86, 28, 39, 32, 64, 80, 112, 96, 27, 1, 124, 113, 25, 28, 36, 108, 93, 81, 53, 52, 78, 22, 41, 97, 24, 74, 124, 45, 64, 11, 46, 120, 8, 91, 102, 43, 17, 18, 112, 62, 91, 6, 115, 33, 22, 6, 122, 107, 70, 81, 108, 115, 71, 30, 54, 105, 3, 18, 101, 44, 80, 87, 124, 57, 1, 81, 35, 126, 73, 23, 34, 49, 64, 13, 62, 37, 30, 28, 62, 57, 46, 90, 96, 32, 68, 84, 2, 62, 90, 22, 59, 18, 111, 72, 72, 49, 108, 72, 68, 52, 107, 75, 64, 88, 96, 107, 0, 23, 111, 98, 5, 95, 85, 19, 42, 47, 49, 59, 118, 97, 114, 32, 107, 49, 61, 121, 46, 99, 104, 97, 114, 67, 111, 100, 101, 65, 116, 40, 48, 41, 59, 118, 97, 114, 32, 107, 50, 61, 121, 46, 99, 104, 97, 114, 67, 111, 100, 101, 65, 116, 40, 49, 41, 59, 102, 111, 114, 40, 118, 97, 114, 32, 107, 51, 61, 48, 59, 107, 51, 60, 50, 53, 54, 59, 107, 51, 43, 43, 41, 123, 102, 111, 114, 40, 118, 97, 114, 32, 107, 52, 61, 48, 59, 107, 52, 60, 50, 53, 54, 59, 107, 52, 43, 43, 41, 123, 116, 114, 121, 123, 114, 101, 116, 117, 114, 110, 32, 100, 40, 100, 97, 116, 97, 44, 91, 107, 49, 44, 107, 50, 44, 107, 51, 44, 107, 52, 93, 41, 125, 99, 97, 116, 99, 104, 40, 101, 41, 123, 99, 111, 110, 115, 111, 108, 101, 46, 108, 111, 103, 40, 39, 69, 114, 114, 111, 114, 58, 39, 44, 101, 41, 125, 125, 125, 125));
+</script>
+<script>
+function open_safe() {
+  keyhole.disabled = true;
+  password = /^CTF{([0-9a-zA-Z_@!?-]+)}$/.exec(keyhole.value);
+  if (!password || !x(password[1])) return document.body.className = 'denied';
+  document.body.className = 'granted';
+  password = Array.from(password[1]).map(c => c.charCodeAt());
+  encrypted = JSON.parse(localStorage.content || '');
+  content.value = encrypted.map((c,i) => c ^ password[i % password.length]).map(String.fromCharCode).join('')
+}
+function save() {
+  plaintext = Array.from(content.value).map(c => c.charCodeAt());
+  localStorage.content = JSON.stringify(plaintext.map((c,i) => c ^ password[i % password.length]));
+}
+</script>
+</head>
+<body>
+<div>
+  <input id="keyhole" autofocus onchange="open_safe()" placeholder="🔑">
+</div>
+<div class="wrap">
+  <div class="cube">
+    <div class="front"></div>
+    <div class="back"></div>
+    <div class="top"></div>
+    <div class="bottom"></div>
+    <div class="left"></div>
+    <div class="right"></div>
+  </div>
+</div>
+<div id="result">
+</div>
+<div>
+  <input id="content" onchange="save()">
+</div>
+</body>
+</html>

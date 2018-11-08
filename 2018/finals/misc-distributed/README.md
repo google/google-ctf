@@ -1,0 +1,3 @@
+# name: BobNeedsHelp
+description: Bob needs some help of you, although the reward isn't that appealing...
+# flag: CTF{Bob_Isnt_Really_Good_At_Security}

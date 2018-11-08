@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!--
+Copyright 2018 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
+<title>Blind XSS</title>
+</head>
+<body>
+<script>
+function sandbox_script(flag) {
+  Function.prototype.toString = function() {
+    return '[No source code for you. Not on my watch, not in my world]';
+  }
+  window.enter = function(password, code) {
+    // Fixed time string compare
+    for (var errors = 0, i = password.length; i+1; i--) errors += (password[i] !== flag[i]);
+    if (errors) return;
+    // Password correct, letting the code into the closure
+    eval(code);
+  }
+  flag = new Proxy(new String(flag), {
+    get: function(enter, bind) {
+      return function(target, prop, receiver) {
+        if (arguments.callee.caller != enter) throw 'No flag access from outside enter fn, sorry';
+        try {
+          prop();
+        } catch(e) {
+          var s = e.stack;
+          for (var i = 0; i < s.length-4; i++) {
+            if (s[i] == 'e' && s[i+1] == 'v' && s[i+2] == 'a' && s[i+3] == 'l') throw 'No flag access from eval, sorry';
+          }
+        }
+        return (typeof target[prop] == 'function') ? bind(target[prop], [target]) : target[prop];
+      }
+    }(window.enter, Function.prototype.apply.bind(Function.prototype.bind)),
+    getOwnPropertyDescriptor() { throw 'No property descriptor access, sorry'; },
+  })
+  // Prevent funny things
+  Object.freeze(String.prototype);
+  Object.freeze(Object.prototype);
+}
+function inject() {
+  sandbox.contentWindow.postMessage('(' + sandbox_script + '("' + document.cookie.match(/flag=(.*?)(?:;|$)/i)[1] + '"))', '*')
+  sandbox.contentWindow.postMessage((new URL(location.href)).searchParams.get('payload'), '*')
+}
+</script>
+<iframe id="sandbox" src="https://blind-xss-sandbox-xpu7tjxmy-dot-ctf-web-kuqo48d.appspot.com/" onload="inject()"></iframe>
+</body>
+</html>

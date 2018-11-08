@@ -1,0 +1,3 @@
+# name: blue
+description: There should be two devices on your table, they're a client and a server. To boot as server: HOLD the right button while the blue led is on, it should start blinking quickly. To boot as client: Just power it up. We have 'faraday' cages if needed. The devices have a dummy flag, we have devices with a real flag you can steal (but you can't touch them, only get close to them :P).
+# flag: CTF{fLaGinTh34Ir}

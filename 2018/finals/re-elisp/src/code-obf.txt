@@ -1,0 +1,81 @@
+;; Copyright 2018 Google LLC
+;; 
+;; Licensed under the Apache License, Version 2.0 (the "License");
+;; you may not use this file except in compliance with the License.
+;; You may obtain a copy of the License at
+;; 
+;;     https://www.apache.org/licenses/LICENSE-2.0
+;; 
+;; Unless required by applicable law or agreed to in writing, software
+;; distributed under the License is distributed on an "AS IS" BASIS,
+;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;; See the License for the specific language governing permissions and
+;; limitations under the License.
+
+;; Obfuscated version of code.txt
+;; The only difference is that the variables have been renamed to
+;; random 2-char names. I did this by hand because I was too lazy to
+;; write a script for it :/
+
+(s gn (make-vector 91 0))~start~
+
+;; FIRST LOOP
+(s fo 0)~l1s~
+(ji (>= fo 91) l1e)~l1s~
+(lc xr (+ fo $perm1$))
+(lc li (+ fo $flag$))
+
+(s rg (+ (* 2 (% xr 2)) (% fo 2)))
+(ji (= rg 1) type1A)
+(ji (= rg 2) type2A)
+(ji (= rg 3) type3A)
+
+;; type == 0
+(s li (logxor li 66))
+(j contA)
+;; type == 1
+(s li (% (+ li 123) 256))~type1A~
+(j contA)
+;; type == 2
+(s li (% (+ (lognot li) 256) 256))~type2A~
+(j contA)
+;; type == 3
+(s li (logior (lsh li -4) (lsh (logand li #x0f) 4)))~type3A~
+
+(si gn xr li)~contA~
+
+(s fo (1+ fo))
+(j l1s)
+
+
+;; SECOND LOOP
+(s fo 0)~l1e~
+(ji (>= fo 91) l2e)~l2s~
+(lc xr (+ fo $perm2$))
+(li li gn fo)
+
+(s rg (+ (* 2 (% xr 2)) (% fo 2)))
+(ji (= rg 1) type1B)
+(ji (= rg 2) type2B)
+(ji (= rg 3) type3B)
+
+;; type == 0
+(s li (% (+ li 66) 256))
+(j contB)
+;; type == 1
+(s li (% (+ (lognot li) 256) 256))~type1B~
+(j contB)
+;; type == 2
+(s li (logior (lsh li -6) (lsh (logand li #x3f) 2)))~type2B~
+(j contB)
+;; type == 3
+(s li (logxor li 123))~type3B~
+
+(lc ex (+ xr $check_buf$))~contB~
+(ji (/= ex li) fail)
+
+(s fo (1+ fo))
+(j l2s)
+
+(p "That's not the correct flag :C")~fail~
+(p "Yaay, you got it! :)")~l2e~

@@ -1,0 +1,714 @@
+<!--
+  Copyright 2018 Google LLC
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<head>
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+  <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+  <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+</head>
+
+<style>
+  html, body, div.list-group-item {
+    padding: 0;
+    margin: 0;
+    background-color: black;
+  }
+  table, *, pre {
+    color: white;
+    font-family: courier,monospace;
+    text-shadow: 0 0.01em 0 #ccc,
+      0 0.02em 0 #c9c9c9,
+      0 0.03em 0 #bbb,
+      0 0.04em 0 #b9b9b9,
+      0 0.05em 0 #aaa,
+      0 0.06em 0.01em rgba(0,0,0,.1),
+      0 0 0.05em rgba(0,0,0,.1),
+      0 0.01em 0.03em rgba(0,0,0,.3),
+      0 0.03em 0.05em rgba(0,0,0,.2),
+      0 0.05em 0.1em rgba(0,0,0,.25),
+      0 0.1em 0.1em rgba(0,0,0,.2),
+      0 0.2em 0.2em rgba(0,0,0,.15);
+  }
+  .cyber {
+    position: absolute;
+    top: 0; bottom: 0;
+    right: 0; left: 0;
+    z-index: 100;
+    color: white;
+    text-shadow: 0 0.01em 0 #ccc,
+      0 0.02em 0 #c9c9c9,
+      0 0.03em 0 #bbb,
+      0 0.04em 0 #b9b9b9,
+      0 0.05em 0 #aaa,
+      0 0.06em 0.01em rgba(0,0,0,.1),
+      0 0 0.05em rgba(0,0,0,.1),
+      0 0.01em 0.03em rgba(0,0,0,.3),
+      0 0.03em 0.05em rgba(0,0,0,.2),
+      0 0.05em 0.1em rgba(0,0,0,.25),
+      0 0.1em 0.1em rgba(0,0,0,.2),
+      0 0.2em 0.2em rgba(0,0,0,.15);
+  }
+  button {
+    outline: 0;
+    background-color: black;
+    color: white;
+    box-shadow: -1px -1px 2px white,
+      1px 1px 2px white,
+      1px -1px 2px white,
+      -1px 1px 2px white,
+      1px 1px 2px white inset,
+      -1px -1px 2px white inset;
+  }
+  .grid {
+    position: absolute;
+    pointer-events: none;
+    width: 100vw;
+    height: 100vw;
+    z-index: -1;
+  }
+  .grid.top {
+    transform: perspective(10in) rotateX(-70deg);
+    transform-origin: 50% 0%;
+    top: 0;
+    left: 0;
+  }
+  input[type="text"] {
+    color: black;
+  }
+  .grid.bottom {
+    transform: perspective(10in) rotateX(70deg);
+    transform-origin: 50% 100%;
+    bottom: 0;
+    left: 0;
+  }
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 2vw white inset;
+    }
+    to {
+      box-shadow: 0 0 1vw yellow inset;
+    }
+  }
+  .grid td {
+    animation: glow 1s 1 forwards;
+  }
+  @keyframes fly {
+    0% {
+      background: white;
+      border: 1px dotted white;
+      margin: 0 0;
+      transform: perspective(10in) translateZ(-30in);
+      filter: drop-shadow(0 0 0 white);
+    }
+    50% {
+      background: white;
+      border: 1px dotted white;
+      margin: 0 49.5vw;
+      transform: perspective(10in) translateZ(-10in);
+      filter: drop-shadow(0 0 0 white);
+      box-shadow: 0 0 0 white;
+    }
+    80% {
+      background: white;
+      border: 1vw dotted white;
+      margin: 0 48.5vw;
+      transform: perspective(10in) translateZ(0in);
+      filter: drop-shadow(0 0 2in yellow);
+      box-shadow: 0 0 2in red;
+    }
+    100% {
+      background: white;
+      border: 1vw dotted white;
+      margin: 0 48.5vw;
+      transform: perspective(10in) translateZ(-120in);
+      filter: drop-shadow(0 0 2in yellow);
+      box-shadow: 0 0 2in red;
+    }
+  }
+  .atom {
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    height: 1vw;
+    width: 1vw;
+    border-radius: 50%;
+    box-sizing: unset;
+  }
+  .atom {
+    animation: fly 10s 1 ease-in forwards;
+  }
+  .atom.right {
+    right: 0;
+  }
+  .atom.left {
+    left: 0;
+  }
+  .debugger {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: 100vh;
+    position: absolute;
+    z-index: 1;
+    height: 100vh;
+    width: 100vw;
+  }
+  .debugger xmp {
+    margin: 0;
+  }
+  .debugger .pane-t {
+    display: flex;
+    flex: 0 0 75vh;
+    min-height: 300px;
+  }
+  .debugger .pane-b {
+    display: flex;
+    flex: 1 0 auto;
+  }
+  .debugger .pane-t .disasm {
+    flex: 1 0 0;
+    overflow: auto;
+  }
+  .debugger .pane-t .disasm {
+    background-color: rgba(0, 0, 48, 0.5);
+    box-shadow: -1px -1px 2px blue,
+      1px 1px 2px blue,
+      1px -1px 2px blue,
+      -1px 1px 2px blue,
+      1px 1px 2px blue inset,
+      -1px -1px 2px blue inset;
+  }
+  .debugger .pane-t .disasm tr:first-child {
+    background-color: #df5e74;
+  }
+  .debugger .pane-t .pane-tr {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    margin: 3px;
+    overflow: auto;
+  }
+  .debugger .pane-t .pane-tr, .hv {
+    background-color: rgba(48, 0, 0, 0.5);
+    box-shadow: -1px -1px 2px red,
+      1px 1px 2px red,
+      1px -1px 2px red,
+      -1px 1px 2px red,
+      1px 1px 2px red inset,
+      -1px -1px 2px red inset;
+  }
+  .debugger .pane-t .pane-tr .buttons {
+    flex: 0 0 auto;
+  }
+  .debugger .pane-t .pane-tr .regs {
+    flex: 0 0 auto;
+  }
+  .debugger .pane-t .pane-tr .regs table {
+    display: flex;
+    flex-direction: column;
+  }
+  tr[data-reg="rip"] {
+    order: -6;
+  }
+  tr[data-reg="rsp"] {
+    order: -5;
+  }
+  tr[data-reg="rdi"] {
+    order: -4;
+  }
+  tr[data-reg="rsi"] {
+    order: -3;
+  }
+  tr[data-reg="rdx"] {
+    order: -2;
+  }
+  tr[data-reg="rcx"] {
+    order: -1;
+  }
+  tr[data-reg="eflags"] {
+    order: 100;
+  }
+  .debugger .pane-t .pane-tr .breakpoints {
+    flex: 0 0 auto;
+    overflow: auto;
+  }
+  .debugger .pane-t .pane-tr .breakpoints .address {
+    width: 20ex;
+  }
+  .debugger .pane-t .pane-tr .breakpoints :checked + span {
+    border: 1px solid #df5e74;
+  }
+  .debugger .pane-b .mem, .debugger .pane-b .maps {
+    background-color: white;
+  }
+  .debugger .pane-b .mem {
+    flex: 1 0 auto;
+  }
+  .debugger .pane-b .mem, .debugger .pane-b .maps, .sb {
+    background-color: rgba(0, 48, 0, 0.7);
+    box-shadow: -1px -1px 2px green,
+      1px 1px 2px green,
+      1px -1px 2px green,
+      -1px 1px 2px green,
+      1px 1px 2px green inset,
+      -1px -1px 2px green inset;
+  }
+  .fsb {
+    position: absolute;
+    right: 0;
+    z-index: 9001;
+  }
+  .memcyber {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .memcyber >* {
+    flex: 1;
+  }
+  .sb {
+    display: flex;
+    flex-direction: column;
+  }
+  .sb table {
+    flex: 1 0 0;
+    display: block;
+    overflow: auto;
+  }
+  .mb {
+    align-self: flex-start;
+    flex: 0;
+    order: 9001;
+  }
+  .sb >div {
+    flex: 0 0 auto;
+  }
+</style>
+
+<script type="text/x-template" id="regs-view">
+<div class="regs">
+  <table>
+    <tr v-for="(value, key) in regs" :data-reg="key">
+      <td> {{ key }} </td>
+      <td align="right"> {{ '0x'+(new Array(17).join(0)+value.toString(16)).substr(-16) }} </td>
+    </tr>
+  </table>
+</div>
+</script>
+
+<script type="text/x-template" id="asm-view">
+<div class="disasm">
+    <table>
+      <tr v-for="(ins, idx) in asm">
+        <td align="right"> {{ (idx==0?'=&#x3E;':'  ')+'0x'+ins[0].toString(16) }} </td>
+        <td> {{ '\xa0' + ins[2] + ' ' + ins[3] }} </td>
+      </tr>
+    </table>
+</div>
+</script>
+
+<script type="text/x-template" id="maps-view">
+<div class="maps">
+    <table>
+      <tr v-for="map in maps">
+        <td style="text-align:right"> {{ '0x'+map[0].toString(16) }} </td>
+        <td style="text-align:right"> {{ '0x'+(map[0]+map[1]).toString(16) }} </td>
+        <td style="text-align:right"> {{ '0x'+map[1].toString(16) }} </td>
+        <td> {{ map[2] }} </td>
+        <td> {{ map[3] }} </td>
+      </tr>
+    </table>
+</div>
+</script>
+
+<script type="text/x-template" id="hex-view">
+<div>
+    <b-input-group>
+      <b-button-group>
+      <b-input v-model="memaddrhex"></b-input>
+        <b-button v-on:dblclick.stop="" v-on:click.stop="prev">&#x3C;&#x3C;</b-button>
+        <b-button v-on:dblclick.stop="" v-on:click.stop="next">&#x3E;&#x3E;</b-button>
+        <b-button v-on:dblclick.stop="" v-on:click.stop="page">align</b-button>
+      </b-button-group>
+    </b-input-group>
+    <pre>{{ hexdump }}</pre>
+</div>
+</script>
+
+<div class="cyber">
+<div class="atom right"></div>
+<div class="atom left"></div>
+<table class="grid top" cellspacing="0">
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
+<table class="grid bottom" cellspacing="0">
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
+</div>
+
+<script type="text/x-template" id="main-template">
+<div class="cyber">
+<div class="debugger">
+<div class="pane-t">
+  <asm-view v-bind:asm="asm"></asm-view>
+<div class="pane-tr">
+  <control-buttons></control-buttons>
+  <breakpoints v-bind:breakpoints="breakpoints"></breakpoints>
+  <regs-view v-bind:regs="regs"></regs-view>
+</div>
+</div>
+<div class="pane-b">
+  <div class="mem">
+    <router-link to="/mem" tag="button" class="fsb">Fullscreen</router-link>
+    <hex-view v-bind:mem="mem" v-bind:count="256"></hex-view>
+  </div>
+  <maps-view v-bind:maps="maps"></maps-view>
+</div>
+</div>
+</div>
+</div>
+</script>
+
+<script type="text/x-template" id="mem-template">
+<div class="memcyber cyber">
+    <router-link to="/" tag="button" class="mb">Main</router-link>
+    <hex-view class="hv" v-bind:mem="mem" v-bind:count="512"></hex-view>
+    <searchbox class="sb" v-bind:q="q" v-bind:qtype="qtype" v-bind:search_results="search_results"></searchbox>
+</div>
+</script>
+
+<script type="text/x-template" id="searchbox-template">
+<div>
+    <b-input-group>
+      <b-input v-model="q" @keyup.enter="search"></b-input>
+      <b-select v-model="qtype">
+        <option>string</option>
+        <option>regex</option>
+        <option>char</option>
+        <option>short</option>
+        <option>int</option>
+        <option>long</option>
+      </b-select>
+      <b-button v-on:dblclick.stop="" v-on:click.stop="search">search</b-button>
+    </b-input-group>
+    <table>
+      <tr v-for="result in search_results">
+        <td style="text-align:right"> {{ '0x'+result[0].toString(16) }} </td>
+        <td>{{ printresult(result[1]) }}</td>
+      </tr>
+    </table>
+</div>
+</script>
+
+<script type="text/x-template" id="breakpoint-template">
+<div class="breakpoints">
+    <b-input-group>
+      <b-input v-model="addr" @keyup.enter="set_break"></b-input>
+      <b-button v-on:dblclick.stop="" v-on:click.stop="set_break">break</b-button>
+    </b-input-group>
+    <b-col>
+    <b-list-group>
+      <b-list-group-item v-for="breakpoint in breakpoints">
+        {{ '0x'+breakpoint.toString(16) }}
+      </b-list-group-item>
+    </b-list-group>
+    </b-col>
+</div>
+</script>
+
+<script type="text/x-template" id="control-button-template">
+<div>
+    <b-button-group>
+      <b-button v-on:dblclick.stop="" v-on:click="run">run</b-button>
+      <b-button v-on:dblclick.stop="" v-on:click="cont">cont</b-button>
+      <b-button v-on:dblclick.stop="" v-on:click="stop">stop</b-button>
+      <b-button v-on:dblclick.stop="" v-on:click="step">step</b-button>
+    </b-button-group>
+</div>
+</script>
+
+<div id="app">
+  <!--<p>
+    <router-link to="/">Main</router-link>
+    <router-link to="/mem">Mem</router-link>
+  </p>-->
+  <router-view v-on:dblclick.native="handledblclick" v-bind:asm="asm" v-bind:regs="regs" v-bind:maps="maps" v-bind:mem="mem" v-bind:breakpoints="breakpoints" v-bind:search_results="search_results"></router-view>
+</div>
+
+<script>
+
+var socket = io.connect(location.origin);
+socket.on('stopped', function(msg) {
+});
+
+socket.on('regs', function(msg) {
+  app.regs = msg;
+});
+
+socket.on('asm', function(msg) {
+  app.asm = msg;
+});
+
+socket.on('maps', function(msg) {
+  app.maps = msg;
+});
+
+socket.on('mem', function(msg) {
+  app.mem.actual_addr = msg.addr;
+  app.mem.data = msg.data;
+});
+
+socket.on('breakpoints', function(msg) {
+  app.breakpoints = msg.sort();
+});
+
+socket.on('search_result', function(msg) {
+  app.search_results = msg;
+});
+
+const Main = Vue.component('main-page', {
+  props: ['asm', 'maps', 'regs', 'mem', 'breakpoints'],
+  template: '#main-template',
+});
+
+const Mem = Vue.component('mem-page', {
+  props: ['mem', 'q', 'qtype', 'search_results'],
+  template: '#mem-template',
+});
+
+const Controls = Vue.component('control-buttons', {
+  template: '#control-button-template',
+  methods: {
+    run: function() {
+      app.run();
+    },
+    step: function() {
+      socket.emit("step");
+    },
+    cont: function() {
+      socket.emit("cont");
+    },
+    stop: function() {
+      socket.emit("stop");
+    }
+  }
+});
+
+const Breakpoints = Vue.component('breakpoints', {
+  props: ['breakpoints'],
+  template: '#breakpoint-template',
+  data: function() {
+    return {
+      addr: 0
+    };
+  },
+  methods: {
+    set_break: async function() {
+      addr = parseInt(this.addr, 0);
+      if (this.breakpoints.includes(addr)) {
+        return;
+      }
+      socket.emit('break', {addr: addr});
+    }
+  }
+});
+
+const Searchbox = Vue.component('searchbox', {
+  props: ['q', 'qtype', 'search_results'],
+  template: '#searchbox-template',
+  methods: {
+    search: function() {
+      if (this.q) {
+        socket.emit('search', {q: this.q, type: this.qtype});
+      }
+    },
+    printresult: function(v) {
+      return arrayToPrintableAscii(new Uint8Array(v));
+    }
+  },
+  created: function() {
+    this.search();
+  }
+});
+
+const Regs = Vue.component('regs-view', {
+  props: ['regs'],
+  template: '#regs-view'
+});
+
+const Asm = Vue.component('asm-view', {
+  props: ['asm'],
+  template: '#asm-view'
+});
+
+const Maps = Vue.component('maps-view', {
+  props: ['maps'],
+  template: '#maps-view'
+});
+
+const Hex = Vue.component('hex-view', {
+  props: {mem: Object, count: Number},
+  computed: {
+    hexdump: function() {
+      let s = '';
+      let bytes = new Uint8Array(this.mem.data);
+      let count = Math.min(this.count, bytes.length);
+      for (let i = 0; i < count; i++) {
+        if (i % 16 == 0) {
+          s += '0x'+(this.mem.actual_addr+i).toString(16)+': ';
+        }
+
+        s += ('0'+bytes[i].toString(16)).slice(-2);
+
+        if ((i+1) % 16 == 0) {
+          s += ' ';
+          for (let j = i-15; j < i+1; j+=1) {
+            s += byteToPrintableAscii(bytes[j]);
+          }
+        }
+        if ((i+1) >= count) {
+          break;
+        }
+        if ((i+1) % 16 == 0) {
+          s += '\n';
+        } else if ((i+1) % 16 == 8) {
+          s += '  ';
+        } else {
+          s += ' ';
+        }
+      }
+      return s;
+    },
+    memaddrhex: {
+      get: function() {
+        return '0x'+this.mem.addr.toString(16);
+      },
+      set: function(v) {
+        if (!isNaN(v)) {
+          this.mem.addr = parseInt(v);
+        }
+      }
+    }
+  },
+  methods: {
+    prev: function() {
+      this.mem.addr -= this.count;
+    },
+    next: function() {
+      this.mem.addr += this.count;
+    },
+    page: function() {
+      this.mem.addr -= this.mem.addr & 0xfff;
+    }
+  },
+  template: '#hex-view'
+});
+
+const routes = [
+  { path: '/', component: Main },
+  { path: '/mem', component: Mem, props: (route) => ({q: route.query.q, qtype: route.query.qtype ? route.query.qtype : 'string'})}
+]
+
+const router = new VueRouter({
+  routes
+})
+
+function initialData() {
+  return {
+    regs: {},
+    asm: [],
+    maps: [],
+    mem: {data: '', actual_addr: 0, addr: 0},
+    breakpoints: [],
+    search_results: []
+  };
+}
+
+const app = new Vue({
+  router: router,
+  data: initialData(),
+  methods: {
+    updatemem: function() {
+      addr = this.mem.addr;
+      socket.emit("mem", {addr: addr, count: 4096});
+    },
+    run: function() {
+      Object.assign(this, initialData());
+      socket.emit("start");
+    },
+    handledblclick: function(ev) {
+      let text = window.getSelection().toString();
+      if (text.includes('0x')) {
+        this.mem.addr = parseInt(text.substr(text.indexOf('0x')));
+      }
+    }
+  },
+  watch: {
+    'mem.addr': function() {
+      this.updatemem();
+    }
+  }
+}).$mount('#app')
+app.run();
+
+function isPrintable(v) {
+  return v >= 32 && v <= 126;
+}
+
+function byteToPrintableAscii(v) {
+  if (!isPrintable(v)) {
+    return '.';
+  }
+  return String.fromCharCode(v);
+}
+
+function arrayToPrintableAscii(a) {
+  let s = '';
+  for (v of a) {
+    s += byteToPrintableAscii(v)
+  }
+  return s;
+}
+
+function decodeHex(s) {
+  let result = [];
+  for (let i = 0; i < s.length; i+=2) {
+    result.push(parseInt(s.substr(i, 2), 16));
+  }
+  return result;
+}
+
+</script>

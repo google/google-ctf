@@ -1,0 +1,93 @@
+<!--
+  Copyright 2018 Google LLC
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+       http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<style>
+body {
+    font-family: verdana;
+    background: black;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+div {
+    height: 0;
+    overflow: hidden;
+}
+
+div:target {
+    height: 200px;
+    transition: height 10s;
+}
+
+@keyframes movelink {
+    from{margin: 0 0;}
+    to{margin: 0 50%;}
+}
+
+a:hover {
+    animation: movelink 1s both infinite;
+}
+
+div > a {
+    display: block;
+    background: #033f03;
+    color: #31d23b;
+    margin: 2px 0;
+    padding: 2px;
+    text-decoration: none;
+}
+
+div::before {
+    display: block;
+    content: "[ " attr(id) " ]";
+    color: #368838;
+    text-align: center;
+}
+
+:target ~ * button {
+    display: none;
+}
+
+</style>
+<script>
+  $(_=>{
+      const token = new URL(location.href).searchParams.get("flag");
+      const page = unescape(location.hash.slice(1) || 'index');
+      $("#flag").val(token);
+      $.get(`secret/${token}/${page}`, data => {
+          data.split('\n').forEach(line => {
+              $('#' + page).append(line.link('#' + line)).click(e=>{
+                  setTimeout(_=>location.reload(true), 1e3);
+              });
+          });
+      });
+      $("#goindex").click(function() {location='#index';location.reload(true);return false;});
+  });
+</script>
+<div id=index>
+</div>
+<div id=events>
+</div>
+<div id=logs>
+</div>
+<div id=tracking>
+</div>
+<div id=alerts>
+</div>
+<div id=users>
+</div>
+<form method=POST action=/clear-log>
+  <button id='goindex'>[index]</button>
+  <input type=hidden name=flag id=flag pattern="CTF[{]meat-egg-ate-[a-zA-Z0-9.-]{20}[}]">
+  <!--(todo:implement gdpr) input type=submit value="delete logs"-->
+</form>

@@ -1,0 +1,44 @@
+diff --git a/content/renderer/renderer_main.cc b/content/renderer/renderer_main.cc
+index 9e76e271b65b..6cf315b7fd15 100644
+--- a/content/renderer/renderer_main.cc
++++ b/content/renderer/renderer_main.cc
+@@ -168,8 +168,7 @@ int RendererMain(const MainFunctionParams& parameters) {
+ 
+   {
+     bool run_loop = true;
+-    bool need_sandbox =
+-        !command_line.HasSwitch(service_manager::switches::kNoSandbox);
++    bool need_sandbox = false;
+ 
+ #if !defined(OS_WIN) && !defined(OS_MACOSX)
+     // Sandbox is enabled before RenderProcess initialization on all platforms,
+diff --git a/sandbox/linux/services/namespace_sandbox.cc b/sandbox/linux/services/namespace_sandbox.cc
+index 53d530ca0af5..83cf0e87e528 100644
+--- a/sandbox/linux/services/namespace_sandbox.cc
++++ b/sandbox/linux/services/namespace_sandbox.cc
+@@ -223,7 +223,7 @@ pid_t NamespaceSandbox::ForkInNewPidNamespace(bool drop_capabilities_in_child) {
+     DCHECK_EQ(1, getpid());
+     if (drop_capabilities_in_child) {
+       // Since we just forked, we are single-threaded, so this should be safe.
+-      CHECK(Credentials::DropAllCapabilitiesOnCurrentThread());
++      //CHECK(Credentials::DropAllCapabilitiesOnCurrentThread());
+     }
+ #if defined(LIBC_GLIBC)
+     MaybeUpdateGlibcTidCache();
+diff --git a/services/service_manager/sandbox/linux/sandbox_linux.cc b/services/service_manager/sandbox/linux/sandbox_linux.cc
+index 2e0a3ea6b0da..f8acc482f35c 100644
+--- a/services/service_manager/sandbox/linux/sandbox_linux.cc
++++ b/services/service_manager/sandbox/linux/sandbox_linux.cc
+@@ -209,9 +209,9 @@ void SandboxLinux::EngageNamespaceSandbox(bool from_zygote) {
+ 
+   // We do not drop CAP_SYS_ADMIN because we need it to place each child process
+   // in its own PID namespace later on.
+-  std::vector<sandbox::Credentials::Capability> caps;
+-  caps.push_back(sandbox::Credentials::Capability::SYS_ADMIN);
+-  CHECK(sandbox::Credentials::SetCapabilities(proc_fd_, caps));
++  //std::vector<sandbox::Credentials::Capability> caps;
++  //caps.push_back(sandbox::Credentials::Capability::SYS_ADMIN);
++  //CHECK(sandbox::Credentials::SetCapabilities(proc_fd_, caps));
+ }
+ 
+ std::vector<int> SandboxLinux::GetFileDescriptorsToClose() {

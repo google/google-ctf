@@ -1,0 +1,18 @@
+__SERIAL__
+cat exit.txt
+cat asparagus.txt
+cat /etc/passwd
+cat /etc/vim.txt
+cat /etc/passwd
+cat exit.txt
+swap /etc/passwd foo bar
+gobbledegook
+swap /etc/vim.txt foo bar
+swap /etc/passwd NO TOPSECRET
+cat /etc/passwd
+rm __PROGRAM_NAME__
+cat exit.txt
+swap /etc/passwd TOPSECRET NO
+rm /etc/passwd
+rm __PROGRAM_NAME__
+
