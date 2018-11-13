@@ -1,0 +1,10 @@
+prefix=@to-be-replaced@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: LibTomMath
+Description: public domain library for manipulating large integer numbers
+Version: @to-be-replaced@
+Libs: -L${libdir} -ltommath
+Cflags: -I${includedir}
