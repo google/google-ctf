@@ -2,7 +2,7 @@
 
 ![Google CTF 2018 Screenshot](frontend/images/screenshot.png)
 
-During the Google CTF 2018 we built a custom scoreboard using Firebase. This is the code, the server-side code is `rules.json`, and the client side code is in the `frontend` directory (there is another README in the directory).
+During the Google CTF 2018 we built a custom scoreboard using Firebase. This is the code, the server-side code is `rules.json`, and the client side code is in the `frontend` directory.
 
 To run this, you need to make the following changes:
  1. Create a Firebase project, see https://firebase.google.com/docs/web/setup for details.
