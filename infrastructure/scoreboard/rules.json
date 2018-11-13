@@ -1,0 +1,125 @@
+// Copyright 2018 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+{
+  "rules": {
+    "config": {
+      ".read": true,
+      ".write": false
+    },
+    "flags": {
+      ".read": false,
+      ".write": false
+    },
+    "tasks": {
+      // Only allow reading visible tasks after the CTF started.
+      ".read": "now >= root.child('config/start').val() && query.orderByChild == 'visible' && query.equalTo == true",
+      ".indexOn": ["visible"],
+      "$task": {
+        ".write": false,
+      }
+    },
+    "taskSolutions": {
+      ".read": true,
+      "$task": {
+        "$teamName": {
+            // Only allow writing a flag submission time with the time the team submitted the flag, before the CTF ends.
+            ".write": "now <= root.child('config/end').val() && newData.val() == root.child('teams').child(root.child('mapping').child($teamName).val()).child('tasks').child($task).child('solved').val()"
+        }
+      }
+    },
+    "teams": {
+      "$teamKey": {
+        "tasks": {
+          "$task": {
+            // Only allow writing correct flags, for tasks that exist, if new, and record submission times in the present.
+            ".write": "!data.exists() && root.child('flags').child($task).exists() && newData.child('flag').val() == root.child('flags').child($task).val() && newData.child('solved').val() == now && root.child('mapping').child(root.child('teams').child($teamKey).child('name').val()).val() == $teamKey",
+            "solved": {
+              ".read": true
+            }
+          }
+        },
+        "name": {
+          ".read": true,
+          // Name must match the one in the mapping. Team key must match the one of the user.
+          ".write": "$teamKey == root.child('userTeams').child(auth.uid).val() && (data.val() == newData.val() || !data.exists() || root.child('mapping').child(data.val()).val() != $teamKey)",
+          ".validate": "newData.isString() && newData.val().matches(/^[^/.$\\[\\]]+$/)"
+        }
+      }
+    },
+    "userTeams": {
+      "$uid": {
+        // Map uid to team key, only allow one team key per authenticated user.
+        ".write": "data.val() === newData.val() || ((!data.exists()) && (!root.child('teams').child(newData.val()).exists()) && auth != null && $uid === auth.uid)",
+        ".validate": "newData.isString() && newData.val().matches(/^[a-zA-Z0-9_-]+$/)",
+        ".read": "auth != null && $uid === auth.uid"
+      }
+    },
+    "mapping": {
+      // Mapping is secret, as it contains team keys.
+      ".read": false,
+      "$teamName": {
+        // First-come, first-served. Check the team key matches the value. Allow team creators to delete their mapping.
+        ".write": "(!data.exists() && $teamName == root.child('teams').child(newData.val()).child('name').val()) || (data.exists() && !newData.exists() && auth != null && root.child('userTeams').child(auth.uid).val() == data.val() && !root.child('teams').child(data.val()).child('tasks').exists())",
+        ".validate": "newData.isString() && newData.val().matches(/^[^/.$\\[\\]]+$/)"
+      }
+    },
+    "scoreboard": {
+      ".read": true,
+      "$teamName": {
+        "tasks": {
+          "$task": {
+            // Record solution in the scoreboard only once.
+            ".write": "now <= root.child('config/end').val() && !data.exists() && newData.val() == root.child('taskSolutions').child($task).child($teamName).val()"
+          }
+        }
+      }
+    },
+    "recruiting": {
+      // Nobody can read the list of emails.
+      ".read": false,
+      "$uid": {
+        ".write": "auth != null && $uid === auth.uid",
+        ".read": "auth != null && $uid === auth.uid"
+      }
+    },
+    "teamLog": {
+      // Nobody can read the list of emails.
+      ".read": false,
+      "$teamKey": {
+        "$uid": {
+          ".write": "auth != null && $uid === auth.uid",
+          ".read": "auth != null && $uid === auth.uid"
+        }
+      }
+    },
+    "readme": {
+      // Everyone can read, nobody can write.
+      ".read": true,
+      ".write": false
+    },
+    "beginners": {
+      "tasks": {
+        ".read": "now >= root.child('config/start').val()",
+        ".write": false
+      },
+      "flags": {
+        ".write": false,
+        // Flags are checked with a query.
+        ".read": "query.orderByValue && query.equalTo.length > 0",
+        ".indexOn": ".value",
+      }
+    },
+  }
+}
