@@ -6,6 +6,7 @@ During the Google CTF 2018 we built a custom scoreboard using Firebase. This is 
 
 To run this, you need to make the following changes:
  1. Create a Firebase project, see https://firebase.google.com/docs/web/setup for details.
+ 1. Set `rules.json` as the Firebase rules (that's the equivalent of the server-side code).
  1. Modify `frontend/vaporware.html` so that the script that includes bootstrap.js contains the following data attributes:
  ```html
      <script
@@ -16,7 +17,6 @@ To run this, you need to make the following changes:
         data-project-id="INSERT_YOUR_PROJECT_ID"
         data-storage-bucket="INSERT_YOUR_BUCKET"></script>
  ```
- 1. Set `rules.json` as the Firebase rules (that's the equivalent of the server-side code).
  
 
 # Notes
