@@ -16,6 +16,7 @@ To run this, you need to make the following changes:
         data-project-id="INSERT_YOUR_PROJECT_ID"
         data-storage-bucket="INSERT_YOUR_BUCKET"></script>
  ```
+ 1. Set `rules.json` as the Firebase rules (that's the equivalent of the server-side code).
  
 
 # Notes
