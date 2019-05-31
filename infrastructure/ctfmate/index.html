@@ -870,6 +870,7 @@ limitations under the License.
   <script src="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.min.js"></script>
   <script src="https://meet.jit.si/external_api.js"></script>
   <script>
+    ONLY_GCS=true;
     firebase.initializeApp(config);
     function initPad(username) {
       var firepadRef = firebase.database().ref();
@@ -1003,9 +1004,9 @@ limitations under the License.
         var endOfChat = document.getElementById('endOfChat');
         var endOfTaskChat = document.getElementById('endOfTaskChat');
         div.className = 'ctfpad-chat-message-container';
-        var quoteRegExp = /(?:(?<quote>```|`|\*\*|\*|~~|__|_)(?<text>[\s\S]*?)\k<quote>)/;
-        var linkRegExp = /(?<url>(?:\bhttps?:\/\/(?:[^\s@/?#\\]*@)?(?:[.\w[\]:-]+)|\bwww[.][\w.:-]+)(?:[\/?#][^\s()]*?(?:\([^\s)]*\)|[^\s])*?(?=[)]?[.,?)](?:\s|$)|(?:\s|$)))?)/;
-        var emojiRegExp = /(?<emoji>(?:^|\b(?=\w)|\B(?=\W))[(]?[=:;8x]['_`"]?[¬"'^vox-]?[{}]?[)(o|¦!DSXCP/\\*#@?](?=\s|$))/;
+        var quoteRegExp = /(?:(```|`|\*\*|\*|~~|__|_)([\s\S]*?)\1)/;
+        var linkRegExp = /((?:\bhttps?:\/\/(?:[^\s@/?#\\]*@)?(?:[.\w[\]:-]+)|\bwww[.][\w.:-]+)(?:[\/?#][^\s()]*?(?:\([^\s)]*\)|[^\s])*?(?=[)]?[.,?)](?:\s|$)|(?:\s|$)))?)/;
+        var emojiRegExp = /((?:^|\b(?=\w)|\B(?=\W))[(]?[=:;8x]['_`"]?[¬"'^vox-]?[{}]?[)(o|¦!DSXCP/\\*#@?](?=\s|$))/;
         var formatRegExp = new RegExp([
           quoteRegExp.source, linkRegExp.source, emojiRegExp.source
         ].join('|'),'ig');
@@ -1354,7 +1355,7 @@ limitations under the License.
               return dict;
             }, {})
           };
-          fetch(
+          return fetch(
             'https://api.github.com/gists',
             {
               method: 'POST',
@@ -1366,6 +1367,7 @@ limitations under the License.
             })
             .then(function(res){return res.json()})
             .then(function(json){
+              if(!json.html_url)throw 'Upload to github failed';
               sayChat('Uploaded ' + filenames + ' ' + json.html_url, title);
               editor.session.insert({
                 row: editor.session.getLength(), column: 0
@@ -1373,21 +1375,24 @@ limitations under the License.
             });
         }
         function uploadToGCS(files) {
+            var promises = [];
         	var folder = firebase.storage().ref().child(teamSecretKey).child(title);
         	for(var i=0;i<files.length;i++) {
-        		folder.child(Math.random().toString(36)).child(files[i].name).put(files[i], {contentDisposition: 'attachment'}).then(function(snap) {
+        		promises.push(folder.child(Math.random().toString(36)).child(files[i].name).put(files[i], {contentDisposition: 'attachment'}).then(function(snap) {
         			return snap.ref.getDownloadURL().then(function(url) {
-		              sayChat('Uploaded ' + url, title);
+		              sayChat('Uploaded **' + snap.ref.name + '** ' + url + '#' + snap.ref.name, title);
 		              editor.session.insert({
 		                row: editor.session.getLength(), column: 0
-		              }, '\n' + url);
+		              }, '\n*' + snap.ref.name + '*\n' + url + '#' + snap.ref.name);
         			});
         		}).catch(function(e){
         			showChat('Error: Upload error =(', '', '', title);
-        		});
+        		}));
         	}
+            return Promise.all(promises);
         }
         function uploadFile(elem) {
+          if(ONLY_GCS)return uploadToGCS(elem.files);
           var files = [];
           var size = 0;
           for(var i=0;i<elem.files.length;i++) {
@@ -1404,7 +1409,7 @@ limitations under the License.
           });
         }
         window.attachFile = function() {
-          if (!githubToken) {
+          if (!githubToken && !ONLY_GCS) {
             getGithubToken();
           } else {
             fileElement.click();
