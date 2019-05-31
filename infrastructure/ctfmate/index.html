@@ -1379,7 +1379,7 @@ limitations under the License.
             var promises = [];
         	var folder = firebase.storage().ref().child(teamSecretKey).child(title);
         	for(var i=0;i<files.length;i++) {
-        		promises.push(folder.child(Math.random().toString(36)).child(files[i].name).put(files[i], {contentDisposition: 'attachment'}).then(function(snap) {
+        		promises.push(folder.child(Math.random().toString(36)).child(files[i].name).put(files[i], {contentDisposition: 'attachment; filename="'+files[i].name+'"'}).then(function(snap) {
         			return snap.ref.getDownloadURL().then(function(url) {
 		              sayChat('Uploaded **' + snap.ref.name + '** ' + url + '#' + snap.ref.name, title);
 		              editor.session.insert({
