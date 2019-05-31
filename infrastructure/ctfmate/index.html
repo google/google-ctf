@@ -879,6 +879,7 @@ limitations under the License.
       if (teamSecretKey) {
         firepadRef = firepadRef.child(teamSecretKey);
       } else {
+        teamSecretKey = urlParams.get('teamSecretKey');
         firepadRef = firepadRef.push();
         urlParams.set('teamSecretKey', firepadRef.key);
         location.hash = urlParams;
