@@ -1,0 +1,28 @@
+// /** @file
+// ISA Bus driver to manage the child devices attached to the ISA Host Controller.
+//
+// This driver follows UEFI driver model and layers on ISA HC protocol defined
+// in PI spec 1.2.1. It consumes the ISA Host Controller protocol produced by
+// the ISA Host Controller and installs the ISA Host Controller Service Binding
+// protocol on the ISA Host Controller's handle.
+//
+// Copyright (c) 2015, Intel Corporation. All rights reserved.<BR>
+//
+// This program and the accompanying materials
+// are licensed and made available under the terms and conditions of the BSD License
+// which accompanies this distribution. The full text of the license may be found at
+// http://opensource.org/licenses/bsd-license.php
+// THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+// WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+//
+// **/
+
+#string STR_MODULE_ABSTRACT
+#language en-US
+"ISA Bus driver to manage the child devices attached to the ISA Host Controller."
+
+#string STR_MODULE_DESCRIPTION
+#language en-US
+"This driver follows UEFI driver model and layers on ISA HC protocol defined in PI spec 1.2.1. It consumes the ISA Host Controller protocol produced by the ISA Host Controller and installs the ISA Host Controller Service Binding protocol on the ISA Host Controller's handle."
+
+

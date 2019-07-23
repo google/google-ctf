@@ -1,0 +1,41 @@
+Run
+
+  ./run.py
+
+Solve locally
+
+  # Takes a few seconds
+  ./solve.py l
+
+Docker
+
+  # Build image
+  docker build -t secureboot .
+
+  # Test run.py inside container
+  docker run -i -t --name secureboot secureboot
+
+  # Export image
+  docker export secureboot > secureboot.tar
+
+nsjail
+
+  # Extract image
+  mkdir secureboot; sudo tar -C secureboot -xvf secureboot.tar
+
+  # Run service
+  nsjail -Ml --port 1337 --chroot `pwd`/secureboot --user 1337 --group 1337 --cwd /home/sb --rlimit_fsize 5 -t 60 -T /tmp -R /dev/null -- ./run.py
+
+  # Use socat to connect to the remote server:
+  socat -,raw,echo=0 tcp:localhost:1337
+
+Solve remotelly
+  
+  # Takes a few seconds
+  # In another terminal:
+  ./solve.py r
+
+Healthcheck
+
+  cd healthcheck
+  ./run.sh

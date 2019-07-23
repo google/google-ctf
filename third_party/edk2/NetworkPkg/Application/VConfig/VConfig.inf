@@ -1,0 +1,61 @@
+## @file
+#  Shell application VLAN configuration.
+#
+#  It is shell application which is used to get and set VLAN configuration.
+#
+#  Copyright (c) 2009 - 2018, Intel Corporation. All rights reserved.<BR>
+#
+#  This program and the accompanying materials
+#  are licensed and made available under the terms and conditions of the BSD License
+#  which accompanies this distribution. The full text of the license may be found at
+#  http://opensource.org/licenses/bsd-license.php.
+#
+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = VConfig
+  FILE_GUID                      = 87E36301-0406-44db-AAF3-9E0E591F3725
+  MODULE_TYPE                    = UEFI_APPLICATION
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = VlanConfigMain
+  MODULE_UNI_FILE                = VConfig.uni
+
+#
+#
+#  This flag specifies whether HII resource section is generated into PE image.
+#
+  UEFI_HII_RESOURCE_SECTION      = TRUE
+
+#
+#  VALID_ARCHITECTURES           = IA32 X64
+#
+
+[Sources]
+  VConfigStrings.uni
+  VConfig.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  ShellPkg/ShellPkg.dec
+
+[LibraryClasses]
+  UefiApplicationEntryPoint
+  UefiBootServicesTableLib
+  UefiHiiServicesLib
+  UefiLib
+  ShellLib
+  NetLib
+  MemoryAllocationLib
+  HiiLib
+
+[Protocols]
+  gEfiVlanConfigProtocolGuid       ## CONSUMES
+  gEfiHiiPackageListProtocolGuid   ## CONSUMES
+
+[UserExtensions.TianoCore."ExtraFiles"]
+  VConfigExtra.uni

@@ -1,0 +1,53 @@
+
+=============================================================================
+                             Introduction
+=============================================================================
+  OpenSSL is a well-known open source implementation of SSL/TLS protocols.
+The core library implements the cryptographic and SSL/TLS functions and
+also provides various utility functions. The OpenSSL library is widely used
+in variety of security products development as base crypto provider.
+(See http://www.openssl.org/ for more information about OpenSSL).
+  UEFI (Unified Extensible Firmware Interface) is a specification detailing
+the interfaces between OS and platform firmware. Several security features
+were introduced (e.g. Authenticated Variable Service, Driver Signing, etc)
+from UEFI 2.2 (http://www.uefi.org/). These security features highly depend
+on the cryptography.
+  This HOWTO documents OpenSSL building under UEFI/EDKII environment.
+
+=============================================================================
+                             OpenSSL-Version
+=============================================================================
+  EDKII supports building with the latest release of OpenSSL.
+  NOTE: Only latest release version was fully validated.
+        And no guarantees on build & functionality if using other versions.
+
+=============================================================================
+                      HOW to Install OpenSSL for UEFI Building
+=============================================================================
+  OpenSSL repository was added as one submodule of EDKII project.
+
+  The user can use the following commands to clone both main EDKII repo and
+openssl submodule:
+  1) Add the "--recursive" flag to the git clone command:
+     $ git clone --recursive https://github.com/tianocore/edk2
+or
+  2) Manually initialize and update the submodules after the clone operation
+     on main project:
+     $ git clone https://github.com/tianocore/edk2
+     $ git submodule update --init --recursive
+
+  And use the following combined commands to pull the remote submodule updates
+(e.g. Updating the new supported OpenSSL release tag):
+     $ git pull --recurse-submodules && \
+       git submodule update --recursive
+
+=============================================================================
+                      About process_files.pl
+=============================================================================
+  "process_files.pl" is one Perl script which runs the OpenSSL Configure,
+then processes the resulting file list into our local OpensslLib.inf and
+OpensslLibCrypto.inf.
+  This only needs to be done once by the maintainer / developer when
+updating to a new version of OpenSSL (or changing options, etc.).
+Normal users do not need do this, since the results are already stored in
+the EDKII git repository for them.

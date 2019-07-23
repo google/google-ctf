@@ -1,0 +1,1361 @@
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/SecureBootConfigDxe.efi matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/DisplayEngine.debug matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/SecureBootConfigDxe.debug matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/SecurityStubDxe.debug matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe/DEBUG/SetupBrowser.debug matches
+./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe/DEBUG/SetupBrowser.map: .text.PasswordCheck
+./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe/DEBUG/SetupBrowser.map: .rodata.PasswordCheck.str1.1
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe/OUTPUT/Setup.obj matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe/OUTPUT/SetupBrowser.lib matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe/OUTPUT/Presentation.obj matches
+./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe/OUTPUT/SetupBrowser.map: .text.PasswordCheck
+./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe/OUTPUT/SetupBrowser.map: .rodata.PasswordCheck.str1.1
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe/DEBUG/HiiDatabase.debug matches
+./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe/DEBUG/DisplayEngine.map: .bss.gConfirmPassword
+./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe/DEBUG/DisplayEngine.map: .bss.gPromptForNewPassword
+./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe/DEBUG/DisplayEngine.map: .bss.gPromptForPassword
+./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe/DEBUG/DisplayEngine.map: .bss.gPasswordUnsupported
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe/DEBUG/DisplayEngine.debug matches
+./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe/OUTPUT/DisplayEngine.map: .bss.gConfirmPassword
+./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe/OUTPUT/DisplayEngine.map: .bss.gPromptForNewPassword
+./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe/OUTPUT/DisplayEngine.map: .bss.gPromptForPassword
+./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe/OUTPUT/DisplayEngine.map: .bss.gPasswordUnsupported
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe/OUTPUT/ProcessOptions.obj matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe/OUTPUT/DisplayEngine.lib matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe/OUTPUT/FormDisplay.obj matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeDxe/DEBUG/VariableRuntimeDxe.efi matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeDxe/DEBUG/VariableRuntimeDxe.dll matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeDxe/DEBUG/VariableRuntimeDxe.debug matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeDxe/OUTPUT/VariableRuntimeDxe.efi matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe/DEBUG/SecurityStubDxe.debug matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe/DEBUG/SecurityStubDxe.efi matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe/DEBUG/SecurityStubDxe.dll matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe/OUTPUT/SecurityStubDxe.efi matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/SecurityStubDxe.efi matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/SetupBrowser.debug matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/VariableRuntimeDxe.efi matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/HiiDatabase.debug matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/CryptoPkg/Library/BaseCryptLib/BaseCryptLib/OUTPUT/Pem/CryptPem.obj matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/CryptoPkg/Library/BaseCryptLib/BaseCryptLib/OUTPUT/BaseCryptLib.lib matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/CryptoPkg/Library/BaseCryptLib/BaseCryptLib/OUTPUT/Pk/CryptPkcs5Pbkdf2.obj matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/CryptoPkg/Library/BaseCryptLib/RuntimeCryptLib/OUTPUT/Pem/CryptPem.obj matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/CryptoPkg/Library/BaseCryptLib/RuntimeCryptLib/OUTPUT/RuntimeCryptLib.lib matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/CryptoPkg/Library/BaseCryptLib/RuntimeCryptLib/OUTPUT/Pk/CryptPkcs5Pbkdf2Null.obj matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/VariableRuntimeDxe.debug matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe/DEBUG/SecureBootConfigDxe.efi matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe/DEBUG/SecureBootConfigDxe.debug matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe/DEBUG/SecureBootConfigDxe.dll matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/X64/SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe/OUTPUT/SecureBootConfigDxe.efi matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/FV/Ffs/F80697E9-7FD6-4665-8646-88E33EF71DFCSecurityStubDxe/F80697E9-7FD6-4665-8646-88E33EF71DFCSEC2.1.pe32 matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/FV/Ffs/F80697E9-7FD6-4665-8646-88E33EF71DFCSecurityStubDxe/F80697E9-7FD6-4665-8646-88E33EF71DFC.ffs matches
+./Build/OvmfX64/DEBUG_GCC5/FV/Ffs/E660EA85-058E-4b55-A54B-F02F83A24707DisplayEngine/E660EA85-058E-4b55-A54B-F02F83A24707.map: .bss.gConfirmPassword
+./Build/OvmfX64/DEBUG_GCC5/FV/Ffs/E660EA85-058E-4b55-A54B-F02F83A24707DisplayEngine/E660EA85-058E-4b55-A54B-F02F83A24707.map: .bss.gPromptForNewPassword
+./Build/OvmfX64/DEBUG_GCC5/FV/Ffs/E660EA85-058E-4b55-A54B-F02F83A24707DisplayEngine/E660EA85-058E-4b55-A54B-F02F83A24707.map: .bss.gPromptForPassword
+./Build/OvmfX64/DEBUG_GCC5/FV/Ffs/E660EA85-058E-4b55-A54B-F02F83A24707DisplayEngine/E660EA85-058E-4b55-A54B-F02F83A24707.map: .bss.gPasswordUnsupported
+Binary file ./Build/OvmfX64/DEBUG_GCC5/FV/Ffs/9E21FD93-9C72-4c15-8C4B-E77F1DB2D792FVMAIN_COMPACT/9E21FD93-9C72-4c15-8C4B-E77F1DB2D792SEC1.2fv.sec matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/FV/Ffs/9E21FD93-9C72-4c15-8C4B-E77F1DB2D792FVMAIN_COMPACT/9E21FD93-9C72-4c15-8C4B-E77F1DB2D792SEC1.guided.dummy matches
+./Build/OvmfX64/DEBUG_GCC5/FV/Ffs/EBf342FE-B1D3-4EF8-957C-8048606FF671SetupBrowser/EBf342FE-B1D3-4EF8-957C-8048606FF671.map: .text.PasswordCheck
+./Build/OvmfX64/DEBUG_GCC5/FV/Ffs/EBf342FE-B1D3-4EF8-957C-8048606FF671SetupBrowser/EBf342FE-B1D3-4EF8-957C-8048606FF671.map: .rodata.PasswordCheck.str1.1
+Binary file ./Build/OvmfX64/DEBUG_GCC5/FV/Ffs/F0E6A44F-7195-41c3-AC64-54F202CD0A21SecureBootConfigDxe/F0E6A44F-7195-41c3-AC64-54F202CD0A21.ffs matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/FV/Ffs/F0E6A44F-7195-41c3-AC64-54F202CD0A21SecureBootConfigDxe/F0E6A44F-7195-41c3-AC64-54F202CD0A21SEC2.1.pe32 matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/FV/Ffs/CBD2E4D5-7068-4FF5-B462-9822B4AD8D60VariableRuntimeDxe/CBD2E4D5-7068-4FF5-B462-9822B4AD8D60.ffs matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/FV/Ffs/CBD2E4D5-7068-4FF5-B462-9822B4AD8D60VariableRuntimeDxe/CBD2E4D5-7068-4FF5-B462-9822B4AD8D60SEC2.1.pe32 matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/FV/DXEFV.Fv matches
+Binary file ./Build/OvmfX64/DEBUG_GCC5/FV/MEMFD.fd matches
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrFormPkg.h:class CIfrPassword : public CIfrObj, public CIfrOpHeader, public CIfrQuestionHeader {
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrFormPkg.h:  EFI_IFR_PASSWORD *mPassword;
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrFormPkg.h:  CIfrPassword () : CIfrObj (EFI_IFR_PASSWORD_OP, (CHAR8 **)&mPassword),
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrFormPkg.h:                    CIfrOpHeader (EFI_IFR_PASSWORD_OP, &mPassword->Header),
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrFormPkg.h:                    CIfrQuestionHeader (&mPassword->Question) {
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrFormPkg.h:    mPassword->MinSize = 0;
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrFormPkg.h:    mPassword->MaxSize = 0;
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrFormPkg.h:  ~CIfrPassword () {
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrFormPkg.h:    mPassword->MinSize = MinSize;
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrFormPkg.h:    mPassword->MaxSize = MaxSize;
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrSyntax.g:#token Password("password")                     "password"
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrSyntax.g:#token EndPassword("endpassword")               "endpassword"
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrSyntax.g:  vfrStatementPassword
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrSyntax.g:vfrStatementPassword :
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrSyntax.g:     CIfrPassword PObj;
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrSyntax.g:  L:Password                                           << PObj.SetLineNo(L->getLine()); >>
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrSyntax.g:  { F:FLAGS "=" vfrPasswordFlagsField[PObj, F->getLine()] "," }
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrSyntax.g:  E:EndPassword                                        << CRT_END_OP (E); >>
+./EdkCompatibilityPkg/Sample/Tools/Source/UefiVfrCompile/VfrSyntax.g:vfrPasswordFlagsField [CIfrPassword & PObj, UINT32 LineNum] :
+./EdkCompatibilityPkg/Sample/Tools/Source/VfrCompile/VfrCompile.g:#token Password("password")                     "password"          
+./EdkCompatibilityPkg/Sample/Tools/Source/VfrCompile/VfrCompile.g:#token EndPassword("endpassword")               "endpassword"             
+./EdkCompatibilityPkg/Sample/Tools/Source/VfrCompile/VfrCompile.g:  vfrStatementPassword        |
+./EdkCompatibilityPkg/Sample/Tools/Source/VfrCompile/VfrCompile.g:  vfrStatementPassword        |
+./EdkCompatibilityPkg/Sample/Tools/Source/VfrCompile/VfrCompile.g://    password  varid    = MyNvData.Password,
+./EdkCompatibilityPkg/Sample/Tools/Source/VfrCompile/VfrCompile.g:vfrStatementPassword : 
+./EdkCompatibilityPkg/Sample/Tools/Source/VfrCompile/VfrCompile.g:  IDPW:Password                       << WriteOpByte (IDPW->getLine(), EFI_IFR_PASSWORD_OP); >>
+./EdkCompatibilityPkg/Sample/Tools/Source/VfrCompile/VfrCompile.g:  EndPassword  ";"              
+./EdkCompatibilityPkg/Foundation/Protocol/ConsoleControl/ConsoleControl.h:  IN CHAR16                             *Password
+./EdkCompatibilityPkg/Foundation/Protocol/ConsoleControl/ConsoleControl.h:    Lock Std In devices until Password is typed.
+./EdkCompatibilityPkg/Foundation/Protocol/ConsoleControl/ConsoleControl.h:    Password - Password needed to unlock screen. NULL means unlock keyboard
+./EdkCompatibilityPkg/Foundation/Framework/Guid/DataHubRecords/DataHubSubClassMisc.h:  EFI_MISC_HARDWARE_SECURITY_STATUS   AdministratorPasswordStatus   :2;  
+./EdkCompatibilityPkg/Foundation/Framework/Guid/DataHubRecords/DataHubSubClassMisc.h:  EFI_MISC_HARDWARE_SECURITY_STATUS   KeyboardPasswordStatus :2;  
+./EdkCompatibilityPkg/Foundation/Framework/Guid/DataHubRecords/DataHubSubClassMisc.h:  EFI_MISC_HARDWARE_SECURITY_STATUS   PowerOnPasswordStatus :2;  
+./EdkCompatibilityPkg/Foundation/Library/Dxe/GraphicsLite/Graphics.c:  IN  CHAR16    *Password
+./EdkCompatibilityPkg/Foundation/Library/Dxe/GraphicsLite/Graphics.c:  presses will be ignored until the Password is typed in. The only way to
+./EdkCompatibilityPkg/Foundation/Library/Dxe/GraphicsLite/Graphics.c:  Password - Password used to lock ConIn device
+./EdkCompatibilityPkg/Foundation/Library/Dxe/GraphicsLite/Graphics.c:  Status = ConsoleControl->LockStdIn (ConsoleControl, Password);
+./EdkCompatibilityPkg/Foundation/Library/Dxe/Include/GraphicsLib.h:  IN  CHAR16    *Password
+./EdkCompatibilityPkg/Foundation/Library/Dxe/Include/GraphicsLib.h:  presses will be ignored until the Password is typed in. The only way to
+./EdkCompatibilityPkg/Foundation/Library/Dxe/Include/GraphicsLib.h:  Password - Password used to lock ConIn device
+./EdkCompatibilityPkg/Foundation/Library/Dxe/Graphics/Graphics.c:  IN  CHAR16    *Password
+./EdkCompatibilityPkg/Foundation/Library/Dxe/Graphics/Graphics.c:  presses will be ignored until the Password is typed in. The only way to
+./EdkCompatibilityPkg/Foundation/Library/Dxe/Graphics/Graphics.c:  Password - Password used to lock ConIn device
+./EdkCompatibilityPkg/Foundation/Library/Dxe/Graphics/Graphics.c:  Status = ConsoleControl->LockStdIn (ConsoleControl, Password);
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:  EfiUserPassword,
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:  EfiAdminPassword
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:  CHAR16            TempPassword[PASSWORD_MAX_SIZE];
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:  CHAR16            EncodedPassword[PASSWORD_MAX_SIZE];
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:  VOID              *PasswordLocation;
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:  EFI_PASSWORD_TYPE PasswordType;
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:ProcessPasswords(
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:  IN UINTN         RequiredPasswordSize,
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:  OUT VOID         *SystemPassword
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:SetPasswordState (
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:EncodePassword (
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:  IN  CHAR16                      *Password
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:CheckForUserPassword(
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:HyperBootPasswordCallback(
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:extern SYSTEM_PASSWORDS     mSystemPassword;
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:extern EFI_PASSWORD_DATA    mAdminPassword;
+./Vlv2TbltDevicePkg/PlatformDxe/PlatformDxe.h:extern EFI_PASSWORD_DATA    mUserPassword;
+./Vlv2TbltDevicePkg/PlatformDxe/SensorVar.c:         gEfiSensorInfoVarNameWithPassword,
+./Vlv2TbltDevicePkg/PlatformDxe/Platform.c:SYSTEM_PASSWORDS      mSystemPassword;
+./Vlv2TbltDevicePkg/PlatformDxe/Platform.c:  // Initialize Password States and Callbacks
+./Vlv2TbltDevicePkg/PlatformDxe/Platform.c:  CHAR16       FirmwareIdNameWithPassword[] = FIRMWARE_ID_NAME_WITH_PASSWORD;
+./Vlv2TbltDevicePkg/PlatformDxe/Platform.c:                    (CHAR16 *)&FirmwareIdNameWithPassword,
+./Vlv2TbltDevicePkg/Include/Protocol/SetupMode.h:extern CHAR16   gEfiSystemPasswordName[];
+./Vlv2TbltDevicePkg/Include/Guid/SetupVariable.h:  UINT8         UserPasswordLevel;
+./Vlv2TbltDevicePkg/Include/Guid/SetupVariable.h:  UINT8         UserPasswordLevelLockHide;
+./Vlv2TbltDevicePkg/Include/Guid/SetupVariable.h:  // Passwords
+./Vlv2TbltDevicePkg/Include/Guid/SetupVariable.h:  UINT16          UserPassword[PASSWORD_MAX_SIZE];
+./Vlv2TbltDevicePkg/Include/Guid/SetupVariable.h:  UINT16          AdminPassword[PASSWORD_MAX_SIZE];
+./Vlv2TbltDevicePkg/Include/Guid/SetupVariable.h:  // Passwords
+./Vlv2TbltDevicePkg/Include/Guid/SetupVariable.h:  UINT16        UserPassword[PASSWORD_MAX_SIZE];
+./Vlv2TbltDevicePkg/Include/Guid/SetupVariable.h:  UINT16        AdminPassword[PASSWORD_MAX_SIZE];
+./Vlv2TbltDevicePkg/Include/Guid/SensorInfoVariable.h:extern CHAR16   gEfiSensorInfoVarNameWithPassword[];
+./Vlv2TbltDevicePkg/Include/SetupMode.h:#define   SYSTEM_PASSWORD_NAME             L"SystemPassword"
+./Vlv2TbltDevicePkg/Include/SetupMode.h:extern CHAR16   gEfiSystemPasswordName[];
+./Vlv2TbltDevicePkg/PlatformSetupDxe/Security.vfi:  password varid  = Setup.AdminPassword,
+./Vlv2TbltDevicePkg/PlatformSetupDxe/Security.vfi:  password varid  = Setup.UserPassword,
+./Vlv2TbltDevicePkg/PlatformSetupDxe/Security.vfi:  password varid  = Setup.AdminPassword,
+./Vlv2TbltDevicePkg/PlatformSetupDxe/Security.vfi:  password varid  = Setup.UserPassword,
+./Vlv2TbltDevicePkg/PlatformSetupDxe/VfrStrings.uni:#string STR_PASSWORD_CONFIGURATION_SUBTITLE            #language en-US "Password Setting"
+./Vlv2TbltDevicePkg/PlatformSetupDxe/VfrStrings.uni:#string STR_PASSWORD_CONFIGURATION_HELP                #language en-US "Password Setting"
+./Vlv2TbltDevicePkg/PlatformSetupDxe/VfrStrings.uni:#string STR_ADMIN_PASSWORD                             #language en-US "Setup Administrator Password"
+./Vlv2TbltDevicePkg/PlatformSetupDxe/VfrStrings.uni:#string STR_ADMIN_PASSWORD_HELP                        #language en-US "Set Setup Administrator Password"
+./Vlv2TbltDevicePkg/PlatformSetupDxe/VfrStrings.uni:#string STR_USER_PASSWORD                              #language en-US "User Password"
+./Vlv2TbltDevicePkg/PlatformSetupDxe/VfrStrings.uni:#string STR_USER_PASSWORD_HELP                         #language en-US "Set User Password"
+./Vlv2TbltDevicePkg/PlatformSetupDxe/VfrStrings.uni:#string STR_CHANGE_ADMIN_PASSWORD                      #language en-US "Change Supervisor Password"
+./Vlv2TbltDevicePkg/PlatformSetupDxe/VfrStrings.uni:#string STR_CHANGE_ADMIN_PASSWORD_HELP                 #language en-US "Change Setup Administrator Password"
+./Vlv2TbltDevicePkg/PlatformSetupDxe/VfrStrings.uni:#string STR_CHANGE_USER_PASSWORD                       #language en-US "Change User Password"
+./Vlv2TbltDevicePkg/PlatformSetupDxe/VfrStrings.uni:#string STR_CHANGE_USER_PASSWORD_HELP                  #language en-US "Change User Password"
+./Vlv2TbltDevicePkg/Library/PlatformBdsLib/BdsPlatform.c:  presses will be ignored until the Password is typed in. The only way to
+./Vlv2TbltDevicePkg/Library/PlatformBdsLib/BdsPlatform.c:  @param  Password        Password used to lock ConIn device.
+./Vlv2TbltDevicePkg/Library/PlatformBdsLib/BdsPlatform.c:  @retval EFI_UNSUPPORTED Password not found
+./Vlv2TbltDevicePkg/Library/PlatformBdsLib/BdsPlatform.c:  IN  CHAR16    *Password
+./IntelFrameworkPkg/Include/Guid/DataHubRecords.h:  UINT32 AdministratorPasswordStatus :2;
+./IntelFrameworkPkg/Include/Guid/DataHubRecords.h:  UINT32 KeyboardPasswordStatus      :2;
+./IntelFrameworkPkg/Include/Guid/DataHubRecords.h:  UINT32 PowerOnPasswordStatus       :2;
+./AppPkg/Applications/Python/Python-2.7.10/Lib/hashlib.py:        """Password based key derivation function 2 (PKCS #5 v2.0)
+./AppPkg/Applications/Python/Python-2.7.2/Tools/faqwiz/faqconf.py:PASSWORD = ""                           # Password for editing
+./AppPkg/Applications/Python/Python-2.7.2/Tools/faqwiz/faqconf.py:        <TD>Password:
+./AppPkg/Applications/Python/Python-2.7.2/Tools/faqwiz/faqconf.py:<LI>The Password field contains the proper password.
+./AppPkg/Applications/Python/Python-2.7.2/Tools/msi/uisample.py:(u'ServiceInstall', u'Password', u'Y', None, None, None, None, u'Formatted', None, u'password to run service with.  (with StartName)'),
+./AppPkg/Applications/Python/Python-2.7.2/Tools/msi/schema.py:ServiceInstall.add_field(10,'Password',7679)
+./AppPkg/Applications/Python/Python-2.7.2/Tools/msi/schema.py:(u'ServiceInstall',u'Password',u'Y',None, None, None, None, u'Formatted',None, u'password to run service with.  (with StartName)',),
+./AppPkg/Applications/Python/Python-2.7.2/Lib/lib2to3/fixes/fix_urllib.py:                     "HTTPPasswordMgr",
+./AppPkg/Applications/Python/Python-2.7.2/Lib/lib2to3/fixes/fix_urllib.py:                     "HTTPPasswordMgrWithDefaultRealm",
+./AppPkg/Applications/Python/Python-2.7.2/Lib/urllib2.py:class HTTPPasswordMgr:
+./AppPkg/Applications/Python/Python-2.7.2/Lib/urllib2.py:class HTTPPasswordMgrWithDefaultRealm(HTTPPasswordMgr):
+./AppPkg/Applications/Python/Python-2.7.2/Lib/urllib2.py:        user, password = HTTPPasswordMgr.find_user_password(self, realm,
+./AppPkg/Applications/Python/Python-2.7.2/Lib/urllib2.py:        return HTTPPasswordMgr.find_user_password(self, None, authuri)
+./AppPkg/Applications/Python/Python-2.7.2/Lib/urllib2.py:            password_mgr = HTTPPasswordMgr()
+./AppPkg/Applications/Python/Python-2.7.2/Lib/urllib2.py:            passwd = HTTPPasswordMgr()
+./AppPkg/Applications/Python/Python-2.7.2/Lib/urllib2.py:            # fail a second time. Hm. Unless the Password Manager is
+./AppPkg/Applications/Python/Python-2.7.2/Lib/test/test_smtplib.py:            self.push('334 Password:')
+./AppPkg/Applications/Python/Python-2.7.2/Lib/test/test_robotparser.py:    def testPasswordProtectedSite(self):
+./AppPkg/Applications/Python/Python-2.7.2/Lib/test/test_urllib2.py:    >>> mgr = urllib2.HTTPPasswordMgr()
+./AppPkg/Applications/Python/Python-2.7.2/Lib/test/test_urllib2.py:    >>> mgr = urllib2.HTTPPasswordMgr()
+./AppPkg/Applications/Python/Python-2.7.2/Lib/test/test_urllib2.py:class MockPasswordManager:
+./AppPkg/Applications/Python/Python-2.7.2/Lib/test/test_urllib2.py:        password_manager = MockPasswordManager()
+./AppPkg/Applications/Python/Python-2.7.2/Lib/test/test_urllib2.py:        password_manager = MockPasswordManager()
+./AppPkg/Applications/Python/Python-2.7.2/Lib/test/test_urllib2.py:        password_manager = MockPasswordManager()
+./AppPkg/Applications/Python/Python-2.7.2/Lib/getpass.py:On the Mac EasyDialogs.AskPassword is used, if available.
+./AppPkg/Applications/Python/Python-2.7.2/Lib/getpass.py:def unix_getpass(prompt='Password: ', stream=None):
+./AppPkg/Applications/Python/Python-2.7.2/Lib/getpass.py:      prompt: Written on stream to ask for the input.  Default: 'Password: '
+./AppPkg/Applications/Python/Python-2.7.2/Lib/getpass.py:def win_getpass(prompt='Password: ', stream=None):
+./AppPkg/Applications/Python/Python-2.7.2/Lib/getpass.py:def fallback_getpass(prompt='Password: ', stream=None):
+./AppPkg/Applications/Python/Python-2.7.2/Lib/getpass.py:    print >>stream, "Warning: Password input may be echoed."
+./AppPkg/Applications/Python/Python-2.7.2/Lib/getpass.py:            from EasyDialogs import AskPassword
+./AppPkg/Applications/Python/Python-2.7.2/Lib/getpass.py:            getpass = AskPassword
+./AppPkg/Applications/Python/Python-2.7.2/Lib/distutils/tests/test_register.py:        # Password : 'password'
+./AppPkg/Applications/Python/Python-2.7.2/Lib/distutils/command/register.py:                password = getpass.getpass('Password: ')
+./AppPkg/Applications/Python/Python-2.7.2/Lib/distutils/command/register.py:            auth = urllib2.HTTPPasswordMgr()
+./AppPkg/Applications/Python/Python-2.7.2/Lib/distutils/command/register.py:                    data['password'] = getpass.getpass('Password: ')
+./AppPkg/Applications/Python/Python-2.7.2/Lib/distutils/command/register.py:                    print "Password and confirm don't match!"
+./AppPkg/Applications/Python/Python-2.7.2/Modules/pwdmodule.c:Password database entries are reported as 7-tuples containing the following\n\
+./NetworkPkg/IpSecDxe/IpSecCryptIo.h:  @param[in]      KeyPwdSize      The size of Key Password in bytes.
+./NetworkPkg/IpSecDxe/IpSecCryptIo.c:  @param[in]      KeyPwdSize      The size of Key Password in bytes.
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrConfigNVDataStruct.h:  CHAR16      Password[PASSWORD_STORAGE_SIZE];
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrConfigNVDataStruct.h:  CHAR16      PrivateKeyPassword[PASSWORD_STORAGE_SIZE];
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrConfigNVDataStruct.h:  CHAR16      EapPassword[PASSWORD_STORAGE_SIZE];
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:WifiMgrConfigPassword (
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:  UINT8                      *AsciiPassword;
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:  if (StrLen (Profile->Password) < PASSWORD_MIN_LEN) {
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:  AsciiPassword = AllocateZeroPool ((StrLen(Profile->Password) + 1) * sizeof (UINT8));
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:  if (AsciiPassword == NULL) {
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:  UnicodeStrToAsciiStrS (Profile->Password, (CHAR8 *) AsciiPassword, PASSWORD_STORAGE_SIZE);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:  Status = Supplicant->SetData (Supplicant, EfiSupplicant80211PskPassword,
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:                         AsciiPassword, (StrLen(Profile->Password) + 1) * sizeof (UINT8));
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:  ZeroMem (AsciiPassword, AsciiStrLen ((CHAR8 *) AsciiPassword) + 1);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:  FreePool(AsciiPassword);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:  CHAR16                            *Password;
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:  UINTN                             PasswordSize;
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:  UINTN                             EncryptPasswordLen;
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:  CHAR8                             *AsciiEncryptPassword;
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:    // Set Password to Eap peer
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:    if (StrLen (Profile->EapPassword) < PASSWORD_MIN_LEN) {
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:      DEBUG ((DEBUG_ERROR, "[WiFi Connection Manager] Error: No Eap Password for Network: %s.\n", Profile->SSId));
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:    PasswordSize = sizeof (CHAR16) * (StrLen (Profile->EapPassword) + 1);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:    Password = AllocateZeroPool (PasswordSize);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:    if (Password == NULL) {
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:    StrCpyS (Password, PasswordSize, Profile->EapPassword);;
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:    Status = EapConfig->SetData (EapConfig, EFI_EAP_TYPE_MSCHAPV2, EfiEapConfigEapMSChapV2Password,
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:               (VOID *) Password, PasswordSize);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:    ZeroMem (Password, PasswordSize);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:    FreePool (Password);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:    if (StrLen (Profile->PrivateKeyPassword) > 0) {
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:      EncryptPasswordLen = StrLen (Profile->PrivateKeyPassword);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:      AsciiEncryptPassword = AllocateZeroPool(EncryptPasswordLen + 1);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:      if (AsciiEncryptPassword == NULL) {
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:      UnicodeStrToAsciiStrS(Profile->PrivateKeyPassword, AsciiEncryptPassword, EncryptPasswordLen + 1);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:                                    EfiEapConfigEapTlsClientPrivateKeyFilePassword,
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:                                    (VOID *) AsciiEncryptPassword, EncryptPasswordLen + 1);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:        ZeroMem (AsciiEncryptPassword, EncryptPasswordLen + 1);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:        FreePool (AsciiEncryptPassword);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:      ZeroMem (AsciiEncryptPassword, EncryptPasswordLen + 1);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:      FreePool (AsciiEncryptPassword);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:        Status = WifiMgrConfigPassword (Nic, Profile);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:              WifiMgrUpdateConnectMessage (Nic, FALSE, L"Connect Failed: Invalid Password!");
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrImpl.c:        WifiMgrUpdateConnectMessage (ConfigToken->Nic, FALSE, L"Connect Failed: Wrong Password or Unexpected Error!");
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrConfig.h:  CHAR16               Password[PASSWORD_STORAGE_SIZE];
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrConfig.h:  CHAR16               PrivateKeyPassword[PASSWORD_STORAGE_SIZE];    //Password to protect private key file
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrConfig.h:  CHAR16               EapPassword[PASSWORD_STORAGE_SIZE];
+./NetworkPkg/WifiConnectionManagerDxe/EapContext.h:  CHAR16                    EncryptPassword[PASSWORD_STORAGE_SIZE];
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionManagerDxe.vfr:      password  varid    = WIFI_MANAGER_IFR_NVDATA.Password,
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionManagerDxe.vfr:            password  varid    = WIFI_MANAGER_IFR_NVDATA.EapPassword,
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionManagerDxe.vfr:    password  varid    = WIFI_MANAGER_IFR_NVDATA.PrivateKeyPassword,
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrMisc.c:  ZeroMem (Profile->Password, sizeof (CHAR16) * PASSWORD_STORAGE_SIZE);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrMisc.c:  ZeroMem (Profile->EapPassword, sizeof (CHAR16) * PASSWORD_STORAGE_SIZE);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrMisc.c:  ZeroMem (Profile->PrivateKeyPassword, sizeof (CHAR16) * PASSWORD_STORAGE_SIZE);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionManagerDxeStrings.uni:#string STR_PASSWORD                      #language en-US "Password"
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionManagerDxeStrings.uni:#string STR_PASSWORD_HELP                 #language en-US "Password Length: 8 - 63 characters"
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionManagerDxeStrings.uni:#string STR_EAP_PASSWORD                  #language en-US "EAP Password"
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionManagerDxeStrings.uni:#string STR_EAP_PASSWORD_HELP             #language en-US "Password Length: 1 - 63 characters"
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionManagerDxeStrings.uni:#string STR_EAP_CLIENT_KEY_PASSWORD           #language en-US "Client Private Key Password"
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrHiiConfigAccess.c:WifiMgrRecordPassword (
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrHiiConfigAccess.c:  CHAR16                          *Password;
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrHiiConfigAccess.c:  Password = HiiGetString (Private->RegisteredHandle, StringId, NULL);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrHiiConfigAccess.c:  if (Password == NULL) {
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrHiiConfigAccess.c:  if (StrLen (Password) > StringBufferLen) {
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrHiiConfigAccess.c:    FreePool (Password);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrHiiConfigAccess.c:  StrnCpyS (StringBuffer, StringBufferLen, Password, StrLen (Password));
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrHiiConfigAccess.c:  ZeroMem (Password, (StrLen (Password) + 1) * sizeof (CHAR16));
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrHiiConfigAccess.c:  FreePool (Password);
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrHiiConfigAccess.c:  CHAR16                             *TempPassword;
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrHiiConfigAccess.c:        TempPassword = Profile->Password;
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrHiiConfigAccess.c:        TempPassword = Profile->EapPassword;
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrHiiConfigAccess.c:        TempPassword = Profile->PrivateKeyPassword;
+./NetworkPkg/WifiConnectionManagerDxe/WifiConnectionMgrHiiConfigAccess.c:      Status = WifiMgrRecordPassword (Private, Value->string, TempPassword, PASSWORD_STORAGE_SIZE);
+./IntelFrameworkModulePkg/Include/Library/PlatformBdsLib.h:  presses will be ignored until the Password is typed in. The only way to
+./IntelFrameworkModulePkg/Include/Library/PlatformBdsLib.h:  @param  Password        The password used to lock ConIn device.
+./IntelFrameworkModulePkg/Include/Library/PlatformBdsLib.h:  @retval EFI_UNSUPPORTED Password not found.
+./IntelFrameworkModulePkg/Include/Library/PlatformBdsLib.h:  IN  CHAR16    *Password
+./IntelFrameworkModulePkg/Library/PlatformBdsLibNull/BdsPlatform.c:  presses will be ignored until the Password is typed in. The only way to
+./IntelFrameworkModulePkg/Library/PlatformBdsLibNull/BdsPlatform.c:  @param  Password        Password used to lock ConIn device.
+./IntelFrameworkModulePkg/Library/PlatformBdsLibNull/BdsPlatform.c:  @retval EFI_UNSUPPORTED Password not found
+./IntelFrameworkModulePkg/Library/PlatformBdsLibNull/BdsPlatform.c:  IN  CHAR16    *Password
+./BaseTools/Source/Python/Pkcs7Sign/Readme.md:Convert Key and Certificate for signing. Password is removed with -nodes flag for convenience in this sample.
+Binary file ./BaseTools/Source/C/bin/VfrCompile matches
+./BaseTools/Source/C/VfrCompile/VfrFormPkg.h:class CIfrPassword : public CIfrObj, public CIfrOpHeader, public CIfrQuestionHeader {
+./BaseTools/Source/C/VfrCompile/VfrFormPkg.h:  EFI_IFR_PASSWORD *mPassword;
+./BaseTools/Source/C/VfrCompile/VfrFormPkg.h:  CIfrPassword () : CIfrObj (EFI_IFR_PASSWORD_OP),
+./BaseTools/Source/C/VfrCompile/VfrFormPkg.h:                    CIfrQuestionHeader (&(GetObjBinAddr<EFI_IFR_PASSWORD>())->Question), mPassword(GetObjBinAddr<EFI_IFR_PASSWORD>()) {
+./BaseTools/Source/C/VfrCompile/VfrFormPkg.h:    mPassword->MinSize = 0;
+./BaseTools/Source/C/VfrCompile/VfrFormPkg.h:    mPassword->MaxSize = 0;
+./BaseTools/Source/C/VfrCompile/VfrFormPkg.h:  ~CIfrPassword () {
+./BaseTools/Source/C/VfrCompile/VfrFormPkg.h:    mPassword->MinSize = MinSize;
+./BaseTools/Source/C/VfrCompile/VfrFormPkg.h:    mPassword->MaxSize = MaxSize;
+./BaseTools/Source/C/VfrCompile/VfrTokens.h:	Password=72,
+./BaseTools/Source/C/VfrCompile/VfrTokens.h:	EndPassword=73,
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:    if ( (LA(1)==Password) ) {
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:      vfrStatementPassword();
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:EfiVfrParser::vfrStatementPassword(void)
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:  CIfrPassword PObj;
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:  UINT16 PasswordMinSize;
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:  UINT16 PasswordMaxSize;
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:  zzmatch(Password);
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:      vfrPasswordFlagsField( PObj, F->getLine() );
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:  PasswordMinSize = _STOU16(MIN->getText(), MIN->getLine());
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:  if (_STOU64(MIN->getText(), MIN->getLine()) > PasswordMinSize) {
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:    _PCATCH (VFR_RETURN_INVALID_PARAMETER, MIN->getLine(), "Password MinSize takes only two byte, which can't be larger than 0xFFFF.");
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:  } else if (VarArraySize != 0 && PasswordMinSize > VarArraySize) {
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:    _PCATCH (VFR_RETURN_INVALID_PARAMETER, MIN->getLine(), "Password MinSize can't be larger than the max number of elements in password array.");
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:  PObj.SetMinSize (PasswordMinSize);
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:  PasswordMaxSize = _STOU16(MAX->getText(), MAX->getLine());
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:  if (_STOU64(MAX->getText(), MAX->getLine()) > PasswordMaxSize) {
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:    _PCATCH (VFR_RETURN_INVALID_PARAMETER, MAX->getLine(), "Password MaxSize takes only two byte, which can't be larger than 0xFFFF.");
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:  } else if (VarArraySize != 0 && PasswordMaxSize > VarArraySize) {
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:    _PCATCH (VFR_RETURN_INVALID_PARAMETER, MAX->getLine(), "Password MaxSize can't be larger than the max number of elements in password array.");
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:  } else if (PasswordMaxSize < PasswordMinSize) {
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:    _PCATCH (VFR_RETURN_INVALID_PARAMETER, MAX->getLine(), "Password MaxSize can't be less than Password MinSize.");
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:  PObj.SetMaxSize (PasswordMaxSize);
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:  zzmatch(EndPassword);
+./BaseTools/Source/C/VfrCompile/VfrSyntax.cpp:EfiVfrParser::vfrPasswordFlagsField(CIfrPassword & PObj,UINT32 LineNum)
+./BaseTools/Source/C/VfrCompile/EfiVfrParser.h:	void vfrStatementPassword(void);
+./BaseTools/Source/C/VfrCompile/EfiVfrParser.h:	void vfrPasswordFlagsField(CIfrPassword & PObj,UINT32 LineNum);
+./BaseTools/Source/C/VfrCompile/VfrLexer.cpp:		return Password;
+./BaseTools/Source/C/VfrCompile/VfrLexer.cpp:		return EndPassword;
+Binary file ./BaseTools/Source/C/VfrCompile/VfrSyntax.o matches
+./BaseTools/Source/C/VfrCompile/VfrParser.dlg:		return Password;
+./BaseTools/Source/C/VfrCompile/VfrParser.dlg:		return EndPassword;
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:#token Password("password")                     "password"
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:#token EndPassword("endpassword")               "endpassword"
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:  vfrStatementPassword
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:vfrStatementPassword :
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:     CIfrPassword PObj;
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:     UINT16 PasswordMinSize;
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:     UINT16 PasswordMaxSize;
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:  L:Password                                           << PObj.SetLineNo(L->getLine()); >>
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:  { F:FLAGS "=" vfrPasswordFlagsField[PObj, F->getLine()] "," }
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:                                                          PasswordMinSize = _STOU16(MIN->getText(), MIN->getLine());
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:                                                          if (_STOU64(MIN->getText(), MIN->getLine()) > PasswordMinSize) {
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:                                                            _PCATCH (VFR_RETURN_INVALID_PARAMETER, MIN->getLine(), "Password MinSize takes only two byte, which can't be larger than 0xFFFF.");
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:                                                          } else if (VarArraySize != 0 && PasswordMinSize > VarArraySize) {
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:                                                            _PCATCH (VFR_RETURN_INVALID_PARAMETER, MIN->getLine(), "Password MinSize can't be larger than the max number of elements in password array.");
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:                                                          PObj.SetMinSize (PasswordMinSize);
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:                                                          PasswordMaxSize = _STOU16(MAX->getText(), MAX->getLine());
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:                                                          if (_STOU64(MAX->getText(), MAX->getLine()) > PasswordMaxSize) {
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:                                                            _PCATCH (VFR_RETURN_INVALID_PARAMETER, MAX->getLine(), "Password MaxSize takes only two byte, which can't be larger than 0xFFFF.");
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:                                                          } else if (VarArraySize != 0 && PasswordMaxSize > VarArraySize) {
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:                                                            _PCATCH (VFR_RETURN_INVALID_PARAMETER, MAX->getLine(), "Password MaxSize can't be larger than the max number of elements in password array.");
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:                                                          } else if (PasswordMaxSize < PasswordMinSize) {
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:                                                            _PCATCH (VFR_RETURN_INVALID_PARAMETER, MAX->getLine(), "Password MaxSize can't be less than Password MinSize.");
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:                                                          PObj.SetMaxSize (PasswordMaxSize);
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:  E:EndPassword                                        << CRT_END_OP (E); >>
+./BaseTools/Source/C/VfrCompile/VfrSyntax.g:vfrPasswordFlagsField [CIfrPassword & PObj, UINT32 LineNum] :
+./MdeModulePkg/Include/Protocol/DisplayProtocol.h:  Perform Password check.
+./MdeModulePkg/Include/Protocol/DisplayProtocol.h:  @param  Form             Form where Password Statement is in.
+./MdeModulePkg/Include/Protocol/DisplayProtocol.h:  @param  Statement        Password statement
+./MdeModulePkg/Include/Protocol/DisplayProtocol.h:  @param  PasswordString   Password string to be checked. It may be NULL.
+./MdeModulePkg/Include/Protocol/DisplayProtocol.h:  @return Status     Status of Password check.
+./MdeModulePkg/Include/Protocol/DisplayProtocol.h:  IN EFI_STRING                    PasswordString  OPTIONAL
+./MdeModulePkg/Include/Protocol/DisplayProtocol.h:  // Password additional check. It may be NULL when the additional check is not required.
+./MdeModulePkg/Include/Protocol/DisplayProtocol.h:  PASSWORD_CHECK        PasswordCheck;
+./MdeModulePkg/Universal/SetupBrowserDxe/Presentation.c:    DisplayStatement->PasswordCheck = PasswordCheck;
+./MdeModulePkg/Universal/SetupBrowserDxe/Presentation.c:          PasswordCheck (NULL, UserInput->SelectedStatement, (CHAR16 *) Statement->BufferValue);
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.h:  Password may be stored as encrypted by Configuration Driver. When change a
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.h:  @retval EFI_SUCCESS            Password correct, Browser will prompt for new
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.h:  @retval EFI_NOT_READY          Password incorrect, Browser will show error
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.h:PasswordCallback (
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.h:PasswordInvalid (
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.h:  Perform Password check.
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.h:  @param  Form             Form where Password Statement is in.
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.h:  @param  Statement        Password statement
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.h:  @param  PasswordString   Password string to be checked. It may be NULL.
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.h:  @return Status     Status of Password check.
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.h:PasswordCheck (
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.h:  IN EFI_STRING                    PasswordString  OPTIONAL
+./MdeModulePkg/Universal/SetupBrowserDxe/IfrParse.c:    // Password with CALLBACK flag is stored in encoded format,
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.c:  Perform Password check.
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.c:  @param  Form             Form where Password Statement is in.
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.c:  @param  Statement        Password statement
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.c:  @param  PasswordString   Password string to be checked. It may be NULL.
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.c:  @return Status     Status of Password check.
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.c:PasswordCheck (
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.c:  IN EFI_STRING                    PasswordString  OPTIONAL
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.c:  if (PasswordString != NULL) {
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.c:    IfrTypeValue.string = NewString (PasswordString, gCurrentSelection->FormSet->HiiHandle);
+./MdeModulePkg/Universal/SetupBrowserDxe/Setup.c:  if (PasswordString != NULL) {
+./MdeModulePkg/Universal/HiiDatabaseDxe/ConfigRouting.c:  EFI_IFR_PASSWORD         *IfrPassword;
+./MdeModulePkg/Universal/HiiDatabaseDxe/ConfigRouting.c:      // Password question is not in IFR Form. This IFR form is not valid.
+./MdeModulePkg/Universal/HiiDatabaseDxe/ConfigRouting.c:      IfrPassword = (EFI_IFR_PASSWORD *) IfrOpHdr;
+./MdeModulePkg/Universal/HiiDatabaseDxe/ConfigRouting.c:      if (IfrPassword->Question.VarStoreId != VarStoreId) {
+./MdeModulePkg/Universal/HiiDatabaseDxe/ConfigRouting.c:      VarWidth  = (UINT16) (IfrPassword->MaxSize * sizeof (UINT16));
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.h:extern CHAR16            *gPromptForPassword;
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.h:extern CHAR16            *gPromptForNewPassword;
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.h:extern CHAR16            *gConfirmPassword;
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.h:extern CHAR16            *gPasswordUnsupported;
+./MdeModulePkg/Universal/DisplayEngineDxe/InputHandler.c:  EFI_IFR_PASSWORD  *PasswordOp;
+./MdeModulePkg/Universal/DisplayEngineDxe/InputHandler.c:    PasswordOp = (EFI_IFR_PASSWORD *) OpCode;
+./MdeModulePkg/Universal/DisplayEngineDxe/InputHandler.c:    *Minimum = PasswordOp->MinSize;
+./MdeModulePkg/Universal/DisplayEngineDxe/InputHandler.c:    *Maximum = PasswordOp->MaxSize;
+./MdeModulePkg/Universal/DisplayEngineDxe/InputHandler.c:  BOOLEAN                 IsPassword;
+./MdeModulePkg/Universal/DisplayEngineDxe/InputHandler.c:    IsPassword = TRUE;
+./MdeModulePkg/Universal/DisplayEngineDxe/InputHandler.c:    IsPassword = FALSE;
+./MdeModulePkg/Universal/DisplayEngineDxe/InputHandler.c:    if (IsPassword) {
+./MdeModulePkg/Universal/DisplayEngineDxe/InputHandler.c:      if (IsPassword) {
+./MdeModulePkg/Universal/DisplayEngineDxe/InputHandler.c:    if (!IsPassword) {
+./MdeModulePkg/Universal/DisplayEngineDxe/InputHandler.c:          PrintCharAt (Start + Index + 1, Top + 3, IsPassword && StringPtr[Index] != CHAR_NULL? L'*' : StringPtr[Index]);
+./MdeModulePkg/Universal/DisplayEngineDxe/InputHandler.c:      if (IsPassword) {
+./MdeModulePkg/Universal/DisplayEngineDxe/InputHandler.c:        if (IsPassword) {
+./MdeModulePkg/Universal/DisplayEngineDxe/InputHandler.c:      if (!IsPassword) {
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.c:CHAR16            *gPromptForPassword;
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.c:CHAR16            *gPromptForNewPassword;
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.c:CHAR16            *gConfirmPassword;
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.c:CHAR16            *gPasswordUnsupported;
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.c:  gPromptForPassword    = GetToken (STRING_TOKEN (PROMPT_FOR_PASSWORD), gHiiHandle);
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.c:  gPromptForNewPassword = GetToken (STRING_TOKEN (PROMPT_FOR_NEW_PASSWORD), gHiiHandle);
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.c:  gConfirmPassword      = GetToken (STRING_TOKEN (CONFIRM_PASSWORD), gHiiHandle);
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.c:  gPasswordUnsupported  = GetToken (STRING_TOKEN (PASSWORD_NOT_SUPPORTED ), gHiiHandle);
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.c:  FreePool (gPromptForPassword);
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.c:  FreePool (gPromptForNewPassword);
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.c:  FreePool (gConfirmPassword);
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplay.c:  FreePool (gPasswordUnsupported);
+./MdeModulePkg/Universal/DisplayEngineDxe/FormDisplayStr.uni:#string CONFIRM_ERROR                  #language en-US  "Passwords are not the same"
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:PasswordInvalid (
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:PasswordProcess (
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:  EFI_IFR_PASSWORD                *PasswordInfo;
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:  PasswordInfo = (EFI_IFR_PASSWORD *) Question->OpCode;
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:  Maximum      = PasswordInfo->MaxSize;
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:  Status = Question->PasswordCheck (gFormData, Question, StringPtr);
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:    // Password can't be set now.
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:        CreateDialog (&Key, gEmptyString, gPasswordUnsupported, gPressEnter, gEmptyString, NULL);
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:    Status = ReadString (MenuOption, gPromptForPassword, StringPtr);
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:    Status = Question->PasswordCheck (gFormData, Question, StringPtr);
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:        PasswordInvalid ();
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:  Status = ReadString (MenuOption, gPromptForNewPassword, StringPtr);
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:    Question->PasswordCheck (gFormData, Question, NULL);
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:  Status = ReadString (MenuOption, gConfirmPassword, TempString);
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:    Question->PasswordCheck (gFormData, Question, NULL);
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:    Question->PasswordCheck (gFormData, Question, NULL);
+./MdeModulePkg/Universal/DisplayEngineDxe/ProcessOptions.c:      Status = PasswordProcess (MenuOption);
+./ShellPkg/Library/UefiShellDebug1CommandsLib/SmbiosView/PrintInfo.c:Bits 7:6    Power-on Password Status, one of:
+./ShellPkg/Library/UefiShellDebug1CommandsLib/SmbiosView/PrintInfo.c:Bits 5:4    Keyboard Password Status, one of:
+./ShellPkg/Library/UefiShellDebug1CommandsLib/SmbiosView/PrintInfo.c:Bits 3:2    Administrator Password Status, one  of:
+./ShellPkg/Library/UefiShellDebug1CommandsLib/SmbiosView/PrintInfo.c:  // Power-on Password Status
+./ShellPkg/Library/UefiShellDebug1CommandsLib/SmbiosView/PrintInfo.c:  // Keyboard Password Status
+./ShellPkg/Library/UefiShellDebug1CommandsLib/SmbiosView/PrintInfo.c:  // Administrator Password Status
+./ShellPkg/Library/UefiShellDebug1CommandsLib/SmbiosView/SmbiosViewStrings.uni:#string STR_SMBIOSVIEW_PRINTINFO_POWER_ON_PASSWORD              #language en-US "Power-on Password Status: "
+./ShellPkg/Library/UefiShellDebug1CommandsLib/SmbiosView/SmbiosViewStrings.uni:#string STR_SMBIOSVIEW_PRINTINFO_KEYBOARD_PASSWORD              #language en-US "Keyboard Password Status: "
+./ShellPkg/Library/UefiShellDebug1CommandsLib/SmbiosView/SmbiosViewStrings.uni:#string STR_SMBIOSVIEW_PRINTINFO_ADMIN_PASSWORD_STATUS          #language en-US "Administrator Password Status: "
+./ShellPkg/Library/UefiShellDebug1CommandsLib/SmbiosView/PrintInfo.h:    Bits 7:6    Power-on Password Status, one of:
+./ShellPkg/Library/UefiShellDebug1CommandsLib/SmbiosView/PrintInfo.h:    Bits 5:4    Keyboard Password Status, one of:
+./ShellPkg/Library/UefiShellDebug1CommandsLib/SmbiosView/PrintInfo.h:    Bits 3:2    Administrator Password Status, one  of:
+./CryptoPkg/Include/Library/BaseCryptLib.h:  @param[in]  Password     NULL-terminated passphrase used for encrypted PEM key data.
+./CryptoPkg/Include/Library/BaseCryptLib.h:  IN   CONST CHAR8  *Password,
+./CryptoPkg/Include/Library/BaseCryptLib.h:  If Password or Salt or OutKey is NULL, then return FALSE.
+./CryptoPkg/Include/Library/BaseCryptLib.h:  @param[in]  PasswordLength  Length of input password in bytes.
+./CryptoPkg/Include/Library/BaseCryptLib.h:  @param[in]  Password        Pointer to the array for the password.
+./CryptoPkg/Include/Library/BaseCryptLib.h:Pkcs5HashPassword (
+./CryptoPkg/Include/Library/BaseCryptLib.h:  IN  UINTN        PasswordLength,
+./CryptoPkg/Include/Library/BaseCryptLib.h:  IN  CONST CHAR8  *Password,
+./CryptoPkg/Include/Library/BaseCryptLib.h:  @param[in]  KeyPassword      NULL-terminated passphrase used for encrypted PEM
+./CryptoPkg/Include/Library/BaseCryptLib.h:  IN   CONST UINT8  *KeyPassword,
+./CryptoPkg/Library/BaseCryptLib/Pem/CryptPemNull.c:  @param[in]  Password     NULL-terminated passphrase used for encrypted PEM key data.
+./CryptoPkg/Library/BaseCryptLib/Pem/CryptPemNull.c:  IN   CONST CHAR8  *Password,
+./CryptoPkg/Library/BaseCryptLib/Pem/CryptPem.c:PasswordCallback (
+./CryptoPkg/Library/BaseCryptLib/Pem/CryptPem.c:  @param[in]  Password     NULL-terminated passphrase used for encrypted PEM key data.
+./CryptoPkg/Library/BaseCryptLib/Pem/CryptPem.c:  IN   CONST CHAR8  *Password,
+./CryptoPkg/Library/BaseCryptLib/Pem/CryptPem.c:  *RsaContext = PEM_read_bio_RSAPrivateKey (PemBio, NULL, (pem_password_cb *) &PasswordCallback, (void *) Password);
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs5Pbkdf2Null.c:  @param[in]  PasswordLength  Length of input password in bytes.
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs5Pbkdf2Null.c:  @param[in]  Password        Pointer to the array for the password.
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs5Pbkdf2Null.c:Pkcs5HashPassword (
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs5Pbkdf2Null.c:  IN  UINTN        PasswordLength,
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs5Pbkdf2Null.c:  IN  CONST CHAR8  *Password,
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs5Pbkdf2.c:  If Password or Salt or OutKey is NULL, then return FALSE.
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs5Pbkdf2.c:  @param[in]  PasswordLength  Length of input password in bytes.
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs5Pbkdf2.c:  @param[in]  Password        Pointer to the array for the password.
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs5Pbkdf2.c:Pkcs5HashPassword (
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs5Pbkdf2.c:  IN  UINTN        PasswordLength,
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs5Pbkdf2.c:  IN  CONST CHAR8  *Password,
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs5Pbkdf2.c:  if ((Password == NULL) || (Salt == NULL) || (OutKey == NULL)) {
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs5Pbkdf2.c:  if ((PasswordLength == 0) || (PasswordLength > INT_MAX) ||
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs5Pbkdf2.c:                    (const char *)Password,
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs5Pbkdf2.c:                    (int)PasswordLength,
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs7SignNull.c:  @param[in]  KeyPassword      NULL-terminated passphrase used for encrypted PEM
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs7SignNull.c:  IN   CONST UINT8  *KeyPassword,
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs7Sign.c:  @param[in]  KeyPassword      NULL-terminated passphrase used for encrypted PEM
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs7Sign.c:  IN   CONST UINT8  *KeyPassword,
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs7Sign.c:  if (PrivateKey == NULL || KeyPassword == NULL || InData == NULL ||
+./CryptoPkg/Library/BaseCryptLib/Pk/CryptPkcs7Sign.c:             (CONST CHAR8 *) KeyPassword,
+./CryptoPkg/Library/OpensslLib/openssl/doc/apps/req.pod:challengePassword or unstructuredName types. They are currently ignored
+./CryptoPkg/Library/OpensslLib/openssl/doc/apps/req.pod: challengePassword              = A challenge password
+./CryptoPkg/Library/OpensslLib/openssl/doc/apps/req.pod: challengePassword_min          = 4
+./CryptoPkg/Library/OpensslLib/openssl/doc/apps/req.pod: challengePassword_max          = 20
+./CryptoPkg/Library/OpensslLib/openssl/doc/apps/req.pod: challengePassword              = A challenge password
+./CryptoPkg/Library/OpensslLib/openssl/util/indent.pro:-T CMS_PasswordRecipientInfo
+./CryptoPkg/Library/OpensslLib/openssl/crypto/evp/p5_crpt2.c:    fprintf(stderr, "Password:\n");
+./CryptoPkg/Library/OpensslLib/openssl/crypto/evp/evp_pbe.c:/* Password based encryption (PBE) functions */
+./CryptoPkg/Library/OpensslLib/openssl/crypto/asn1/a_strnid.c:    {NID_pkcs9_challengePassword, 1, -1, PKCS9STRING_TYPE, 0},
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_mac.num:pkcs9_challengePassword		54
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_mac.num:id_PasswordBasedMAC		782
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_mac.num:userPassword		879
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/objects.txt:ISO-US 113533 7 66 13	: id-PasswordBasedMAC	: password based MAC
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/objects.txt:pkcs9 7			:			: challengePassword
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/objects.txt:X509 35			: 			: userPassword
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_dat.h:    0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x09,0x07,  /* [  310] OBJ_pkcs9_challengePassword */
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_dat.h:    0x2A,0x86,0x48,0x86,0xF6,0x7D,0x07,0x42,0x0D,  /* [ 5172] OBJ_id_PasswordBasedMAC */
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_dat.h:    0x55,0x04,0x23,                                /* [ 5779] OBJ_userPassword */
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_dat.h:    {"challengePassword", "challengePassword", NID_pkcs9_challengePassword, 9, &so[310]},
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_dat.h:    {"id-PasswordBasedMAC", "password based MAC", NID_id_PasswordBasedMAC, 9, &so[5172]},
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_dat.h:    {"userPassword", "userPassword", NID_userPassword, 3, &so[5779]},
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_dat.h:      54,    /* "challengePassword" */
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_dat.h:     782,    /* "id-PasswordBasedMAC" */
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_dat.h:     879,    /* "userPassword" */
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_dat.h:      54,    /* "challengePassword" */
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_dat.h:     879,    /* "userPassword" */
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_dat.h:     879,    /* OBJ_userPassword                 2 5 4 35 */
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_dat.h:     782,    /* OBJ_id_PasswordBasedMAC          1 2 840 113533 7 66 13 */
+./CryptoPkg/Library/OpensslLib/openssl/crypto/objects/obj_dat.h:      54,    /* OBJ_pkcs9_challengePassword      1 2 840 113549 1 9 7 */
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_pwri.c:    CMS_PasswordRecipientInfo *pwri;
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_pwri.c:    CMS_PasswordRecipientInfo *pwri;
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_pwri.c:    ri->d.pwri = M_ASN1_new_of(CMS_PasswordRecipientInfo);
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_pwri.c:    CMS_PasswordRecipientInfo *pwri;
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_lcl.h:typedef struct CMS_PasswordRecipientInfo_st CMS_PasswordRecipientInfo;
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_lcl.h:        CMS_PasswordRecipientInfo *pwri;
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_lcl.h:struct CMS_PasswordRecipientInfo_st {
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_lcl.h:DECLARE_ASN1_ITEM(CMS_PasswordRecipientInfo)
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_asn1.c:ASN1_SEQUENCE(CMS_PasswordRecipientInfo) = {
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_asn1.c:        ASN1_SIMPLE(CMS_PasswordRecipientInfo, version, LONG),
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_asn1.c:        ASN1_IMP_OPT(CMS_PasswordRecipientInfo, keyDerivationAlgorithm, X509_ALGOR, 0),
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_asn1.c:        ASN1_SIMPLE(CMS_PasswordRecipientInfo, keyEncryptionAlgorithm, X509_ALGOR),
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_asn1.c:        ASN1_SIMPLE(CMS_PasswordRecipientInfo, encryptedKey, ASN1_OCTET_STRING)
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_asn1.c:} ASN1_SEQUENCE_END(CMS_PasswordRecipientInfo)
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_asn1.c:            CMS_PasswordRecipientInfo *pwri = ri->d.pwri;
+./CryptoPkg/Library/OpensslLib/openssl/crypto/cms/cms_asn1.c:        ASN1_IMP(CMS_RecipientInfo, d.pwri, CMS_PasswordRecipientInfo, 3),
+./CryptoPkg/Library/OpensslLib/openssl/crypto/pkcs12/p12_key.c:    fprintf(stderr, "Password (length %d):\n", passlen);
+./CryptoPkg/Library/OpensslLib/openssl/NEWS:      o Password callbacks have a new void * argument for application data
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/evp.h:/* Password based encryption function */
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/x509.h:/* Password based encryption structure */
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/x509.h:/* Password based encryption V2 structures */
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/obj_mac.h:#define SN_id_PasswordBasedMAC          "id-PasswordBasedMAC"
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/obj_mac.h:#define LN_id_PasswordBasedMAC          "password based MAC"
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/obj_mac.h:#define NID_id_PasswordBasedMAC         782
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/obj_mac.h:#define OBJ_id_PasswordBasedMAC         OBJ_ISO_US,113533L,7L,66L,13L
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/obj_mac.h:#define LN_pkcs9_challengePassword              "challengePassword"
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/obj_mac.h:#define NID_pkcs9_challengePassword             54
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/obj_mac.h:#define OBJ_pkcs9_challengePassword             OBJ_pkcs9,7L
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/obj_mac.h:#define LN_userPassword         "userPassword"
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/obj_mac.h:#define NID_userPassword                879
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/obj_mac.h:#define OBJ_userPassword                OBJ_X509,35L
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/objects.h:#  define LN_pkcs9_challengePassword      "challengePassword"
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/objects.h:#  define NID_pkcs9_challengePassword     54
+./CryptoPkg/Library/OpensslLib/openssl/include/openssl/objects.h:#  define OBJ_pkcs9_challengePassword     OBJ_pkcs9,7L
+./CryptoPkg/Library/OpensslLib/openssl/CHANGES:  *) Password based recipient info support for CMS library: implementing
+./CryptoPkg/Library/OpensslLib/openssl/CHANGES:  *) Add PKCS#10 attributes to field table: challengePassword, 
+./CryptoPkg/Library/OpensslLib/openssl/CHANGES:     more complex types. The string types like challengePassword can
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = ""
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = "password"
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = "pleaseletmein"
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = "pleaseletmein"
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = 0073006D006500670000
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = 0073006D006500670000
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = 0073006D006500670000
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = 007100750065006500670000
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = 007100750065006500670000
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = 007100750065006500670000
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = "password"
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = "password"
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = "password"
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = "password"
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = "password"
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = "password"
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = "password"
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = "password"
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = "password"
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = "passwordPASSWORDpassword"
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = "passwordPASSWORDpassword"
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = "passwordPASSWORDpassword"
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = 7061737300776f7264
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = 7061737300776f7264
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = 7061737300776f7264
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = ""
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = ""
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = ""
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = NULL
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = NULL
+./CryptoPkg/Library/OpensslLib/openssl/test/recipes/30-test_evp_data/evppbe.txt:Password = NULL
+./CryptoPkg/Library/OpensslLib/openssl/test/pbelutest.c: * Password based encryption (PBE) table ordering test.
+./CryptoPkg/Library/OpensslLib/openssl/test/evp_test.c:    if (strcmp(keyword, "Password") == 0)
+./CryptoPkg/Library/OpensslLib/openssl/apps/openssl-vms.cnf:# Passwords for private keys if not present they will be prompted for
+./CryptoPkg/Library/OpensslLib/openssl/apps/openssl-vms.cnf:challengePassword		= A challenge password
+./CryptoPkg/Library/OpensslLib/openssl/apps/openssl-vms.cnf:challengePassword_min		= 4
+./CryptoPkg/Library/OpensslLib/openssl/apps/openssl-vms.cnf:challengePassword_max		= 20
+./CryptoPkg/Library/OpensslLib/openssl/apps/srp.c:                        BIO_printf(bio_err, "Password for user \"%s\" ok.\n",
+./CryptoPkg/Library/OpensslLib/openssl/apps/pkcs8.c:                    (pass, sizeof(pass), "Enter Encryption Password:", 1)) {
+./CryptoPkg/Library/OpensslLib/openssl/apps/pkcs8.c:                BIO_printf(bio_err, "Password required\n");
+./CryptoPkg/Library/OpensslLib/openssl/apps/pkcs8.c:            if (EVP_read_pw_string(pass, sizeof(pass), "Enter Password:", 0)) {
+./CryptoPkg/Library/OpensslLib/openssl/apps/pkcs8.c:                BIO_printf(bio_err, "Can't read Password\n");
+./CryptoPkg/Library/OpensslLib/openssl/apps/pkcs8.c:            BIO_printf(bio_err, "Password required\n");
+./CryptoPkg/Library/OpensslLib/openssl/apps/s_client.c:        BIO_printf(bio_err, "Can't read Password\n");
+./CryptoPkg/Library/OpensslLib/openssl/apps/s_client.c:    {"srppass", OPT_SRPPASS, 's', "Password for 'user'"},
+./CryptoPkg/Library/OpensslLib/openssl/apps/openssl.cnf:# Passwords for private keys if not present they will be prompted for
+./CryptoPkg/Library/OpensslLib/openssl/apps/openssl.cnf:challengePassword		= A challenge password
+./CryptoPkg/Library/OpensslLib/openssl/apps/openssl.cnf:challengePassword_min		= 4
+./CryptoPkg/Library/OpensslLib/openssl/apps/openssl.cnf:challengePassword_max		= 20
+./CryptoPkg/Library/OpensslLib/openssl/apps/pkcs12.c:                (macpass, sizeof(macpass), "Enter MAC Password:", export_cert)) {
+./CryptoPkg/Library/OpensslLib/openssl/apps/pkcs12.c:                BIO_printf(bio_err, "Can't read Password\n");
+./CryptoPkg/Library/OpensslLib/openssl/apps/pkcs12.c:                if (EVP_read_pw_string(pass, sizeof(pass), "Enter Export Password:",
+./CryptoPkg/Library/OpensslLib/openssl/apps/pkcs12.c:                    BIO_printf(bio_err, "Can't read Password\n");
+./CryptoPkg/Library/OpensslLib/openssl/apps/pkcs12.c:                BIO_printf(bio_err, "Password required\n");
+./CryptoPkg/Library/OpensslLib/openssl/apps/pkcs12.c:            if (EVP_read_pw_string(pass, sizeof(pass), "Enter Import Password:",
+./CryptoPkg/Library/OpensslLib/openssl/apps/pkcs12.c:                BIO_printf(bio_err, "Can't read Password\n");
+./CryptoPkg/Library/OpensslLib/openssl/apps/pkcs12.c:            BIO_printf(bio_err, "Password required\n");
+./CryptoPkg/Library/OpensslLib/openssl/apps/passwd.c:                    (passwd_malloc, passwd_malloc_size, "Password: ",
+Binary file ./.git/objects/pack/pack-7a2830468b4a408986dde93bc1c30691be53f0e0.pack matches
+Binary file ./.git/index matches
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:OpalSetPassword(
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      NewPin              New Password used to set Pin column
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      Password           New admin password to set
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:OpalUtilSetAdminPasswordAsSid(
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  const VOID        *Password,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      Password           New admin password to set
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  const VOID     *Password,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      OldPassword        Current admin password
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      OldPasswordLength  Length of current admin password in bytes
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      NewPassword        New admin password to set
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      NewPasswordLength  Length of new password in bytes
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:OpalUtilSetAdminPassword(
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  const VOID    *OldPassword,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  UINT32        OldPasswordLength,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  const VOID    *NewPassword,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  UINT32        NewPasswordLength
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      OldPassword        Current admin password
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      OldPasswordLength  Length of current admin password in bytes
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      NewPassword        New admin password to set
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      NewPasswordLength  Length of new password in bytes
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:OpalUtilSetUserPassword(
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  const VOID      *OldPassword,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  UINT32          OldPasswordLength,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  const VOID      *NewPassword,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  UINT32          NewPasswordLength
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      Password                    Admin password
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      PasswordLength              Length of password in bytes
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:OpalUtilVerifyPassword (
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  const VOID     *Password,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  UINT32         PasswordLength,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      Password             Admin or user password
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      PasswordLength       Length of password in bytes
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in/out]  PasswordFailed       indicates if password failed (start session didn't work)
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  const VOID       *Password,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  UINT32           PasswordLength,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  BOOLEAN          *PasswordFailed
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      Password              Admin password
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      PasswordLength        Length of password in bytes
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in/out]  PasswordFailed        indicates if password failed (start session didn't work)
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  const VOID     *Password,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  UINT32         PasswordLength,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  BOOLEAN        *PasswordFailed
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      Password           Admin password
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in]      PasswordLength     Length of password in bytes
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param[in/out]  PasswordFailed     indicates if password failed (start session didn't work)
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  const VOID       *Password,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  UINT32           PasswordLength,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  BOOLEAN          *PasswordFailed,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param          Password,          Input password info.
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param          PasswordLength,    Input password length.
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  const VOID       *Password,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  UINT32           PasswordLength,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param          Password,          Input password info.
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  @param          PasswordLength,    Input password length.
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  const VOID      *Password,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:  UINT32          PasswordLength,
+./SecurityPkg/Include/Library/TcgStorageOpalLib.h:OpalUtilAdminPasswordExists(
+./SecurityPkg/Include/Library/TcgStorageCoreLib.h:  @param [in]       Password               value of PIN to set
+./SecurityPkg/Include/Library/TcgStorageCoreLib.h:  @param [in]       PasswordSize           Size of PIN
+./SecurityPkg/Include/Library/TcgStorageCoreLib.h:  const VOID              *Password,
+./SecurityPkg/Include/Library/TcgStorageCoreLib.h:  UINT32                  PasswordSize
+./SecurityPkg/SecurityPkg.dec:  ## Include/OpalPasswordExtraInfoVariable.h
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.c:  Opal Password PEI driver which is used to unlock Opal Password for S3.
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.c:#include "OpalPasswordPei.h"
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.c:UnlockOpalPassword (
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.c:               OpalDev->Device->Password,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.c:               OpalDev->Device->PasswordLength,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.c:    DEBUG ((DEBUG_INFO, "OpalPassword: S3 phase send BlockSid command to device!\n"));
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.c:UnlockOpalPasswordDevices (
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.c:        UnlockOpalPassword (&OpalDev);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.c:OpalPasswordStorageSecurityPpiNotify (
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.c:  UnlockOpalPasswordDevices ((EDKII_PEI_STORAGE_SECURITY_CMD_PPI *) Ppi);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.c:EFI_PEI_NOTIFY_DESCRIPTOR mOpalPasswordStorageSecurityPpiNotifyDesc = {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.c:  OpalPasswordStorageSecurityPpiNotify
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.c:OpalPasswordPeiInit (
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.c:  Status = PeiServicesNotifyPpi (&mOpalPasswordStorageSecurityPpiNotifyDesc);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.inf:#  This is a Opal Password PEI driver.
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.inf:  BASE_NAME                      = OpalPasswordPei
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.inf:  ENTRY_POINT                    = OpalPasswordPeiInit
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.inf:  OpalPasswordPei.c
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.inf:  OpalPasswordPei.h
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.inf:  OpalPasswordCommon.h
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordDxe.inf:#  This is a OpalPasswordDxe driver.
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordDxe.inf:  BASE_NAME                      = OpalPasswordDxe
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordDxe.inf:  OpalPasswordCommon.h
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordDxe.inf:  OpalPasswordForm.vfr
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalHiiFormStrings.uni:#string STR_DISK_INFO_SET_ADMIN_PSWD             #language en-US "Update Drive Admin Password"
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalHiiFormStrings.uni:#string STR_DISK_INFO_SET_USER_PSWD              #language en-US "Set Drive User Password"
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.h:#include "OpalPasswordCommon.h"
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.h:  UINT8                                           PasswordLength;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.h:  UINT8                                           Password[OPAL_MAX_PASSWORD_SIZE];
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.h:  @param[in]      Password          The input password.
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.h:  @param[in]      PasswordLength    The input password length.
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.h:OpalSupportUpdatePassword (
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.h:  IN VOID               *Password,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.h:  IN UINT32             PasswordLength
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.h:  @param[in]      Password           Admin password
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.h:  IN VOID                      *Password,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordCommon.h:  Opal Password common header file.
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordCommon.h:  UINT8                       PasswordLength;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordCommon.h:  UINT8                       Password[OPAL_MAX_PASSWORD_SIZE];
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalHii.h:HiiPasswordEntered(
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalHii.c:extern UINT8  OpalPasswordFormBin[];
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalHii.c:extern UINT8  OpalPasswordDxeStrings[];
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalHii.c:CHAR16  OpalPasswordStorageName[] = L"OpalHiiConfig";
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalHii.c:                                OpalPasswordDxeStrings,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalHii.c:                                OpalPasswordFormBin,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalHii.c:  if (!HiiIsConfigHdrMatch (Configuration, &gHiiSetupVariableGuid, OpalPasswordStorageName)) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalHii.c:    !HiiIsConfigHdrMatch (Request, &gHiiSetupVariableGuid, OpalPasswordStorageName)) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalHii.c:    ConfigRequestHdr = HiiConstructConfigHdr (&gHiiSetupVariableGuid, OpalPasswordStorageName, DriverHandle);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  BOOLEAN ExistingPassword;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  ExistingPassword = OpalUtilAdminPasswordExists(OwnerShip, LockingFeature);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  AvalDiskActions->UserPass = ExistingPassword;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  AvalDiskActions->DisableUser = ExistingPassword;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  @param[in]      Password           Admin password
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  IN VOID                      *Password,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  NULL_CHECK(Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  Ret = OpalUtilSetAdminPasswordAsSid(
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:                          Password,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:                              Password,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  @param[in]      Password          The input password.
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  @param[in]      PasswordLength    The input password length.
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:OpalSupportUpdatePassword (
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  IN VOID               *Password,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  IN UINT32             PasswordLength
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  CopyMem (OpalDisk->Password, Password, PasswordLength);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  OpalDisk->PasswordLength = (UINT8) PasswordLength;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      TempDevInfo->Password,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      TmpDev->OpalDisk.Password,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      TmpDev->OpalDisk.PasswordLength
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    TempDevInfo->PasswordLength = TmpDev->OpalDisk.PasswordLength;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    ZeroMem (TmpDev->OpalDisk.Password, TmpDev->OpalDisk.PasswordLength);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  @retval Password string if success. NULL if failed.
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:OpalDriverPopUpPasswordInput (
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:OpalDriverRequestPassword (
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  CHAR8                 *Password;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  UINT32                PasswordLen;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      Password = OpalDriverPopUpPasswordInput (Dev, PopUpString, NULL, &PressEsc);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      if (Password == NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      PasswordLen = (UINT32) AsciiStrLen(Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:        Ret = OpalUtilUpdateGlobalLockingRange(&Session, Password, PasswordLen, FALSE, FALSE);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:        Ret = OpalUtilUpdateGlobalLockingRange(&Session, Password, PasswordLen, TRUE, TRUE);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:          Ret = OpalUtilUpdateGlobalLockingRange(&Session, Password, PasswordLen, FALSE, FALSE);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:        OpalSupportUpdatePassword (&Dev->OpalDisk, Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      if (Password != NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:        ZeroMem (Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:        FreePool (Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  CHAR8                 *Password;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  UINT32                PasswordLen;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  CHAR8                 *PasswordConfirm;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  UINT32                PasswordLenConfirm;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    Password = OpalDriverPopUpPasswordInput (Dev, PopUpString, L"Please type in your new password", &PressEsc);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (Password == NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    PasswordLen = (UINT32) AsciiStrLen(Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    PasswordConfirm = OpalDriverPopUpPasswordInput (Dev, PopUpString, L"Please confirm your new password", &PressEsc);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (PasswordConfirm == NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    PasswordLenConfirm = (UINT32) AsciiStrLen(PasswordConfirm);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if ((PasswordLen != PasswordLenConfirm) ||
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:        (CompareMem (Password, PasswordConfirm, PasswordLen) != 0)) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (PasswordConfirm, PasswordLenConfirm);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (PasswordConfirm);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:          L"Passwords are not the same.",
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (PasswordConfirm != NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (PasswordConfirm, PasswordLenConfirm);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (PasswordConfirm);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    Ret = OpalSupportEnableOpalFeature (&Session, Dev->OpalDisk.Msid,  Dev->OpalDisk.MsidLength, Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      OpalSupportUpdatePassword (&Dev->OpalDisk, Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (Password != NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  CHAR8                 *Password;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  UINT32                PasswordLen;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  BOOLEAN               PasswordFailed;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    Password = OpalDriverPopUpPasswordInput (Dev, PopUpString, NULL, &PressEsc);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (Password == NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    PasswordLen = (UINT32) AsciiStrLen(Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    Ret = OpalUtilDisableUser(&Session, Password, PasswordLen, &PasswordFailed);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      OpalSupportUpdatePassword (&Dev->OpalDisk, Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (Password != NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  CHAR8                 *Password;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  UINT32                PasswordLen;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  BOOLEAN               PasswordFailed;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    Password = OpalDriverPopUpPasswordInput (Dev, PopUpString, PopUpString2, &PressEsc);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (Password == NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    PasswordLen = (UINT32) AsciiStrLen(Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:              Password,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:              PasswordLen,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:              &PasswordFailed,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:              Password,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:              PasswordLen,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:              &PasswordFailed,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      OpalSupportUpdatePassword (&Dev->OpalDisk, Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (Password != NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  CHAR8                 *Password;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  UINT32                PasswordLen;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  BOOLEAN               PasswordFailed;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    Password = OpalDriverPopUpPasswordInput (Dev, PopUpString, NULL, &PressEsc);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (Password == NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    PasswordLen = (UINT32) AsciiStrLen(Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    Ret = OpalUtilSecureErase(&Session, Password, PasswordLen, &PasswordFailed);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      OpalSupportUpdatePassword (&Dev->OpalDisk, Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (Password != NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  CHAR8                 *OldPassword;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  UINT32                OldPasswordLen;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  CHAR8                 *Password;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  UINT32                PasswordLen;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  CHAR8                 *PasswordConfirm;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  UINT32                PasswordLenConfirm;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    OldPassword = OpalDriverPopUpPasswordInput (Dev, PopUpString, L"Please type in your password", &PressEsc);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (OldPassword == NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    OldPasswordLen = (UINT32) AsciiStrLen(OldPassword);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    Ret = OpalUtilVerifyPassword (&Session, OldPassword, OldPasswordLen, OPAL_LOCKING_SP_USER1_AUTHORITY);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      Ret = OpalUtilVerifyPassword (&Session, OldPassword, OldPasswordLen, OPAL_LOCKING_SP_ADMIN1_AUTHORITY);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:        ZeroMem (OldPassword, OldPasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:        FreePool (OldPassword);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    Password = OpalDriverPopUpPasswordInput (Dev, PopUpString, L"Please type in your new password", &PressEsc);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (Password == NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (OldPassword, OldPasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (OldPassword);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    PasswordLen = (UINT32) AsciiStrLen(Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    PasswordConfirm = OpalDriverPopUpPasswordInput (Dev, PopUpString, L"Please confirm your new password", &PressEsc);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (PasswordConfirm == NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (OldPassword, OldPasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (OldPassword);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    PasswordLenConfirm = (UINT32) AsciiStrLen(PasswordConfirm);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if ((PasswordLen != PasswordLenConfirm) ||
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:        (CompareMem (Password, PasswordConfirm, PasswordLen) != 0)) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (OldPassword, OldPasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (OldPassword);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (PasswordConfirm, PasswordLenConfirm);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (PasswordConfirm);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:          L"Passwords are not the same.",
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (PasswordConfirm != NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (PasswordConfirm, PasswordLenConfirm);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (PasswordConfirm);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    Ret = OpalUtilSetUserPassword(
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:            OldPassword,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:            OldPasswordLen,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:            Password,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:            PasswordLen
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      OpalSupportUpdatePassword (&Dev->OpalDisk, Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (OldPassword != NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (OldPassword, OldPasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (OldPassword);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (Password != NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  CHAR8                 *OldPassword;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  UINT32                OldPasswordLen;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  CHAR8                 *Password;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  UINT32                PasswordLen;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  CHAR8                 *PasswordConfirm;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  UINT32                PasswordLenConfirm;
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    OldPassword = OpalDriverPopUpPasswordInput (Dev, PopUpString, L"Please type in your password", &PressEsc);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (OldPassword == NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    OldPasswordLen = (UINT32) AsciiStrLen(OldPassword);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    Ret = OpalUtilVerifyPassword (&Session, OldPassword, OldPasswordLen, OPAL_LOCKING_SP_ADMIN1_AUTHORITY);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (OldPassword, OldPasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (OldPassword);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    Password = OpalDriverPopUpPasswordInput (Dev, PopUpString, L"Please type in your new password", &PressEsc);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (Password == NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (OldPassword, OldPasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (OldPassword);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    PasswordLen = (UINT32) AsciiStrLen(Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    PasswordConfirm = OpalDriverPopUpPasswordInput (Dev, PopUpString, L"Please confirm your new password", &PressEsc);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (PasswordConfirm == NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (OldPassword, OldPasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (OldPassword);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    PasswordLenConfirm = (UINT32) AsciiStrLen(PasswordConfirm);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if ((PasswordLen != PasswordLenConfirm) ||
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:        (CompareMem (Password, PasswordConfirm, PasswordLen) != 0)) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (OldPassword, OldPasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (OldPassword);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (PasswordConfirm, PasswordLenConfirm);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (PasswordConfirm);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:          L"Passwords are not the same.",
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (PasswordConfirm != NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (PasswordConfirm, PasswordLenConfirm);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (PasswordConfirm);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    Ret = OpalUtilSetAdminPassword(
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:            OldPassword,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:            OldPasswordLen,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:            Password,
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:            PasswordLen
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      OpalSupportUpdatePassword (&Dev->OpalDisk, Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (OldPassword != NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (OldPassword, OldPasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (OldPassword);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:    if (Password != NULL) {
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      ZeroMem (Password, PasswordLen);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:      FreePool (Password);
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:        DEBUG ((DEBUG_INFO, "OpalPassword: ReadyToBoot point, send BlockSid command to device!\n"));
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalDriver.c:  OpalDriverRequestPassword (Dev, L"Unlock:");
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.h:  Opal Password PEI driver which is used to unlock Opal Password for S3.
+./SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.h:#include "OpalPasswordCommon.h"
+./SecurityPkg/HddPassword/HddPasswordStrings.uni:// String definitions for HddPassword Setup Form.
+./SecurityPkg/HddPassword/HddPasswordStrings.uni:#string STR_SECURITY_HDD_PWD_DESC             #language en-US "HDD Password Description :"
+./SecurityPkg/HddPassword/HddPasswordStrings.uni:#string STR_SECURITY_HDD_BANNER_TWO           #language en-US "Master Passwords."
+./SecurityPkg/HddPassword/HddPasswordStrings.uni:#string STR_SECURITY_HDD_BANNER_THREE         #language en-US "User Password need to be installed for Enabling Security."
+./SecurityPkg/HddPassword/HddPasswordStrings.uni:#string STR_SECURITY_HDD_BANNER_FOUR          #language en-US "Master Password can be modified only when succesfully"
+./SecurityPkg/HddPassword/HddPasswordStrings.uni:#string STR_SECURITY_HDD_BANNER_FIVE          #language en-US "unlocked with User Password in POST."
+./SecurityPkg/HddPassword/HddPasswordStrings.uni:#string STR_HDD_SECURITY_HD                   #language en-US "HDD Password"
+./SecurityPkg/HddPassword/HddPasswordStrings.uni:#string STR_HDD_SECURITY_HELP                 #language en-US "Set HDD Password"
+./SecurityPkg/HddPassword/HddPasswordStrings.uni:#string STR_HDD_USER_PASSWORD                 #language en-US "Request to set User Password"
+./SecurityPkg/HddPassword/HddPasswordStrings.uni:#string STR_HDD_USER_PASSWORD_HELP            #language en-US "Request to set HDD User Password. \n*** Reset is required for the request to be processed in next boot *** \n*** G3 circle is required to disable freeze state when Security Frozen state is Yes, otherwise the request will be ignored. *** "
+./SecurityPkg/HddPassword/HddPasswordStrings.uni:#string STR_HDD_MASTER_PASSWORD               #language en-US "Request to set Master Password"
+./SecurityPkg/HddPassword/HddPasswordStrings.uni:#string STR_HDD_MASTER_PASSWORD_HELP          #language en-US "Request to set HDD Master Password. \n*** Reset is required for the request to be processed in next boot *** \n*** G3 circle is required to disable freeze state when Security Frozen state is Yes, otherwise the request will be ignored. *** "
+./SecurityPkg/HddPassword/HddPasswordStrings.uni:#string STR_HDD_USER_PASSWORD_STS             #language en-US "HDD User Password Status  :"
+./SecurityPkg/HddPassword/HddPasswordStrings.uni:#string STR_HDD_MASTER_PASSWORD_STS           #language en-US "HDD Master Password Status:"
+./SecurityPkg/HddPassword/HddPasswordDxe.h:#include "HddPasswordCommon.h"
+./SecurityPkg/HddPassword/HddPasswordDxe.h:#include "HddPasswordHiiDataStruc.h"
+./SecurityPkg/HddPassword/HddPasswordDxe.h:extern UINT8  HddPasswordBin[];
+./SecurityPkg/HddPassword/HddPasswordDxe.h:extern UINT8  HddPasswordDxeStrings[];
+./SecurityPkg/HddPassword/HddPasswordDxe.h:  CHAR8                         Password[HDD_PASSWORD_MAX_LENGTH];
+./SecurityPkg/HddPassword/HddPasswordDxe.h:#define HDD_PASSWORD_REQUEST_VARIABLE_NAME  L"HddPasswordRequest"
+./SecurityPkg/HddPassword/HddPasswordDxe.h:#define HDD_PASSWORD_VARIABLE_NAME          L"HddPassword"
+./SecurityPkg/HddPassword/HddPasswordDxe.h:  UINT8                 PasswordHash[SHA256_DIGEST_SIZE];
+./SecurityPkg/HddPassword/HddPasswordDxe.h:  UINT8                 PasswordSalt[PASSWORD_SALT_SIZE];
+./SecurityPkg/HddPassword/HddPassword.vfr:  HDD Password Configuration Formset.
+./SecurityPkg/HddPassword/HddPassword.vfr:#include "HddPasswordHiiDataStruc.h"
+./SecurityPkg/HddPassword/HddPassword.vfr:    suppressif ideqvallist HDD_PASSWORD_CONFIG.SecurityStatus.UserPasswordStatus == 0;
+./SecurityPkg/HddPassword/HddPassword.vfr:    suppressif ideqvallist HDD_PASSWORD_CONFIG.SecurityStatus.UserPasswordStatus == 1;
+./SecurityPkg/HddPassword/HddPassword.vfr:    suppressif ideqvallist HDD_PASSWORD_CONFIG.SecurityStatus.MasterPasswordStatus == 0;
+./SecurityPkg/HddPassword/HddPassword.vfr:    suppressif ideqvallist HDD_PASSWORD_CONFIG.SecurityStatus.MasterPasswordStatus == 1;
+./SecurityPkg/HddPassword/HddPassword.vfr:      checkbox varid  = HDD_PASSWORD_CONFIG.Request.UserPassword,
+./SecurityPkg/HddPassword/HddPassword.vfr:      checkbox varid  = HDD_PASSWORD_CONFIG.Request.MasterPassword,
+./SecurityPkg/HddPassword/HddPasswordHiiDataStruc.h:  HddPassword HII data structure used by the driver.
+./SecurityPkg/HddPassword/HddPasswordHiiDataStruc.h:  UINT8     UserPasswordStatus:1;
+./SecurityPkg/HddPassword/HddPasswordHiiDataStruc.h:  UINT8     MasterPasswordStatus:1;
+./SecurityPkg/HddPassword/HddPasswordHiiDataStruc.h:  UINT8     UserPassword:1;
+./SecurityPkg/HddPassword/HddPasswordHiiDataStruc.h:  UINT8     MasterPassword:1;
+./SecurityPkg/HddPassword/HddPasswordDxe.inf:#  HddPasswordDxe driver which is used to set/clear hdd password at attached harddisk
+./SecurityPkg/HddPassword/HddPasswordDxe.inf:  BASE_NAME                      = HddPasswordDxe
+./SecurityPkg/HddPassword/HddPasswordDxe.inf:  ENTRY_POINT                    = HddPasswordDxeInit
+./SecurityPkg/HddPassword/HddPasswordDxe.inf:  HddPasswordDxe.c
+./SecurityPkg/HddPassword/HddPasswordDxe.inf:  HddPasswordDxe.h
+./SecurityPkg/HddPassword/HddPasswordDxe.inf:  HddPasswordHiiDataStruc.h
+./SecurityPkg/HddPassword/HddPasswordDxe.inf:  HddPassword.vfr
+./SecurityPkg/HddPassword/HddPasswordDxe.inf:  HddPasswordStrings.uni
+./SecurityPkg/HddPassword/HddPasswordDxe.inf:  HddPasswordCommon.h
+./SecurityPkg/HddPassword/HddPasswordPei.c:  HddPassword PEI module which is used to unlock HDD password for S3.
+./SecurityPkg/HddPassword/HddPasswordPei.c:#include "HddPasswordPei.h"
+./SecurityPkg/HddPassword/HddPasswordPei.c:EFI_GUID mHddPasswordDeviceInfoGuid = HDD_PASSWORD_DEVICE_INFO_GUID;
+./SecurityPkg/HddPassword/HddPasswordPei.c:  @param[in] Password              The hdd password of attached ATA device.
+./SecurityPkg/HddPassword/HddPasswordPei.c:  IN CHAR8                          *Password
+./SecurityPkg/HddPassword/HddPasswordPei.c:  if ((AtaPassThru == NULL) || (Password == NULL)) {
+./SecurityPkg/HddPassword/HddPasswordPei.c:  CopyMem (&((CHAR16 *) Buffer)[1], Password, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordPei.c:UnlockHddPassword (
+./SecurityPkg/HddPassword/HddPasswordPei.c:  Status = RestoreLockBox (&mHddPasswordDeviceInfoGuid, Buffer, &Length);
+./SecurityPkg/HddPassword/HddPasswordPei.c:      Status = RestoreLockBox (&mHddPasswordDeviceInfoGuid, Buffer, &Length);
+./SecurityPkg/HddPassword/HddPasswordPei.c:          if (!IsZeroBuffer (DevInfo->Password, HDD_PASSWORD_MAX_LENGTH)) {
+./SecurityPkg/HddPassword/HddPasswordPei.c:            UnlockDevice (AtaPassThruPpi, Port, PortMultiplierPort, 0, DevInfo->Password);
+./SecurityPkg/HddPassword/HddPasswordPei.c:HddPasswordAtaPassThruNotify (
+./SecurityPkg/HddPassword/HddPasswordPei.c:  UnlockHddPassword ((EDKII_PEI_ATA_PASS_THRU_PPI *) Ppi);
+./SecurityPkg/HddPassword/HddPasswordPei.c:EFI_PEI_NOTIFY_DESCRIPTOR mHddPasswordAtaPassThruPpiNotifyDesc = {
+./SecurityPkg/HddPassword/HddPasswordPei.c:  HddPasswordAtaPassThruNotify
+./SecurityPkg/HddPassword/HddPasswordPei.c:HddPasswordPeiInit (
+./SecurityPkg/HddPassword/HddPasswordPei.c:  Status = PeiServicesNotifyPpi (&mHddPasswordAtaPassThruPpiNotifyDesc);
+./SecurityPkg/HddPassword/HddPasswordPei.h:  HddPassword PEI module which is used to unlock HDD password for S3.
+./SecurityPkg/HddPassword/HddPasswordPei.h:#include "HddPasswordCommon.h"
+./SecurityPkg/HddPassword/HddPasswordCommon.h:  HDD Password common header file.
+./SecurityPkg/HddPassword/HddPasswordCommon.h:  CHAR8                       Password[HDD_PASSWORD_MAX_LENGTH];
+./SecurityPkg/HddPassword/HddPasswordDxe.c:#include "HddPasswordDxe.h"
+./SecurityPkg/HddPassword/HddPasswordDxe.c:EFI_GUID   mHddPasswordVendorGuid          = HDD_PASSWORD_CONFIG_GUID;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:CHAR16     mHddPasswordVendorStorageName[] = L"HDD_PASSWORD_CONFIG";
+./SecurityPkg/HddPassword/HddPasswordDxe.c:LIST_ENTRY mHddPasswordConfigFormList;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:EFI_GUID mHddPasswordDeviceInfoGuid = HDD_PASSWORD_DEVICE_INFO_GUID;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:BOOLEAN                         mHddPasswordEndOfDxe = FALSE;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:HDD_PASSWORD_REQUEST_VARIABLE   *mHddPasswordRequestVariable = NULL;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:UINTN                           mHddPasswordRequestVariableSize = 0;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:HII_VENDOR_DEVICE_PATH          mHddPasswordHiiVendorDevicePath = {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in]   Password       Points to the data buffer
+./SecurityPkg/HddPassword/HddPasswordDxe.c:PasswordIsFullZero (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  IN CHAR8                    *Password
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    if (Password[Index] != 0) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  CopyMem (TempDevInfo->Password, ConfigFormEntry->Password, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:BuildHddPasswordDeviceInfo (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  EFI_LIST_FOR_EACH (Entry, &mHddPasswordConfigFormList) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    if ((!PasswordIsFullZero (ConfigFormEntry->Password)) ||
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  EFI_LIST_FOR_EACH (Entry, &mHddPasswordConfigFormList) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    if ((!PasswordIsFullZero (ConfigFormEntry->Password)) ||
+./SecurityPkg/HddPassword/HddPasswordDxe.c:             &mHddPasswordDeviceInfoGuid,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:             &mHddPasswordDeviceInfoGuid,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:GetHddPasswordSecurityStatus (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  IfrData->SecurityStatus.UserPasswordStatus   = IfrData->SecurityStatus.Enabled;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  IfrData->SecurityStatus.MasterPasswordStatus = IfrData->SecurityStatus.Supported;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  DEBUG ((DEBUG_INFO, "IfrData->SecurityStatus.UserPasswordStatus   = %x\n", IfrData->SecurityStatus.UserPasswordStatus));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  DEBUG ((DEBUG_INFO, "IfrData->SecurityStatus.MasterPasswordStatus = %x\n", IfrData->SecurityStatus.MasterPasswordStatus));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:HddPasswordEndOfDxeEventNotify (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  mHddPasswordEndOfDxe = TRUE;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  if (mHddPasswordRequestVariable != NULL) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    FreePool (mHddPasswordRequestVariable);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    mHddPasswordRequestVariable = NULL;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    mHddPasswordRequestVariableSize = 0;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  if (IsListEmpty (&mHddPasswordConfigFormList)) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  BuildHddPasswordDeviceInfo ();
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  EFI_LIST_FOR_EACH (Entry, &mHddPasswordConfigFormList) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    ZeroMem (ConfigFormEntry->Password, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      GetHddPasswordSecurityStatus (&IdentifyData, &ConfigFormEntry->IfrData);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in] ConfigFormEntry        The HDD Password configuration form entry.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in] Password               The hdd password of attached ATA device.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:SaveHddPasswordVariable (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  IN CHAR8                          *Password
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  if (!PasswordIsFullZero (Password)) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    // It is Set/Update HDD Password.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    HashOk = GenerateCredential ((UINT8 *) Password, HDD_PASSWORD_MAX_LENGTH, SaltData, HashData);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    // It is Disable HDD Password.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:             &mHddPasswordVendorGuid,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      DEBUG ((DEBUG_INFO, "HddPassword variable get failed (%r)\n", Status));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:          CopyMem (TempVariable->PasswordHash, HashData, sizeof (HashData));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:          CopyMem (TempVariable->PasswordSalt, SaltData, sizeof (SaltData));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        CopyMem (TempVariable->PasswordHash, HashData, sizeof (HashData));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        CopyMem (TempVariable->PasswordSalt, SaltData, sizeof (SaltData));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      CopyMem (NewVariable->PasswordHash, HashData, sizeof (HashData));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      CopyMem (NewVariable->PasswordSalt, SaltData, sizeof (SaltData));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:                    &mHddPasswordVendorGuid,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      DEBUG ((DEBUG_INFO, "HddPassword variable set failed (%r)\n", Status));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in]  ConfigFormEntry       The HDD Password configuration form entry.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[out] HddPasswordVariable   The variable node for the HDD password device.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:GetSavedHddPasswordVariable (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  OUT HDD_PASSWORD_VARIABLE             *HddPasswordVariable
+./SecurityPkg/HddPassword/HddPasswordDxe.c:             &mHddPasswordVendorGuid,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    DEBUG ((DEBUG_INFO, "HddPassword variable get failed (%r)\n", Status));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      CopyMem (HddPasswordVariable, TempVariable, sizeof (HDD_PASSWORD_VARIABLE));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in] ConfigFormEntry    The HDD Password configuration form entry.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in] Password           The hdd password of attached ATA device.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:ValidateHddPassword (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  IN CHAR8                          *Password
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  HDD_PASSWORD_VARIABLE             HddPasswordVariable;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  if (!GetSavedHddPasswordVariable (ConfigFormEntry, &HddPasswordVariable)) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    DEBUG ((DEBUG_INFO, "GetSavedHddPasswordVariable failed\n"));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  HashOk = GenerateCredential ((UINT8 *) Password, HDD_PASSWORD_MAX_LENGTH, HddPasswordVariable.PasswordSalt, HashData);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  if (CompareMem (HddPasswordVariable.PasswordHash, HashData, sizeof (HashData)) != 0) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in] Password            The hdd password of attached ATA device.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:UnlockHddPassword (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  IN CHAR8                          *Password
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  if ((AtaPassThru == NULL) || (Password == NULL)) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  CopyMem (&((CHAR16 *) Buffer)[1], Password, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in] Password            The hdd password of attached ATA device.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:DisableHddPassword (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  IN CHAR8                          *Password
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  if ((AtaPassThru == NULL) || (Password == NULL)) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  CopyMem (&((CHAR16 *) Buffer)[1], Password, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in] MasterPasswordIdentifier   The master password identifier to be set to device.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in] Password                   The hdd password of attached ATA device.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:SetHddPassword (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  IN CHAR16                         MasterPasswordIdentifier,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  IN CHAR8                          *Password
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  if ((AtaPassThru == NULL) || (Password == NULL)) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  CopyMem (&((CHAR16 *) Buffer)[1], Password, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    ((CHAR16 *) Buffer)[17] = MasterPasswordIdentifier;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in, out] Password      The buffer to hold the input password.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:PopupHddPasswordInputWindows (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  IN OUT CHAR8      *Password
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  CopyMem (Password, Ascii, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in] ConfigFormEntry        The HDD Password configuration form entry.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:HddPasswordRequestPassword (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  CHAR8                             Password[HDD_PASSWORD_MAX_LENGTH];
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      Status = PopupHddPasswordInputWindows (PopUpString, NULL, Password);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        if (!PasswordIsFullZero (Password)) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:            Status = UnlockHddPassword (AtaPassThru, Port, PortMultiplierPort, 0, Password);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:            Status = ValidateHddPassword (ConfigFormEntry, Password);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:          CopyMem (ConfigFormEntry->Password, Password, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:            SaveHddPasswordVariable (ConfigFormEntry, Password);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:          ZeroMem (Password, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:          GetHddPasswordSecurityStatus (&IdentifyData, &ConfigFormEntry->IfrData);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        ZeroMem (Password, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in] ConfigFormEntry        The HDD Password configuration form entry.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:ProcessHddPasswordRequestSetUserPwd (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  CHAR8                             Password[HDD_PASSWORD_MAX_LENGTH];
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  CHAR8                             PasswordConfirm[HDD_PASSWORD_MAX_LENGTH];
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      Status = PopupHddPasswordInputWindows (PopUpString, L"Please type in your new password", Password);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        Status = PopupHddPasswordInputWindows (PopUpString, L"Please confirm your new password", PasswordConfirm);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:          if (CompareMem (Password, PasswordConfirm, HDD_PASSWORD_MAX_LENGTH) == 0) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:            if (!PasswordIsFullZero (Password)) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:              Status = SetHddPassword (AtaPassThru, Port, PortMultiplierPort, 0, 1, 0, Password);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:                Status = DisableHddPassword (AtaPassThru, Port, PortMultiplierPort, 0, ConfigFormEntry->Password);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:              CopyMem (ConfigFormEntry->Password, Password, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:              SaveHddPasswordVariable (ConfigFormEntry, Password);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:              ZeroMem (Password, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:              ZeroMem (PasswordConfirm, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:              GetHddPasswordSecurityStatus (&IdentifyData, &ConfigFormEntry->IfrData);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:                L"Passwords are not the same.",
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        ZeroMem (Password, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        ZeroMem (PasswordConfirm, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in] ConfigFormEntry        The HDD Password configuration form entry.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:ProcessHddPasswordRequestSetMasterPwd (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  CHAR8                             Password[HDD_PASSWORD_MAX_LENGTH];
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  CHAR8                             PasswordConfirm[HDD_PASSWORD_MAX_LENGTH];
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      Status = PopupHddPasswordInputWindows (PopUpString, L"Please type in your new password", Password);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        Status = PopupHddPasswordInputWindows (PopUpString, L"Please confirm your new password", PasswordConfirm);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:          if (CompareMem (Password, PasswordConfirm, HDD_PASSWORD_MAX_LENGTH) == 0) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:            if (!PasswordIsFullZero (Password)) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:              Status = SetHddPassword (AtaPassThru, Port, PortMultiplierPort, 1, 1, 1, Password);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:              ZeroMem (Password, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:              ZeroMem (PasswordConfirm, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:                L"Passwords are not the same.",
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        ZeroMem (Password, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        ZeroMem (PasswordConfirm, HDD_PASSWORD_MAX_LENGTH);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in] ConfigFormEntry        The HDD Password configuration form entry.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:ProcessHddPasswordRequest (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  if (mHddPasswordRequestVariable == NULL) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:               &mHddPasswordVendorGuid,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    mHddPasswordRequestVariable = Variable;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    mHddPasswordRequestVariableSize = VariableSize;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:                    &mHddPasswordVendorGuid,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    Variable = mHddPasswordRequestVariable;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    VariableSize = mHddPasswordRequestVariableSize;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      if (TempVariable->Request.UserPassword != 0) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        ProcessHddPasswordRequestSetUserPwd (AtaPassThru, Port, PortMultiplierPort, ConfigFormEntry);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      if (TempVariable->Request.MasterPassword != 0) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        ProcessHddPasswordRequestSetMasterPwd (AtaPassThru, Port, PortMultiplierPort, ConfigFormEntry);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in, out] ConfigFormEntry       The HDD Password configuration form entry.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:GetSavedHddPasswordRequest (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:             &mHddPasswordVendorGuid,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        "HddPasswordRequest got: 0x%x\n",
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @param[in] ConfigFormEntry        The HDD Password configuration form entry.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:SaveHddPasswordRequest (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    "HddPasswordRequest to save: 0x%x\n",
+./SecurityPkg/HddPassword/HddPasswordDxe.c:             &mHddPasswordVendorGuid,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:                  &mHddPasswordVendorGuid,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    DEBUG ((DEBUG_INFO, "HddPasswordRequest variable set failed (%r)\n", Status));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  Get the HDD Password configuration form entry by the index of the goto opcode actived.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @return The HDD Password configuration form entry found.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:HddPasswordGetConfigFormEntryByIndex (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  EFI_LIST_FOR_EACH (Entry, &mHddPasswordConfigFormList) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:HddPasswordFormExtractConfig (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  if ((Request != NULL) && !HiiIsConfigHdrMatch (Request, &mHddPasswordVendorGuid, mHddPasswordVendorStorageName)) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    ConfigRequestHdr = HiiConstructConfigHdr (&mHddPasswordVendorGuid, mHddPasswordVendorStorageName, Private->DriverHandle);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:HddPasswordFormRouteConfig (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  if (!HiiIsConfigHdrMatch (Configuration, &mHddPasswordVendorGuid, mHddPasswordVendorStorageName)) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:HddPasswordFormCallback (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  if (!HiiGetBrowserData (&mHddPasswordVendorGuid, mHddPasswordVendorStorageName, sizeof (HDD_PASSWORD_CONFIG), (UINT8 *) IfrData)) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      ConfigFormEntry->IfrData.Request.UserPassword = Value->b;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      SaveHddPasswordRequest (ConfigFormEntry);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      ConfigFormEntry->IfrData.Request.MasterPassword = Value->b;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      SaveHddPasswordRequest (ConfigFormEntry);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        ConfigFormEntry = HddPasswordGetConfigFormEntryByIndex ((UINT32) (QuestionId - KEY_HDD_DEVICE_ENTRY_BASE));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  HiiSetBrowserData (&mHddPasswordVendorGuid, mHddPasswordVendorStorageName, sizeof (HDD_PASSWORD_CONFIG), (UINT8 *) IfrData, NULL);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  Updates the HDD Password configuration form to add an entry for the attached
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @retval EFI_SUCCESS             The Hdd Password configuration form is updated.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:HddPasswordConfigUpdateForm (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  EFI_LIST_FOR_EACH (Entry, &mHddPasswordConfigFormList) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    DEBUG ((DEBUG_INFO, "HddPasswordDxe: Create new form for device[%d][%d] at Bus 0x%x Dev 0x%x Func 0x%x\n", Port, PortMultiplierPort, Bus, Device, Function));
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    ConfigFormEntry->TitleHelpToken = HiiSetString (HiiHandle, 0, L"Request to set HDD Password", NULL);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    GetHddPasswordSecurityStatus (&IdentifyData, &ConfigFormEntry->IfrData);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    InsertTailList (&mHddPasswordConfigFormList, &ConfigFormEntry->Link);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    EFI_LIST_FOR_EACH (Entry, &mHddPasswordConfigFormList) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:      &mHddPasswordVendorGuid,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    HddPasswordRequestPassword (AtaPassThru, Port, PortMultiplierPort, ConfigFormEntry);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    ProcessHddPasswordRequest (AtaPassThru, Port, PortMultiplierPort, ConfigFormEntry);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:HddPasswordNotificationEvent (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  if (mHddPasswordEndOfDxe) {
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        // Try to add a HDD Password configuration page for the attached devices.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:        Status = HddPasswordConfigUpdateForm (Private->HiiHandle, AtaPassThru, PciIo, Controller, BusNum, DevNum, FuncNum, Port, PortMultiplierPort);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  Initialize the HDD Password configuration form.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  @retval EFI_SUCCESS              The HDD Password configuration form is initialized.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:HddPasswordConfigFormInit (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  InitializeListHead (&mHddPasswordConfigFormList);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  Private->ConfigAccess.ExtractConfig = HddPasswordFormExtractConfig;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  Private->ConfigAccess.RouteConfig   = HddPasswordFormRouteConfig;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  Private->ConfigAccess.Callback      = HddPasswordFormCallback;
+./SecurityPkg/HddPassword/HddPasswordDxe.c:                  &mHddPasswordHiiVendorDevicePath,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:                         &mHddPasswordVendorGuid,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:                         HddPasswordDxeStrings,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:                         HddPasswordBin,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:HddPasswordDxeInit (
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  // Initialize the configuration form of HDD Password.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  Status = HddPasswordConfigFormInit (&Private);
+./SecurityPkg/HddPassword/HddPasswordDxe.c:  // Register HddPasswordNotificationEvent() notify function.
+./SecurityPkg/HddPassword/HddPasswordDxe.c:    HddPasswordNotificationEvent,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:                  HddPasswordEndOfDxeEventNotify,
+./SecurityPkg/HddPassword/HddPasswordDxe.c:                             &mHddPasswordVendorGuid
+./SecurityPkg/HddPassword/HddPasswordPei.inf:#  HddPassword PEI module which is used to unlock HDD password for S3.
+./SecurityPkg/HddPassword/HddPasswordPei.inf:  BASE_NAME                      = HddPasswordPei
+./SecurityPkg/HddPassword/HddPasswordPei.inf:  ENTRY_POINT                    = HddPasswordPeiInit
+./SecurityPkg/HddPassword/HddPasswordPei.inf:  HddPasswordPei.c
+./SecurityPkg/HddPassword/HddPasswordPei.inf:  HddPasswordPei.h
+./SecurityPkg/HddPassword/HddPasswordPei.inf:  HddPasswordCommon.h
+./SecurityPkg/Library/TcgStorageCoreLib/TcgStorageUtil.c:  @param [in]       Password               value of PIN to set
+./SecurityPkg/Library/TcgStorageCoreLib/TcgStorageUtil.c:  @param [in]       PasswordSize           Size of PIN
+./SecurityPkg/Library/TcgStorageCoreLib/TcgStorageUtil.c:  const VOID              *Password,
+./SecurityPkg/Library/TcgStorageCoreLib/TcgStorageUtil.c:  UINT32                  PasswordSize
+./SecurityPkg/Library/TcgStorageCoreLib/TcgStorageUtil.c:  // set new SID Password
+./SecurityPkg/Library/TcgStorageCoreLib/TcgStorageUtil.c:  ERROR_CHECK(TcgAddByteSequence(CreateStruct, Password, PasswordSize, FALSE));
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalCore.c:OpalSetPassword(
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalCore.c:  @param[in]      NewPin              New Password used to set Pin column
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      Password           New admin password to set
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:OpalUtilSetAdminPasswordAsSid(
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  const VOID        *Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  NULL_CHECK(Password);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  // 1. Update SID = new Password
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  Ret = OpalSetPassword(
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                    Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:    DEBUG ((DEBUG_INFO, "set Password failed: Ret=%d MethodStatus=%u\n", Ret, MethodStatus));
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      Password           New admin password to set
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  const VOID     *Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  NULL_CHECK(Password);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  // Start session with Locking SP using current admin Password
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                      Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      OldPassword        Current admin password
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      OldPasswordLength  Length of current admin password in bytes
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      NewPassword        New admin password to set
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      NewPasswordLength  Length of new password in bytes
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:OpalUtilSetAdminPassword(
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  const VOID    *OldPassword,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  UINT32        OldPasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  const VOID    *NewPassword,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  UINT32        NewPasswordLength
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  NULL_CHECK(OldPassword);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  NULL_CHECK(NewPassword);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                  OldPasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                  OldPassword,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:    DEBUG ((DEBUG_INFO, "start session with admin SP using old Password failed\n"));
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  Ret = OpalSetPassword(Session, OPAL_UID_ADMIN_SP_C_PIN_SID, NewPassword, NewPasswordLength, &MethodStatus);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:    DEBUG ((DEBUG_INFO, "set new admin SP Password failed\n"));
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                  OldPasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                  OldPassword,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:    DEBUG ((DEBUG_INFO, "start session with locking SP using old Password failed\n"));
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  Ret = OpalSetPassword(Session, OPAL_LOCKING_SP_C_PIN_ADMIN1, NewPassword, NewPasswordLength, &MethodStatus);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:    DEBUG ((DEBUG_INFO, "set new locking SP Password failed\n"));
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      OldPassword        Current admin password
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      OldPasswordLength  Length of current admin password in bytes
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      NewPassword        New admin password to set
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      NewPasswordLength  Length of new password in bytes
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:OpalUtilSetUserPassword(
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  const VOID      *OldPassword,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  UINT32          OldPasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  const VOID      *NewPassword,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  UINT32          NewPasswordLength
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  NULL_CHECK(OldPassword);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  NULL_CHECK(NewPassword);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                    OldPasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                    OldPassword,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:    Ret = OpalSetPassword(
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                      NewPassword,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                      NewPasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  // Setting Password for first time or setting Password as admin
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  // Start session with Locking SP using current admin Password
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                    OldPasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                    OldPassword,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                                          NewPassword,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                                          NewPasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      Password                    Admin password
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      PasswordLength              Length of password in bytes
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:OpalUtilVerifyPassword (
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  const VOID     *Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  UINT32         PasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  NULL_CHECK(Password);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:            PasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:            Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      Password                   Admin or user password
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      PasswordLength         Length of password in bytes
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in/out]  PasswordFailed       indicates if password failed (start session didn't work)
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  const VOID       *Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  UINT32           PasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  BOOLEAN          *PasswordFailed
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  NULL_CHECK(Password);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  NULL_CHECK(PasswordFailed);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                      PasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                      Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:    *PasswordFailed = FALSE;
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                      PasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                      Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:      *PasswordFailed = FALSE;
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:      *PasswordFailed = TRUE;
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      Password               Admin password
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      PasswordLength         Length of password in bytes
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in/out]  PasswordFailed         indicates if password failed (start session didn't work)
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  const VOID     *Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  UINT32         PasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  BOOLEAN        *PasswordFailed
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  NULL_CHECK(Password);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  NULL_CHECK(PasswordFailed);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  // Start session with Locking SP using current admin Password
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                    PasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                    Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:    *PasswordFailed = TRUE;
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  *PasswordFailed = FALSE;
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      Password           Admin password
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in]      PasswordLength     Length of password in bytes
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param[in/out]  PasswordFailed     indicates if password failed (start session didn't work)
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  const VOID       *Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  UINT32           PasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  BOOLEAN          *PasswordFailed,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  NULL_CHECK(Password);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  NULL_CHECK(PasswordFailed);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                   PasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                   Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:    *PasswordFailed = TRUE;
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  *PasswordFailed = FALSE;
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  Ret = OpalUtilSetSIDtoMSID (Session, Password, PasswordLength, Msid, MsidLength);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param          Password,          Input password info.
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param          PasswordLength,    Input password length.
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  const VOID       *Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  UINT32           PasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  NULL_CHECK(Password);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:            PasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:            Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  Ret = OpalSetPassword(Session, OPAL_UID_ADMIN_SP_C_PIN_SID, Msid, MsidLength, &MethodStatus);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param          Password,          Input password info.
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  @param          PasswordLength,    Input password length.
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  const VOID      *Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  UINT32          PasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:  NULL_CHECK(Password);
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                    PasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                    Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                    PasswordLength,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:                    Password,
+./SecurityPkg/Library/TcgStorageOpalLib/TcgStorageOpalUtil.c:OpalUtilAdminPasswordExists(
+./SecurityPkg/SecurityPkg.dsc:  # Opal Password solution
+./SecurityPkg/SecurityPkg.dsc:  SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordDxe.inf
+./SecurityPkg/SecurityPkg.dsc:  SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.inf
+./SecurityPkg/SecurityPkg.dsc:  # HDD Password solution
+./SecurityPkg/SecurityPkg.dsc:  SecurityPkg/HddPassword/HddPasswordDxe.inf
+./SecurityPkg/SecurityPkg.dsc:  SecurityPkg/HddPassword/HddPasswordPei.inf
+./MdePkg/Include/IndustryStandard/IpmiNetFnApp.h://  Definitions for Set User Password command
+./MdePkg/Include/IndustryStandard/IpmiNetFnApp.h://  Constants and Structure definitions for "Set User Password" command to follow here
+./MdePkg/Include/IndustryStandard/IpmiNetFnApp.h:    UINT8  PasswordSize : 1;
+./MdePkg/Include/IndustryStandard/IpmiNetFnApp.h:  UINT8                             PasswordData[0];  // 16 or 20 bytes, depending on the 'PasswordSize' field
+./MdePkg/Include/IndustryStandard/IpmiNetFnTransport.h:    UINT8  StraightPassword : 1;
+./MdePkg/Include/IndustryStandard/Tpm20.h:#define TPM_CC_PolicyPassword             (TPM_CC)(0x0000018C)
+./MdePkg/Include/IndustryStandard/IpmiNetFnChassis.h:    UINT8  UserPasswordBypass:1;
+./MdePkg/Include/Protocol/UserManager.h:extern EFI_GUID gEfiUserCredentialClassPasswordGuid;
+./MdePkg/Include/Protocol/Ftp4.h:  /// responsible for freeing Password after GetModeData() is called.
+./MdePkg/Include/Protocol/Ftp4.h:  UINT8                                *Password;
+./MdePkg/Include/Protocol/Ftp4.h:                                 mode data. The string buffers for Username and Password
+./MdePkg/Include/Protocol/EapConfiguration.h:  EfiEapConfigEapTlsClientPrivateKeyFilePassword, // ASCII format, Volatile
+./MdePkg/Include/Protocol/EapConfiguration.h:  EfiEapConfigEapMSChapV2Password, // UNICODE format, Volatile
+./MdePkg/Include/Protocol/Supplicant.h:  EfiSupplicant80211PskPassword,
+./MdePkg/MdePkg.dec:  gEfiUserCredentialClassPasswordGuid = { 0xf8e5058c, 0xccb6, 0x4714, { 0xb2, 0x20, 0x3f, 0x7e, 0x3a, 0x64, 0xb, 0xd1 }}
