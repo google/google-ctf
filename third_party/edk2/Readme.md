@@ -1,3 +1,7 @@
+# WARNING!
+
+This folder contains a modified version of EDK2, made exclusively for a challenge of Google CTF and educational purposes. It contains vulnerable code and must not be used in production. If you are looking for the original EDK2 source code, go to https://github.com/tianocore/edk2.
+
 # EDK II Project
 
 A modern, feature-rich, cross-platform firmware development environment
