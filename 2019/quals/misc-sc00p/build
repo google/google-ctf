@@ -1,0 +1,32 @@
+#!/bin/bash
+
+pushd .
+cd generatereport
+GOOS=linux go build -ldflags "-s -w"
+popd
+
+BASE64_PROGRAM=$(base64 -w 0 generatereport/generatereport)
+
+FILE="launcher/generatereport.go"
+
+/bin/cat <<EOM >$FILE
+package main
+var GenerateReportProgram = \`$BASE64_PROGRAM\`
+EOM
+
+pushd .
+cd launcher
+GOOS=linux go build -ldflags "-s -w"
+popd
+
+docker build --rm -t misc-sc00p .
+DOCKER_ID=$(docker run -i -d misc-sc00p:latest)
+
+if [ -d "chroot/" ]; then
+  rm -rf /tmp/last_chroot
+  mv chroot/ /tmp/last_chroot
+fi
+
+mkdir -p chroot/ && docker export $DOCKER_ID > chroot.tar
+tar xf chroot.tar -C chroot/ --exclude='dev/*'
+rm -f chroot.tar

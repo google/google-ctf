@@ -1,0 +1,49 @@
+<!--
+Copyright 2019 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.    
+-->
+<html>
+ <head>
+   <meta charset="utf-8">
+   <title>Blind association</title>
+
+   <style>
+    body {
+      background-color:black;
+      color: white;
+      font-family: Helvetica, Arial;
+    }
+   </style>
+ </head>
+ <meta name="editor" content="libreoffice">
+ <meta property="og:title" content="Association of blind people" />
+ <meta property="og:description" content="Find the closest association" />
+ <body>
+     <center><br/> <br/> 
+        <img id="blind" src="/static/logo.png"><br/> <br/> 
+          <p>Please use the search engine below to find the closest association near you.</p>
+        <form action="javascript:AjaxFormPost();" style="color:white;">
+            <p>City: <select id="message" name="Type">
+                    <option value="zurich">Zurich</option>
+                    <option value="bangalore">Bangalore</option>
+                    <option value="paris">Paris</option>
+                    </select> </p>
+            <p><input type="submit" value="Submit"></p> 
+            <p><textarea id="database-data" style="width: 700px; height: 80px; background: transparent; border: none; outline: none; color:white; font-family: Helvetica, Arial; font-size: 18px"></textarea></p> 
+        </form>
+     </center>
+
+     <script src="/static/post.js"></script>
+   </body>
+</html>

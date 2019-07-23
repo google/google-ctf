@@ -1,0 +1,214 @@
+/*
+Copyright 2019 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+body {
+  background: #fcfcfc;
+  margin: 0;
+  font-family: Roboto;
+}
+
+.top-bar {
+  background: #009688;
+  padding: 1.25rem 2rem;
+}
+
+.top-bar-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+}
+
+.top-bar-logo {
+  font-size: 1.7rem;
+  color: white;
+  font-weight: 900;
+}
+
+.top-bar-button {
+  font-size: 1rem;
+  font-weight: 900;
+  margin-left: auto;
+}
+
+.top-bar-button a {
+  color: white;
+}
+
+.livestream-container {
+  display: flex;
+  margin: 0 auto;
+  width: fit-content;
+  margin-top: 7rem;
+}
+
+.livestream-video {
+  margin: 0 auto;
+  margin-top: 44px;
+  width: fit-content;
+}
+
+.livestream-video video {
+  height: 662px;
+}
+
+.livestream-chat {
+  width: 420px;
+  height: 700px;
+  background: white;
+  border-radius: 7px;
+  -webkit-box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12), 0 8px 10px -7px rgba(0,0,0,0.2);
+  box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12), 0 8px 10px -7px rgba(0,0,0,0.2);
+  padding: 1.5rem;
+}
+
+.livestream-chat-item {
+  display: flex;
+  margin: 1rem 0;
+}
+
+.livestream-chat-profile img {
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  margin: 5px;
+}
+
+.livestream-chat-text {
+  margin: 10px;
+}
+
+.livestream-chat-username {
+  font-weight: 900;
+}
+
+.livestream-chat-message {
+  font-weight: 300;
+}
+
+.livestream-chat-list {
+  height: 640px;
+  overflow-y: auto;
+}
+
+#livestream-chat-input {
+  width: 374px;
+  border-radius: 5px;
+  padding: 12px 20px;
+  border: 2px solid #dcdcdc;
+}
+
+#username {
+  width: 90%;
+  border-radius: 5px;
+  padding: 12px 20px;
+  border: 2px solid #dcdcdc;
+}
+
+#password {
+  width: 90%;
+  border-radius: 5px;
+  padding: 12px 20px;
+  border: 2px solid #dcdcdc;
+  margin-top: 1.5rem;
+}
+
+.login-container {
+  background: white;
+  border-radius: 7px;
+  -webkit-box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12), 0 8px 10px -7px rgba(0,0,0,0.2);
+  box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12), 0 8px 10px -7px rgba(0,0,0,0.2);
+  padding: 2rem;
+  max-width: 450px;
+  margin: 0 auto;
+  margin-top: 5rem;
+}
+
+#submit {
+  border: none;
+  border-radius: 2px;
+  display: inline-block;
+  height: 36px;
+  line-height: 36px;
+  padding: 0 16px;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: #26a69a;
+  text-align: center;
+  letter-spacing: .5px;
+  margin-top: 1rem;
+  width: 100%;
+  cursor: pointer;
+}
+
+.error {
+  background: #ffb2b2;
+  padding: 11px 12px;
+  border-radius: 5px;
+  border: 1px solid red;
+  color: red;
+  margin-bottom: 15px;
+}
+
+.admin-side-nav {
+  width: 250px;
+  background: rgba(0,0,0,0.03);
+  height: 100vh;
+}
+
+.admin-side-nav a {
+  text-decoration: none;
+  color: 
+}
+
+.admin-side-item {
+  padding: 1.3rem 2rem;
+  color: #009688;
+  font-weight: 900;
+  font-size: 1.2rem;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.admin-wrapper {
+  display: flex;
+}
+
+.admin-container {
+  margin: 0 auto;
+}
+
+.admin-message-blur {
+  position: absolute;
+  background: rgba(0,0,0,0.1);
+  width: 530px;
+  height: 666px;
+  
+}
+
+.admin-message {
+  margin: 5rem;
+  color: #009688;
+  font-weight: 900;
+  font-size: 2rem;
+}
+
+.controls-title {
+  text-align: center;
+  color: #000000;
+  font-weight: 900;
+  font-size: 2rem;
+}
+
+

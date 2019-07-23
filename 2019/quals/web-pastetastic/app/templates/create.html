@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<!--
+Copyright 2019 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html>
+  <head>
+    <title>Paste-Tastic</title>
+    <meta name="referrer" content="origin">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <script nonce={{ nonce }}>CONFIG={% autoescape false %}{{ config }}{% endautoescape %};</script>
+    <script src="/static/app.js" nonce={{ nonce }} defer></script>
+    <script src="https://www.google.com/recaptcha/api.js" nonce={{ nonce }} async defer></script>
+    <link rel="stylesheet" type="text/css" href="/static/app.css" nonce={{ nonce }}/>
+  </head>
+  <body>
+      <div class="header-container">
+        <div class="header">
+          <span class="header-title">Paste-Tastic! &#128203;</span>
+          <span class="tag-line">The pretty paste solution!&trade;</span>
+        </div>
+      </div>
+      <div class="content-container">
+      <form id="form" action="/create" method="post">
+        <div class="field-container">
+          <label class="label-name" for="name">Name:</label>
+          <input class="input-name" name="name"></input>
+          <label class="label-language" for="lang">Language:</label>
+          <select class="language-select" id="lang" name="lang">
+            <option {% if lang == "actionscript" %}selected="selected"{% endif %} value="actionscript">ActionScript</option>
+            <option {% if lang == "ada" %}selected="selected"{% endif %} value="ada">Ada</option>
+            <option {% if lang == "applescript" %}selected="selected"{% endif %} value="applescript">AppleScript</option>
+            <option {% if lang == "arduino" %}selected="selected"{% endif %} value="arduino">Arduino</option>
+            <option {% if lang == "asm6502" %}selected="selected"{% endif %} value="asm6502">6502 Assembly</option>
+            <option {% if lang == "aspnet" %}selected="selected"{% endif %} value="aspnet">ASP.Net</option>
+            <option {% if lang == "bash" %}selected="selected"{% endif %} value="bash">Bash</option>
+            <option {% if lang == "basic" %}selected="selected"{% endif %} value="basic">Basic</option>
+            <option {% if lang == "bison" %}selected="selected"{% endif %} value="bison">Bison</option>
+            <option {% if lang == "brainfuck" %}selected="selected"{% endif %} value="brainfuck">Brainfuck</option>
+            <option {% if lang == "c" %}selected="selected"{% endif %} value="c">C</option>
+            <option {% if lang == "cil" %}selected="selected"{% endif %} value="cil">CIL</option>
+            <option {% if lang == "clojure" %}selected="selected"{% endif %} value="clojure">Clojure</option>
+            <option {% if lang == "cmake" %}selected="selected"{% endif %} value="cmake">CMake</option>
+            <option {% if lang == "coffeescript" %}selected="selected"{% endif %} value="coffeescript">CoffeeScript</option>
+            <option {% if lang == "cpp" %}selected="selected"{% endif %} value="cpp">C++</option>
+            <option {% if lang == "crystal" %}selected="selected"{% endif %} value="crystal">Crystal</option>
+            <option {% if lang == "csharp" %}selected="selected"{% endif %} value="csharp">C#</option>
+            <option {% if lang == "css" %}selected="selected"{% endif %} value="css">CSS</option>
+            <option {% if lang == "d" %}selected="selected"{% endif %} value="d">D</option>
+            <option {% if lang == "dart" %}selected="selected"{% endif %} value="dart">Dart</option>
+            <option {% if lang == "diff" %}selected="selected"{% endif %} value="diff">Diff (git)</option>
+            <option {% if lang == "erb" %}selected="selected"{% endif %} value="erb">Embedded Ruby</option>
+            <option {% if lang == "erlang" %}selected="selected"{% endif %} value="erlang">Erlang</option>
+            <option {% if lang == "fortran" %}selected="selected"{% endif %} value="fortran">Fortran</option>
+            <option {% if lang == "fsharp" %}selected="selected"{% endif %} value="fsharp">F#</option>
+            <option {% if lang == "git" %}selected="selected"{% endif %} value="git">git CLI</option>
+            <option {% if lang == "glsl" %}selected="selected"{% endif %} value="glsl">GLSL</option>
+            <option {% if lang == "go" %}selected="selected"{% endif %} value="go">Go</option>
+            <option {% if lang == "graphql" %}selected="selected"{% endif %} value="graphql">GraphQL</option>
+            <option {% if lang == "groovy" %}selected="selected"{% endif %} value="groovy">Groovy</option>
+            <option {% if lang == "haskell" %}selected="selected"{% endif %} value="haskell">Haskell</option>
+            <option {% if lang == "http" %}selected="selected"{% endif %} value="http">HTTP</option>
+            <option {% if lang == "java" %}selected="selected"{% endif %} value="java">Java</option>
+            <option {% if lang == "javadoc" %}selected="selected"{% endif %} value="javadoc">Javadoc</option>
+            <option {% if lang == None or lang == "javascript" %}selected="selected"{% endif %} value="javascript">JavaScript</option>
+            <option {% if lang == "javastacktrace" %}selected="selected"{% endif %} value="javastacktrace">Java Stack Trace</option>
+            <option {% if lang == "jsdoc" %}selected="selected"{% endif %} value="jsdoc">JSDoc</option>
+            <option {% if lang == "json" %}selected="selected"{% endif %} value="json">JSON</option>
+            <option {% if lang == "jsx" %}selected="selected"{% endif %} value="jsx">JSX</option>
+            <option {% if lang == "julia" %}selected="selected"{% endif %} value="julia">Julia</option>
+            <option {% if lang == "kotlin" %}selected="selected"{% endif %} value="kotlin">Kotlin</option>
+            <option {% if lang == "latex" %}selected="selected"{% endif %} value="latex">LaTeX</option>
+            <option {% if lang == "less" %}selected="selected"{% endif %} value="less">Less</option>
+            <option {% if lang == "lisp" %}selected="selected"{% endif %} value="lisp">Lisp</option>
+            <option {% if lang == "lua" %}selected="selected"{% endif %} value="lua">Lua</option>
+            <option {% if lang == "makefile" %}selected="selected"{% endif %} value="makefile">Makefile</option>
+            <option {% if lang == "markdown" %}selected="selected"{% endif %} value="markdown">Markdown</option>
+            <option {% if lang == "markup" %}selected="selected"{% endif %} value="markup">HTML</option>
+            <option {% if lang == "markup" %}selected="selected"{% endif %} value="markup">MathML</option>
+            <option {% if lang == "matlab" %}selected="selected"{% endif %} value="matlab">Matlab</option>
+            <option {% if lang == "nasm" %}selected="selected"{% endif %} value="nasm">NASM</option>
+            <option {% if lang == "objectivec" %}selected="selected"{% endif %} value="objectivec">Objective-C</option>
+            <option {% if lang == "ocaml" %}selected="selected"{% endif %} value="ocaml">OCaml</option>
+            <option {% if lang == "opencl" %}selected="selected"{% endif %} value="opencl">OpenCL</option>
+            <option {% if lang == "parigp" %}selected="selected"{% endif %} value="parigp">PARI/GP</option>
+            <option {% if lang == "pascal" %}selected="selected"{% endif %} value="pascal">Pascal</option>
+            <option {% if lang == "perl" %}selected="selected"{% endif %} value="perl">Perl</option>
+            <option {% if lang == "php" %}selected="selected"{% endif %} value="php">PHP</option>
+            <option {% if lang == "plsql" %}selected="selected"{% endif %} value="plsql">PL/SQL</option>
+            <option {% if lang == "powershell" %}selected="selected"{% endif %} value="powershell">PowerShell</option>
+            <option {% if lang == "processing" %}selected="selected"{% endif %} value="processing">Processing</option>
+            <option {% if lang == "prolog" %}selected="selected"{% endif %} value="prolog">Prolog</option>
+            <option {% if lang == "protobuf" %}selected="selected"{% endif %} value="protobuf">Protobuf</option>
+            <option {% if lang == "python" %}selected="selected"{% endif %} value="python">Python</option>
+            <option {% if lang == "r" %}selected="selected"{% endif %} value="r">R</option>
+            <option {% if lang == "regex" %}selected="selected"{% endif %} value="regex">RegExp</option>
+            <option {% if lang == "ruby" %}selected="selected"{% endif %} value="ruby">Ruby</option>
+            <option {% if lang == "rust" %}selected="selected"{% endif %} value="rust">Rust</option>
+            <option {% if lang == "sass" %}selected="selected"{% endif %} value="sass">Sass</option>
+            <option {% if lang == "scala" %}selected="selected"{% endif %} value="scala">Scala</option>
+            <option {% if lang == "scheme" %}selected="selected"{% endif %} value="scheme">Scheme</option>
+            <option {% if lang == "scss" %}selected="selected"{% endif %} value="scss">SCSS</option>
+            <option {% if lang == "smalltalk" %}selected="selected"{% endif %} value="smalltalk">Smalltalk</option>
+            <option {% if lang == "soy" %}selected="selected"{% endif %} value="soy">Soy</option>
+            <option {% if lang == "sql" %}selected="selected"{% endif %} value="sql">SQL</option>
+            <option {% if lang == "swift" %}selected="selected"{% endif %} value="swift">Swift</option>
+            <option {% if lang == "markup" %}selected="selected"{% endif %} value="markup">SVG</option>
+            <option {% if lang == "textile" %}selected="selected"{% endif %} value="textile">Textile</option>
+            <option {% if lang == "toml" %}selected="selected"{% endif %} value="toml">TOML</option>
+            <option {% if lang == "typescript" %}selected="selected"{% endif %} value="typescript">TypeScript</option>
+            <option {% if lang == "tsx" %}selected="selected"{% endif %} value="tsx">TypeScript JSX</option>
+            <option {% if lang == "vbnet" %}selected="selected"{% endif %} value="vbnet">VB.Net</option>
+            <option {% if lang == "verilog" %}selected="selected"{% endif %} value="verilog">Verilog</option>
+            <option {% if lang == "vhdl" %}selected="selected"{% endif %} value="vhdl">VHDL</option>
+            <option {% if lang == "vim" %}selected="selected"{% endif %} value="vim">Vim</option>
+            <option {% if lang == "visual-basic" %}selected="selected"{% endif %} value="visual-basic">Visual Basic</option>
+            <option {% if lang == "wasm" %}selected="selected"{% endif %} value="wasm">Web Assembly</option>
+            <option {% if lang == "wiki" %}selected="selected"{% endif %} value="wiki">Wikitext</option>
+            <option {% if lang == "markup" %}selected="selected"{% endif %} value="markup">XML</option>
+            <option {% if lang == "yaml" %}selected="selected"{% endif %} value="yaml">YAML</option>
+          </select>
+        </div>
+        <label class="label-editor" for="editor">Enter your new paste:</label>
+        <div class="editor">
+          <textarea id="editor" name="text" class="editor-textarea" wrap="off" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+          <div id="viewer" class="viewer"></div>
+        </div>
+        <input class="button" type="submit" value="✔ Submit" />
+      </form>
+      <div class="label-recent">Recently viewed:</div>
+      <ul id="recent-container"></ul>
+    </div>
+  </body>
+</html>

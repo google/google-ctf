@@ -1,0 +1,4 @@
+#!/bin/bash
+
+nsjail -Ml -u 0 -g 0 --port 1337 -R /dev/urandom -R /dev/null --rlimit_fsize 10 --chroot $(pwd)/chroot -m none:/bob:tmpfs:size=10M -N \
+  -- /launcher --verbose

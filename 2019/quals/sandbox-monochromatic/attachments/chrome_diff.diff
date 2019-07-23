@@ -1,0 +1,663 @@
+Copyright 2019 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+diff --git a/content/browser/BUILD.gn b/content/browser/BUILD.gn
+index 7a1d4333934a..3218fb403839 100644
+--- a/content/browser/BUILD.gn
++++ b/content/browser/BUILD.gn
+@@ -236,6 +236,14 @@ jumbo_source_set("browser") {
+   ]
+ 
+   sources = [
++    "CTF/person_interface_impl.cc",
++    "CTF/person_interface_impl.h",
++    "CTF/dog_interface_impl.cc",
++    "CTF/dog_interface_impl.h",
++    "CTF/cat_interface_impl.cc",
++    "CTF/cat_interface_impl.h",
++    "CTF/being_creator_interface_impl.cc",
++    "CTF/being_creator_interface_impl.h",
+     "$target_gen_dir/devtools/protocol/background_service.cc",
+     "$target_gen_dir/devtools/protocol/background_service.h",
+     "$target_gen_dir/devtools/protocol/base_string_adapter.cc",
+diff --git a/content/browser/CTF/being_creator_interface_impl.cc b/content/browser/CTF/being_creator_interface_impl.cc
+new file mode 100644
+index 000000000000..f5afe445a85e
+--- /dev/null
++++ b/content/browser/CTF/being_creator_interface_impl.cc
+@@ -0,0 +1,56 @@
++#include "content/browser/CTF/being_creator_interface_impl.h"
++#include "content/browser/CTF/person_interface_impl.h"
++#include "content/browser/CTF/dog_interface_impl.h"
++#include "content/browser/CTF/cat_interface_impl.h"
++
++#include "mojo/public/cpp/bindings/strong_binding.h"
++
++namespace content {
++
++BeingCreatorInterfaceImpl::BeingCreatorInterfaceImpl() : weak_factory_(this) {}
++
++// static
++void BeingCreatorInterfaceImpl::Create(
++    blink::mojom::BeingCreatorInterfaceRequest request) {
++  mojo::MakeStrongBinding(std::make_unique<BeingCreatorInterfaceImpl>(),
++                          std::move(request));
++}
++
++BeingCreatorInterfaceImpl::~BeingCreatorInterfaceImpl() {}
++
++base::WeakPtr<BeingCreatorInterfaceImpl>
++BeingCreatorInterfaceImpl::AsWeakPtr() {
++  return weak_factory_.GetWeakPtr();
++}
++
++void BeingCreatorInterfaceImpl::CreatePerson(CreatePersonCallback callback) {
++
++  DCHECK_CURRENTLY_ON(BrowserThread::IO);
++  blink::mojom::PersonInterfacePtr person;
++
++  mojo::MakeStrongBinding(std::make_unique<content::PersonInterfaceImpl>(),
++                          MakeRequest(&person));
++  std::move(callback).Run(std::move(person));
++}
++
++void BeingCreatorInterfaceImpl::CreateDog(CreateDogCallback callback) {
++
++  DCHECK_CURRENTLY_ON(BrowserThread::IO);
++  blink::mojom::DogInterfacePtr dog;
++
++  mojo::MakeStrongBinding(std::make_unique<content::DogInterfaceImpl>(),
++                          MakeRequest(&dog));
++  std::move(callback).Run(std::move(dog));
++}
++
++void BeingCreatorInterfaceImpl::CreateCat(CreateCatCallback callback) {
++
++  DCHECK_CURRENTLY_ON(BrowserThread::IO);
++  blink::mojom::CatInterfacePtr cat;
++
++  mojo::MakeStrongBinding(std::make_unique<content::CatInterfaceImpl>(),
++                          MakeRequest(&cat));
++  std::move(callback).Run(std::move(cat));
++}
++
++} // namespace content
+diff --git a/content/browser/CTF/being_creator_interface_impl.h b/content/browser/CTF/being_creator_interface_impl.h
+new file mode 100644
+index 000000000000..a0b705ef730e
+--- /dev/null
++++ b/content/browser/CTF/being_creator_interface_impl.h
+@@ -0,0 +1,34 @@
++#ifndef CONTENT_BROWSER_CTF_PERSON_BEING_INTERFACE_IMPL_H_
++#define CONTENT_BROWSER_CTF_PERSON_BEING_INTERFACE_IMPL_H_
++
++#include "content/public/browser/browser_message_filter.h"
++#include "mojo/public/cpp/bindings/binding.h"
++#include "third_party/blink/public/mojom/CTF/person_interface.mojom.h"
++#include "third_party/blink/public/mojom/CTF/dog_interface.mojom.h"
++#include "third_party/blink/public/mojom/CTF/cat_interface.mojom.h"
++
++#include "third_party/blink/public/mojom/CTF/being_creator_interface.mojom.h"
++
++namespace content {
++
++class CONTENT_EXPORT BeingCreatorInterfaceImpl
++    : public blink::mojom::BeingCreatorInterface {
++public:
++  BeingCreatorInterfaceImpl();
++  ~BeingCreatorInterfaceImpl() override;
++  static void Create(blink::mojom::BeingCreatorInterfaceRequest request);
++
++  base::WeakPtr<BeingCreatorInterfaceImpl> AsWeakPtr();
++
++  void CreatePerson(CreatePersonCallback callback) override;
++  void CreateDog(CreateDogCallback callback) override;
++  void CreateCat(CreateCatCallback callback) override;
++
++  base::WeakPtrFactory<BeingCreatorInterfaceImpl> weak_factory_;
++
++  DISALLOW_COPY_AND_ASSIGN(BeingCreatorInterfaceImpl);
++};
++
++} // namespace content
++
++#endif // CONTENT_BROWSER_CTF_BEING_CREATOR_INTERFACE_IMPL_H_
+diff --git a/content/browser/CTF/cat_interface_impl.cc b/content/browser/CTF/cat_interface_impl.cc
+new file mode 100644
+index 000000000000..2d45134c7c34
+--- /dev/null
++++ b/content/browser/CTF/cat_interface_impl.cc
+@@ -0,0 +1,69 @@
++#include "content/browser/CTF/cat_interface_impl.h"
++
++#include "mojo/public/cpp/bindings/callback_helpers.h"
++#include "mojo/public/cpp/bindings/strong_binding.h"
++
++namespace content {
++
++CatInterfaceImpl::CatInterfaceImpl() : weak_factory_(this) {}
++
++
++// static
++void CatInterfaceImpl::Create(blink::mojom::CatInterfaceRequest request) {
++  mojo::MakeStrongBinding(
++      std::make_unique<CatInterfaceImpl>(),
++      std::move(request));
++}
++
++CatInterfaceImpl::~CatInterfaceImpl() {}
++
++base::WeakPtr<CatInterfaceImpl> CatInterfaceImpl::AsWeakPtr() {
++  return weak_factory_.GetWeakPtr();
++}
++
++void CatInterfaceImpl::GetName(GetNameCallback callback) {
++  std::move(callback).Run(name);
++}
++
++void CatInterfaceImpl::SetName(const std::string &new_name,
++                                  SetNameCallback callback) {
++  name = new_name;
++  std::move(callback).Run();
++}
++
++void CatInterfaceImpl::GetAge(GetAgeCallback callback) {
++  std::move(callback).Run(age);
++}
++
++void CatInterfaceImpl::SetAge(uint64_t new_age, SetAgeCallback callback) {
++  age = new_age;
++  std::move(callback).Run();
++}
++
++void CatInterfaceImpl::GetWeight(GetWeightCallback callback) {
++  std::move(callback).Run(weight);
++}
++
++void CatInterfaceImpl::SetWeight(uint64_t new_weight,
++                                    SetWeightCallback callback) {
++  weight = new_weight;
++  std::move(callback).Run();
++}
++
++void CatInterfaceImpl::AddWeight(
++    CatInterfaceImpl::CookAndEatCallback callback,
++    blink::mojom::FoodInterfacePtr foodPtr, uint64_t weight_) {
++  weight += weight_;
++  std::move(callback).Run();
++}
++
++void CatInterfaceImpl::CookAndEat(blink::mojom::FoodInterfacePtr foodPtr,
++                                     CookAndEatCallback callback) {
++  blink::mojom::FoodInterface *raw_food = foodPtr.get();
++
++  raw_food->GetWeight(base::BindOnce(&CatInterfaceImpl::AddWeight,
++                                     base::Unretained(this),
++                                     std::move(callback), std::move(foodPtr)));
++}
++
++} // namespace content
+diff --git a/content/browser/CTF/cat_interface_impl.h b/content/browser/CTF/cat_interface_impl.h
+new file mode 100644
+index 000000000000..da72b10920a2
+--- /dev/null
++++ b/content/browser/CTF/cat_interface_impl.h
+@@ -0,0 +1,47 @@
++#ifndef CONTENT_BROWSER_CTF_CAT_INTERFACE_IMPL_H_
++#define CONTENT_BROWSER_CTF_CAT_INTERFACE_IMPL_H_
++
++#include <string>
++
++#include "content/public/browser/browser_message_filter.h"
++#include "mojo/public/cpp/bindings/binding.h"
++#include "third_party/blink/public/mojom/CTF/food_interface.mojom.h"
++
++#include "third_party/blink/public/mojom/CTF/cat_interface.mojom.h"
++
++namespace content {
++
++class CONTENT_EXPORT CatInterfaceImpl
++    : public blink::mojom::CatInterface {
++public:
++  CatInterfaceImpl();
++  ~CatInterfaceImpl() override;
++  static void Create(blink::mojom::CatInterfaceRequest request);
++
++  base::WeakPtr<CatInterfaceImpl> AsWeakPtr();
++
++  void GetName(GetNameCallback callback) override;
++  void SetName(const std::string &name, SetNameCallback callback) override;
++  void GetWeight(GetWeightCallback callback) override;
++  void SetWeight(uint64_t new_weight, SetWeightCallback callback) override;
++  void GetAge(GetWeightCallback callback) override;
++  void SetAge(uint64_t new_age, SetAgeCallback callback) override;
++  void CookAndEat(blink::mojom::FoodInterfacePtr food,
++                  SetAgeCallback callback) override;
++
++  std::string name;
++  uint64_t age;
++  uint64_t weight;
++
++  base::WeakPtrFactory<CatInterfaceImpl> weak_factory_;
++
++  DISALLOW_COPY_AND_ASSIGN(CatInterfaceImpl);
++
++private:
++  void AddWeight(CookAndEatCallback callback,
++                 blink::mojom::FoodInterfacePtr foodPtr, uint64_t weight);
++};
++
++} // namespace content
++
++#endif // CONTENT_BROWSER_CTF_CAT_INTERFACE_IMPL_H_
+diff --git a/content/browser/CTF/dog_interface_impl.cc b/content/browser/CTF/dog_interface_impl.cc
+new file mode 100644
+index 000000000000..494d40062724
+--- /dev/null
++++ b/content/browser/CTF/dog_interface_impl.cc
+@@ -0,0 +1,69 @@
++#include "content/browser/CTF/dog_interface_impl.h"
++
++#include "mojo/public/cpp/bindings/callback_helpers.h"
++#include "mojo/public/cpp/bindings/strong_binding.h"
++
++namespace content {
++
++DogInterfaceImpl::DogInterfaceImpl() : weak_factory_(this) {}
++
++
++// static
++void DogInterfaceImpl::Create(blink::mojom::DogInterfaceRequest request) {
++  mojo::MakeStrongBinding(
++      std::make_unique<DogInterfaceImpl>(),
++      std::move(request));
++}
++
++DogInterfaceImpl::~DogInterfaceImpl() {}
++
++base::WeakPtr<DogInterfaceImpl> DogInterfaceImpl::AsWeakPtr() {
++  return weak_factory_.GetWeakPtr();
++}
++
++void DogInterfaceImpl::GetName(GetNameCallback callback) {
++  std::move(callback).Run(name);
++}
++
++void DogInterfaceImpl::SetName(const std::string &new_name,
++                                  SetNameCallback callback) {
++  name = new_name;
++  std::move(callback).Run();
++}
++
++void DogInterfaceImpl::GetAge(GetAgeCallback callback) {
++  std::move(callback).Run(age);
++}
++
++void DogInterfaceImpl::SetAge(uint64_t new_age, SetAgeCallback callback) {
++  age = new_age;
++  std::move(callback).Run();
++}
++
++void DogInterfaceImpl::GetWeight(GetWeightCallback callback) {
++  std::move(callback).Run(weight);
++}
++
++void DogInterfaceImpl::SetWeight(uint64_t new_weight,
++                                    SetWeightCallback callback) {
++  weight = new_weight;
++  std::move(callback).Run();
++}
++
++void DogInterfaceImpl::AddWeight(
++    DogInterfaceImpl::CookAndEatCallback callback,
++    blink::mojom::FoodInterfacePtr foodPtr, uint64_t weight_) {
++  weight += weight_;
++  std::move(callback).Run();
++}
++
++void DogInterfaceImpl::CookAndEat(blink::mojom::FoodInterfacePtr foodPtr,
++                                     CookAndEatCallback callback) {
++  blink::mojom::FoodInterface *raw_food = foodPtr.get();
++
++  raw_food->GetWeight(base::BindOnce(&DogInterfaceImpl::AddWeight,
++                                     base::Unretained(this),
++                                     std::move(callback), std::move(foodPtr)));
++}
++
++} // namespace content
+diff --git a/content/browser/CTF/dog_interface_impl.h b/content/browser/CTF/dog_interface_impl.h
+new file mode 100644
+index 000000000000..4afe601c4ab7
+--- /dev/null
++++ b/content/browser/CTF/dog_interface_impl.h
+@@ -0,0 +1,47 @@
++#ifndef CONTENT_BROWSER_CTF_DOG_INTERFACE_IMPL_H_
++#define CONTENT_BROWSER_CTF_DOG_INTERFACE_IMPL_H_
++
++#include <string>
++
++#include "content/public/browser/browser_message_filter.h"
++#include "mojo/public/cpp/bindings/binding.h"
++#include "third_party/blink/public/mojom/CTF/food_interface.mojom.h"
++
++#include "third_party/blink/public/mojom/CTF/dog_interface.mojom.h"
++
++namespace content {
++
++class CONTENT_EXPORT DogInterfaceImpl
++    : public blink::mojom::DogInterface {
++public:
++  DogInterfaceImpl();
++  ~DogInterfaceImpl() override;
++  static void Create(blink::mojom::DogInterfaceRequest request);
++
++  base::WeakPtr<DogInterfaceImpl> AsWeakPtr();
++
++  void GetName(GetNameCallback callback) override;
++  void SetName(const std::string &name, SetNameCallback callback) override;
++  void GetWeight(GetWeightCallback callback) override;
++  void SetWeight(uint64_t new_weight, SetWeightCallback callback) override;
++  void GetAge(GetWeightCallback callback) override;
++  void SetAge(uint64_t new_age, SetAgeCallback callback) override;
++  void CookAndEat(blink::mojom::FoodInterfacePtr food,
++                  SetAgeCallback callback) override;
++
++  uint64_t weight;
++  std::string name;
++  uint64_t age;
++
++  base::WeakPtrFactory<DogInterfaceImpl> weak_factory_;
++
++  DISALLOW_COPY_AND_ASSIGN(DogInterfaceImpl);
++
++private:
++  void AddWeight(CookAndEatCallback callback,
++                 blink::mojom::FoodInterfacePtr foodPtr, uint64_t weight);
++};
++
++} // namespace content
++
++#endif // CONTENT_BROWSER_CTF_DOG_INTERFACE_IMPL_H_
+diff --git a/content/browser/CTF/person_interface_impl.cc b/content/browser/CTF/person_interface_impl.cc
+new file mode 100644
+index 000000000000..c32a9f7a7377
+--- /dev/null
++++ b/content/browser/CTF/person_interface_impl.cc
+@@ -0,0 +1,69 @@
++#include "content/browser/CTF/person_interface_impl.h"
++
++#include "mojo/public/cpp/bindings/callback_helpers.h"
++#include "mojo/public/cpp/bindings/strong_binding.h"
++
++namespace content {
++
++PersonInterfaceImpl::PersonInterfaceImpl() : weak_factory_(this) {}
++
++
++// static
++void PersonInterfaceImpl::Create(blink::mojom::PersonInterfaceRequest request) {
++  mojo::MakeStrongBinding(
++      std::make_unique<PersonInterfaceImpl>(),
++      std::move(request));
++}
++
++PersonInterfaceImpl::~PersonInterfaceImpl() {}
++
++base::WeakPtr<PersonInterfaceImpl> PersonInterfaceImpl::AsWeakPtr() {
++  return weak_factory_.GetWeakPtr();
++}
++
++void PersonInterfaceImpl::GetName(GetNameCallback callback) {
++  std::move(callback).Run(name);
++}
++
++void PersonInterfaceImpl::SetName(const std::string &new_name,
++                                  SetNameCallback callback) {
++  name = new_name;
++  std::move(callback).Run();
++}
++
++void PersonInterfaceImpl::GetAge(GetAgeCallback callback) {
++  std::move(callback).Run(age);
++}
++
++void PersonInterfaceImpl::SetAge(uint64_t new_age, SetAgeCallback callback) {
++  age = new_age;
++  std::move(callback).Run();
++}
++
++void PersonInterfaceImpl::GetWeight(GetWeightCallback callback) {
++  std::move(callback).Run(weight);
++}
++
++void PersonInterfaceImpl::SetWeight(uint64_t new_weight,
++                                    SetWeightCallback callback) {
++  weight = new_weight;
++  std::move(callback).Run();
++}
++
++void PersonInterfaceImpl::AddWeight(
++    PersonInterfaceImpl::CookAndEatCallback callback,
++    blink::mojom::FoodInterfacePtr foodPtr, uint64_t weight_) {
++  weight += weight_;
++  std::move(callback).Run();
++}
++
++void PersonInterfaceImpl::CookAndEat(blink::mojom::FoodInterfacePtr foodPtr,
++                                     CookAndEatCallback callback) {
++  blink::mojom::FoodInterface *raw_food = foodPtr.get();
++
++  raw_food->GetWeight(base::BindOnce(&PersonInterfaceImpl::AddWeight,
++                                     base::Unretained(this),
++                                     std::move(callback), std::move(foodPtr)));
++}
++
++} // namespace content
+diff --git a/content/browser/CTF/person_interface_impl.h b/content/browser/CTF/person_interface_impl.h
+new file mode 100644
+index 000000000000..617d817963e9
+--- /dev/null
++++ b/content/browser/CTF/person_interface_impl.h
+@@ -0,0 +1,47 @@
++#ifndef CONTENT_BROWSER_CTF_PERSON_INTERFACE_IMPL_H_
++#define CONTENT_BROWSER_CTF_PERSON_INTERFACE_IMPL_H_
++
++#include <string>
++
++#include "content/public/browser/browser_message_filter.h"
++#include "mojo/public/cpp/bindings/binding.h"
++#include "third_party/blink/public/mojom/CTF/food_interface.mojom.h"
++
++#include "third_party/blink/public/mojom/CTF/person_interface.mojom.h"
++
++namespace content {
++
++class CONTENT_EXPORT PersonInterfaceImpl
++    : public blink::mojom::PersonInterface {
++public:
++  PersonInterfaceImpl();
++  ~PersonInterfaceImpl() override;
++  static void Create(blink::mojom::PersonInterfaceRequest request);
++
++  base::WeakPtr<PersonInterfaceImpl> AsWeakPtr();
++
++  void GetName(GetNameCallback callback) override;
++  void SetName(const std::string &name, SetNameCallback callback) override;
++  void GetWeight(GetWeightCallback callback) override;
++  void SetWeight(uint64_t new_weight, SetWeightCallback callback) override;
++  void GetAge(GetWeightCallback callback) override;
++  void SetAge(uint64_t new_age, SetAgeCallback callback) override;
++  void CookAndEat(blink::mojom::FoodInterfacePtr food,
++                  SetAgeCallback callback) override;
++
++  uint64_t age;
++  uint64_t weight;
++  std::string name;
++
++  base::WeakPtrFactory<PersonInterfaceImpl> weak_factory_;
++
++  DISALLOW_COPY_AND_ASSIGN(PersonInterfaceImpl);
++
++private:
++  void AddWeight(CookAndEatCallback callback,
++                 blink::mojom::FoodInterfacePtr foodPtr, uint64_t weight);
++};
++
++} // namespace content
++
++#endif // CONTENT_BROWSER_CTF_PERSON_INTERFACE_IMPL_H_
+diff --git a/content/browser/frame_host/render_frame_host_impl.cc b/content/browser/frame_host/render_frame_host_impl.cc
+index a3651be4e397..42c4b4cde2a4 100644
+--- a/content/browser/frame_host/render_frame_host_impl.cc
++++ b/content/browser/frame_host/render_frame_host_impl.cc
+@@ -200,6 +200,7 @@
+ #include "url/gurl.h"
+ #include "url/origin.h"
+ #include "url/url_constants.h"
++#include "content/browser/CTF/being_creator_interface_impl.h"
+ 
+ #if defined(OS_ANDROID)
+ #include "content/browser/android/content_url_loader_factory.h"
+@@ -4147,6 +4148,10 @@ void RenderFrameHostImpl::RegisterMojoInterfaces() {
+ 
+   registry_->AddInterface(base::BindRepeating(
+       &PictureInPictureServiceImpl::Create, base::Unretained(this)));
++
++  registry_->AddInterface(
++      base::BindRepeating(content::BeingCreatorInterfaceImpl::Create),
++      base::CreateSingleThreadTaskRunnerWithTraits({BrowserThread::IO}));
+ }
+ 
+ void RenderFrameHostImpl::ResetWaitingState() {
+diff --git a/content/public/app/content_browser_manifest.cc b/content/public/app/content_browser_manifest.cc
+index a1fa37e05edf..a1034e1b1a40 100644
+--- a/content/public/app/content_browser_manifest.cc
++++ b/content/public/app/content_browser_manifest.cc
+@@ -197,6 +197,7 @@ const service_manager::Manifest& GetContentBrowserManifest() {
+           .ExposeInterfaceFilterCapability_Deprecated(
+               "navigation:frame", "renderer",
+               std::set<const char*>{
++                  "blink.mojom.BeingCreatorInterface",
+                   "autofill.mojom.AutofillDriver",
+                   "autofill.mojom.PasswordManagerDriver",
+                   "blink.mojom.AnchorElementMetricsHost",
+diff --git a/third_party/blink/public/mojom/BUILD.gn b/third_party/blink/public/mojom/BUILD.gn
+index 181640e24921..6a0a81d3a5bd 100644
+--- a/third_party/blink/public/mojom/BUILD.gn
++++ b/third_party/blink/public/mojom/BUILD.gn
+@@ -14,6 +14,11 @@ if (is_android) {
+ # are typemapped to a type in renderer/core.
+ mojom("mojom_platform") {
+   sources = [
++    "CTF/person_interface.mojom",
++    "CTF/dog_interface.mojom",
++    "CTF/cat_interface.mojom",
++    "CTF/food_interface.mojom",
++    "CTF/being_creator_interface.mojom",
+     "ad_tagging/ad_frame.mojom",
+     "app_banner/app_banner.mojom",
+     "appcache/appcache.mojom",
+diff --git a/third_party/blink/public/mojom/CTF/being_creator_interface.mojom b/third_party/blink/public/mojom/CTF/being_creator_interface.mojom
+new file mode 100644
+index 000000000000..103735dc6a1c
+--- /dev/null
++++ b/third_party/blink/public/mojom/CTF/being_creator_interface.mojom
+@@ -0,0 +1,12 @@
++module blink.mojom;
++
++import "url/mojom/origin.mojom";
++import "third_party/blink/public/mojom/CTF/person_interface.mojom";
++import "third_party/blink/public/mojom/CTF/dog_interface.mojom";
++import "third_party/blink/public/mojom/CTF/cat_interface.mojom";
++
++interface BeingCreatorInterface {
++  CreatePerson() => (blink.mojom.PersonInterface? person);
++  CreateDog() => (blink.mojom.DogInterface? dog);
++  CreateCat() => (blink.mojom.CatInterface? cat);
++};
+diff --git a/third_party/blink/public/mojom/CTF/cat_interface.mojom b/third_party/blink/public/mojom/CTF/cat_interface.mojom
+new file mode 100644
+index 000000000000..48a7b890e209
+--- /dev/null
++++ b/third_party/blink/public/mojom/CTF/cat_interface.mojom
+@@ -0,0 +1,14 @@
++module blink.mojom;
++
++import "url/mojom/origin.mojom";
++import "third_party/blink/public/mojom/CTF/food_interface.mojom";
++
++interface CatInterface {
++  GetName() => (string name);
++  SetName(string new_name) => ();
++  GetAge() => (uint64 age);
++  SetAge(uint64 new_age) => ();
++  GetWeight() => (uint64 weight);
++  SetWeight(uint64 new_weight) => ();
++  CookAndEat(blink.mojom.FoodInterface food) => ();
++};
+diff --git a/third_party/blink/public/mojom/CTF/dog_interface.mojom b/third_party/blink/public/mojom/CTF/dog_interface.mojom
+new file mode 100644
+index 000000000000..5c8b3b8f4d91
+--- /dev/null
++++ b/third_party/blink/public/mojom/CTF/dog_interface.mojom
+@@ -0,0 +1,14 @@
++module blink.mojom;
++
++import "url/mojom/origin.mojom";
++import "third_party/blink/public/mojom/CTF/food_interface.mojom";
++
++interface DogInterface {
++  GetName() => (string name);
++  SetName(string new_name) => ();
++  GetAge() => (uint64 age);
++  SetAge(uint64 new_age) => ();
++  GetWeight() => (uint64 weight);
++  SetWeight(uint64 new_weight) => ();
++  CookAndEat(blink.mojom.FoodInterface food) => ();
++};
+diff --git a/third_party/blink/public/mojom/CTF/food_interface.mojom b/third_party/blink/public/mojom/CTF/food_interface.mojom
+new file mode 100644
+index 000000000000..b4d407fb8c9a
+--- /dev/null
++++ b/third_party/blink/public/mojom/CTF/food_interface.mojom
+@@ -0,0 +1,10 @@
++module blink.mojom;
++
++import "url/mojom/origin.mojom";
++
++interface FoodInterface {
++  GetDescription() => (string description);
++  SetDescription(string new_description) => ();
++  GetWeight() => (uint64 weight);
++  SetWeight(uint64 new_weight) => ();
++};
+diff --git a/third_party/blink/public/mojom/CTF/person_interface.mojom b/third_party/blink/public/mojom/CTF/person_interface.mojom
+new file mode 100644
+index 000000000000..4a30c55f8c5f
+--- /dev/null
++++ b/third_party/blink/public/mojom/CTF/person_interface.mojom
+@@ -0,0 +1,14 @@
++module blink.mojom;
++
++import "url/mojom/origin.mojom";
++import "third_party/blink/public/mojom/CTF/food_interface.mojom";
++
++interface PersonInterface {
++  GetName() => (string name);
++  SetName(string new_name) => ();
++  GetAge() => (uint64 age);
++  SetAge(uint64 new_age) => ();
++  GetWeight() => (uint64 weight);
++  SetWeight(uint64 new_weight) => ();
++  CookAndEat(blink.mojom.FoodInterface food) => ();
++};

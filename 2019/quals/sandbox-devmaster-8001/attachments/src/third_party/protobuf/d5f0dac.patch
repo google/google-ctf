@@ -1,0 +1,24 @@
+From d5f0dac497f833d06f92d246431f4f2f42509e04 Mon Sep 17 00:00:00 2001
+From: James Judd <james@lucidchart.com>
+Date: Tue, 14 Aug 2018 21:55:35 -0600
+Subject: [PATCH] Change deprecated Bazel single file attr param
+
+This removes the need for --incompatible_disable_deprecated_attr_params
+when using Protobuf
+---
+ protobuf.bzl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/protobuf.bzl b/protobuf.bzl
+index 67d61d7ba7..ae391aa643 100644
+--- a/protobuf.bzl
++++ b/protobuf.bzl
+@@ -178,7 +178,7 @@ proto_gen = rule(
+         "protoc": attr.label(
+             cfg = "host",
+             executable = True,
+-            single_file = True,
++            allow_single_file = True,
+             mandatory = True,
+         ),
+         "plugin": attr.label(

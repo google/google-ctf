@@ -1,0 +1,25 @@
+From 4fcb36c51c1c0355c2a23b1f06ec583f2428cd30 Mon Sep 17 00:00:00 2001
+From: Ittai Zeidman <ittaiz@gmail.com>
+Date: Mon, 21 May 2018 23:48:10 +0300
+Subject: [PATCH] remove PACKAGE_NAME and REPOSITORY_NAME deprecated usage
+ (#4650)
+
+---
+ protobuf.bzl | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/protobuf.bzl b/protobuf.bzl
+index 78f19c621a..4226a1424c 100644
+--- a/protobuf.bzl
++++ b/protobuf.bzl
+@@ -266,8 +266,8 @@ def internal_gen_well_known_protos_java(srcs):
+   Args:
+     srcs: the well known protos
+   """
+-  root = Label("%s//protobuf_java" % (REPOSITORY_NAME)).workspace_root
+-  pkg = PACKAGE_NAME + "/" if PACKAGE_NAME else ""
++  root = Label("%s//protobuf_java" % (native.repository_name())).workspace_root
++  pkg = native.package_name() + "/" if native.package_name() else ""
+   if root == "":
+     include = " -I%ssrc " % pkg
+   else:
