@@ -1,0 +1,19 @@
+[package]
+name = "gpurtl"
+version = "0.1.0"
+authors = ["Robin McCorkell <rmccorkell@google.com>"]
+edition = "2018"
+build = "build.rs"
+
+[dependencies]
+vulkano = "0.14"
+vulkano-shaders = "0.14"
+itertools = "0.8"
+arrayvec = "0.4"
+nom = "5.0"
+clap = "2.33"
+bitvec = "0.15"
+rlua = "0.16"
+
+[build-dependencies]
+build-deps = "0.1"

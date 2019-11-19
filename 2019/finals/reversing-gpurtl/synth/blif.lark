@@ -1,0 +1,53 @@
+%import common.NEWLINE
+%import common.WS_INLINE
+%import common.WS
+
+_WS: WS_INLINE
+_WSN: WS
+_NL: NEWLINE
+
+VAR: /[^ \n\t\r]+/
+ZERO: "0"
+ONE: "1"
+TWO: "2"
+THREE: "3"
+DASH: "-"
+NIL: "NIL"
+
+_lut_prog_input: ZERO | ONE | DASH
+lut_prog_input: _lut_prog_input+ _WS |
+lut_prog_output: ZERO | ONE
+lut_prog: lut_prog_input lut_prog_output
+lut_progs: (lut_prog _NL+)*
+lut_inputs: (_WS VAR)*
+lut_output: VAR
+lut: ".names" lut_inputs _WS lut_output _NL+ lut_progs
+
+REG_TYPE_FE: "fe"
+REG_TYPE_RE: "re"
+REG_TYPE_AH: "ah"
+REG_TYPE_AL: "al"
+REG_TYPE_AS: "as"
+reg_type: REG_TYPE_FE | REG_TYPE_RE | REG_TYPE_AH | REG_TYPE_AL | REG_TYPE_AS
+reg_control: VAR | NIL
+reg_init: ZERO | ONE | TWO | THREE
+reg_input: VAR
+reg_output: VAR
+reg: ".latch" _WS reg_input _WS reg_output _WS (reg_type _WS reg_control _WS)? reg_init? _NL+
+
+_command: reg | lut
+
+model_inputs: ".inputs" (_WS VAR)* _NL+
+model_inputs_mul: model_inputs*
+model_outputs: ".outputs" (_WS VAR)* _NL+
+model_outputs_mul: model_outputs*
+model_clocks: ".clock" (_WS VAR)* _NL+
+model_clocks_mul: model_clocks*
+model_name: VAR
+commands: _command*
+model: ".model" _WS model_name _NL+ model_inputs_mul model_outputs_mul model_clocks_mul commands (".end" _NL)?
+
+blif: _WSN? model _WSN?
+
+COMMENT: "#" /[^\n]/*
+%ignore COMMENT

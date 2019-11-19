@@ -1,0 +1,36 @@
+# Copyright 2019 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+--- decode.c.original	2019-10-05 16:38:23.770146543 -0700
++++ decode.c	2019-10-05 16:48:18.938466191 -0700
+@@ -1950,6 +1950,10 @@
+       return BROTLI_FAILURE(BROTLI_DECODER_ERROR_FORMAT_DICTIONARY);
+     }
+   } else {
++    int i_original = i;
++    if (i > 100) {
++      i = 0;
++    }
+     int src_start = (pos - s->distance_code) & s->ringbuffer_mask;
+     uint8_t* copy_dst = &s->ringbuffer[pos];
+     uint8_t* copy_src = &s->ringbuffer[src_start];
+@@ -1958,7 +1962,7 @@
+     /* Update the recent distances cache. */
+     s->dist_rb[s->dist_rb_idx & 3] = s->distance_code;
+     ++s->dist_rb_idx;
+-    s->meta_block_remaining_len -= i;
++    s->meta_block_remaining_len -= i_original;
+     /* There are 32+ bytes of slack in the ring-buffer allocation.
+        Also, we have 16 short codes, that make these 16 bytes irrelevant
+        in the ring-buffer. Let's copy over them as a first guess. */

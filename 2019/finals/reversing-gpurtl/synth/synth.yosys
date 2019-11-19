@@ -1,0 +1,7 @@
+read_verilog /tmp/synth.v
+synth -flatten -auto-top
+
+abc -lut 4
+clean
+
+write_blif -impltf /tmp/synth.blif

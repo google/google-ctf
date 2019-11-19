@@ -1,0 +1,50 @@
+diff --git a/src/mt19937_64.rs b/src/mt19937_64.rs
+index f0a92fe..1e408f6 100644
+--- a/src/mt19937_64.rs
++++ b/src/mt19937_64.rs
+@@ -16,6 +16,7 @@ use std::num::Wrapping;
+ 
+ use rand::{Rng, SeedableRng, Rand};
+ 
++const K: usize = 1337;
+ const NN: usize = 312;
+ const MM: usize = 156;
+ const ONE: Wrapping<u64> = Wrapping(1);
+@@ -64,25 +65,21 @@ impl<'a> SeedableRng<&'a [u64]> for MT19937_64 {
+ 
+     fn reseed(&mut self, key: &[u64]) {
+         self.reseed(19650218u64);
+-        let mut i = 1;
+-        let mut j = 0;
+-        for _ in 0 .. max(NN, key.len()) {
+-            self.state[i] = (self.state[i] ^ ((self.state[i-1] ^ (self.state[i-1]>>62)) * Wrapping(3935559000370003845))) + Wrapping(key[j]) + Wrapping(j as u64);
+-            i += 1;
+-            if i >= NN {
+-                self.state[0] = self.state[NN-1];
+-                i = 1;
+-            }
+-            j += 1;
+-            if j >= key.len() {
+-                j = 0;
+-            }
++
++        for i in 0..self.state.len(){
++            self.state[i] ^= Wrapping(key[i]);
+         }
+-        for _ in 0 .. NN-1 {
+-            self.state[i] = (self.state[i] ^ ((self.state[i-1] ^ (self.state[i-1]>>62)) * Wrapping(2862933555777941757))) - Wrapping(i as u64);
++        self.idx = NN;
++        let mut i = 1;
++        for _ in 0..K * (NN - 1) {
++            // Replace the slow + and * operations with something faster.
++            self.state[i] = self.state[i]
++                ^ ((self.state[i - 1] ^ (self.state[i - 1] >> 62)) ^
++                    ((self.state[i - 1] >> 32) & Wrapping(0xdeadbeefu64)) ^
++                    Wrapping(2862933555777941757)) ^ Wrapping(i as u64);
+             i += 1;
+             if i >= NN {
+-                self.state[0] = self.state[NN-1];
++                self.state[0] ^= self.state[NN - 1];
+                 i = 1;
+             }
+         }
