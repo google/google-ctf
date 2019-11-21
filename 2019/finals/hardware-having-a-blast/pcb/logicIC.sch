@@ -1,0 +1,961 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 2 3
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L power:GND #PWR?
+U 1 1 5D8F9428
+P 3275 2225
+AR Path="/5D8F9428" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D8F9428" Ref="#PWR014"  Part="1" 
+F 0 "#PWR014" H 3275 1975 50  0001 C CNN
+F 1 "GND" H 3280 2052 50  0000 C CNN
+F 2 "" H 3275 2225 50  0001 C CNN
+F 3 "" H 3275 2225 50  0001 C CNN
+	1    3275 2225
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F942E
+P 2700 1975
+AR Path="/5D8F942E" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F942E" Ref="R13"  Part="1" 
+F 0 "R13" V 2493 1975 50  0000 C CNN
+F 1 "10k" V 2584 1975 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2630 1975 50  0001 C CNN
+F 3 "~" H 2700 1975 50  0001 C CNN
+	1    2700 1975
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F9436
+P 3275 1225
+AR Path="/5D8F9436" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F9436" Ref="R16"  Part="1" 
+F 0 "R16" H 3345 1271 50  0000 L CNN
+F 1 "1k" H 3345 1180 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 3205 1225 50  0001 C CNN
+F 3 "~" H 3275 1225 50  0001 C CNN
+	1    3275 1225
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5D8F943D
+P 3275 1025
+AR Path="/5D8F943D" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D8F943D" Ref="#PWR013"  Part="1" 
+F 0 "#PWR013" H 3275 875 50  0001 C CNN
+F 1 "VCC" H 3292 1198 50  0000 C CNN
+F 2 "" H 3275 1025 50  0001 C CNN
+F 3 "" H 3275 1025 50  0001 C CNN
+	1    3275 1025
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2850 1975 2975 1975
+Wire Wire Line
+	3275 2225 3275 2175
+Wire Wire Line
+	3275 1025 3275 1075
+Text Label 6525 2000 0    50   ~ 0
+_40
+Text Label 6525 1475 0    50   ~ 0
+_45
+$Comp
+L power:GND #PWR?
+U 1 1 5D8F9452
+P 3250 3975
+AR Path="/5D8F9452" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D8F9452" Ref="#PWR012"  Part="1" 
+F 0 "#PWR012" H 3250 3725 50  0001 C CNN
+F 1 "GND" H 3255 3802 50  0000 C CNN
+F 2 "" H 3250 3975 50  0001 C CNN
+F 3 "" H 3250 3975 50  0001 C CNN
+	1    3250 3975
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F9458
+P 2675 3725
+AR Path="/5D8F9458" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F9458" Ref="R12"  Part="1" 
+F 0 "R12" V 2468 3725 50  0000 C CNN
+F 1 "10k" V 2559 3725 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2605 3725 50  0001 C CNN
+F 3 "~" H 2675 3725 50  0001 C CNN
+	1    2675 3725
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F9460
+P 3250 2975
+AR Path="/5D8F9460" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F9460" Ref="R15"  Part="1" 
+F 0 "R15" H 3320 3021 50  0000 L CNN
+F 1 "1k" H 3320 2930 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 3180 2975 50  0001 C CNN
+F 3 "~" H 3250 2975 50  0001 C CNN
+	1    3250 2975
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5D8F9467
+P 3250 2775
+AR Path="/5D8F9467" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D8F9467" Ref="#PWR011"  Part="1" 
+F 0 "#PWR011" H 3250 2625 50  0001 C CNN
+F 1 "VCC" H 3267 2948 50  0000 C CNN
+F 2 "" H 3250 2775 50  0001 C CNN
+F 3 "" H 3250 2775 50  0001 C CNN
+	1    3250 2775
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2825 3725 2950 3725
+Wire Wire Line
+	3250 3975 3250 3925
+Wire Wire Line
+	3250 2775 3250 2825
+Wire Wire Line
+	3250 3125 3250 3325
+Connection ~ 3250 3325
+Wire Wire Line
+	3250 3325 3250 3525
+Wire Wire Line
+	3250 3325 3725 3325
+$Comp
+L power:GND #PWR?
+U 1 1 5D8F947B
+P 3225 5750
+AR Path="/5D8F947B" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D8F947B" Ref="#PWR010"  Part="1" 
+F 0 "#PWR010" H 3225 5500 50  0001 C CNN
+F 1 "GND" H 3230 5577 50  0000 C CNN
+F 2 "" H 3225 5750 50  0001 C CNN
+F 3 "" H 3225 5750 50  0001 C CNN
+	1    3225 5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F9481
+P 2650 5500
+AR Path="/5D8F9481" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F9481" Ref="R11"  Part="1" 
+F 0 "R11" V 2443 5500 50  0000 C CNN
+F 1 "10k" V 2534 5500 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2580 5500 50  0001 C CNN
+F 3 "~" H 2650 5500 50  0001 C CNN
+	1    2650 5500
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F9489
+P 3225 4750
+AR Path="/5D8F9489" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F9489" Ref="R14"  Part="1" 
+F 0 "R14" H 3295 4796 50  0000 L CNN
+F 1 "1k" H 3295 4705 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 3155 4750 50  0001 C CNN
+F 3 "~" H 3225 4750 50  0001 C CNN
+	1    3225 4750
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5D8F9490
+P 3225 4550
+AR Path="/5D8F9490" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D8F9490" Ref="#PWR09"  Part="1" 
+F 0 "#PWR09" H 3225 4400 50  0001 C CNN
+F 1 "VCC" H 3242 4723 50  0000 C CNN
+F 2 "" H 3225 4550 50  0001 C CNN
+F 3 "" H 3225 4550 50  0001 C CNN
+	1    3225 4550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2800 5500 2925 5500
+Wire Wire Line
+	3225 5750 3225 5700
+Wire Wire Line
+	3225 4550 3225 4600
+Wire Wire Line
+	3225 4900 3225 5100
+Connection ~ 3225 5100
+Wire Wire Line
+	3225 5100 3225 5300
+Wire Wire Line
+	3225 5100 3700 5100
+$Comp
+L power:GND #PWR?
+U 1 1 5D8F94A4
+P 4975 3975
+AR Path="/5D8F94A4" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D8F94A4" Ref="#PWR020"  Part="1" 
+F 0 "#PWR020" H 4975 3725 50  0001 C CNN
+F 1 "GND" H 4980 3802 50  0000 C CNN
+F 2 "" H 4975 3975 50  0001 C CNN
+F 3 "" H 4975 3975 50  0001 C CNN
+	1    4975 3975
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F94AA
+P 4400 3725
+AR Path="/5D8F94AA" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F94AA" Ref="R19"  Part="1" 
+F 0 "R19" V 4193 3725 50  0000 C CNN
+F 1 "10k" V 4284 3725 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 4330 3725 50  0001 C CNN
+F 3 "~" H 4400 3725 50  0001 C CNN
+	1    4400 3725
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F94B2
+P 4975 2975
+AR Path="/5D8F94B2" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F94B2" Ref="R22"  Part="1" 
+F 0 "R22" H 5045 3021 50  0000 L CNN
+F 1 "1k" H 5045 2930 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 4905 2975 50  0001 C CNN
+F 3 "~" H 4975 2975 50  0001 C CNN
+	1    4975 2975
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5D8F94B9
+P 4975 2775
+AR Path="/5D8F94B9" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D8F94B9" Ref="#PWR019"  Part="1" 
+F 0 "#PWR019" H 4975 2625 50  0001 C CNN
+F 1 "VCC" H 4992 2948 50  0000 C CNN
+F 2 "" H 4975 2775 50  0001 C CNN
+F 3 "" H 4975 2775 50  0001 C CNN
+	1    4975 2775
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4550 3725 4675 3725
+Wire Wire Line
+	4975 3975 4975 3925
+Wire Wire Line
+	4975 2775 4975 2825
+Wire Wire Line
+	4975 3125 4975 3325
+Connection ~ 4975 3325
+Wire Wire Line
+	4975 3325 4975 3525
+Wire Wire Line
+	4975 3325 5450 3325
+$Comp
+L power:GND #PWR?
+U 1 1 5D8F94CD
+P 4950 5750
+AR Path="/5D8F94CD" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D8F94CD" Ref="#PWR016"  Part="1" 
+F 0 "#PWR016" H 4950 5500 50  0001 C CNN
+F 1 "GND" H 4955 5577 50  0000 C CNN
+F 2 "" H 4950 5750 50  0001 C CNN
+F 3 "" H 4950 5750 50  0001 C CNN
+	1    4950 5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F94D3
+P 4375 5500
+AR Path="/5D8F94D3" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F94D3" Ref="R17"  Part="1" 
+F 0 "R17" V 4168 5500 50  0000 C CNN
+F 1 "10k" V 4259 5500 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 4305 5500 50  0001 C CNN
+F 3 "~" H 4375 5500 50  0001 C CNN
+	1    4375 5500
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F94DB
+P 4950 4750
+AR Path="/5D8F94DB" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F94DB" Ref="R20"  Part="1" 
+F 0 "R20" H 5020 4796 50  0000 L CNN
+F 1 "1k" H 5020 4705 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 4880 4750 50  0001 C CNN
+F 3 "~" H 4950 4750 50  0001 C CNN
+	1    4950 4750
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5D8F94E2
+P 4950 4550
+AR Path="/5D8F94E2" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D8F94E2" Ref="#PWR015"  Part="1" 
+F 0 "#PWR015" H 4950 4400 50  0001 C CNN
+F 1 "VCC" H 4967 4723 50  0000 C CNN
+F 2 "" H 4950 4550 50  0001 C CNN
+F 3 "" H 4950 4550 50  0001 C CNN
+	1    4950 4550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4525 5500 4650 5500
+Wire Wire Line
+	4950 5750 4950 5700
+Wire Wire Line
+	4950 4550 4950 4600
+Wire Wire Line
+	4950 4900 4950 5100
+Connection ~ 4950 5100
+Wire Wire Line
+	4950 5100 4950 5300
+Wire Wire Line
+	4950 5100 5425 5100
+Text Label 3725 3325 0    50   ~ 0
+~B2
+Text Label 3700 5100 0    50   ~ 0
+~B4
+Text Label 5425 5100 0    50   ~ 0
+~A4
+Text Label 5450 3325 0    50   ~ 0
+~A2
+$Comp
+L 74xx:74LS32 U?
+U 1 1 5D8F94F3
+P 7375 3200
+AR Path="/5D8F94F3" Ref="U?"  Part="1" 
+AR Path="/5D8F6BED/5D8F94F3" Ref="U1"  Part="1" 
+F 0 "U1" H 7375 3525 50  0000 C CNN
+F 1 "74LS32" H 7375 3434 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm" H 7375 3200 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 7375 3200 50  0001 C CNN
+	1    7375 3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS32 U?
+U 2 1 5D8F94FA
+P 7375 4350
+AR Path="/5D8F94FA" Ref="U?"  Part="2" 
+AR Path="/5D8F6BED/5D8F94FA" Ref="U1"  Part="2" 
+F 0 "U1" H 7375 4675 50  0000 C CNN
+F 1 "74LS32" H 7375 4584 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm" H 7375 4350 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 7375 4350 50  0001 C CNN
+	2    7375 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS32 U?
+U 3 1 5D8F9501
+P 7375 5100
+AR Path="/5D8F9501" Ref="U?"  Part="3" 
+AR Path="/5D8F6BED/5D8F9501" Ref="U1"  Part="3" 
+F 0 "U1" H 7375 5425 50  0000 C CNN
+F 1 "74LS32" H 7375 5334 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm" H 7375 5100 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 7375 5100 50  0001 C CNN
+	3    7375 5100
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS32 U?
+U 4 1 5D8F9508
+P 7425 3800
+AR Path="/5D8F9508" Ref="U?"  Part="4" 
+AR Path="/5D8F6BED/5D8F9508" Ref="U1"  Part="4" 
+F 0 "U1" H 7425 4125 50  0000 C CNN
+F 1 "74LS32" H 7425 4034 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm" H 7425 3800 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 7425 3800 50  0001 C CNN
+	4    7425 3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F9517
+P 7900 2600
+AR Path="/5D8F9517" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F9517" Ref="R30"  Part="1" 
+F 0 "R30" V 7693 2600 50  0000 C CNN
+F 1 "10k" V 7784 2600 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 7830 2600 50  0001 C CNN
+F 3 "~" H 7900 2600 50  0001 C CNN
+	1    7900 2600
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F951E
+P 7875 3200
+AR Path="/5D8F951E" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F951E" Ref="R24"  Part="1" 
+F 0 "R24" V 7668 3200 50  0000 C CNN
+F 1 "10k" V 7759 3200 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 7805 3200 50  0001 C CNN
+F 3 "~" H 7875 3200 50  0001 C CNN
+	1    7875 3200
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F9525
+P 7875 4350
+AR Path="/5D8F9525" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F9525" Ref="R25"  Part="1" 
+F 0 "R25" V 7668 4350 50  0000 C CNN
+F 1 "10k" V 7759 4350 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 7805 4350 50  0001 C CNN
+F 3 "~" H 7875 4350 50  0001 C CNN
+	1    7875 4350
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F952C
+P 7875 5100
+AR Path="/5D8F952C" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F952C" Ref="R26"  Part="1" 
+F 0 "R26" V 7668 5100 50  0000 C CNN
+F 1 "10k" V 7759 5100 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 7805 5100 50  0001 C CNN
+F 3 "~" H 7875 5100 50  0001 C CNN
+	1    7875 5100
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7700 2600 7750 2600
+Wire Wire Line
+	7675 3200 7725 3200
+Wire Wire Line
+	7675 4350 7725 4350
+Wire Wire Line
+	7675 5100 7725 5100
+$Comp
+L Device:R R?
+U 1 1 5D8F9537
+P 7900 2100
+AR Path="/5D8F9537" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F9537" Ref="R29"  Part="1" 
+F 0 "R29" V 7693 2100 50  0000 C CNN
+F 1 "10k" V 7784 2100 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 7830 2100 50  0001 C CNN
+F 3 "~" H 7900 2100 50  0001 C CNN
+	1    7900 2100
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F953E
+P 7900 1600
+AR Path="/5D8F953E" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F953E" Ref="R28"  Part="1" 
+F 0 "R28" V 7693 1600 50  0000 C CNN
+F 1 "10k" V 7784 1600 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 7830 1600 50  0001 C CNN
+F 3 "~" H 7900 1600 50  0001 C CNN
+	1    7900 1600
+	0    1    1    0   
+$EndComp
+Text Label 7750 1600 2    50   ~ 0
+_45
+Text Label 7750 2100 2    50   ~ 0
+_40
+$Comp
+L power:VCC #PWR?
+U 1 1 5D8F9571
+P 8525 950
+AR Path="/5D8F9571" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D8F9571" Ref="#PWR021"  Part="1" 
+F 0 "#PWR021" H 8525 800 50  0001 C CNN
+F 1 "VCC" H 8542 1123 50  0000 C CNN
+F 2 "" H 8525 950 50  0001 C CNN
+F 3 "" H 8525 950 50  0001 C CNN
+	1    8525 950 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8525 1000 8525 950 
+Wire Wire Line
+	8050 1600 8225 1600
+Wire Wire Line
+	8050 2100 8225 2100
+Wire Wire Line
+	8050 2600 8225 2600
+Wire Wire Line
+	8025 3200 8225 3200
+Wire Wire Line
+	8025 3800 8225 3800
+Wire Wire Line
+	8025 4350 8225 4350
+Wire Wire Line
+	8525 1800 8525 1900
+Wire Wire Line
+	8525 2300 8525 2400
+Wire Wire Line
+	8525 2800 8525 3000
+Wire Wire Line
+	8525 3400 8525 3600
+Wire Wire Line
+	8525 4000 8525 4150
+$Comp
+L power:GND #PWR?
+U 1 1 5D8F9583
+P 8525 6000
+AR Path="/5D8F9583" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D8F9583" Ref="#PWR022"  Part="1" 
+F 0 "#PWR022" H 8525 5750 50  0001 C CNN
+F 1 "GND" H 8530 5827 50  0000 C CNN
+F 2 "" H 8525 6000 50  0001 C CNN
+F 3 "" H 8525 6000 50  0001 C CNN
+	1    8525 6000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F9589
+P 8525 5800
+AR Path="/5D8F9589" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F9589" Ref="R31"  Part="1" 
+F 0 "R31" H 8595 5846 50  0000 L CNN
+F 1 "1k" H 8595 5755 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 8455 5800 50  0001 C CNN
+F 3 "~" H 8525 5800 50  0001 C CNN
+	1    8525 5800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8525 5950 8525 6000
+Wire Wire Line
+	8525 5300 8525 5325
+Wire Wire Line
+	8525 5325 9550 5325
+Connection ~ 8525 5325
+Wire Wire Line
+	8525 5325 8525 5650
+$Comp
+L Device:R R?
+U 1 1 5D8F95AA
+P 7875 1200
+AR Path="/5D8F95AA" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F95AA" Ref="R23"  Part="1" 
+F 0 "R23" V 7668 1200 50  0000 C CNN
+F 1 "10k" V 7759 1200 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 7805 1200 50  0001 C CNN
+F 3 "~" H 7875 1200 50  0001 C CNN
+	1    7875 1200
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F95B1
+P 7875 3800
+AR Path="/5D8F95B1" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F95B1" Ref="R27"  Part="1" 
+F 0 "R27" V 7668 3800 50  0000 C CNN
+F 1 "10k" V 7759 3800 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 7805 3800 50  0001 C CNN
+F 3 "~" H 7875 3800 50  0001 C CNN
+	1    7875 3800
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	8025 5100 8225 5100
+Wire Wire Line
+	8025 1200 8225 1200
+Text Label 7700 2600 2    50   ~ 0
+~A3
+$Comp
+L power:GND #PWR?
+U 1 1 5D8F95C3
+P 4975 2225
+AR Path="/5D8F95C3" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D8F95C3" Ref="#PWR018"  Part="1" 
+F 0 "#PWR018" H 4975 1975 50  0001 C CNN
+F 1 "GND" H 4980 2052 50  0000 C CNN
+F 2 "" H 4975 2225 50  0001 C CNN
+F 3 "" H 4975 2225 50  0001 C CNN
+	1    4975 2225
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F95C9
+P 4400 1975
+AR Path="/5D8F95C9" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F95C9" Ref="R18"  Part="1" 
+F 0 "R18" V 4193 1975 50  0000 C CNN
+F 1 "10k" V 4284 1975 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 4330 1975 50  0001 C CNN
+F 3 "~" H 4400 1975 50  0001 C CNN
+	1    4400 1975
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5D8F95D1
+P 4975 1225
+AR Path="/5D8F95D1" Ref="R?"  Part="1" 
+AR Path="/5D8F6BED/5D8F95D1" Ref="R21"  Part="1" 
+F 0 "R21" H 5045 1271 50  0000 L CNN
+F 1 "1k" H 5045 1180 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 4905 1225 50  0001 C CNN
+F 3 "~" H 4975 1225 50  0001 C CNN
+	1    4975 1225
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5D8F95D8
+P 4975 1025
+AR Path="/5D8F95D8" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D8F95D8" Ref="#PWR017"  Part="1" 
+F 0 "#PWR017" H 4975 875 50  0001 C CNN
+F 1 "VCC" H 4992 1198 50  0000 C CNN
+F 2 "" H 4975 1025 50  0001 C CNN
+F 3 "" H 4975 1025 50  0001 C CNN
+	1    4975 1025
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4550 1975 4675 1975
+Wire Wire Line
+	4975 2225 4975 2175
+Wire Wire Line
+	4975 1025 4975 1075
+Wire Wire Line
+	4975 1375 4975 1575
+Connection ~ 4975 1575
+Wire Wire Line
+	4975 1575 4975 1775
+Wire Wire Line
+	4975 1575 5450 1575
+Text Label 5450 1575 0    50   ~ 0
+~A3
+Wire Wire Line
+	8525 4550 8525 4900
+$Comp
+L 74xGxx:74LVC2G86 U?
+U 1 1 5D8F95E7
+P 6275 1475
+AR Path="/5D8F95E7" Ref="U?"  Part="1" 
+AR Path="/5D8F6BED/5D8F95E7" Ref="U2"  Part="1" 
+F 0 "U2" H 6250 1742 50  0000 C CNN
+F 1 "74LVC2G86" H 6250 1651 50  0000 C CNN
+F 2 "Package_SO:SSOP-8_3.9x5.05mm_P1.27mm" H 6275 1475 50  0001 C CNN
+F 3 "http://www.ti.com/lit/sg/scyt129e/scyt129e.pdf" H 6275 1475 50  0001 C CNN
+	1    6275 1475
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xGxx:74LVC2G86 U?
+U 2 1 5D8F95EE
+P 6275 2000
+AR Path="/5D8F95EE" Ref="U?"  Part="2" 
+AR Path="/5D8F6BED/5D8F95EE" Ref="U2"  Part="2" 
+F 0 "U2" H 6250 2267 50  0000 C CNN
+F 1 "74LVC2G86" H 6250 2176 50  0000 C CNN
+F 2 "Package_SO:SSOP-8_3.9x5.05mm_P1.27mm" H 6275 2000 50  0001 C CNN
+F 3 "http://www.ti.com/lit/sg/scyt129e/scyt129e.pdf" H 6275 2000 50  0001 C CNN
+	2    6275 2000
+	1    0    0    -1  
+$EndComp
+Text Label 3350 1550 0    50   ~ 0
+~B0
+Text Label 5975 1525 2    50   ~ 0
+~B0
+Wire Wire Line
+	3275 1375 3275 1550
+Wire Wire Line
+	3350 1550 3275 1550
+Connection ~ 3275 1550
+Wire Wire Line
+	3275 1550 3275 1775
+Text HLabel 2500 5500 0    50   Input ~ 0
+B4
+Text HLabel 2525 3725 0    50   Input ~ 0
+B2
+Text HLabel 2450 1975 0    50   Input ~ 0
+B0
+Text HLabel 4250 1975 0    50   Input ~ 0
+A3
+Text HLabel 4250 3725 0    50   Input ~ 0
+A2
+Text HLabel 4225 5500 0    50   Input ~ 0
+A4
+Text HLabel 7125 3900 0    50   Input ~ 0
+B4
+Text HLabel 7075 5200 0    50   Input ~ 0
+B2
+Text HLabel 7075 4250 0    50   Input ~ 0
+A4
+Text HLabel 7075 3100 0    50   Input ~ 0
+A2
+Text Label 7075 3300 2    50   ~ 0
+~B2
+Text Label 7075 4450 2    50   ~ 0
+~B4
+Text Label 7075 5000 2    50   ~ 0
+~A2
+Text Label 7125 3700 2    50   ~ 0
+~A4
+Text HLabel 5975 1950 0    50   Input ~ 0
+A1
+Text HLabel 5975 2050 0    50   Input ~ 0
+B1
+Text HLabel 5975 1425 0    50   Input ~ 0
+A0
+Text HLabel 7725 1200 0    50   Input ~ 0
+B3
+Text HLabel 9550 5325 2    50   Output ~ 0
+LogicOK
+$Comp
+L 74xx:74LS32 U?
+U 5 1 5D9120E1
+P 1200 1550
+AR Path="/5D9120E1" Ref="U?"  Part="5" 
+AR Path="/5D8F6BED/5D9120E1" Ref="U1"  Part="5" 
+F 0 "U1" H 1430 1596 50  0000 L CNN
+F 1 "74LS32" H 1430 1505 50  0000 L CNN
+F 2 "Package_DIP:DIP-14_W7.62mm" H 1200 1550 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 1200 1550 50  0001 C CNN
+	5    1200 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D9120E8
+P 1200 2125
+AR Path="/5D9120E8" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D9120E8" Ref="#PWR06"  Part="1" 
+F 0 "#PWR06" H 1200 1875 50  0001 C CNN
+F 1 "GND" H 1205 1952 50  0000 C CNN
+F 2 "" H 1200 2125 50  0001 C CNN
+F 3 "" H 1200 2125 50  0001 C CNN
+	1    1200 2125
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5D9120EE
+P 1200 1000
+AR Path="/5D9120EE" Ref="#PWR?"  Part="1" 
+AR Path="/5D8F6BED/5D9120EE" Ref="#PWR05"  Part="1" 
+F 0 "#PWR05" H 1200 850 50  0001 C CNN
+F 1 "VCC" H 1217 1173 50  0000 C CNN
+F 2 "" H 1200 1000 50  0001 C CNN
+F 3 "" H 1200 1000 50  0001 C CNN
+	1    1200 1000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1200 1050 1200 1000
+Wire Wire Line
+	1200 2125 1200 2050
+$Comp
+L power:VCC #PWR07
+U 1 1 5D913128
+P 2200 950
+F 0 "#PWR07" H 2200 800 50  0001 C CNN
+F 1 "VCC" H 2217 1123 50  0000 C CNN
+F 2 "" H 2200 950 50  0001 C CNN
+F 3 "" H 2200 950 50  0001 C CNN
+	1    2200 950 
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR08
+U 1 1 5D913207
+P 2200 1425
+F 0 "#PWR08" H 2200 1175 50  0001 C CNN
+F 1 "GND" H 2205 1252 50  0000 C CNN
+F 2 "" H 2200 1425 50  0001 C CNN
+F 3 "" H 2200 1425 50  0001 C CNN
+	1    2200 1425
+	1    0    0    -1  
+$EndComp
+Text HLabel 2200 950  3    50   Input ~ 0
+VCC
+Text HLabel 2200 1425 1    50   Input ~ 0
+GND
+Wire Wire Line
+	2450 1975 2550 1975
+$Comp
+L Transistor_BJT:BC848 Q3
+U 1 1 5DCDFBF7
+P 3175 1975
+F 0 "Q3" H 3366 2021 50  0000 L CNN
+F 1 "BC848" H 3366 1930 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 3375 1900 50  0001 L CIN
+F 3 "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657" H 3175 1975 50  0001 L CNN
+	1    3175 1975
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC848 Q2
+U 1 1 5DCE04E0
+P 3150 3725
+F 0 "Q2" H 3341 3771 50  0000 L CNN
+F 1 "BC848" H 3341 3680 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 3350 3650 50  0001 L CIN
+F 3 "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657" H 3150 3725 50  0001 L CNN
+	1    3150 3725
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC848 Q1
+U 1 1 5DCE05FE
+P 3125 5500
+F 0 "Q1" H 3316 5546 50  0000 L CNN
+F 1 "BC848" H 3316 5455 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 3325 5425 50  0001 L CIN
+F 3 "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657" H 3125 5500 50  0001 L CNN
+	1    3125 5500
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC848 Q4
+U 1 1 5DCE06E2
+P 4850 5500
+F 0 "Q4" H 5041 5546 50  0000 L CNN
+F 1 "BC848" H 5041 5455 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 5050 5425 50  0001 L CIN
+F 3 "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657" H 4850 5500 50  0001 L CNN
+	1    4850 5500
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC848 Q6
+U 1 1 5DCE07DB
+P 4875 3725
+F 0 "Q6" H 5066 3771 50  0000 L CNN
+F 1 "BC848" H 5066 3680 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 5075 3650 50  0001 L CIN
+F 3 "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657" H 4875 3725 50  0001 L CNN
+	1    4875 3725
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC848 Q5
+U 1 1 5DCE08CD
+P 4875 1975
+F 0 "Q5" H 5066 2021 50  0000 L CNN
+F 1 "BC848" H 5066 1930 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 5075 1900 50  0001 L CIN
+F 3 "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657" H 4875 1975 50  0001 L CNN
+	1    4875 1975
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC848 Q7
+U 1 1 5DCE0B5D
+P 8425 1200
+F 0 "Q7" H 8616 1246 50  0000 L CNN
+F 1 "BC848" H 8616 1155 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 8625 1125 50  0001 L CIN
+F 3 "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657" H 8425 1200 50  0001 L CNN
+	1    8425 1200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC848 Q8
+U 1 1 5DCE0C89
+P 8425 1600
+F 0 "Q8" H 8616 1646 50  0000 L CNN
+F 1 "BC848" H 8616 1555 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 8625 1525 50  0001 L CIN
+F 3 "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657" H 8425 1600 50  0001 L CNN
+	1    8425 1600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC848 Q9
+U 1 1 5DCE0D56
+P 8425 2100
+F 0 "Q9" H 8616 2146 50  0000 L CNN
+F 1 "BC848" H 8616 2055 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 8625 2025 50  0001 L CIN
+F 3 "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657" H 8425 2100 50  0001 L CNN
+	1    8425 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC848 Q10
+U 1 1 5DCE0E28
+P 8425 2600
+F 0 "Q10" H 8616 2646 50  0000 L CNN
+F 1 "BC848" H 8616 2555 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 8625 2525 50  0001 L CIN
+F 3 "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657" H 8425 2600 50  0001 L CNN
+	1    8425 2600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC848 Q11
+U 1 1 5DCE0F33
+P 8425 3200
+F 0 "Q11" H 8616 3246 50  0000 L CNN
+F 1 "BC848" H 8616 3155 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 8625 3125 50  0001 L CIN
+F 3 "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657" H 8425 3200 50  0001 L CNN
+	1    8425 3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC848 Q12
+U 1 1 5DCE0FF7
+P 8425 3800
+F 0 "Q12" H 8616 3846 50  0000 L CNN
+F 1 "BC848" H 8616 3755 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 8625 3725 50  0001 L CIN
+F 3 "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657" H 8425 3800 50  0001 L CNN
+	1    8425 3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC848 Q13
+U 1 1 5DCE10E0
+P 8425 4350
+F 0 "Q13" H 8616 4396 50  0000 L CNN
+F 1 "BC848" H 8616 4305 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 8625 4275 50  0001 L CIN
+F 3 "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657" H 8425 4350 50  0001 L CNN
+	1    8425 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC848 Q14
+U 1 1 5DCE11B0
+P 8425 5100
+F 0 "Q14" H 8616 5146 50  0000 L CNN
+F 1 "BC848" H 8616 5055 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 8625 5025 50  0001 L CIN
+F 3 "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657" H 8425 5100 50  0001 L CNN
+	1    8425 5100
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
