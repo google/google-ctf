@@ -1,0 +1,606 @@
+; ---------------------------------------------------------------------------------------
+; Copyright 2019 Google LLC
+;
+; Licensed under the Apache License, Version 2.0 (the "License");
+; you may not use this file except in compliance with the License.
+; You may obtain a copy of the License at
+;
+;     https://www.apache.org/licenses/LICENSE-2.0
+;
+; Unless required by applicable law or agreed to in writing, software
+; distributed under the License is distributed on an "AS IS" BASIS,
+; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+; See the License for the specific language governing permissions and
+; limitations under the License.
+; ---------------------------------------------------------------------------------------
+; The Onion Binary (TOB)
+; ---------------------------------------------------------------------------------------
+; Everything after a semicolon is ignored (i.e., comment)
+; Parser is simple, so 1 statement per line please :)
+;
+; Some important notes:
+;   * We have 26 registers a-z
+;   * Use only double quotes "
+;
+; The Onion Binary (TOB) language
+;
+; Algorithm: See crack.py
+; Flag : CTF{I_h47e_0n1oNs_&_oNi0n_b1nARi3zzz}
+;
+; NOTE: program reads exactly 37 characters. Anything after 37th character is
+;       not processed.
+; ---------------------------------------------------------------------------------------
+print "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+print "$                                                                              $"
+print "$                              ::::::::::: :::    ::: ::::::::::               $"
+print "$                                 :+:     :+:    :+: :+:                       $"
+print "$                                +:+     +:+    +:+ +:+                        $"
+print "$                               +#+     +#++:++#++ +#++:++#                    $"
+print "$                              +#+     +#+    +#+ +#+                          $"
+print "$                             #+#     #+#    #+# #+#                           $"
+print "$                            ###     ###    ### ##########                     $"
+print "$                   ::::::::  ::::    ::: ::::::::::: ::::::::  ::::    :::    $"
+print "$                 :+:    :+: :+:+:   :+:     :+:    :+:    :+: :+:+:   :+:     $"
+print "$                +:+    +:+ :+:+:+  +:+     +:+    +:+    +:+ :+:+:+  +:+      $"
+print "$               +#+    +:+ +#+ +:+ +#+     +#+    +#+    +:+ +#+ +:+ +#+       $"
+print "$              +#+    +#+ +#+  +#+#+#     +#+    +#+    +#+ +#+  +#+#+#        $"
+print "$             #+#    #+# #+#   #+#+#     #+#    #+#    #+# #+#   #+#+#         $"
+print "$             ########  ###    #### ########### ########  ###    ####          $"
+print "$         ::::::::: ::::::::::: ::::    :::     :::     :::::::::  :::   :::   $"
+print "$        :+:    :+:    :+:     :+:+:   :+:   :+: :+:   :+:    :+: :+:   :+:    $"
+print "$       +:+    +:+    +:+     :+:+:+  +:+  +:+   +:+  +:+    +:+  +:+ +:+      $"
+print "$      +#++:++#+     +#+     +#+ +:+ +#+ +#++:++#++: +#++:++#:    +#++:        $"
+print "$     +#+    +#+    +#+     +#+  +#+#+# +#+     +#+ +#+    +#+    +#+          $"
+print "$    #+#    #+#    #+#     #+#   #+#+# #+#     #+# #+#    #+#    #+#           $"
+print "$   ######### ########### ###    #### ###     ### ###    ###    ###            $"
+print "$                                                                              $"
+print "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+print ""
+print "Are you ready?"
+; ---------------------------------------------------------------------------------------
+; Store key in memory at address 100
+; ---------------------------------------------------------------------------------------
+a = 100
+b = 0x21
+*a = b
+
+a = 101
+b = 0x85
+*a = b
+
+a = 102
+b = 0xed
+*a = b
+
+a = 103
+b = 0x09
+*a = b
+
+a = 104
+b = 0xc9
+*a = b
+
+a = 105
+b = 0xc8
+*a = b
+
+a = 106
+b = 0x3f
+*a = b
+
+a = 107
+b = 0xdd
+*a = b
+
+a = 108
+b = 0x91
+*a = b
+
+a = 109
+b = 0xb0
+*a = b
+
+a = 110
+b = 0xb0
+*a = b
+
+a = 111
+b = 0x55
+*a = b
+
+a = 112
+b = 0x1a
+*a = b
+
+a = 113
+b = 0x2a
+*a = b
+
+a = 114
+b = 0x37
+*a = b
+
+a = 115
+b = 0x65
+*a = b
+
+a = 116
+b = 0x7a
+*a = b
+
+a = 117
+b = 0xcf
+*a = b
+
+a = 118
+b = 0xe0
+*a = b
+
+a = 119
+b = 0x43
+*a = b
+
+a = 120
+b = 0xaa
+*a = b
+
+a = 121
+b = 0xf5
+*a = b
+
+a = 122
+b = 0x01
+*a = b
+
+a = 123
+b = 0x23
+*a = b
+
+a = 124
+b = 0xe7
+*a = b
+
+a = 125
+b = 0x2b
+*a = b
+
+a = 126
+b = 0x90
+*a = b
+
+a = 127
+b = 0xa7
+*a = b
+
+a = 128
+b = 0xf3
+*a = b
+
+a = 129
+b = 0x3b
+*a = b
+
+a = 130
+b = 0xdb
+*a = b
+
+a = 131
+b = 0x77
+*a = b
+
+; ---------------------------------------------------------------------------------------
+; Read first 4 characters of the flag and make sure that it's "CTF{". Compare character
+; by character and if don't match abort execution.
+;
+; Then read 32 characters (the actual flag) and store it to memory at address 0x0 after
+; XORing with the key.
+;
+; Finally check if the last character is "}" and if not abort execution.
+;
+; NOTE: This is a good decoy for side channel attacks. Flag size can be found trivially
+; since VM reads exactly 37 characters.
+; ---------------------------------------------------------------------------------------
+z = 0
+
+read a
+if (a != 0x43) {                    ; flag[0] == 'C' ?
+    print "Wrong flag. Sorry :("
+    halt
+}
+
+read b
+if (b != 0x54) {                    ; flag[0] == 'T' ?
+    print "Wrong flag. Sorry :("
+    halt
+}
+
+read c
+if (c != 0x46) {                    ; flag[0] == 'F' ?
+    print "Wrong flag. Sorry :("
+    halt
+}
+
+read d
+if (d != 0x7b) {                    ; flag[0] == '{' ?
+    print "Wrong flag. Sorry :("
+    halt
+}
+
+a = 0
+b = 100
+while (a < 32) {                    ; read the actual flag
+    read f                          ; read flag[i]
+    k = *b                          ; read key[i]
+
+    k ^= f                          ; flag[i] ^= key[i] (interm[i])
+    *a = k
+
+    a += 1                          ; move iterators
+    b += 1
+}
+
+read e
+if (e != 0x7d) {                    ; flag[N-1] == '}' ?
+    print "Wrong flag. Sorry :("
+    halt
+}
+
+; ---------------------------------------------------------------------------------------
+; Step 2: Encrypt characters modulo 0
+; ---------------------------------------------------------------------------------------
+m = 0
+y = 200                             ; store cipher at offset 200
+
+while (m < 32) {                    ; read flag[4*i]
+    i = *m                          ; read interm[i]
+
+    s = i                           ; s = i^3 * 0xbeef mod 257
+    s *= i
+    s *= i
+    s *= 0xbeef
+    s %= 257
+
+    ; if s == 256 we should throw an exception since there's an overflow, but we
+    ; know that this won't happen with current flag
+    if (s == 256) {
+        z = 1                       ; set exception, but don't halt
+    }
+
+    *y = s                          ; store cipher
+
+    m += 4                          ; move by 4
+    y += 1
+}
+
+; ---------------------------------------------------------------------------------------
+; Step 3: Encrypt characters modulo 1
+; ---------------------------------------------------------------------------------------
+m = 1
+
+while (m < 32) {                    ; read flag[4*i + 1]
+    i = *m                          ; read interm[i]
+
+    t = i                           ; t = i * 0x3541 + 3c97b mod 257
+    t *= 0x3541
+    t += 0x3c97b
+    t %= 257
+
+    if (t == 256) {
+        z = 1                       ; set exception, but don't halt
+    }
+
+    *y = t                          ; store cipher
+
+    m += 4                          ; move by 4
+    y += 1
+}
+
+; ---------------------------------------------------------------------------------------
+; Step 4: Encrypt characters modulo 2
+; ---------------------------------------------------------------------------------------
+n = 2
+
+while (n < 32) {                    ; read flag[4*i + 2]
+    i = *n                          ; read interm[i]
+
+    u = i                           ; u = i + 0xa9 mod 256
+    u += 0xa9
+    u %= 256
+
+    *y = u                          ; store cipher
+
+    n += 4                          ; move by 4
+    y += 1
+}
+
+; ---------------------------------------------------------------------------------------
+; Step 5: Encrypt characters modulo 3
+; ---------------------------------------------------------------------------------------
+m = 3
+
+while (m < 32) {                    ; read flag[4*i + 3]
+    i = *m                          ; read interm[i]
+
+    u = i                           ; u = ((i + 0x77) / 16) + 0x80
+    u += 0x77
+    u /= 16
+    u += 0x80
+
+    v = i                           ; u = ((i + 0x77) % 16) + 0x80
+    v += 0x77
+    v %= 16
+    v += 0x80
+
+    *y = u                          ; store cipher (2 characters)
+    y += 1
+    *y = v
+
+    m += 4                          ; move by 4
+    y += 1
+}
+
+; ---------------------------------------------------------------------------------------
+; Step 6: Compare cipher character by character
+; ---------------------------------------------------------------------------------------
+w = 0
+
+y = 200
+o = *y
+if (o == 0x3c) {
+    w += 1                          ; increment w by 1 each time we have a match
+}
+
+y = 201
+o = *y
+if (o == 0xdb) {
+    w += 1
+}
+
+y = 202
+o = *y
+if (o == 0x7a) {
+    w += 1
+}
+
+y = 203
+o = *y
+if (o == 0x7f) {
+    w += 1
+}
+
+y = 204
+o = *y
+if (o == 0xb8) {
+    w += 1
+}
+
+y = 205
+o = *y
+if (o == 0x78) {
+    w += 1
+}
+
+y = 206
+o = *y
+if (o == 0xf8) {
+    w += 1
+}
+
+y = 207
+o = *y
+if (o == 0x98) {
+    w += 1
+}
+
+y = 208
+o = *y
+if (o == 0xe4) {
+    w += 1
+}
+
+y = 209
+o = *y
+if (o == 0xca) {
+    w += 1
+}
+
+y = 210
+o = *y
+if (o == 0xbc) {
+    w += 1
+}
+
+y = 211
+o = *y
+if (o == 0x2c) {
+    w += 1
+}
+
+y = 212
+o = *y
+if (o == 0xbc) {
+    w += 1
+}
+
+y = 213
+o = *y
+if (o == 0xa6) {
+    w += 1
+}
+
+y = 214
+o = *y
+if (o == 0xa9) {
+    w += 1
+}
+
+y = 215
+o = *y
+if (o == 0xbf) {
+    w += 1
+}
+
+y = 216
+o = *y
+if (o == 0x2e) {
+    w += 1
+}
+
+y = 217
+o = *y
+if (o == 0x09) {
+    w += 1
+}
+
+y = 218
+o = *y
+if (o == 0x88) {
+    w += 1
+}
+
+y = 219
+o = *y
+if (o == 0xba) {
+    w += 1
+}
+
+y = 220
+o = *y
+if (o == 0x32) {
+    w += 1
+}
+
+y = 221
+o = *y
+if (o == 0x0c) {
+    w += 1
+}
+
+y = 222
+o = *y
+if (o == 0x6b) {
+    w += 1
+}
+
+y = 223
+o = *y
+if (o == 0x4a) {
+    w += 1
+}
+
+y = 224
+o = *y
+if (o == 0x8b) {
+    w += 1
+}
+
+y = 225
+o = *y
+if (o == 0x84) {
+    w += 1
+}
+
+y = 226
+o = *y
+if (o == 0x96) {
+    w += 1
+}
+
+y = 227
+o = *y
+if (o == 0x84) {
+    w += 1
+}
+
+y = 228
+o = *y
+if (o == 0x89) {
+    w += 1
+}
+
+y = 229
+o = *y
+if (o == 0x82) {
+    w += 1
+}
+
+y = 230
+o = *y
+if (o == 0x8b) {
+    w += 1
+}
+
+y = 231
+o = *y
+if (o == 0x81) {
+    w += 1
+}
+
+y = 232
+o = *y
+if (o == 0x8e) {
+    w += 1
+}
+
+y = 233
+o = *y
+if (o == 0x8a) {
+    w += 1
+}
+
+y = 234
+o = *y
+if (o == 0x88) {
+    w += 1
+}
+
+y = 235
+o = *y
+if (o == 0x89) {
+    w += 1
+}
+
+y = 236
+o = *y
+if (o == 0x94) {
+    w += 1
+}
+
+y = 237
+o = *y
+if (o == 0x85) {
+    w += 1
+}
+
+y = 238
+o = *y
+if (o == 0x88) {
+    w += 1
+}
+
+y = 239
+o = *y
+if (o == 0x84) {
+    w += 1
+}
+
+; ---------------------------------------------------------------------------------------
+; Print the appropriate message
+; ---------------------------------------------------------------------------------------
+if (z == 1) {                       ; check if an exception was raised
+    print "Wrong flag. Sorry :("
+}
+
+if (z == 0) {
+    if (w == 40) {                  ; if all characters matched (no side channel)
+        print "You got it baby! :)"
+    }
+
+    if (w != 40) {
+        print "Wrong flag. Sorry :("
+    }
+}
+
+; ---------------------------------------------------------------------------------------
+; End of story
+; ---------------------------------------------------------------------------------------
