@@ -1,0 +1,70 @@
+{% comment %}
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+{% endcomment %}
+{% load static %}
+{% spaceless %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>gPhotos2</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+
+  <body class="grey darken-3">
+
+    <nav class="nav-extended black darken-4">
+      <div class="nav-wrapper container">
+
+          <a href="/" class="brand-logo">
+            <i class="material-icons"><img src="{% static "logo.png" %}"/></i>gPhotos2
+            <span class="hide-on-med-and-down" style="font-size: 11px; color: #aaa">>Discover the most secure photo gallery ever released!</span>
+          </a>
+
+          <a href="#" data-target="mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="/new"><i class="material-icons left">add_a_photo</i>Upload image</a></li>
+        </ul>
+      </div>
+
+    </nav>
+
+    <ul class="sidenav" id="mobile">
+      <li><a href="/new"><i class="material-icons left">add_a_photo</i>Upload image</a></li>
+    </ul>
+
+
+    <div class="container" style="margin-top: 20px">
+      {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        M.Sidenav.init(document.querySelectorAll('.sidenav'));
+        M.updateTextFields();
+      });
+
+    </script>
+  </body>
+</html>
+{% endspaceless %}

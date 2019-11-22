@@ -1,0 +1,6 @@
+-i https://pypi.python.org/simple
+django==2.2.5
+gunicorn==19.9.0
+pytz==2019.2
+sqlparse==0.3.0; python_version != '3.2.*'
+wand==0.5.7
