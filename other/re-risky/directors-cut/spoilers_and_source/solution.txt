@@ -1,0 +1,40 @@
+This file contains the description of how the challenge is constructed and hints
+on how it should be solved.
+
+1. What is this task about?
+The "RiskY" re450 is a multi-layer reverse-engineering challenge. While no layer
+is obfuscated in itself, the transitions between layers itself is the source of
+difficulty of the task.
+
+There are 4 layers:
+- Initial .pyc file
+- In-memory loaded .pyc module
+- In-memory loaded x86_64 ELF binary (trivial RISC-V emulator)
+- In-memory loaded RISC-V flat binary (flag checker)
+
+Given that the flag checker is in the last layer, it is expected for the player
+to either reverse all the layers in order to understand how the flag checker
+works, or find a side channel attack.
+
+The flag checker itself is a simple bit mixer, that shuffles a 256-bit set and
+NOTs a selected subset, and then compares to the hardcoded string.
+Given the construction of the checker it is only possible to have 1 solution for
+this task.
+
+2. Hints for solving:
+First layer can be decompiled with any available Python decompiler.
+
+The second layer can be stored into a .pyc file (this requires adding a proper
+magic and timestamp) and decompiled the same way as the first layer.
+
+The third layer is the x86_64 ELF binary, which can be dumped and analyzed. It
+doesn't make ANY syscalls and doesn't have ANY imports. It's up to the player
+to either reverse-engineer it to realize it's a VM, or figure out that it's
+the RISC-V architecture (organizers should not hint about it being a RISK-V).
+
+The forth layer (RISC-V flat binary) will take some reverse-engineering as there
+are no decompilers for RISC-V (as far as I know at least). However the code is
+pretty short so it shouldn't take too much time.
+
+The last step is to either reverse the bit mixer, or brute-force it bit-by-bit.
+

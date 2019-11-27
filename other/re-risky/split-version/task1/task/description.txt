@@ -1,0 +1,7 @@
+Task name: Bronze
+Category: RE
+Difficulty/points: 40 (easy)
+
+Description:
+Examine this Python source code and... oh wait, no source code.
+

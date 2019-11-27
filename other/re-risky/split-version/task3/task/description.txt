@@ -1,0 +1,7 @@
+Task name: Gold
+Category: RE
+Difficulty/points: 125 (easy)
+
+Description:
+This time you have the source code as well - what luck!
+

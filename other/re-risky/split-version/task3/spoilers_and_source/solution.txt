@@ -1,0 +1,16 @@
+This file contains the description of how the challenge is constructed and hints
+on how it should be solved.
+
+--- To solve the task:
+1. Analyze the code.
+2. Dump the binary data and notice it's an ELF file with symbols.
+3. Analyze the ELF code - it's a simple bit mixer.
+4. Reverse the mixing (or bruteforce it bit-by-bit).
+
+Predicted time to solve: 30 minutes.
+
+--- To change the flag:
+1. Edit gen_mixer.py and replace the flag string.
+2. Run go.sh (note, you need to replace the flag here too for tests to work).
+3. Distribute only gold.py file.
+

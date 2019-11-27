@@ -1,0 +1,7 @@
+Task name: Silver
+Category: RE
+Difficulty/points: 75 (easy)
+
+Description:
+This time you have the source code! Sort of.
+

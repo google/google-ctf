@@ -1,0 +1,7 @@
+Task name: RiskY
+Category: RE
+Difficulty/points: 450 (hard)
+
+Description:
+Just a straightforward Python RE challenge. Kinda.
+

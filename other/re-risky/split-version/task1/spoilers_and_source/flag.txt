@@ -1,0 +1,1 @@
+flag{88%Copper+12%Tin}

@@ -1,0 +1,24 @@
+This file contains the description of how the challenge is constructed and hints
+on how it should be solved.
+
+--- To solve the task:
+There are several ways to approach this. The easiest one is described below, but
+it requires knowledge of how a .pyc file is constructed.
+1. Analyze the code.
+2. Create a new .pyc file based on the marshaled module (requires adding a magic
+   value at the beginning and a timestamp; then following that with the
+   marshaled object).
+3. Decompile the .pyc module using any Python decompiler.
+4. Analyze the code and brute the flag.
+
+Predicted time to solve: ~15-20 minutes.
+
+If one doesn't know the .pyc file format it's still possible to solve it going
+for the long route of disassembling the code and inspecting the code object
+itself. This would lengthen the task to about 45 minutes.
+
+--- To change the flag:
+1. Edit gen_checker.py and replace the flag string.
+2. Run go.sh (note, you need to replace the flag here too for tests to work).
+3. Distribute only silver.py file.
+

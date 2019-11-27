@@ -1,0 +1,15 @@
+This file contains the description of how the challenge is constructed and hints
+on how it should be solved.
+
+--- To solve the task:
+1. Install/download a RISC-V disassembler.
+2. Disassemble and analyze the code.
+3. Do a simple XOR to unXOR the flag.
+
+Predicted time to solve: 25-40 minutes.
+
+--- To change the flag:
+1. Edit gen_carbon.py and replace the flag string.
+2. Run go.sh (note, you need to replace the flag here too for tests to work).
+3. Distribute only carbon file.
+

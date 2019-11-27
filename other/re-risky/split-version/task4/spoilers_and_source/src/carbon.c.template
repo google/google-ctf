@@ -1,0 +1,45 @@
+// Copyright 2018 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+void banner(void) {
+  puts("");
+  puts("   \x1b[48;5;255;38;5;238m   _____           _                  \x1b[m");
+  puts("  \x1b[48;5;254;38;5;237m   / ____|         | |                  \x1b[m");
+  puts(" \x1b[48;5;253;38;5;236m   | |     __ _ _ __| |__   ___  _ __     \x1b[m");
+  puts(" \x1b[48;5;252;38;5;235m   | |    / _` | '__| '_ \\ / _ \\| '_ \\    \x1b[m");
+  puts(" \x1b[48;5;250;38;5;234m   | |___| (_| | |  | |_) | (_) | | | |   \x1b[m");
+  puts("  \x1b[48;5;249;38;5;233m   \\_____\\__,_|_|  |_.__/ \\___/|_| |_|  \x1b[m");
+  puts("   \x1b[48;5;248;38;5;232m   Winja CTF                    2018  \x1b[m");
+  puts("");
+}
+
+/*FUNCTIONS_TEMPLATE*/
+
+int main(int argc, char **argv) {
+  banner();
+
+  if (argc != 2) {
+    puts("usage: ./carbon <flag>");
+    return 1;
+  }
+
+  char *flag = argv[1];
+
+/*CALLS_TEMPLATE*/
+
+  return 0;
+}

@@ -1,0 +1,7 @@
+Task name: Carbon
+Category: RE
+Difficulty/points: 125 (easy)
+
+Description:
+It would be a warmup challenge normally, but there is a twist.
+

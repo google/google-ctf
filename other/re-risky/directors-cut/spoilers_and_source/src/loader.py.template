@@ -1,0 +1,48 @@
+#!/usr/bin/python
+# Copyright 2018 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+from ctypes import *
+# Load library and get functions.
+libc = CDLL('libc.so.6')
+
+mmap_type = CFUNCTYPE(c_void_p, c_void_p, c_ulong, c_int, c_int, c_int, c_ulong)
+mmap = cast(libc.mmap, mmap_type)
+
+memcpy_type = CFUNCTYPE(None, c_void_p, c_void_p, c_ulong)
+memcpy = cast(libc.memcpy, memcpy_type)
+
+# Load code and data into memory.
+# NOTE: This is hardcoded. In case of changes to riscv-emu-standalone this needs to
+# change as well.
+
+text = mmap(0x42000000, 0x1000, 7, 0x32, -1, 0)
+data = mmap(0x42001000, 0x9000, 7, 0x32, -1, 0)
+
+"PROG_TEMPLATE"
+
+text_sz = 0xa78
+data_sz = 0x3028
+
+memcpy(text, create_string_buffer(prog[0x1000:0x1000+text_sz]), text_sz)
+memcpy(data + text_sz, create_string_buffer(prog[0x1000+text_sz:0x1000+text_sz+data_sz]), data_sz)
+
+func_type = CFUNCTYPE(c_int, c_void_p)
+func = cast(0x42000900, func_type)
+
+def check(s):
+  #raw_input()
+  s = s.ljust(0x20, '\0')
+  return func(create_string_buffer(s))
+
+

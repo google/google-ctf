@@ -1,0 +1,15 @@
+This file contains the description of how the challenge is constructed and hints
+on how it should be solved.
+
+--- To solve the task:
+1. Decompile the .pyc file using a publically available decompiler.
+2. Analyze the code.
+3. UnXOR the hardcoded flag.
+
+Predicted time to solve: 5-10 minutes.
+
+--- To change the flag:
+1. Edit gen_bronze.py and replace the flag string.
+2. Run go.sh (note, you need to replace the flag here too for tests to work).
+3. Distribute only bronze.pyc file.
+

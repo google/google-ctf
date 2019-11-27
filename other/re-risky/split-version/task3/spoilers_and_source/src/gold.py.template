@@ -1,0 +1,91 @@
+#!/usr/bin/python
+# -*- coding: utf8 -*-
+# Copyright 2018 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http:#www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+import platform
+import sys
+import marshal
+import types
+from ctypes import *
+
+print """
+\x1b[38;5;226m   ▄██████▄   ▄██████▄   ▄█       ████████▄\x1b[m
+\x1b[38;5;227m  ███    ███ ███    ███ ███       ███   ▀███\x1b[m
+\x1b[38;5;228m  ███    █▀  ███    ███ ███       ███    ███\x1b[m
+\x1b[38;5;229m ▄███        ███    ███ ███       ███    ███\x1b[m
+\x1b[38;5;230m▀▀███ ████▄  ███    ███ ███       ███    ███\x1b[m
+\x1b[38;5;229m  ███    ███ ███    ███ ███       ███    ███\x1b[m
+\x1b[38;5;228m  ███    ███ ███    ███ ███▌    ▄ ███   ▄███\x1b[m
+\x1b[38;5;227m  ████████▀   ▀██████▀  █████▄▄██ ████████▀\x1b[m
+\x1b[38;5;214m  Winja CTF             \x1b[m\x1b[38;5;226m▀\x1b[m\x1b[38;5;214m               2018\x1b[m
+"""
+
+if (platform.system() != 'Linux' or
+    platform.architecture()[0] != '64bit' or
+    sys.version_info.major != 2 or sys.version_info.minor != 7):
+  sys.exit("This application requires a 64-bit Python 2.7 running on Linux.")
+
+if len(sys.argv) != 2:
+  sys.exit("usage: gold.py <flag>")
+
+flag = sys.argv[1]
+if len(flag) >= 32:
+  sys.exit("Meh.")
+
+alphabet = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789{}")
+for ch in flag:
+  if ch not in alphabet:
+    sys.exit("No.")
+
+libc = CDLL('libc.so.6')
+
+mmap_type = CFUNCTYPE(c_void_p, c_void_p, c_ulong, c_int, c_int, c_int, c_ulong)
+mmap = cast(libc.mmap, mmap_type)
+
+memcpy_type = CFUNCTYPE(None, c_void_p, c_void_p, c_ulong)
+memcpy = cast(libc.memcpy, memcpy_type)
+
+entrypoint = EP_TEMPLATE
+
+mem_start = VA_0_TEMPLATE & 0xfffffffffffff000
+mem_end = ((VA_1_TEMPLATE & 0xfffffffffffff000) +
+           ((MEMSZ_1_TEMPLATE + 0xfff) & 0xfffffffffffff000) +
+           0x4000)
+
+mem = mmap(mem_start, mem_end - mem_start, 7, 0x32, -1, 0)
+
+"PROG_TEMPLATE"
+
+memcpy(
+  mem + VA_0_TEMPLATE - mem_start,
+  create_string_buffer(prog[OFF_0_TEMPLATE:OFF_0_TEMPLATE+FILESZ_0_TEMPLATE]),
+  FILESZ_0_TEMPLATE)
+
+memcpy(
+  mem + VA_1_TEMPLATE - mem_start,
+  create_string_buffer(prog[OFF_1_TEMPLATE:OFF_1_TEMPLATE+FILESZ_1_TEMPLATE]),
+  FILESZ_1_TEMPLATE)
+
+func_type = CFUNCTYPE(c_int, c_void_p)
+func = cast(entrypoint, func_type)
+
+def check(s):
+  s = s.ljust(0x20, '\0')
+  return func(create_string_buffer(s))
+
+if check(flag):
+  print "Well done!"
+else:
+  sys.exit("Nope.")
+
