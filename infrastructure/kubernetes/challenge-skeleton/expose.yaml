@@ -1,0 +1,14 @@
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "challenge-skeleton-lb-service"
+spec:
+  type: "LoadBalancer"
+  # needs to be a premium IP
+  #loadBalancerIP: "1.2.3.4"
+  selector:
+    app: "challenge-skeleton"
+  ports:
+  - protocol: "TCP"
+    port: 1
+    targetPort: 1337

@@ -1,0 +1,45 @@
+apiVersion: "extensions/v1beta1"
+kind: "Deployment"
+metadata:
+  name: "challenge-skeleton-deployment"
+  namespace: "default"
+  labels:
+    app: "challenge-skeleton"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "challenge-skeleton"
+  template:
+    metadata:
+      labels:
+        app: "challenge-skeleton"
+    spec:
+      containers:
+      - name: "challenge-skeleton"
+        # needs to be eu.gcr.io/$project/$challenge-dir
+        image: "eu.gcr.io/gctf-k8s/challenge-skeleton"
+        ports:
+        - containerPort: 1337
+        securityContext:
+          privileged: true
+        command:
+        volumeMounts:
+        - name: "flag"
+          mountPath: "/flag"
+          subPath: "flag"
+          readOnly: true
+        - name: "pow"
+          mountPath: "/pow"
+          subPath: "pow"
+          readOnly: true
+      volumes:
+      - name: "flag"
+        secret:
+          # must be called ${challenge-dir}-flag
+          secretName: "challenge-skeleton-flag"
+          defaultMode: 0444
+      - name: "pow"
+        configMap:
+          # must be called ${challenge-dir}-pow
+          name: "challenge-skeleton-pow"
