@@ -8,22 +8,36 @@ Before we start, you need to have billing set up, and the compute API enabled. L
 1. <walkthrough-enable-apis apis="compute.googleapis.com">Enable the compute API.</walkthrough-enable-apis>
 
 ## Then, configure the project
-In order to continue, you need to modify the `cluster_vars` file and edit the `PROJECT` variable to point to the right GCP project name.
 
-So, <walkthrough-editor-select-regex filePath="google-ctf/infrastructure/kubernetes/cluster_vars" regex="gctf-k8s">open the file</walkthrough-editor-select-regex> and replace "gctf-k8s" with
+### Go to the right directory
+
+```
+cd infrastructure/kubernetes
+```
+
+### And run the configuration script
+
+```
+./scripts/setup/config.sh
+```
+
+When prompted, type your project name:
 ```
 {{project-id}}
 ```
 
-Also, make sure you are on the right directory!
+You can use the default values for all other settings.
+
+### And make sure you are logged in
+
 ```
-cd kubernetes
+./scripts/setup/login.sh
 ```
 
 ## And finally, create the cluster
 Run the following command:
 ```
-./create_cluster.sh
+./scripts/cluster/create.sh
 ```
 This only needs to be done once per CTF. A "cluster" is essentially a group of VMs with a "master" that defines what to run there.
 
@@ -53,25 +67,25 @@ Click next to continue if your cluster is already created.
 ## First, call create_challenge.sh to copy the skeleton
 Run the following command to create a challenged called "demo-challenge"
 ```
-. create_challenge.sh demo-challenge
+./scripts/challenge/new.sh demo-challenge
 ```
 
-This will create a directory called demo-challenge, and if you look inside it (check files/chal for example), you'll find out the challenge details and configuration. The file in files/chal is executed every time there's a TCP connection on port 1. This demo challenge just runs bash, but a real challenge would instead expose a harder challenge that doesn't just give out a shell.
+This will create a directory called `demo-challenge` under the `challenges` directory, and if you look inside of it (check files/chal for example), you'll find out the challenge configuration. The file in `files/chal` is the entry-point, that means it is executed every time there's a TCP connection. This demo challenge just runs bash, but a real challenge would instead expose a harder challenge that doesn't just give out a shell.
 
 In the next step you'll find out how to create a docker image with the newly created challenge.
 
-## Then, create the image
+## Then, build the image
 Run the following command this only needs to be done if you want to build the challenge, **but not to deploy it.**
 ```
-./create_image.sh demo-challenge
+./scripts/challenge/build.sh demo-challenge
 ```
 
-This creates the "image", which means the docker image. Depending on how complex your challenge will be, this can be very fast or take forever.
+This builds the "image", which means the docker image. Depending on how complex your challenge will be, this can be very fast or take forever.
 
 Now to deploy it, run the following command, this builds and deploys the challenge, **but doesn't expose it to the internet.**
 
 ```
-./deploy.sh demo-challenge
+./scripts/challenge/deploy.sh demo-challenge
 ```
 
 This will deploy the image to your cluster, and will soon be consuming CPU resources. The challenge will automatically scale based on traffic.
@@ -80,7 +94,7 @@ This will deploy the image to your cluster, and will soon be consuming CPU resou
 Run the following command, this exposes the challenge to the internet **(must be deployed first)**.
 
 ```
-./expose.sh demo-challenge
+./scripts/challenge/expose.sh demo-challenge
 ```
 
 This step might take a minute, it will reserve an IP address for your challenge, and redirect traffic to your docker containers when someone connects to it. Wait for it to finish before continuing.
@@ -97,7 +111,7 @@ Now we have a challenge up and running, and we need to test it to make sure it w
 Run the following command, this connects you to the challenge.
 
 ```
-nc $(cat demo-challenge/.ip) 1
+nc $(./scripts/challenge/ip.sh demo-challenge) 1
 ```
 
 If all went well, you should see a shell. Now, let's add a proof of work to the task to avoid people abusing it too much.
@@ -114,11 +128,11 @@ In the next step we'll see how to edit the challenge, add a proof of work, and p
 ## To add a proof of work, just edit pow.yaml
 To add a proof of work, you just need to edit the configuration of the challenge.
 
-Edit <walkthrough-editor-select-regex filePath="google-ctf/infrastructure/kubernetes/demo-challenge/pow.yaml" regex="0">pow.yaml</walkthrough-editor-select-regex> and change the 0 to 1.
+Edit <walkthrough-editor-select-regex filePath="google-ctf/infrastructure/kubernetes/challenges/demo-challenge/pow.yaml" regex="0">pow.yaml</walkthrough-editor-select-regex> and change the 0 to 1.
 
 Once that's done,  run
 ```
-./update.sh demo-challenge
+./scripts/challenge/update.sh demo-challenge
 ```
 this enables the proof of work.
 
@@ -126,7 +140,7 @@ Note that this is a very weak proof of work (strength of 1), for it to be useful
 
 Once the challenge is updated, just run:
 ```
-nc $(cat demo-challenge/.ip) 1
+nc $(./scripts/challenge/ip.sh demo-challenge) 1
 ```
 
 This connects you to the challenge with a proof of work in front. Just type 1 to bypass the proof of work (told you a difficulty of 1 wasn't gonna cut it).
@@ -138,12 +152,12 @@ This is the last step of the walkthrough, and this step you probably want to do 
 
 Run:
 ```
-./kill_challenge.sh demo-challenge
+./scripts/challenge/kill.sh demo-challenge
 ```
 
 You can test this worked by running:
 ```
-nc $(cat demo-challenge/.ip) 1
+nc $(./scripts/challenge/ip.sh demo-challenge) 1
 ```
 
 If all worked, that won't connect and it'll give you an error.
