@@ -20,3 +20,5 @@ while sleep 5; do
 done
 
 echo "Challenge running at ${LB_IP}"
+
+echo "${LB_IP}" > "${CHALLENGE_DIR}/.ip"
