@@ -17,7 +17,7 @@ if [ -d "${CHALLENGE_DIR}" ]; then
   exit 1
 fi
 
-cp -r challenge-skeleton "${CHALLENGE_DIR}"
+cp -r "${DIR}/util/challenge-skeleton" "${CHALLENGE_DIR}"
 
 pushd "${CHALLENGE_DIR}"
 

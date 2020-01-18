@@ -13,6 +13,6 @@ gcloud container clusters create --enable-network-policy --enable-autoscaling --
 
 gcloud container clusters get-credentials ${CLUSTER_NAME}
 
-kubectl create -f network-policy.yaml
-kubectl create -f allow-dns.yaml
+kubectl create -f "${DIR}/config/network-policy.yaml"
+kubectl create -f "${DIR}/config/allow-dns.yaml"
 kubectl patch ServiceAccount default --patch "automountServiceAccountToken: false"
