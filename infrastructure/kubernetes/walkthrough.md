@@ -47,7 +47,7 @@ While you wait, here's how the infrastructure works:
 1. The CTF challenges will run inside "nsjail" (a security sandbox).
 1. The contents of the nsjail sandbox will be configured in a docker container.
 1. The container will be deployed using Kubernetes in a group of VMs.
-1. If the VMs consume too much CPU, Kubernetes automatically deploy more VMs.
+1. If the VMs consume too much CPU, Kubernetes automatically deploys more VMs.
 1. If the VMs consume too little CPU, Kubernetess will shut down some VMs.
 1. Some very expensive challenges will probably be allocated in the same VMs as less busy challenges.
 
@@ -60,12 +60,12 @@ Now that we have a cluster setup, we need to create a challenge.
 
 In this walkthrough, you'll learn how to create a challenge called "demo-challenge", build the docker image, deploy it to the cluster, and expose it to the internet.
 
-You need the cluster to be created before you continue, otherwise the following commands wont work.
+You need the cluster to be created before you continue, otherwise the following commands won't work.
 
 Click next to continue if your cluster is already created.
 
 ## First, call create_challenge.sh to copy the skeleton
-Run the following command to create a challenged called "demo-challenge"
+Run the following command to create a challenge called "demo-challenge"
 ```
 ./scripts/challenge/new.sh demo-challenge
 ```
