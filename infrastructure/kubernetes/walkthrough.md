@@ -28,12 +28,6 @@ When prompted, type your project name:
 
 You can use the default values for all other settings.
 
-### And make sure you are logged in
-
-```
-./scripts/setup/login.sh
-```
-
 ## And finally, create the cluster
 Run the following command:
 ```
