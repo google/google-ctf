@@ -1,8 +1,8 @@
 #!/bin/bash
 
 set -Eeuo pipefail
-
-source cluster_vars
+DIR="$( cd "$( dirname "$( readlink -f "${BASH_SOURCE[0]}")" )" >/dev/null && pwd )/../.."
+source $DIR/config/CLUSTER_VARS
 
 gcloud components install kubectl
 
@@ -13,6 +13,6 @@ gcloud container clusters create --enable-network-policy --enable-autoscaling --
 
 gcloud container clusters get-credentials ${CLUSTER_NAME}
 
-kubectl create -f network-policy.yaml
-kubectl create -f allow-dns.yaml
+kubectl create -f "${DIR}/config/network-policy.yaml"
+kubectl create -f "${DIR}/config/allow-dns.yaml"
 kubectl patch ServiceAccount default --patch "automountServiceAccountToken: false"
