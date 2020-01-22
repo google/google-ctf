@@ -1,58 +1,107 @@
-#!/usr/bin/env python2.7
-from __future__ import print_function
-import sys, random, string, struct
-from hashlib import sha256
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-def proof_of_work_okay(chall, solution, hardness):
-    h = sha256(chall.encode('ASCII') + struct.pack('<Q', solution)).hexdigest()
-    return int(h, 16) < 2**256 / hardness
+import hmac
+import secrets
+import sys
 
-def random_string(length = 10):
-    characters = string.ascii_letters + string.digits
-    return ''.join(random.choice(characters) for _ in range(length))
+SOLVER_URL = 'https://github.com/google/google-ctf/blob/master/infrastructure/kubernetes/nsjail-docker/proof_of_work/pow.py'
 
-def solve_proof_of_work(task):
-    hardness, task = task.split('_')
-    hardness = int(hardness)
+def gen_seed():
+    return secrets.token_hex(8)
 
-    ''' You can use this to solve the proof of work. '''
-    print('Creating proof of work for {} (hardness {})'.format(task, hardness))
-    i = 0
-    while True:
-        if i % 1000000 == 0: print('Progress: %d' % i)
-        if proof_of_work_okay(task, i, hardness):
-            return i
-        i += 1
+def byte_has_leading_zeroes(b, count):
+    if count == 0:
+        return True
 
-if __name__ == '__main__':
-    if sys.version[0] == '2':
-        input = raw_input
+    for i in range(count):
+        if (b & 1) == 1:
+            return False
+        b >>= 1
 
-    if len(sys.argv) > 1 and sys.argv[1] == 'ask':
-        hardness = int(sys.argv[2])
+    return True
 
-        challenge = random_string()
-        print()
-        print(' ======================================')
-        print(' Proof of work code & solver can be found at https://35c3ctf.ccc.ac/uploads/pow.py')
-        print(' You may run the following to solve:')
-        print()
-        print('    ./pow.py {}_{}'.format(hardness, challenge))
-        print(' ======================================')
-        print()
+def has_leading_zeroes(inp, count):
+    for b in inp:
+        if count > 8:
+            if b != 0:
+                return False
+            count -= 8
+            continue
 
-        print('Proof of work challenge: {}_{}'.format(hardness, challenge))
-        sys.stdout.write('Your response? ')
-        sys.stdout.flush()
-        sol = int(input())
-        if not proof_of_work_okay(challenge, sol, hardness):
-            print('Wrong :(')
-            exit(1)
-    else:
-        if len(sys.argv) > 1:
-            challenge = sys.argv[1]
-        else:
-            sys.stdout.write('Challenge? ')
+        return byte_has_leading_zeroes(b, count)
+
+    if count == 0:
+        return True
+
+    raise Exception('input too short for requested leading zeroes')
+
+def check_pow(seed, solution, difficulty):
+    digest = hmac.digest(seed, solution, 'sha256')
+    return has_leading_zeroes(digest, difficulty)
+
+def usage():
+    sys.stdout.write('Usage:\n')
+    sys.stdout.write('Solve pow: {} solve seed difficulty\n')
+    sys.stdout.write('Check pow: {} ask difficulty\n')
+    sys.stdout.flush()
+    sys.exit(1)
+
+def find_pow_solution(seed, difficulty):
+    for i in range((1<<64)-1):
+        solution = i.to_bytes(8, 'little')
+        if check_pow(seed, solution, difficulty):
+            sys.stdout.write("Solution: {}\n".format(solution.hex()))
             sys.stdout.flush()
-            challenge = input()
-        print('Solution: {}'.format(solve_proof_of_work(challenge)))
+            return True
+
+    return False
+
+def main():
+    if len(sys.argv) < 2:
+        usage()
+
+    cmd = sys.argv[1]
+
+    if cmd == 'ask':
+        if len(sys.argv) != 3:
+            usage()
+        seed_hex = gen_seed()
+        difficulty = int(sys.argv[2])
+
+        sys.stdout.write("== proof-of-work ==\n")
+        sys.stdout.write("please solve a pow first\n")
+        sys.stdout.write("You can find the solver at:\n")
+        sys.stdout.write("  {}\n".format(SOLVER_URL))
+        sys.stdout.write("./pow.py solve {} {}\n".format(seed_hex, difficulty))
+        sys.stdout.write("===================\n")
+        sys.stdout.write("\n")
+        sys.stdout.write("Solution? ")
+        sys.stdout.flush()
+        solution = bytes.fromhex(sys.stdin.readline())
+        seed = bytes.fromhex(seed_hex)
+
+        if check_pow(seed, solution, difficulty):
+            sys.stdout.write("Proof-of-work fail")
+            sys.stdout.flush()
+            sys.exit(0)
+        else:
+            sys.exit(1)
+
+    elif cmd == 'solve':
+        if len(sys.argv) != 4:
+            usage()
+
+        seed = bytes.fromhex(sys.argv[2])
+        difficulty = int(sys.argv[3])
+
+        if find_pow_solution(seed, difficulty):
+            sys.exit(0)
+        else:
+            sys.exit(1)
+
+    else:
+        usage()
+
+if __name__ == "__main__":
+    main()
