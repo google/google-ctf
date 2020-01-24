@@ -10,7 +10,9 @@ docker build -qt "eu.gcr.io/${PROJECT}/nsjail" .
 docker push "eu.gcr.io/${PROJECT}/nsjail"
 popd
 
-gcloud components install kubectl
+if [ ! -x $(which kubectl) ]; then
+  gcloud components install kubectl
+fi
 
 gcloud config set project ${PROJECT}
 gcloud config set compute/zone ${ZONE}
