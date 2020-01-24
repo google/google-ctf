@@ -1,4 +1,4 @@
-apiVersion: "extensions/v1beta1"
+apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
   name: "challenge-skeleton-deployment"
@@ -14,6 +14,8 @@ spec:
     metadata:
       labels:
         app: "challenge-skeleton"
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/challenge-skeleton: unconfined
     spec:
       containers:
       - name: "challenge-skeleton"
@@ -22,7 +24,8 @@ spec:
         ports:
         - containerPort: 1337
         securityContext:
-          privileged: true
+          capabilities:
+            add: ["DAC_OVERRIDE", "SYS_ADMIN"]
         command:
         volumeMounts:
         - name: "flag"
@@ -33,6 +36,9 @@ spec:
           mountPath: "/pow"
           subPath: "pow"
           readOnly: true
+        - name: "cgroup"
+          mountPath: "/sys/fs/cgroup"
+          readOnly: false
       volumes:
       - name: "flag"
         secret:
@@ -43,3 +49,6 @@ spec:
         configMap:
           # must be called ${challenge-dir}-pow
           name: "challenge-skeleton-pow"
+      - name: "cgroup"
+        hostPath:
+          path: /sys/fs/cgroup
