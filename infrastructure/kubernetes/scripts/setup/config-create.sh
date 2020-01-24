@@ -5,6 +5,7 @@ cd $(dirname $(readlink -f $0))
 
 # Default Configuration
 
+CHAL_DIR=""
 PROJECT=""
 ZONE="europe-west3-c"
 MIN_NODES="3"
@@ -14,8 +15,26 @@ MACHINE_TYPE="n1-standard-4"
 CLUSTER_NAME="ctf-cluster-eu"
 DOMAIN_NAME=""
 
-CONFIG_FILE="../../config/CLUSTER_VARS"
+config=""
+read_config() {
+    read -e -p "  $2: " -i "${!1}" "$1"
+    line=$(declare -p "$1")
+    config="${config}"$'\n'"${line}"
+}
 
+echo "= Challenges Directory ="
+echo
+read -e -p "  In which directory will challenges be stored?: " "CHAL_DIR"
+eval CHAL_DIR="${CHAL_DIR}"
+if [ ! -d "${CHAL_DIR}" ]; then
+    echo "creating ${CHAL_DIR}"
+    mkdir -p "${CHAL_DIR}"
+fi
+line=$(declare -p "CHAL_DIR")
+config="${config}"$'\n'"${line}"
+echo
+
+CONFIG_FILE="${CHAL_DIR}/kctf.conf"
 if test -f "$CONFIG_FILE"; then
     echo "= WARNING ="
     read -s -p "Config file already exists, this program will overwrite it. Press Ctrl+C to cancel, Enter to continue."
@@ -23,13 +42,6 @@ if test -f "$CONFIG_FILE"; then
     echo
     . "$CONFIG_FILE"
 fi
-
-config=""
-read_config() {
-    read -e -p "  $2: " -i "${!1}" "$1"
-    line=$(declare -p "$1")
-    config="${config}"$'\n'"${line}"
-}
 
 echo "= CLUSTER CONFIGURATION ="
 echo
@@ -92,4 +104,6 @@ echo "$config"
 echo
 echo " If you wish to change anything, just run this command again."
 
+mkdir -p "${HOME}/.config/kctf"
 echo "${config}" > "$CONFIG_FILE"
+ln -fs "${CONFIG_FILE}" "${HOME}/.config/kctf/cluster.conf"

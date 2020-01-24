@@ -2,7 +2,12 @@
 
 set -Eeuo pipefail
 DIR="$( cd "$( dirname "$( readlink -f "${BASH_SOURCE[0]}")" )" >/dev/null && pwd )/../.."
-source $DIR/config/CLUSTER_VARS
+
+if [ ! -f ~/.config/kctf/cluster.conf ]; then
+    echo 'cluster config not found, please create or load it first'
+    exit 1
+fi
+source ~/.config/kctf/cluster.conf
 
 echo 'building nsjail container'
 pushd $DIR/util/nsjail-docker
