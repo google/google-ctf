@@ -4,6 +4,12 @@ set -Eeuo pipefail
 DIR="$( cd "$( dirname "$( readlink -f "${BASH_SOURCE[0]}")" )" >/dev/null && pwd )/../.."
 source $DIR/config/CLUSTER_VARS
 
+echo 'building nsjail container'
+pushd $DIR/util/nsjail-docker
+docker build -qt "eu.gcr.io/${PROJECT}/nsjail" .
+docker push "eu.gcr.io/${PROJECT}/nsjail"
+popd
+
 gcloud components install kubectl
 
 gcloud config set project ${PROJECT}
