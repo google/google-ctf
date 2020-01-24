@@ -17,11 +17,15 @@ pushd "${CHALLENGE_DIR}"
 docker build -t "eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}" .
 docker push "eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}"
 
+pushd config
+
 if [ -f pow.yaml ]; then
   kubectl apply -f "pow.yaml"
 fi
 
-kubectl delete -f "challenge.yaml"
-kubectl create -f "challenge.yaml"
+kubectl delete -f "filesystem.yaml"
+kubectl create -f "filesystem.yaml"
+
+popd
 
 popd

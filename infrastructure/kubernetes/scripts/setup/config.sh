@@ -12,6 +12,7 @@ MAX_NODES="20"
 NUM_NODES="3"
 MACHINE_TYPE="n1-standard-4"
 CLUSTER_NAME="ctf-cluster-eu"
+DOMAIN_NAME=""
 
 CONFIG_FILE="../../config/CLUSTER_VARS"
 
@@ -78,6 +79,12 @@ echo
 echo "  If you are reusing the same project for multiple CTFs, make sure this name is unique."
 echo
 read_config CLUSTER_NAME "Name of the cluster"
+echo
+echo "== DOMAIN NAME =="
+echo
+echo "  If you want to configure a domain name for the challenge, provide it below, otherwise leave it empty."
+echo
+read_config DOMAIN_NAME "Domain name (eg, k8s.ctfcompetititon.com)"
 echo
 echo "= SUMMARY ="
 echo " This is the configuration for your cluster, please review it to make sure it is correct."
