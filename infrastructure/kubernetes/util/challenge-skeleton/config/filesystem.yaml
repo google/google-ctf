@@ -25,7 +25,8 @@ spec:
         - containerPort: 1337
         securityContext:
           capabilities:
-            add: ["DAC_OVERRIDE", "SYS_ADMIN"]
+            add: ["SYS_ADMIN"]
+          readOnlyRootFilesystem: true
         command:
         volumeMounts:
         - name: "flag"
