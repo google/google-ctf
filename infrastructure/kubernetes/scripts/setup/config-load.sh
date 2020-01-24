@@ -23,5 +23,5 @@ fi
 
 echo "loaded config for ${CLUSTER_NAME} in ${PROJECT}"
 
-mkdir -p "~/.config/kctf"
-ln -fs "${CONFIG_FILE}" "~/.config/kctf/cluster.conf"
+mkdir -p "${HOME}/.config/kctf"
+ln -fs "${CONFIG_FILE}" "${HOME}/.config/kctf/cluster.conf"
