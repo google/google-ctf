@@ -42,6 +42,14 @@ echo
 echo " Note: This will also change the location of the config file!"
 echo
 read_config CHAL_DIR "In which directory will challenges be stored?"
+if [ "${CHAL_DIR}" != $(realpath -L "${CHAL_DIR}") ]; then
+    CHAL_DIR=$(realpath -L "${CHAL_DIR}")
+    echo
+    echo " The challenge directory appears to be a relative path."
+    echo
+    read_config CHAL_DIR "Please confirm the absolute path or type a different directory"
+fi
+echo
 if [ ! -d "${CHAL_DIR}" ]; then
     echo "${CHAL_DIR} does not exist yet. Creating it."
     mkdir -p "${CHAL_DIR}"
@@ -102,7 +110,7 @@ echo
 read_config DOMAIN_NAME "Domain name (eg, k8s.ctfcompetititon.com)"
 echo
 echo "= SUMMARY ="
-echo " This is the configuration for your cluster, please review it to make sure it is correct."
+echo " This is the configuration for your cluster, please review it to make sure it is correct. It will be written to ${CONFIG_FILE}"
 echo "$config"
 echo
 echo " If you wish to change anything, just run this command again."
