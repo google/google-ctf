@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ ! -f ~/.config/kctf/cluster.conf ]; then
+    echo 'cluster config not found, please create or load it first'
+else
+    if [ "$0" == "${BASH_SOURCE[0]}" ]; then
+	echo "ERROR: In order to activate kctf convenience tools, source this script to the current shell."
+	echo
+	echo "Example:"
+	echo "  source ${BASH_SOURCE[0]}"
+    else
+	KCTF_DIR="$( cd "$( dirname "$( readlink -f "${BASH_SOURCE[0]}")" )" >/dev/null && pwd )/../.."
+	PATH="${PATH}:${KCTF_DIR}/bin"
+	function autocomplete_challenge_name() {
+	    source ~/.config/kctf/cluster.conf
+	    if [ "$COMP_CWORD" == "1" ]; then
+		COMPREPLY=($(cd "${CHAL_DIR}" && compgen -d "${COMP_WORDS[COMP_CWORD]}"))
+	    fi
+	}
+	(cd "${KCTF_DIR}/bin" && complete -F autocomplete_challenge_name kctf-chal-*)
+	echo "SUCCESS: Tools added to PATH, and autocompletion of challenges enabled."
+    fi
+fi
