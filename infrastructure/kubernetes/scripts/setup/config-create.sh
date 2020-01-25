@@ -61,6 +61,7 @@ echo
 echo " Important: Make sure to update this field to your own project, or nothing will work"
 echo
 read_config PROJECT "Google Cloud Platform project name"
+gcloud config set project "${PROJECT}"
 echo
 echo "= OPTIONAL CONFIGURATION ="
 echo
