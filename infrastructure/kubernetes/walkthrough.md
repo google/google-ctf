@@ -24,7 +24,7 @@ kctf-setup-config-create
 ### Configuration properties
 Type a path for storing the challenges
 ```
-/tmp/kctf-demo
+kctf-demo
 ```
 
 Type your project id:
@@ -70,7 +70,7 @@ Run the following command to create a challenge called "demo-challenge"
 kctf-chal-new demo-challenge
 ```
 
-This will create a directory called `demo-challenge` under the `/tmp/kctf-demo` directory, and if you look inside of it (check files/chal for example), you'll find out the challenge configuration. The file in `files/chal` is the entry-point, that means it is executed every time there's a TCP connection. This demo challenge just runs bash, but a real challenge would instead expose a harder challenge that doesn't just give out a shell.
+This will create a directory called `demo-challenge` under the `kctf-demo` directory, and if you look inside of it (check files/chal for example), you'll find out the challenge configuration. The file in `files/chal` is the entry-point, that means it is executed every time there's a TCP connection. This demo challenge just runs bash, but a real challenge would instead expose a harder challenge that doesn't just give out a shell.
 
 In the next step you'll find out how to create a docker image with the newly created challenge.
 
@@ -128,7 +128,7 @@ In the next step we'll see how to edit the challenge, add a proof of work, and p
 ## To add a proof of work, just edit pow.yaml
 To add a proof of work, you just need to edit the configuration of the challenge.
 
-Edit <walkthrough-editor-select-regex filePath="/tmp/kctf-demo/demo-challenge/pow.yaml" regex="0">pow.yaml</walkthrough-editor-select-regex> and change the 0 to 1.
+Edit <walkthrough-editor-select-regex filePath="kctf-demo/demo-challenge/pow.yaml" regex="0">pow.yaml</walkthrough-editor-select-regex> and change the 0 to 1.
 
 Once that's done,  run
 ```
@@ -143,7 +143,7 @@ Once the challenge is updated, just run:
 telnet $(kctf-chal-ip demo-challenge) 1
 ```
 
-This connects you to the challenge with a proof of work in front. Just type 1 to bypass the proof of work (told you a difficulty of 1 wasn't gonna cut it).
+This connects you to the challenge with a proof of work in front. Just type **00** to bypass the proof of work (told you a difficulty of 1 wasn't gonna cut it).
 
 And that's it, now that you saw how to push a challenge and update it, let's clean up to save some resources.
 
@@ -152,7 +152,7 @@ This is the last step of the walkthrough, and this step you probably want to do 
 
 Run:
 ```
-kctf-chal-kil demo-challenge
+kctf-chal-kill demo-challenge
 ```
 
 You can test this worked by running:
