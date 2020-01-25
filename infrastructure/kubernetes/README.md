@@ -1,13 +1,10 @@
 # Walkthrough
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.png)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/google/google-ctf&tutorial=infrastructure/kubernetes/walkthrough.md)
 
-# Budgetting
- - Calculate the resources and the amount of budget assuming 100% consumption.
- - Add a budget alert at 25% budget, 50% budget, 75% budget and 100% of budget.
- - Plan for the CTF to last 50% longer than it will, increase proof of work on challenges using too much CPU.
-
 # Errors
- - If you can't connect to port 1 of the IP address, that's probably because the challenge didnt deploy.
+ - If you can't connect to port 1 of the IP address, that's probably because the challenge didnt deploy. See [Debugging deployment](#debugging-deployment) below.
+ - If you see `Unable to connect to the server: dial tcp ...:443: i/o timeout`, that's probably because there no cluster was created. Run `kctf-cluster-create`.
+ - If you see `ERROR: (gcloud.dns.record-sets.transaction.start) HTTPError 404: The 'parameters.managedZone' resource named '...-dns-zone' does not exist.`, that's probably because the DNS zone hasn't yet been created. Run `kctf-setup-dns`.
 
 # Debugging
  - Go to https://console.cloud.google.com/kubernetes/list and click on services.
