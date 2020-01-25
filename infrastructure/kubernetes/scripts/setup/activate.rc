@@ -1,5 +1,3 @@
-#!/bin/bash
-
 if [ ! -f ~/.config/kctf/cluster.conf ]; then
     echo 'cluster config not found, please create or load it first'
 else
@@ -17,7 +15,7 @@ else
 		COMPREPLY=($(cd "${CHAL_DIR}" && compgen -d "${COMP_WORDS[COMP_CWORD]}"))
 	    fi
 	}
-	(cd "${KCTF_DIR}/bin" && complete -F autocomplete_challenge_name kctf-chal-*)
+	complete -F autocomplete_challenge_name $(ls "${KCTF_DIR}/bin/" | grep kctf-chal-)
 	echo "SUCCESS: Tools added to PATH, and autocompletion of challenges enabled."
     fi
 fi
