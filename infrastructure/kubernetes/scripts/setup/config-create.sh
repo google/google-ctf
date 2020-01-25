@@ -22,28 +22,31 @@ read_config() {
     config="${config}"$'\n'"${line}"
 }
 
-echo "= Challenges Directory ="
 echo
-read -e -p "  In which directory will challenges be stored?: " "CHAL_DIR"
-eval CHAL_DIR="${CHAL_DIR}"
+echo "= CLUSTER CONFIGURATION ="
+echo
+HOME_CONFIG_FILE="${HOME}/.config/kctf/cluster.conf"
+if test -f "$HOME_CONFIG_FILE"; then
+    echo
+    echo " Reusing the last config file used ($(readlink -f "${HOME_CONFIG_FILE}"))."
+    echo
+    . "${HOME_CONFIG_FILE}"
+else
+    echo
+    echo " Creating a new config file from scratch."
+    echo
+fi
+echo
+echo "= CHALLENGES DIRECTORY ="
+echo
+echo " Note: This will also change the location of the config file!"
+echo
+read_config CHAL_DIR "In which directory will challenges be stored?"
 if [ ! -d "${CHAL_DIR}" ]; then
-    echo "creating ${CHAL_DIR}"
+    echo "${CHAL_DIR} does not exist yet. Creating it."
     mkdir -p "${CHAL_DIR}"
 fi
-line=$(declare -p "CHAL_DIR")
-config="${config}"$'\n'"${line}"
-echo
-
 CONFIG_FILE="${CHAL_DIR}/kctf.conf"
-if test -f "$CONFIG_FILE"; then
-    echo "= WARNING ="
-    read -s -p "Config file already exists, this program will overwrite it. Press Ctrl+C to cancel, Enter to continue."
-    echo
-    echo
-    . "$CONFIG_FILE"
-fi
-
-echo "= CLUSTER CONFIGURATION ="
 echo
 echo "== PROJECT NAME =="
 echo
@@ -104,6 +107,7 @@ echo "$config"
 echo
 echo " If you wish to change anything, just run this command again."
 
-mkdir -p "${HOME}/.config/kctf"
-echo "${config}" > "$CONFIG_FILE"
-ln -fs "${CONFIG_FILE}" "${HOME}/.config/kctf/cluster.conf"
+echo "${config}" > "${CONFIG_FILE}"
+
+mkdir -p $(dirname "${HOME_CONFIG_FILE}")
+ln -fs "${CONFIG_FILE}" "${HOME_CONFIG_FILE}"
