@@ -37,7 +37,7 @@ else
     echo
 fi
 echo
-echo "= CHALLENGES DIRECTORY ="
+echo "== CHALLENGES DIRECTORY =="
 echo
 echo " Note: This will also change the location of the config file!"
 echo
