@@ -67,28 +67,22 @@ Click next to continue if your cluster is already created.
 ## First, call create_challenge.sh to copy the skeleton
 Run the following command to create a challenge called "demo-challenge"
 ```
-kctf-chal-new demo-challenge
+kctf-chal-create demo-challenge
 ```
 
 This will create a directory called `demo-challenge` under the `kctf-demo` directory, and if you look inside of it (check files/chal for example), you'll find out the challenge configuration. The file in `files/chal` is the entry-point, that means it is executed every time there's a TCP connection. This demo challenge just runs bash, but a real challenge would instead expose a harder challenge that doesn't just give out a shell.
 
 In the next step you'll find out how to create a docker image with the newly created challenge.
 
-## Then, build the image
-Run the following command this only needs to be done if you want to build the challenge, **but not to deploy it.**
-```
-kctf-chal-build demo-challenge
-```
+## Then, deploy the challenge
 
-This builds the "image", which means the docker image. Depending on how complex your challenge will be, this can be very fast or take forever.
-
-Now to deploy it, run the following command, this builds and deploys the challenge, **but doesn't expose it to the internet.**
+To deploy the challenge run the following command, this builds and deploys the challenge, **but doesn't expose it to the internet.**
 
 ```
 kctf-chal-deploy demo-challenge
 ```
 
-This will deploy the image to your cluster, and will soon be consuming CPU resources. The challenge will automatically scale based on traffic.
+This will deploy the image to your cluster, and will soon be consuming CPU resources. The challenge will automatically scale based on CPU usage.
 
 ## And finally, expose it to the internet
 Run the following command, this exposes the challenge to the internet **(must be deployed first)**.
@@ -143,14 +137,14 @@ Once the challenge is updated, just run:
 telnet $(kctf-chal-ip demo-challenge) 1
 ```
 
-This connects you to the challenge with a proof of work in front. Just type **00** to bypass the proof of work (told you a difficulty of 1 wasn't gonna cut it).
+This connects you to the challenge with a proof of work in front. Just type **00** to pass the proof of work (told you a difficulty of 1 wasn't gonna cut it). If it doesn't work, try again (or run the script :).
 
 And that's it, now that you saw how to push a challenge and update it, let's clean up to save some resources.
 
 ## Let's just clean the challenge
 This is the last step of the walkthrough, and this step you probably want to do at the end of the CTF to save resources.
 
-Run:
+To delete a challenge, run:
 ```
 kctf-chal-kill demo-challenge
 ```
@@ -161,5 +155,14 @@ telnet $(kctf-chal-ip demo-challenge) 1
 ```
 
 If all worked, that won't connect and it'll give you an error.
+
+You also probably want to kill the cluster, so you are not charged for the VMs anymore.
+
+To kill the cluster, run:
+```
+kctf-cluster-kill
+```
+
+This will kill the cluster, and all the challenges with it, so only do that if you really want to kill it permanently.
 
 Thanks for doing the walkthrough, and good luck on your CTF!
