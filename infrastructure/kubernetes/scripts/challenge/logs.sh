@@ -17,5 +17,4 @@ fi
 CHALLENGE_NAME=$1
 CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
 
-shift
-kubectl logs -l "app=${CHALLENGE_NAME}" $@
+kubectl logs -l "app=${CHALLENGE_NAME}"
