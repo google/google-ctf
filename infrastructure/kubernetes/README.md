@@ -7,15 +7,12 @@
  - If you see `ERROR: (gcloud.dns.record-sets.transaction.start) HTTPError 404: The 'parameters.managedZone' resource named '...-dns-zone' does not exist.`, that's probably because the DNS zone hasn't yet been created. Run `kctf-setup-dns`.
 
 # Debugging
- - Go to https://console.cloud.google.com/kubernetes/list and click on services.
- - Look for the challenge, and click on it to reach the kubernetes service page for the challenge.
+ - Use the `kctf-chal-status` command to inspect the status of the challenge.
+   - If the challenge is not deployed, see [Debugging deployment](#debugging-deployment) below.
+   - If the challenge is deployed but still doesn't work see [Debugging challenge](#debugging-challenge) below.
 
 ## Debugging deployment
- - From the kubernetes service page for the challenge.
- - Under overview, look for the "Stackdriver logs" row and click on the link.
+ - Use the `kctf-chal-logs challenge_name` command to see the logs of the challenge deployment.
 
 ## Debugging challenge
- - From the kubernetes service page for the challenge.
- - Under overview, look for "Service Pods", click on one of them.
- - On the top right corner there's a "KUBECTL" button, click on it, and then on "Exec" and then on the task name.
- - On the Cloud Shell, modify the end of command from `-- ls` to `-it -- /bin/bash` and run `cd home/user`.
+ - Use the `kctf-chal-shell challenge_name` command to shell into the challenge and inspect it.
