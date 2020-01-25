@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -Eeuo pipefail
-cd $(dirname $(readlink -f $0))
+SCRIPT_DIR=$(dirname $(readlink -f $0))
 
 # Default Configuration
 
@@ -41,20 +41,21 @@ echo "== CHALLENGES DIRECTORY =="
 echo
 echo " Note: This will also change the location of the config file!"
 echo
-read_config CHAL_DIR "In which directory will challenges be stored?"
-if [ "${CHAL_DIR}" != $(realpath -L "${CHAL_DIR}") ]; then
-    CHAL_DIR=$(realpath -L "${CHAL_DIR}")
-    echo
-    echo " The challenge directory appears to be a relative path."
-    echo
-    read_config CHAL_DIR "Please confirm the absolute path or type a different directory"
+
+read -e -p "  In which directory will challenges be stored?: " "CHAL_DIR"
+if [[ $CHAL_DIR == ~\/* ]]; then
+    CHAL_DIR="${HOME}/${CHAL_DIR:2}"
 fi
-echo
+
 if [ ! -d "${CHAL_DIR}" ]; then
-    echo "${CHAL_DIR} does not exist yet. Creating it."
+    echo "creating ${CHAL_DIR}"
     mkdir -p "${CHAL_DIR}"
 fi
+CHAL_DIR=$(realpath -L "${CHAL_DIR}")
+line=$(declare -p "CHAL_DIR")
+config="${config}"$'\n'"${line}"
 CONFIG_FILE="${CHAL_DIR}/kctf.conf"
+
 echo
 echo "== PROJECT NAME =="
 echo
