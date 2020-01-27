@@ -1,4 +1,4 @@
-FROM eu.gcr.io/gctf-k8s/nsjail
+FROM kctf-nsjail
 
 RUN apt-get -y update
 RUN apt-get -y upgrade

@@ -11,8 +11,7 @@ source ~/.config/kctf/cluster.conf
 
 echo 'building nsjail container'
 pushd $DIR/util/nsjail-docker
-docker build -qt "eu.gcr.io/${PROJECT}/nsjail" .
-docker push "eu.gcr.io/${PROJECT}/nsjail"
+docker build -qt "kctf-nsjail" .
 popd
 
 if [ ! -x $(which kubectl) ]; then
