@@ -54,7 +54,6 @@ fi
 CHAL_DIR=$(realpath -L "${CHAL_DIR}")
 line=$(declare -p "CHAL_DIR")
 config="${config}"$'\n'"${line}"
-CONFIG_FILE="${CHAL_DIR}/kctf.conf"
 
 echo
 echo "== PROJECT NAME =="
@@ -111,11 +110,16 @@ echo "  If you want to configure a domain name for the challenge, provide it bel
 echo
 read_config DOMAIN_NAME "Domain name (eg, k8s.ctfcompetititon.com)"
 echo
+
+CONFIG_FILE="${CHAL_DIR}/${PROJECT}_${ZONE}_${CLUSTER_NAME}/kctf.conf"
+
 echo "= SUMMARY ="
 echo " This is the configuration for your cluster, please review it to make sure it is correct. It will be written to ${CONFIG_FILE}"
 echo "$config"
 echo
 echo " If you wish to change anything, just run this command again."
+
+mkdir -p "${CHAL_DIR}/${PROJECT}_${ZONE}_${CLUSTER_NAME}"
 
 echo "${config}" > "${CONFIG_FILE}"
 
