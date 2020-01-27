@@ -5,7 +5,7 @@ RUN apt-get upgrade -y
 RUN apt-get install -y uidmap
 RUN apt-get install -y build-essential git protobuf-compiler libprotobuf-dev bison flex pkg-config libnl-route-3-dev
 RUN git clone https://github.com/google/nsjail.git
-RUN cd /nsjail && make && cp nsjail /usr/bin/
+RUN cd /nsjail && make -j && cp nsjail /usr/bin/
 RUN rm -R /nsjail
 
 RUN useradd --no-create-home -u 1000 user
