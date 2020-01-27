@@ -2,13 +2,9 @@
 
 set -Eeuo pipefail
 DIR="$( cd "$( dirname "$( readlink -f "${BASH_SOURCE[0]}")" )" >/dev/null && pwd )/../.."
-CONFIG_DIR="${HOME}/.config/kctf"
+source "${DIR}/scripts/lib/config.sh"
 
-if [ ! -d ${CONFIG_DIR}/challenges ]; then
-    echo 'challenge directory not found, please run kctf-setup-chal-dir'
-    exit 1
-fi
-CHAL_DIR=$(readlink "${CONFIG_DIR}/challenges")
+load_chal_dir
 
 if [ $# != 1 ]; then
     echo 'missing challenge name'

@@ -2,12 +2,9 @@
 
 set -Eeuo pipefail
 DIR="$( cd "$( dirname "$( readlink -f "${BASH_SOURCE[0]}")" )" >/dev/null && pwd )/../.."
+source "${DIR}/scripts/lib/config.sh"
 
-if [ ! -f ~/.config/kctf/cluster.conf ]; then
-    echo 'cluster config not found, please create or load it first'
-    exit 1
-fi
-source ~/.config/kctf/cluster.conf
+load_config
 
 if [ $# != 1 ]; then
     echo 'missing challenge name'
@@ -15,6 +12,5 @@ if [ $# != 1 ]; then
 fi
 
 CHALLENGE_NAME=$1
-CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
 
 kubectl logs -l "app=${CHALLENGE_NAME}"

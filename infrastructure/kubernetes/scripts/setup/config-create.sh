@@ -1,8 +1,9 @@
 #!/bin/bash
 
 set -Eeuo pipefail
+DIR="$( cd "$( dirname "$( readlink -f "${BASH_SOURCE[0]}")" )" >/dev/null && pwd )/../.."
+source "${DIR}/scripts/lib/config.sh"
 
-CONFIG_DIR="${HOME}/.config/kctf"
 mkdir -p "${CONFIG_DIR}"
 
 # Default Configuration
@@ -20,7 +21,7 @@ DOMAIN_NAME=""
 config=""
 read_config() {
     read -e -p "  $2: " -i "${!1}" "$1"
-    line=$(declare -p "$1")
+    line="${1}=\"${!1}\""
     config="${config}"$'\n'"${line}"
 }
 
@@ -44,17 +45,14 @@ else
     ln -fs "${CHAL_DIR}" "${CONFIG_DIR}/challenges"
 fi
 
-line=$(declare -p "CHAL_DIR")
-config="${config}"$'\n'"${line}"
 echo
 echo "= CLUSTER CONFIGURATION ="
 echo
-HOME_CONFIG_FILE="${CONFIG_DIR}/cluster.conf"
-if test -f "$HOME_CONFIG_FILE"; then
+if test -f "${CONFIG_FILE}"; then
     echo
-    echo " Reusing the last config file used ($(readlink -f "${HOME_CONFIG_FILE}"))."
+    echo " Reusing the last config file used ($(readlink -f "${CONFIG_FILE}"))."
     echo
-    . "${HOME_CONFIG_FILE}"
+    . "${CONFIG_FILE}"
 else
     echo
     echo " Creating a new config file from scratch."
@@ -117,7 +115,7 @@ read_config DOMAIN_NAME "Domain name (eg, k8s.ctfcompetititon.com)"
 echo
 
 CLUSTER_DIR="${CHAL_DIR}/kctf-conf/${PROJECT}_${ZONE}_${CLUSTER_NAME}"
-CONFIG_FILE="${CLUSTER_DIR}/cluster.conf"
+CLUSTER_CONFIG="${CLUSTER_DIR}/cluster.conf"
 
 echo "= SUMMARY ="
 echo " This is the configuration for your cluster, please review it to make sure it is correct. It will be written to ${CONFIG_FILE}"
@@ -128,4 +126,4 @@ echo " If you wish to change anything, just run this command again."
 mkdir -p "${CLUSTER_DIR}"
 echo "${config}" > "${CONFIG_FILE}"
 
-ln -fs "${CONFIG_FILE}" "${HOME_CONFIG_FILE}"
+ln -fs "${CLUSTER_CONFIG}" "${CONFIG_FILE}"

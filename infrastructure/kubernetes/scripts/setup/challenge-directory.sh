@@ -1,8 +1,8 @@
 #!/bin/bash
 
 set -Eeuo pipefail
-
-CONFIG_DIR="${HOME}/.config/kctf"
+DIR="$( cd "$( dirname "$( readlink -f "${BASH_SOURCE[0]}")" )" >/dev/null && pwd )/../.."
+source "${DIR}/scripts/lib/config.sh"
 
 if [ $# != 1 ]; then
     echo "usage: $0 /path/to/challenge/directory"
