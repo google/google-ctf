@@ -38,6 +38,26 @@ spec:
           subPath: "pow"
           readOnly: true
         - name: "cgroup"
+          subPath: "cpu/NSJAIL/challenge-skeleton"
+          mountPath: "/cgroup/cpu/NSJAIL"
+          readOnly: false
+        - name: "cgroup"
+          subPath: "memory/NSJAIL/challenge-skeleton"
+          mountPath: "/cgroup/memory/NSJAIL"
+          readOnly: false
+        - name: "cgroup"
+          subPath: "pids/NSJAIL/challenge-skeleton"
+          mountPath: "/cgroup/pids/NSJAIL"
+          readOnly: false
+      initContainers:
+      - name: "cgroup-setup"
+        image: "busybox"
+        securityContext:
+          capabilities:
+            add: ["SYS_ADMIN"]
+        command: ["sh", "-c", "for res in cpu memory pids; do mkdir -p /sys/fs/cgroup/${res}/NSJAIL && mkdir -m 0777 -p /sys/fs/cgroup/${res}/NSJAIL/challenge-skeleton; done"]
+        volumeMounts:
+        - name: "cgroup"
           mountPath: "/sys/fs/cgroup"
           readOnly: false
       volumes:
