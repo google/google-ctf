@@ -24,7 +24,7 @@ docker push "eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}"
 kubectl create secret generic "${CHALLENGE_NAME}-flag" --from-file="secrets/flag"
 
 pushd config
-kubectl create -f "filesystem.yaml"
+kubectl create -f "containers.yaml"
 kubectl create -f "autoscaling.yaml"
 if [ -f pow.yaml ]; then
   kubectl create -f "pow.yaml"

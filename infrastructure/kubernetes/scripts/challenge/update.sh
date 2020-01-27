@@ -28,8 +28,8 @@ if [ -f pow.yaml ]; then
   kubectl apply -f "pow.yaml"
 fi
 
-kubectl delete -f "filesystem.yaml"
-kubectl create -f "filesystem.yaml"
+kubectl delete -f "containers.yaml"
+kubectl create -f "containers.yaml"
 
 popd
 

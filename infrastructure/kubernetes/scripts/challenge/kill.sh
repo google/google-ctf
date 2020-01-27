@@ -20,6 +20,6 @@ CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
 kubectl delete "secret/${CHALLENGE_NAME}-flag"
 kubectl delete "configMap/${CHALLENGE_NAME}-pow" || true
 
-kubectl delete -f "${CHALLENGE_DIR}/config/filesystem.yaml"
+kubectl delete -f "${CHALLENGE_DIR}/config/containers.yaml"
 kubectl delete -f "${CHALLENGE_DIR}/config/autoscaling.yaml"
 kubectl delete -f "${CHALLENGE_DIR}/config/network.yaml" || echo 'ignoring error trying to delete the load balancer'
