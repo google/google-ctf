@@ -26,7 +26,6 @@ cp -r "${DIR}/util/challenge-skeleton" "${CHALLENGE_DIR}"
 
 pushd "${CHALLENGE_DIR}"
 
-sed -i "s/gctf-k8s/${PROJECT}/g" config/*.yaml
 sed -i "s/challenge-skeleton/${CHALLENGE_NAME}/g" config/*.yaml
 
 popd

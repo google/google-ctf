@@ -119,7 +119,7 @@ echo "$config"
 echo
 echo " If you wish to change anything, just run this command again."
 
-mkdir -p "${CHAL_DIR}/${PROJECT}_${ZONE}_${CLUSTER_NAME}"
+mkdir -p "${CHAL_DIR}/kctf-conf/${PROJECT}_${ZONE}_${CLUSTER_NAME}"
 
 echo "${config}" > "${CONFIG_FILE}"
 

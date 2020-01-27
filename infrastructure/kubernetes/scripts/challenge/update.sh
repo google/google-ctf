@@ -16,6 +16,7 @@ fi
 
 CHALLENGE_NAME=$1
 CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
+CLUSTER_CONF_DIR="${CHAL_DIR}/kctf-conf/${PROJECT}_${ZONE}_${CLUSTER_NAME}/${CHALLENGE_NAME}"
 
 pushd "${CHALLENGE_DIR}"
 
@@ -29,7 +30,8 @@ if [ -f pow.yaml ]; then
 fi
 
 kubectl delete -f "containers.yaml"
-kubectl create -f "containers.yaml"
+# This will use the kustomization.yaml to spawn the containers.yaml
+kubectl create -k "${CLUSTER_CONF_DIR}"
 
 popd
 

@@ -19,8 +19,8 @@ spec:
     spec:
       containers:
       - name: "challenge-skeleton"
-        # needs to be eu.gcr.io/$project/$challenge-dir
-        image: "eu.gcr.io/gctf-k8s/challenge-skeleton"
+        # this will be updated to eu.gcr.io/$project/$challenge-dir using kustomization.yaml in the kctf-conf
+        image: "challenge-skeleton"
         ports:
         - containerPort: 1337
         securityContext:
