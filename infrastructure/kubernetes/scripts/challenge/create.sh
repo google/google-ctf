@@ -2,12 +2,13 @@
 
 set -Eeuo pipefail
 DIR="$( cd "$( dirname "$( readlink -f "${BASH_SOURCE[0]}")" )" >/dev/null && pwd )/../.."
+CONFIG_DIR="${HOME}/.config/kctf"
 
-if [ ! -f ~/.config/kctf/cluster.conf ]; then
-    echo 'cluster config not found, please create or load it first'
+if [ ! -d ${CONFIG_DIR}/challenges ]; then
+    echo 'challenge directory not found, please run kctf-setup-chal-dir'
     exit 1
 fi
-source ~/.config/kctf/cluster.conf
+CHAL_DIR=$(readlink "${CONFIG_DIR}/challenges")
 
 if [ $# != 1 ]; then
     echo 'missing challenge name'
@@ -15,7 +16,7 @@ if [ $# != 1 ]; then
 fi
 
 CHALLENGE_NAME=$1
-CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
+CHALLENGE_DIR="${CHAL_DIR}/${CHALLENGE_NAME}"
 
 if [ -d "${CHALLENGE_DIR}" ]; then
   echo 'challenge already exists'

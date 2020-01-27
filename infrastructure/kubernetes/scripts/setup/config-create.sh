@@ -1,7 +1,9 @@
 #!/bin/bash
 
 set -Eeuo pipefail
-SCRIPT_DIR=$(dirname $(readlink -f $0))
+
+CONFIG_DIR="${HOME}/.config/kctf"
+mkdir -p "${CONFIG_DIR}"
 
 # Default Configuration
 
@@ -22,10 +24,32 @@ read_config() {
     config="${config}"$'\n'"${line}"
 }
 
+if [ -d ${CONFIG_DIR}/challenges ]; then
+    CHAL_DIR=$(readlink ${CONFIG_DIR}/challenges)
+    echo
+    echo "Configuring cluster for challenge directory ${CHAL_DIR}"
+else
+    echo
+    read -e -p "In which directory will challenges be stored?: " "CHAL_DIR"
+
+    if [[ $CHAL_DIR == ~\/* ]]; then
+        CHAL_DIR="${HOME}/${CHAL_DIR:2}"
+    fi
+    if [ ! -d "${CHAL_DIR}" ]; then
+        echo "creating ${CHAL_DIR}"
+        mkdir -p "${CHAL_DIR}"
+    fi
+
+    CHAL_DIR=$(realpath -L "${CHAL_DIR}")
+    ln -fs "${CHAL_DIR}" "${CONFIG_DIR}/challenges"
+fi
+
+line=$(declare -p "CHAL_DIR")
+config="${config}"$'\n'"${line}"
 echo
 echo "= CLUSTER CONFIGURATION ="
 echo
-HOME_CONFIG_FILE="${HOME}/.config/kctf/cluster.conf"
+HOME_CONFIG_FILE="${CONFIG_DIR}/cluster.conf"
 if test -f "$HOME_CONFIG_FILE"; then
     echo
     echo " Reusing the last config file used ($(readlink -f "${HOME_CONFIG_FILE}"))."
@@ -36,25 +60,6 @@ else
     echo " Creating a new config file from scratch."
     echo
 fi
-echo
-echo "== CHALLENGES DIRECTORY =="
-echo
-echo " Note: This will also change the location of the config file!"
-echo
-
-read -e -p "  In which directory will challenges be stored?: " "CHAL_DIR"
-if [[ $CHAL_DIR == ~\/* ]]; then
-    CHAL_DIR="${HOME}/${CHAL_DIR:2}"
-fi
-
-if [ ! -d "${CHAL_DIR}" ]; then
-    echo "creating ${CHAL_DIR}"
-    mkdir -p "${CHAL_DIR}"
-fi
-CHAL_DIR=$(realpath -L "${CHAL_DIR}")
-line=$(declare -p "CHAL_DIR")
-config="${config}"$'\n'"${line}"
-
 echo
 echo "== PROJECT NAME =="
 echo
@@ -111,7 +116,8 @@ echo
 read_config DOMAIN_NAME "Domain name (eg, k8s.ctfcompetititon.com)"
 echo
 
-CONFIG_FILE="${CHAL_DIR}/${PROJECT}_${ZONE}_${CLUSTER_NAME}/kctf.conf"
+CLUSTER_DIR="${CHAL_DIR}/kctf-conf/${PROJECT}_${ZONE}_${CLUSTER_NAME}"
+CONFIG_FILE="${CLUSTER_DIR}/cluster.conf"
 
 echo "= SUMMARY ="
 echo " This is the configuration for your cluster, please review it to make sure it is correct. It will be written to ${CONFIG_FILE}"
@@ -119,9 +125,7 @@ echo "$config"
 echo
 echo " If you wish to change anything, just run this command again."
 
-mkdir -p "${CHAL_DIR}/kctf-conf/${PROJECT}_${ZONE}_${CLUSTER_NAME}"
-
+mkdir -p "${CLUSTER_DIR}"
 echo "${config}" > "${CONFIG_FILE}"
 
-mkdir -p $(dirname "${HOME_CONFIG_FILE}")
 ln -fs "${CONFIG_FILE}" "${HOME_CONFIG_FILE}"
