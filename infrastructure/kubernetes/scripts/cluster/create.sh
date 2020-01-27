@@ -6,10 +6,7 @@ source "${DIR}/scripts/lib/config.sh"
 
 load_config
 
-echo 'building nsjail container'
-pushd $DIR/util/nsjail-docker
-docker build -qt "kctf-nsjail" .
-popd
+build_nsjail_docker
 
 if [ ! -x $(which kubectl) ]; then
   gcloud components install kubectl

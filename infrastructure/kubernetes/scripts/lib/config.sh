@@ -42,3 +42,10 @@ function load_config {
     exit 1
   fi
 }
+
+function build_nsjail_docker {
+  echo 'building nsjail container'
+  pushd $DIR/util/nsjail-docker
+  docker build -qt "kctf-nsjail" .
+  popd
+}
