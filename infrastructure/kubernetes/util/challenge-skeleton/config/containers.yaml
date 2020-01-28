@@ -29,13 +29,11 @@ spec:
           readOnlyRootFilesystem: true
         command:
         volumeMounts:
-        - name: "flag"
-          mountPath: "/flag"
-          subPath: "flag"
+        - name: "secrets"
+          mountPath: "/secrets"
           readOnly: true
         - name: "pow"
-          mountPath: "/pow"
-          subPath: "pow"
+          mountPath: "/config"
           readOnly: true
         - name: "cgroup"
           subPath: "cpu/NSJAIL/challenge-skeleton"
@@ -61,10 +59,10 @@ spec:
           mountPath: "/sys/fs/cgroup"
           readOnly: false
       volumes:
-      - name: "flag"
+      - name: "secrets"
         secret:
-          # must be called ${challenge-dir}-flag
-          secretName: "challenge-skeleton-flag"
+          # must be called ${challenge-dir}-secrets
+          secretName: "challenge-skeleton-secrets"
           defaultMode: 0444
       - name: "pow"
         configMap:

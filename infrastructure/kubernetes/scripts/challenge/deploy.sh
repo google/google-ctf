@@ -22,7 +22,8 @@ pushd "${CHALLENGE_DIR}"
 
 docker build -t "eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}" .
 docker push "eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}"
-kubectl create secret generic "${CHALLENGE_NAME}-flag" --from-file="secrets/flag"
+#kubectl create secret generic "${CHALLENGE_NAME}-flag" --from-file="secrets/flag"
+kubectl apply -k secrets
 
 if [ ! -d "${CLUSTER_CONF_DIR}" ]; then
   mkdir -p "${CLUSTER_CONF_DIR}"
