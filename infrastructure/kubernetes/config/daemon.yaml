@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ctf-daemon
+  namespace: kube-system
+  labels:
+    k8s-app: ctf-daemon
+spec:
+  selector:
+    matchLabels:
+      name: ctf-daemon
+  template:
+    metadata:
+      labels:
+        name: ctf-daemon
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      containers:
+      - name: ctf-daemon
+        image: google/apparmor-loader:latest
+        securityContext:
+          privileged: true
+        command: ["sh", "-c", "for res in cpu memory pids; do mkdir -p -m 0777 /sys/fs/cgroup/${res}/NSJAIL; done && while true; do for f in /profiles/*; do echo \"loading $f\"; apparmor_parser -r $f; sleep 60; done; done"]
+        volumeMounts:
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
+          readOnly: false
+        - name: sys
+          mountPath: /sys
+          readOnly: true
+        - name: apparmor-includes
+          mountPath: /etc/apparmor.d
+          readOnly: true
+        - name: profiles
+          mountPath: /profiles
+          readOnly: true
+      volumes:
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+      - name: sys
+        hostPath:
+          path: /sys
+      - name: apparmor-includes
+        hostPath:
+          path: /etc/apparmor.d
+      - name: profiles
+        configMap:
+          name: apparmor-profiles

@@ -15,7 +15,7 @@ spec:
       labels:
         app: "challenge-skeleton"
       annotations:
-        container.apparmor.security.beta.kubernetes.io/challenge-skeleton: unconfined
+        container.apparmor.security.beta.kubernetes.io/challenge-skeleton: localhost/ctf-profile
     spec:
       containers:
       - name: "challenge-skeleton"
