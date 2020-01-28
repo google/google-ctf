@@ -18,12 +18,15 @@ CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
 generate_config_dir
 CLUSTER_CONF_DIR="${ret}/${CHALLENGE_NAME}"
 
+function delete_resource {
+  local RESOURCE="$1"
+  kubectl get "${RESOURCE}" >/dev/null && kubectl delete "${RESOURCE}"
+}
+
 pushd "${CHALLENGE_DIR}"
 
 docker build -t "eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}" .
 docker push "eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}"
-#kubectl create secret generic "${CHALLENGE_NAME}-flag" --from-file="secrets/flag"
-kubectl create -k secrets
 
 if [ ! -d "${CLUSTER_CONF_DIR}" ]; then
   mkdir -p "${CLUSTER_CONF_DIR}"
@@ -47,9 +50,17 @@ spec:
 EOF
 fi
 
+delete_resource "secret/${CHALLENGE_NAME}-secrets"
+kubectl create -k secrets
+
+delete_resource "deployment/${CHALLENGE_NAME}-deployment"
 # This will use the kustomization.yaml to spawn the containers.yaml
 kubectl create -k "${CLUSTER_CONF_DIR}"
+
+delete_resource "hpa/${CHALLENGE_NAME}-hpa"
 kubectl create -f "k8s/autoscaling.yaml"
+
+delete_resource "configMap/${CHALLENGE_NAME}-config"
 kubectl create -k config
 
 popd
