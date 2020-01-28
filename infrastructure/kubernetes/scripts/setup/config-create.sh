@@ -42,7 +42,7 @@ else
     fi
 
     CHAL_DIR=$(realpath -L "${CHAL_DIR}")
-    ln -fs "${CHAL_DIR}" "${CONFIG_DIR}/challenges"
+    ln -nfs "${CHAL_DIR}" "${CONFIG_DIR}/challenges"
 fi
 
 echo
