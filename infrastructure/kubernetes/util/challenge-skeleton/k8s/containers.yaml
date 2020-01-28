@@ -53,7 +53,7 @@ spec:
         securityContext:
           capabilities:
             add: ["SYS_ADMIN"]
-        command: ["sh", "-c", "for res in cpu memory pids; do mkdir -p /sys/fs/cgroup/${res}/NSJAIL && mkdir -m 0777 -p /sys/fs/cgroup/${res}/NSJAIL/challenge-skeleton; done"]
+        command: ["sh", "-c", "for res in cpu memory pids; do mkdir -m 0777 -p /sys/fs/cgroup/${res}/NSJAIL/challenge-skeleton; done"]
         volumeMounts:
         - name: "cgroup"
           mountPath: "/sys/fs/cgroup"
