@@ -118,12 +118,12 @@ CLUSTER_DIR="${CHAL_DIR}/kctf-conf/${PROJECT}_${ZONE}_${CLUSTER_NAME}"
 CLUSTER_CONFIG="${CLUSTER_DIR}/cluster.conf"
 
 echo "= SUMMARY ="
-echo " This is the configuration for your cluster, please review it to make sure it is correct. It will be written to ${CONFIG_FILE}"
+echo " This is the configuration for your cluster, please review it to make sure it is correct. It will be written to ${CLUSTER_CONFIG}"
 echo "$config"
 echo
 echo " If you wish to change anything, just run this command again."
 
 mkdir -p "${CLUSTER_DIR}"
-echo "${config}" > "${CONFIG_FILE}"
+echo "${config}" > "${CLUSTER_CONFIG}"
 
 ln -fs "${CLUSTER_CONFIG}" "${CONFIG_FILE}"
