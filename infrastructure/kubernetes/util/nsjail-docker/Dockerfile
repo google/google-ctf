@@ -19,8 +19,8 @@ RUN apt-get install -y libprotobuf17
 RUN apt-get install -y python3
 RUN apt-get install -y libnl-route-3-200
 
-RUN echo 'flagplaceholder' > /chroot/flag
 RUN mkdir /chroot/config
+RUN mkdir /chroot/secrets
 
 COPY k8s_nsjail_setup.sh /usr/bin/
 COPY proof_of_work/pow.py /chroot/usr/bin/
