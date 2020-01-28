@@ -19,6 +19,10 @@ for dir in ${CHAL_DIR}/*; do
   source "${CHALLENGE_DIR}/chal.conf"
 
   if [ ! "${DEPLOY}" = "true" ]; then
+    echo
+    echo "= Deleting all resources for ${CHALLENGE_NAME} ="
+    echo
+    ${DIR}/scripts/challenge/kill.sh "${CHALLENGE_NAME}"
     continue
   fi
 

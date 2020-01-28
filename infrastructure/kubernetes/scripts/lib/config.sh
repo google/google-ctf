@@ -42,3 +42,8 @@ function build_nsjail_docker {
   docker build -qt "kctf-nsjail" .
   popd
 }
+
+function delete_resource {
+  local RESOURCE="$1"
+  kubectl get "${RESOURCE}" >/dev/null 2>&1 && kubectl delete "${RESOURCE}" || true
+}

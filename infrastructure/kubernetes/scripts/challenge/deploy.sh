@@ -18,11 +18,6 @@ CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
 generate_config_dir
 CLUSTER_CONF_DIR="${ret}/${CHALLENGE_NAME}"
 
-function delete_resource {
-  local RESOURCE="$1"
-  kubectl get "${RESOURCE}" >/dev/null 2>&1 && kubectl delete "${RESOURCE}" || true
-}
-
 pushd "${CHALLENGE_DIR}"
 
 source chal.conf

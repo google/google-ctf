@@ -12,11 +12,9 @@ if [ $# != 1 ]; then
 fi
 
 CHALLENGE_NAME=$1
-CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
 
-kubectl delete "secret/${CHALLENGE_NAME}-secrets" || echo 'deleting secret failed'
-kubectl delete "configMap/${CHALLENGE_NAME}-config" || echo 'deleting pow failed'
-
-kubectl delete -f "${CHALLENGE_DIR}/k8s/containers.yaml" || echo 'deleting containers failed'
-kubectl delete -f "${CHALLENGE_DIR}/k8s/autoscaling.yaml" || echo 'deleting autoscaling failed'
-kubectl delete -f "${CHALLENGE_DIR}/k8s/network.yaml" || echo 'deleting load balancer failed'
+delete_resource "secret/${CHALLENGE_NAME}-secrets"
+delete_resource "deployment/${CHALLENGE_NAME}-deployment"
+delete_resource "hpa/${CHALLENGE_NAME}-hpa"
+delete_resource "configMap/${CHALLENGE_NAME}-config"
+delete_resource "service/${CHALLENGE_NAME}-lb-service"
