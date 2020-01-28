@@ -7,7 +7,9 @@ else
     KCTF_DIR="$( cd "$( dirname "$( readlink -f "${BASH_SOURCE[0]}")" )" >/dev/null && pwd )/../.."
     PATH="${PATH}:${KCTF_DIR}/bin"
     function autocomplete_challenge_name() {
-	source ~/.config/kctf/cluster.conf
+	DIR="$( cd "$( dirname "$( readlink -f "${BASH_SOURCE[0]}")" )" >/dev/null && pwd )/../.."
+	source "${DIR}/scripts/lib/config.sh"
+	load_config
 	if [ "$COMP_CWORD" == "1" ]; then
       	    COMPREPLY=($(cd "${CHAL_DIR}" && compgen -d "${COMP_WORDS[COMP_CWORD]}"))
 	fi
