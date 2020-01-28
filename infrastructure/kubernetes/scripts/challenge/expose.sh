@@ -14,7 +14,7 @@ fi
 CHALLENGE_NAME=$1
 CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
 
-kubectl create -f "${CHALLENGE_DIR}/config/network.yaml"
+kubectl create -f "${CHALLENGE_DIR}/k8s/network.yaml"
 echo 'Waiting for load balancer to come up, Ctrl-C if you don'"'"'t care'
 
 LB_IP=$($DIR/scripts/challenge/ip.sh "${CHALLENGE_NAME}")

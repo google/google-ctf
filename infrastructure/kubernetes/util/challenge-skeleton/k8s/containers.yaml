@@ -32,7 +32,7 @@ spec:
         - name: "secrets"
           mountPath: "/secrets"
           readOnly: true
-        - name: "pow"
+        - name: "config"
           mountPath: "/config"
           readOnly: true
         - name: "cgroup"
@@ -64,10 +64,10 @@ spec:
           # must be called ${challenge-dir}-secrets
           secretName: "challenge-skeleton-secrets"
           defaultMode: 0444
-      - name: "pow"
+      - name: "config"
         configMap:
-          # must be called ${challenge-dir}-pow
-          name: "challenge-skeleton-pow"
+          # must be called ${challenge-dir}-config
+          name: "challenge-skeleton-config"
       - name: "cgroup"
         hostPath:
           path: /sys/fs/cgroup

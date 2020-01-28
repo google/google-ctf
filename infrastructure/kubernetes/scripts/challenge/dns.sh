@@ -14,7 +14,7 @@ fi
 CHALLENGE_NAME=$1
 CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
 
-pushd $CHALLENGE_DIR/config
+pushd $CHALLENGE_DIR/k8s
 if [ ! -z "${DOMAIN_NAME}" ]
 then
     LB_IP=$($DIR/scripts/challenge/ip.sh "${CHALLENGE_NAME}")

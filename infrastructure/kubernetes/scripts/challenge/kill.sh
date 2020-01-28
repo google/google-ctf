@@ -14,9 +14,9 @@ fi
 CHALLENGE_NAME=$1
 CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
 
-kubectl delete "secret/${CHALLENGE_NAME}-flag" || echo 'deleting secret failed'
-kubectl delete "configMap/${CHALLENGE_NAME}-pow" || echo 'deleting pow failed'
+kubectl delete "secret/${CHALLENGE_NAME}-secrets" || echo 'deleting secret failed'
+kubectl delete "configMap/${CHALLENGE_NAME}-config" || echo 'deleting pow failed'
 
-kubectl delete -f "${CHALLENGE_DIR}/config/containers.yaml" || echo 'deleting containers failed'
-kubectl delete -f "${CHALLENGE_DIR}/config/autoscaling.yaml" || echo 'deleting autoscaling failed'
-kubectl delete -f "${CHALLENGE_DIR}/config/network.yaml" || echo 'deleting load balancer failed'
+kubectl delete -f "${CHALLENGE_DIR}/k8s/containers.yaml" || echo 'deleting containers failed'
+kubectl delete -f "${CHALLENGE_DIR}/k8s/autoscaling.yaml" || echo 'deleting autoscaling failed'
+kubectl delete -f "${CHALLENGE_DIR}/k8s/network.yaml" || echo 'deleting load balancer failed'

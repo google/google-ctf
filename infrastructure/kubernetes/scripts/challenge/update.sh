@@ -20,11 +20,10 @@ pushd "${CHALLENGE_DIR}"
 docker build -t "eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}" .
 docker push "eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}"
 
-pushd config
+kubectl delete "configMap/${CHALLENGE_NAME}-config"
+kubectl create -k config
 
-if [ -f pow.yaml ]; then
-  kubectl apply -f "pow.yaml"
-fi
+pushd k8s
 
 kubectl delete -f "containers.yaml"
 # This will use the kustomization.yaml to spawn the containers.yaml

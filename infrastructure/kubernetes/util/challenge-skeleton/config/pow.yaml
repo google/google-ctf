@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: challenge-skeleton-pow
-  namespace: default
-data:
-  pow: |
-    0

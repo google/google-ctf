@@ -23,13 +23,13 @@ pushd "${CHALLENGE_DIR}"
 docker build -t "eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}" .
 docker push "eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}"
 #kubectl create secret generic "${CHALLENGE_NAME}-flag" --from-file="secrets/flag"
-kubectl apply -k secrets
+kubectl create -k secrets
 
 if [ ! -d "${CLUSTER_CONF_DIR}" ]; then
   mkdir -p "${CLUSTER_CONF_DIR}"
   cat > "${CLUSTER_CONF_DIR}/kustomization.yaml" << EOF
 bases:
-- "../../../${CHALLENGE_NAME}/config"
+- "../../../${CHALLENGE_NAME}/k8s"
 patchesStrategicMerge:
 - "update_image_name.yaml"
 EOF
@@ -47,14 +47,9 @@ spec:
 EOF
 fi
 
-pushd config
 # This will use the kustomization.yaml to spawn the containers.yaml
 kubectl create -k "${CLUSTER_CONF_DIR}"
-kubectl create -f "autoscaling.yaml"
-if [ -f pow.yaml ]; then
-  kubectl create -f "pow.yaml"
-fi
-
-popd
+kubectl create -f "k8s/autoscaling.yaml"
+kubectl create -k config
 
 popd

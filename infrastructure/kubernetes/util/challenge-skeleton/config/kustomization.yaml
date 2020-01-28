@@ -1,2 +1,11 @@
-resources:
-- "containers.yaml"
+configMapGenerator:
+- name: challenge-skeleton-config
+  files:
+  - pow
+  - nsjail.cfg
+generatorOptions:
+  disableNameSuffixHash: true
+  labels:
+    type: generated
+  annotations:
+    note: generated
