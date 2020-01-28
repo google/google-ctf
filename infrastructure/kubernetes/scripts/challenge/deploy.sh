@@ -20,10 +20,17 @@ CLUSTER_CONF_DIR="${ret}/${CHALLENGE_NAME}"
 
 function delete_resource {
   local RESOURCE="$1"
-  kubectl get "${RESOURCE}" >/dev/null && kubectl delete "${RESOURCE}"
+  kubectl get "${RESOURCE}" >/dev/null 2>&1 && kubectl delete "${RESOURCE}" || true
 }
 
 pushd "${CHALLENGE_DIR}"
+
+source chal.conf
+
+if [ ! "${DEPLOY}" = "true" ]; then
+  echo "aborting: DEPLOY=${DEPLOY} in chal.conf"
+  exit 1
+fi
 
 docker build -t "eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}" .
 docker push "eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}"
@@ -62,5 +69,20 @@ kubectl create -f "k8s/autoscaling.yaml"
 
 delete_resource "configMap/${CHALLENGE_NAME}-config"
 kubectl create -k config
+
+if [ "${PUBLIC}" = "true" ]; then
+  if ! kubectl get "service/${CHALLENGE_NAME}-lb-service" >/dev/null 2>&1; then
+    kubectl create -f "${CHALLENGE_DIR}/k8s/network.yaml"
+  else
+    echo 're-using existing load balancer'
+  fi
+  echo '== CHALLENGE IS PUBLIC =='
+  echo 'Waiting for load balancer to come up, Ctrl-C if you don'"'"'t care'
+  LB_IP=$($DIR/scripts/challenge/ip.sh "${CHALLENGE_NAME}")
+  echo "Running at ${LB_IP}"
+else
+  # if not marked as public, try to delete an existing load balancer
+  delete_resource "service/${CHALLENGE_NAME}-lb-service"
+fi
 
 popd
