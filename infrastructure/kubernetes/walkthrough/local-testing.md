@@ -19,7 +19,7 @@ svn checkout https://github.com/google/google-ctf/trunk/infrastructure/kubernete
 PATH=$PATH:$PWD/kubernetes/bin
 ```
 
-## Setup user namespaces
+## Enable and build nsjail
 ```
 echo 1 | sudo tee /proc/sys/kernel/unprivileged_userns_clone
 sudo service procps restart
@@ -27,6 +27,7 @@ sudo mkdir -p /sys/fs/cgroup/memory/NSJAIL
 sudo mkdir -p /sys/fs/cgroup/pids/NSJAIL
 sudo mkdir -p /sys/fs/cgroup/cpu/NSJAIL
 sudo chmod o+w /sys/fs/cgroup/*/NSJAIL
+docker build -t kctf-nsjail kubernetes/base/nsjail-docker
 ```
 
 ## Setup basic demo challenge

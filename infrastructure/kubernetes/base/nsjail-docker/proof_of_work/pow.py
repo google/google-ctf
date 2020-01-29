@@ -5,7 +5,7 @@ import hmac
 import secrets
 import sys
 
-SOLVER_URL = 'https://github.com/google/google-ctf/blob/master/infrastructure/kubernetes/util/nsjail-docker/proof_of_work/pow.py'
+SOLVER_URL = 'https://github.com/google/google-ctf/blob/master/infrastructure/kubernetes/base/nsjail-docker/proof_of_work/pow.py'
 
 def gen_seed():
     return secrets.token_hex(8)
