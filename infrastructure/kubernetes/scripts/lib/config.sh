@@ -38,7 +38,7 @@ function load_config {
 
 function build_nsjail_docker {
   echo 'building nsjail container'
-  pushd $DIR/util/nsjail-docker
+  pushd $DIR/base/nsjail-docker
   docker build -t "kctf-nsjail" .
   popd
 }

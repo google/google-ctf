@@ -27,7 +27,7 @@ sudo mkdir -p /sys/fs/cgroup/memory/NSJAIL
 sudo mkdir -p /sys/fs/cgroup/pids/NSJAIL
 sudo mkdir -p /sys/fs/cgroup/cpu/NSJAIL
 sudo chmod o+w /sys/fs/cgroup/*/NSJAIL
-docker build -t kctf-nsjail kubernetes/util/nsjail-docker
+docker build -t kctf-nsjail kubernetes/base/nsjail-docker
 ```
 
 ## Setup basic demo challenge
