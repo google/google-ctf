@@ -29,15 +29,15 @@ sudo mkdir -p /sys/fs/cgroup/cpu/NSJAIL
 sudo chmod o+w /sys/fs/cgroup/*/NSJAIL
 ```
 
-## Setup basic demo challenge
+## Create basic demo challenge
 ```
 kctf-setup-chal-dir $(mktemp -d)
 kctf-chal-create test-1
-kctf-chal-test-docker test-1
 ```
 
 ## Test connecting to the challenge
 ```
+kctf-chal-test-docker test-1
 sudo apt-get install -y netcat
 nc 127.0.0.1 1337
 ```
