@@ -6,8 +6,6 @@ source "${DIR}/scripts/lib/config.sh"
 
 load_config
 
-build_nsjail_docker
-
 gcloud config set project ${PROJECT}
 gcloud config set compute/zone ${ZONE}
 

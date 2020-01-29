@@ -39,5 +39,3 @@ else
         rm "${CONFIG_DIR}/cluster.conf"
     fi
 fi
-
-build_nsjail_docker
