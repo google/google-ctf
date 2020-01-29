@@ -3,8 +3,9 @@ FROM ubuntu:19.10
 RUN apt-get update
 RUN apt-get upgrade -y
 
+# TODO: move to cdebootstrap once docker allows privileged builds (needs unshare)
 RUN apt-get install -y debootstrap
-RUN debootstrap eoan /chroot
+RUN debootstrap --variant minbase eoan /chroot
 RUN chroot /chroot /usr/sbin/useradd --no-create-home -u 1000 user
 
 RUN /usr/sbin/useradd --no-create-home -u 1000 user
