@@ -8,10 +8,6 @@ load_config
 
 build_nsjail_docker
 
-if [ ! -x $(which kubectl) ]; then
-  gcloud components install kubectl
-fi
-
 gcloud config set project ${PROJECT}
 gcloud config set compute/zone ${ZONE}
 
