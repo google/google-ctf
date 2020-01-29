@@ -29,5 +29,33 @@ for dir in ${CHAL_DIR}/*; do
   echo
   echo "= Deploying challenge ${CHALLENGE_NAME} ="
   echo
+  export KCTF_DONTBLOCK_LB="true"
   ${DIR}/scripts/challenge/deploy.sh "${CHALLENGE_NAME}"
+done
+
+echo
+echo '= challenges deployed, waiting for load balancers ='
+echo "ctrl+c if you don't care"
+echo
+
+for dir in ${CHAL_DIR}/*; do
+  if [ ! -f "${dir}/chal.conf" ]; then
+    continue
+  fi
+
+  CHALLENGE_NAME=$(basename "${dir}")
+  CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
+  source "${CHALLENGE_DIR}/chal.conf"
+
+  if [ ! "${DEPLOY}" = "true" ]; then
+    continue
+  fi
+
+  if [ ! "${PUBLIC}" = "true" ]; then
+    continue
+  fi
+
+  LB_IP=$($DIR/scripts/challenge/ip.sh "${CHALLENGE_NAME}")
+  echo "${CHALLENGE_NAME}: ${LB_IP}"
+
 done

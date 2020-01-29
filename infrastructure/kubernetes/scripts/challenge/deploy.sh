@@ -72,9 +72,11 @@ if [ "${PUBLIC}" = "true" ]; then
     echo 're-using existing load balancer'
   fi
   echo '== CHALLENGE IS PUBLIC =='
-  echo 'Waiting for load balancer to come up, Ctrl-C if you don'"'"'t care'
-  LB_IP=$($DIR/scripts/challenge/ip.sh "${CHALLENGE_NAME}")
-  echo "Running at ${LB_IP}"
+  if [ "${KCTF_DONTBLOCK_LB}" != "true" ]; then
+    echo 'Waiting for load balancer to come up, Ctrl-C if you don'"'"'t care'
+    LB_IP=$($DIR/scripts/challenge/ip.sh "${CHALLENGE_NAME}")
+    echo "Running at ${LB_IP}"
+  fi
 else
   # if not marked as public, try to delete an existing load balancer
   delete_resource "service/${CHALLENGE_NAME}-lb-service"
