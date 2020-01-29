@@ -1,7 +1,7 @@
 apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
-  name: "challenge-skeleton-deployment"
+  name: "challenge-skeleton"
   namespace: "default"
   labels:
     app: "challenge-skeleton"
@@ -15,10 +15,10 @@ spec:
       labels:
         app: "challenge-skeleton"
       annotations:
-        container.apparmor.security.beta.kubernetes.io/challenge-skeleton: localhost/ctf-profile
+        container.apparmor.security.beta.kubernetes.io/challenge: localhost/ctf-profile
     spec:
       containers:
-      - name: "challenge-skeleton"
+      - name: "challenge"
         # this will be updated to eu.gcr.io/$project/$challenge-dir using kustomization.yaml in the kctf-conf
         image: "challenge-skeleton"
         ports:

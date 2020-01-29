@@ -43,12 +43,12 @@ EOF
 apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
-  name: "${CHALLENGE_NAME}-deployment"
+  name: "${CHALLENGE_NAME}"
 spec:
   template:
     spec:
       containers:
-      - name: "${CHALLENGE_NAME}"
+      - name: "challenge"
         image: "eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}"
 EOF
 fi
@@ -56,18 +56,18 @@ fi
 delete_resource "secret/${CHALLENGE_NAME}-secrets"
 kubectl create -k secrets
 
-delete_resource "deployment/${CHALLENGE_NAME}-deployment"
+delete_resource "deployment/${CHALLENGE_NAME}"
 # This will use the kustomization.yaml to spawn the containers.yaml
 kubectl create -k "${CLUSTER_CONF_DIR}"
 
-delete_resource "hpa/${CHALLENGE_NAME}-hpa"
+delete_resource "hpa/${CHALLENGE_NAME}"
 kubectl create -f "k8s/autoscaling.yaml"
 
 delete_resource "configMap/${CHALLENGE_NAME}-config"
 kubectl create -k config
 
 if [ "${PUBLIC}" = "true" ]; then
-  if ! kubectl get "service/${CHALLENGE_NAME}-lb-service" >/dev/null 2>&1; then
+  if ! kubectl get "service/${CHALLENGE_NAME}" >/dev/null 2>&1; then
     kubectl create -f "${CHALLENGE_DIR}/k8s/network.yaml"
   else
     echo 're-using existing load balancer'
@@ -80,7 +80,7 @@ if [ "${PUBLIC}" = "true" ]; then
   fi
 else
   # if not marked as public, try to delete an existing load balancer
-  delete_resource "service/${CHALLENGE_NAME}-lb-service"
+  delete_resource "service/${CHALLENGE_NAME}"
 fi
 
 popd

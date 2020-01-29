@@ -15,7 +15,7 @@ CHALLENGE_NAME=$1
 
 LB_IP=""
 while [ -z "${LB_IP}" ]; do
-  LB_IP=$(kubectl get "service/${CHALLENGE_NAME}-lb-service" -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  LB_IP=$(kubectl get "service/${CHALLENGE_NAME}" -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
   sleep 3
 done
 

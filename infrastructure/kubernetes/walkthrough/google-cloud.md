@@ -112,8 +112,8 @@ If all went well, you should see a shell. Now, let's add a proof of work to the 
 
 Debugging failures here is easy, here are some things you could do if this didn't work:
 1. Go to [Services in GKE](https://console.cloud.google.com/kubernetes/discovery)
-1. Select demo-challenge-lb-service
-1. Under *Stackdriver Logs* click on demo-challenge-deployment
+1. Select demo-challenge
+1. Under *Stackdriver Logs* click on demo-challenge
 
 If there were any errors deploying the challenge, they should be visible here.
 

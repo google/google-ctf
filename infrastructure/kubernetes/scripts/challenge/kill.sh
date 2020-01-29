@@ -14,7 +14,7 @@ fi
 CHALLENGE_NAME=$1
 
 delete_resource "secret/${CHALLENGE_NAME}-secrets"
-delete_resource "deployment/${CHALLENGE_NAME}-deployment"
-delete_resource "hpa/${CHALLENGE_NAME}-hpa"
+delete_resource "deployment/${CHALLENGE_NAME}"
+delete_resource "hpa/${CHALLENGE_NAME}"
 delete_resource "configMap/${CHALLENGE_NAME}-config"
-delete_resource "service/${CHALLENGE_NAME}-lb-service"
+delete_resource "service/${CHALLENGE_NAME}"

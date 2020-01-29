@@ -1,7 +1,7 @@
 apiVersion: "autoscaling/v1"
 kind: "HorizontalPodAutoscaler"
 metadata:
-  name: "challenge-skeleton-hpa"
+  name: "challenge-skeleton"
   namespace: "default"
   labels:
     app: "challenge-skeleton"
