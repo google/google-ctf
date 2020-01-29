@@ -18,7 +18,7 @@ PATH="$PATH:$(pwd)/infrastructure/kubernetes/bin"
 ### And run the configuration script
 
 ```
-kctf-setup-config-create
+kctf-config-create
 ```
 
 ### Configuration properties
