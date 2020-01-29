@@ -5,7 +5,7 @@
 
 * [gcloud](https://cloud.google.com/sdk/install)
 * [docker](https://docs.docker.com/install/)
-* [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) or `gcloud components install kubectl`
+* [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
 # DNS Support
 If you point a domain or subdomain to Google Cloud DNS, you can use `kctf-setup-dns` and `kctf-chal-dns` to map *challenge_name.yourdomain.com* to your challenge.
