@@ -27,20 +27,17 @@ sudo mkdir -p /sys/fs/cgroup/memory/NSJAIL
 sudo mkdir -p /sys/fs/cgroup/pids/NSJAIL
 sudo mkdir -p /sys/fs/cgroup/cpu/NSJAIL
 sudo chmod o+w /sys/fs/cgroup/*/NSJAIL
-docker build -t kctf-nsjail kubernetes/base/nsjail-docker
 ```
 
 ## Setup basic demo challenge
 ```
 kctf-setup-chal-dir $(mktemp -d)
 kctf-chal-create test-1
-pushd ~/.config/kctf/challenges/test-1/
-docker build -t test-1 .
+kctf-chal-test-docker test-1
 ```
 
 ## Test connecting to the challenge
 ```
-docker run -d -p 1337:1337 --mount type=bind,source="/sys/fs/cgroup",target=/cgroup --mount type=bind,source="$(pwd)"/config,target=/config --mount type=bind,source="$(pwd)"/secrets,target=/secrets --privileged -it test-1
 sudo apt-get install -y netcat
 nc 127.0.0.1 1337
 ```
