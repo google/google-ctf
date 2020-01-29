@@ -19,7 +19,7 @@ svn checkout https://github.com/google/google-ctf/trunk/infrastructure/kubernete
 PATH=$PATH:$PWD/kubernetes/bin
 ```
 
-## Enable and build nsjail
+## Setup nsjail configuration
 ```
 echo 1 | sudo tee /proc/sys/kernel/unprivileged_userns_clone
 sudo service procps restart
