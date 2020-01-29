@@ -6,8 +6,5 @@ source "${DIR}/scripts/lib/config.sh"
 
 load_config
 
-if [ ! -x $(which kubectl) ]; then
-  gcloud components install kubectl
-fi
 gcloud container clusters get-credentials ${CLUSTER_NAME}
 gcloud auth configure-docker
