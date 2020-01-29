@@ -23,7 +23,7 @@ fi
 CHAL_DIR=$(realpath -L ${CHAL_DIR})
 
 mkdir -p "${CONFIG_DIR}"
-ln -fs "${CHAL_DIR}" "${CONFIG_DIR}/challenges"
+ln -nfs "${CHAL_DIR}" "${CONFIG_DIR}/challenges"
 if [ -f "${CONFIG_DIR}/cluster.conf" ]; then
     source "${CONFIG_DIR}/cluster.conf"
 
