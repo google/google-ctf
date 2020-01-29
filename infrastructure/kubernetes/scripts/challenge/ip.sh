@@ -13,11 +13,10 @@ fi
 
 CHALLENGE_NAME=$1
 
-while : ; do
-  LB_IP=$(kubectl get services | grep "${CHALLENGE_NAME}" | awk '{print $4}')
-  if [ "${LB_IP}" != "<pending>" ]; then
-      echo "${LB_IP}"
-      break;
-  fi
+LB_IP=""
+while [ -z "${LB_IP}" ]; do
+  LB_IP=$(kubectl get "service/${CHALLENGE_NAME}-lb-service" -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
   sleep 3
 done
+
+echo "${LB_IP}"
