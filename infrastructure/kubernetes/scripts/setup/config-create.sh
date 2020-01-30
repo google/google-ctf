@@ -127,3 +127,12 @@ mkdir -p "${CLUSTER_DIR}"
 echo "${config}" > "${CLUSTER_CONFIG}"
 
 ln -fs "${CLUSTER_CONFIG}" "${CONFIG_FILE}"
+
+echo
+read -p "Start the cluster now (y/N)? " SHOULD_START
+echo
+if [[ ${SHOULD_START} =~ ^[Yy]$ ]]; then
+    "${DIR}/scripts/cluster/create.sh"
+fi
+exit 0
+
