@@ -19,7 +19,7 @@ if [ -d "${CHALLENGE_DIR}" ]; then
   exit 1
 fi
 
-cp -r "${DIR}/base/challenge-skeleton" "${CHALLENGE_DIR}"
+cp -r "${CHAL_DIR}/kctf-conf/base/challenge-skeleton" "${CHALLENGE_DIR}"
 
 pushd "${CHALLENGE_DIR}"
 

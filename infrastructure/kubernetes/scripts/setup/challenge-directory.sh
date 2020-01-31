@@ -11,16 +11,21 @@ fi
 
 CHAL_DIR=$1
 
-if [ ! -d ${CHAL_DIR} ]; then
-    if [ -e ${CHAL_DIR} ]; then
+if [ ! -d "${CHAL_DIR}" ]; then
+    if [ -e "${CHAL_DIR}" ]; then
         echo "error: ${CHAL_DIR} already exists and is not a directory"
         exit 1
     fi
     echo "creating ${CHAL_DIR}"
-    mkdir -p "${CHAL_DIR}"
 fi
 
 CHAL_DIR=$(realpath -L ${CHAL_DIR})
+
+# copy the base files to the chal dir
+if [ ! -d "${CHAL_DIR}/kctf-conf" ]; then
+    mkdir -p "${CHAL_DIR}/kctf-conf"
+    cp -R "${DIR}/base" "${CHAL_DIR}/kctf-conf/"
+fi
 
 mkdir -p "${CONFIG_DIR}"
 ln -nfs "${CHAL_DIR}" "${CONFIG_DIR}/challenges"
