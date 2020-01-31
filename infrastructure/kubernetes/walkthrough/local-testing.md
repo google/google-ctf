@@ -21,11 +21,9 @@ PATH=$PATH:$PWD/kubernetes/bin
 
 ## Setup nsjail configuration
 ```
-(echo 1 | sudo tee /proc/sys/kernel/unprivileged_userns_clone) || (echo 'kernel.unprivileged_userns_clone=1' | sudo tee /etc/sysctl.d/00-local-userns.conf)
+(echo 1 | sudo tee /proc/sys/kernel/unprivileged_userns_clone) || (echo 'kernel.unprivileged_userns_clone=1' | sudo tee /etc/sysctl.d/00-local-userns.conf) 2>&1
 sudo service procps restart
-sudo mkdir -p /sys/fs/cgroup/memory/NSJAIL
-sudo mkdir -p /sys/fs/cgroup/pids/NSJAIL
-sudo mkdir -p /sys/fs/cgroup/cpu/NSJAIL
+sudo mkdir -p /sys/fs/cgroup/memory/NSJAIL /sys/fs/cgroup/pids/NSJAIL /sys/fs/cgroup/cpu/NSJAIL
 sudo chmod o+w /sys/fs/cgroup/*/NSJAIL
 ```
 
