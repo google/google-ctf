@@ -4,8 +4,20 @@
 import hmac
 import secrets
 import sys
+import socket
 
 SOLVER_URL = 'https://github.com/google/google-ctf/blob/master/infrastructure/kubernetes/base/nsjail-docker/proof_of_work/pow.py'
+
+def stdin_is_localhost_socket():
+    try:
+        sock = socket.socket(fileno=sys.stdin.fileno())
+    except OSError:
+        return False
+
+    peername = sock.getpeername()
+    sock.detach()
+
+    return peername[0] == '::ffff:127.0.0.1'
 
 def gen_seed():
     return secrets.token_hex(8)
@@ -68,6 +80,11 @@ def main():
             usage()
         seed_hex = gen_seed()
         difficulty = int(sys.argv[2])
+        if difficulty == 0:
+            sys.exit(0)
+
+        if stdin_is_localhost_socket():
+            sys.exit(0)
 
         sys.stdout.write("== proof-of-work ==\n")
         sys.stdout.write("please solve a pow first\n")
