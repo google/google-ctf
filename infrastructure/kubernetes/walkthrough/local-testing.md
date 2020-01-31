@@ -48,6 +48,17 @@ The instructions below might help you resolve errors in the setup.
 
 Windows Subsystem for Linux doesn't support docker directly. To use it, you must configure it differently, see the [docker guide](https://docs.docker.com/docker-for-windows/wsl-tech-preview/) for help.
 
+### Errors installing docker
+
+If you get this error installing docker in Ubuntu:
+```
+E: Package 'docker-ce' has no installation candidate
+```
+Try to install Ubuntu's version of docker:
+```
+sudo apt-get install -y docker.io
+```
+
 ### Errors building the docker images
 
 #### Docker daemon error
