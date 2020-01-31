@@ -50,7 +50,8 @@ Windows Subsystem for Linux doesn't support docker directly. To use it, you must
 
 ### Errors building the docker images
 
-In SUSE, docker leaves the socket on the FS, but it's no longer running. The error looks like this:
+#### Docker daemon error
+In some cases, docker leaves the socket on the FS, but it's no longer running. The error looks like this:
 ```
 Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
 ```
@@ -60,7 +61,8 @@ To fix this, just run:
 sudo service docker restart
 ```
 
-In some cases with Debian, docker might fail to run because of network errors. Check if you have this error
+#### IPv4 forwarding error
+In some cases, docker might fail to run because of network errors. Check if you have this error
 ```
  ---> [Warning] IPv4 forwarding is disabled. Networking will not work.
 ```
@@ -71,13 +73,26 @@ echo net.ipv4.ip_forward=1 | sudo tee -a /etc/sysctl.conf
 And since this probably made docker cache an invalid `apt-get update`, you will also have to run `docker system prune -a` before running the `kctf-chal-test-docker` command again.
 
 ### Errors connecting to the challenge
-If you can't connect, type ```docker ps -a``` and look for the last ran container, and then run ```docker logs CONTAINER_NAME``` replacing CONTAINER_NAME with the name of the last ran container.
+If you can't connect, type:
+```
+docker ps -a
+```
+In the table, look for the last ran container, and then run:
+```
+docker logs CONTAINER_NAME
+```
+replacing CONTAINER_NAME with the name of the last ran container.
 
-That will output the logs of the last time the container ran, if you see errors like:
+That will output the logs of the last time the container ran.
+
+#### cgroup directory not found
+if you see errors like:
 ```
 [W][2020-01-31T19:49:47+0000][1] bool cgroup::createCgroup(const string&, pid_t)():43 mkdir('/cgroup/memory/NSJAIL/NSJAIL.10', 0700) failed: No such file or directory
 ```
 That probably means the NSJAIL cgroup directories didn't get created in the nsjail setup step above, try running the [setup nsjail configuration](#setup-nsjail-configuration) step again and then run `kctf-chal-test-docker` again.
+
+#### CLONE error in nsjail
 
 If the error is like this:
 ```
