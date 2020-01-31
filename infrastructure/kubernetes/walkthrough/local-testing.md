@@ -41,6 +41,7 @@ nc 127.0.0.1 1337
 ```
 
 ## Debug failures
+If all went well, you should have received a shell, if you didn't, there might be some issues with your system (support for nsjail, docker, or else). The instructions below might help you resolve this so you can do local testing.
 
 ### Errors building the docker images
 In some cases, docker might fail to run because of network errors. Check if you have this error
