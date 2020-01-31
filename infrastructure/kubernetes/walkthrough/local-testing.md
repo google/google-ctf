@@ -69,7 +69,7 @@ If the error is like this:
 ```
 That probably means that unprivileged user namespaces are not enabled, you can fix this by running the [setup nsjail configuration](#setup-nsjail-configuration) step again and then try connecting through netcat again.
 
-## Errors inside the challenge
+### Errors inside the challenge
 If you see errors like these:
 ```
 bash: cannot set terminal process group (-1): Inappropriate ioctl for device
