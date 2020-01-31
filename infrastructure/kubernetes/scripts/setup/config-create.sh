@@ -11,10 +11,6 @@ mkdir -p "${CONFIG_DIR}"
 CHAL_DIR=""
 PROJECT=""
 ZONE="europe-west3-c"
-MIN_NODES="1"
-MAX_NODES="3"
-NUM_NODES="1"
-MACHINE_TYPE="n1-standard-2"
 CLUSTER_NAME="ctf-cluster-eu"
 DOMAIN_NAME=""
 
@@ -79,27 +75,6 @@ echo -n "  Available zones: (Loading...)"
 gcloud compute zones list --format="csv[no-heading](name)" | xargs echo -e "\r  Available zones: "
 echo
 read_config ZONE "GCP Zone"
-echo
-echo "== AUTOSCALING =="
-echo
-echo " Used for autoscaling configuration"
-echo "  A node is a VM, here you can configure how many VMs your cluster will have."
-echo
-read_config MIN_NODES "Minimum number of nodes"
-read_config MAX_NODES "Maximum number of nodes"
-read_config NUM_NODES "Initial number of nodes"
-echo
-echo "== VM CONFIGURATION =="
-echo
-echo " Select the VM type for the nodes"
-echo "  n1-standard-4 means a 4 vCPUs VM of N1 gen with a standard RAM (15G for 4CPUs)."
-echo "  n1-highmem-4 means a 4 vCPUs VM of N1 gen with more RAM (27G for 4CPUs)."
-echo "  n1-highcpu-4 means a 4 vCPUs VM of N1 gen with less RAM (3G for 4CPUs)."
-echo
-echo -n "  Available machine types: (Loading...)"
-gcloud compute machine-types list --zones="${ZONE}" --format="csv[no-heading](name)" | xargs echo -e "\r  Available machine types: "
-echo
-read_config MACHINE_TYPE "The VM machine type"
 echo
 echo "== CLUSTER NAME =="
 echo
