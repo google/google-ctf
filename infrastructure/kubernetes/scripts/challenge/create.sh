@@ -24,5 +24,6 @@ cp -r "${DIR}/base/challenge-skeleton" "${CHALLENGE_DIR}"
 pushd "${CHALLENGE_DIR}"
 
 sed -i "s/challenge-skeleton/${CHALLENGE_NAME}/g" */*.yaml
+sed -i "s/challenge-skeleton/healthcheck/${CHALLENGE_NAME}/g" */*.yaml
 
 popd

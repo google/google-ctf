@@ -47,6 +47,24 @@ spec:
           subPath: "pids/NSJAIL/challenge-skeleton"
           mountPath: "/cgroup/pids/NSJAIL"
           readOnly: false
+        livenessProbe:
+          failureThreshold: 2
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 20
+          timeoutSeconds: 3
+          periodSeconds: 30
+      - name: "healthcheck"
+        image: "challenge-skeleton-healthcheck"
+        command:
+        volumeMounts:
+        - name: "healthcheck-secrets"
+          mountPath: "/secrets"
+          readOnly: true
+        - name: "healthcheck-config"
+          mountPath: "/config"
+          readOnly: true
       initContainers:
       - name: "cgroup-setup"
         image: "busybox"
@@ -71,3 +89,12 @@ spec:
       - name: "cgroup"
         hostPath:
           path: /sys/fs/cgroup
+      - name: "healthcheck-secrets"
+        secret:
+          # must be called ${challenge-dir}-healthcheck-secrets
+          secretName: "challenge-skeleton-healthcheck-secrets"
+          defaultMode: 0444
+      - name: "healthcheck-config"
+        configMap:
+          # must be called ${challenge-dir}-healthcheck-config
+          name: "challenge-skeleton-healthcheck-config"
