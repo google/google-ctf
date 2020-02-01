@@ -25,9 +25,9 @@ if [ ! "${DEPLOY}" = "true" ]; then
 fi
 
 if [ "${PUBLIC}" = "true" ]; then
-  make -C "${CHALLENGE_DIR}" expose
+  make -C "${CHALLENGE_DIR}" -j expose
 else
-  make -C "${CHALLENGE_DIR}" deploy
+  make -C "${CHALLENGE_DIR}" -j deploy
   # if not marked as public, try to delete an existing load balancer
   delete_resource "service/${CHALLENGE_NAME}"
 fi
