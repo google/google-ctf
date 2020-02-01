@@ -62,6 +62,9 @@ spec:
         - name: "healthcheck-secrets"
           mountPath: "/secrets"
           readOnly: true
+        - name: "healthcheck-exploit-key"
+          mountPath: "/keys"
+          readOnly: true
         - name: "healthcheck-config"
           mountPath: "/config"
           readOnly: true
@@ -93,6 +96,11 @@ spec:
         secret:
           # must be called ${challenge-dir}-healthcheck-secrets
           secretName: "challenge-skeleton-healthcheck-secrets"
+          defaultMode: 0444
+      - name: "healthcheck-exploit-key"
+        secret:
+          # must be called ${challenge-dir}-healthcheck-exploit-key
+          secretName: "challenge-skeleton-healthcheck-exploit-key"
           defaultMode: 0444
       - name: "healthcheck-config"
         configMap:

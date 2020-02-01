@@ -38,9 +38,7 @@ function load_config {
 
 function build_nsjail_docker {
   echo 'building nsjail container'
-  pushd "${CHAL_DIR}/kctf-conf/base/nsjail-docker"
-  docker build -t "kctf-nsjail" .
-  popd
+  make -C "${CHAL_DIR}/kctf-conf/base/nsjail-docker" docker
 }
 
 function delete_resource {

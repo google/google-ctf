@@ -17,7 +17,7 @@ DOMAIN_NAME=""
 config=""
 read_config() {
     read -e -p "  $2: " -i "${!1}" "$1"
-    line="${1}=\"${!1}\""
+    line="${1}=${!1}"
     config="${config}"$'\n'"${line}"
 }
 
