@@ -27,6 +27,6 @@ RUN apt-get install -y libprotobuf17 libnl-route-3-200
 RUN mkdir /chroot/config
 RUN mkdir /chroot/secrets
 
-COPY k8s_nsjail_setup.sh /usr/bin/
-COPY proof_of_work/pow.py /chroot/usr/bin/
-COPY proof_of_work/maybe_pow.sh /chroot/usr/bin/
+COPY files/k8s_nsjail_setup.sh /usr/bin/
+COPY files/proof_of_work/pow.py /chroot/usr/bin/
+COPY files/proof_of_work/maybe_pow.sh /chroot/usr/bin/
