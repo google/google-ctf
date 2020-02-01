@@ -47,7 +47,7 @@ The instructions below might help you resolve errors in the setup.
 
 ### Errors in Windows Subsystem for Linux
 
-Windows Subsystem for Linux doesn't support docker directly. To use it, you must configure it differently, see the [docker guide](https://docs.docker.com/docker-for-windows/wsl-tech-preview/) for help.
+Users of WSL1 will need to do testing through a local kubernetes cluster (todo: add instructions).
 
 ### Errors installing docker
 
