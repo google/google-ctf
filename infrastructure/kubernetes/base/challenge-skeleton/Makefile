@@ -20,6 +20,10 @@ deploy: ${CLUSTER_GEN}/autoscaling ${CLUSTER_GEN}/deployment ${CLUSTER_GEN}/secr
 
 expose: ${CLUSTER_GEN}/network deploy cluster-config
 
+clean:
+	- rm -R gen/*
+	- rm -R healthcheck/gen/*
+
 ${CLUSTER_GEN}/network: | cluster-config
 	kubectl apply -f k8s/network.yaml
 	touch $@
