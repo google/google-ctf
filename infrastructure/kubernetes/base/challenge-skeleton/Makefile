@@ -11,32 +11,33 @@ ZONE:=CONFIGMISSING
 CHALLENGE_NAME:=$(shell basename ${PWD})
 IMAGE_NAME=eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}
 HEALTHCHECK_IMAGE_NAME=eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}-healthcheck
-DEPLOYMENT_CONF_DIR=gen/deployment-conf/${PROJECT}_${ZONE}_${CLUSTER_NAME}
+CLUSTER_GEN=gen/${PROJECT}_${ZONE}_${CLUSTER_NAME}
+DEPLOYMENT_CONF_DIR=${CLUSTER_GEN}/deployment-conf
 
 docker: gen/docker-image
 
-deploy: gen/autoscaling gen/deployment gen/secrets gen/config gen/healthcheck-secrets gen/healthcheck-exploit-key-secret gen/healthcheck-config cluster-config
+deploy: ${CLUSTER_GEN}/autoscaling ${CLUSTER_GEN}/deployment ${CLUSTER_GEN}/secrets ${CLUSTER_GEN}/config ${CLUSTER_GEN}/healthcheck-secrets ${CLUSTER_GEN}/healthcheck-exploit-key-secret ${CLUSTER_GEN}/healthcheck-config cluster-config
 
-expose: gen/network deploy cluster-config
+expose: ${CLUSTER_GEN}/network deploy cluster-config
 
-gen/network: | cluster-config
+${CLUSTER_GEN}/network: | cluster-config
 	kubectl apply -f k8s/network.yaml
 	touch $@
 
-gen/autoscaling: k8s/autoscaling.yaml | cluster-config
+${CLUSTER_GEN}/autoscaling: k8s/autoscaling.yaml | cluster-config
 	kubectl apply -f k8s/autoscaling.yaml
 	touch $@
 
-gen/deployment: ${DEPLOYMENT_CONF_DIR} gen/image-pushed gen/healthcheck-image-pushed k8s/containers.yaml | cluster-config
+${CLUSTER_GEN}/deployment: ${DEPLOYMENT_CONF_DIR} ${CLUSTER_GEN}/image-pushed ${CLUSTER_GEN}/healthcheck-image-pushed k8s/containers.yaml | cluster-config
 	kubectl get "deployments/${CHALLENGE_NAME}" >/dev/null 2>&1 && kubectl delete "deployments/${CHALLENGE_NAME}"
 	kubectl create -k ${DEPLOYMENT_CONF_DIR}
 	touch $@
 
-gen/secrets: $(shell find secrets) | cluster-config
+${CLUSTER_GEN}/secrets: $(shell find secrets) | cluster-config
 	kubectl apply -k secrets
 	touch $@
 
-gen/config: $(shell find config) | cluster-config
+${CLUSTER_GEN}/config: $(shell find config) | cluster-config
 	kubectl apply -k config
 	touch $@
 
@@ -44,7 +45,7 @@ gen/docker-image: Dockerfile $(shell find files) ../kctf-conf/base/nsjail-docker
 	docker build -t "kctf-chal-${CHALLENGE_NAME}" .
 	echo $$(docker image ls "kctf-chal-${CHALLENGE_NAME}" -q) > $@
 
-gen/image-pushed: gen/docker-image | cluster-config
+${CLUSTER_GEN}/image-pushed: gen/docker-image | cluster-config
 	docker tag "kctf-chal-${CHALLENGE_NAME}" "${IMAGE_NAME}"
 	docker push "${IMAGE_NAME}"
 	touch $@
@@ -70,23 +71,23 @@ healthcheck/gen/exploit.cpio: $(shell find healthcheck/exploit)
 healthcheck/gen/exploit.key: healthcheck/gen/exploit.cpio
 	sha256sum healthcheck/gen/exploit.cpio | awk '{print $$1}' > $@
 
-gen/healthcheck-image-pushed: gen/healthcheck-docker-image | cluster-config
+${CLUSTER_GEN}/healthcheck-image-pushed: gen/healthcheck-docker-image | cluster-config
 	docker tag "kctf-healthcheck-${CHALLENGE_NAME}" "${HEALTHCHECK_IMAGE_NAME}"
 	docker push "${HEALTHCHECK_IMAGE_NAME}"
 	touch $@
 
-gen/healthcheck-exploit-key-secret: healthcheck/gen/exploit.key | cluster-config
+${CLUSTER_GEN}/healthcheck-exploit-key-secret: healthcheck/gen/exploit.key | cluster-config
 	SECRET_NAME="${CHALLENGE_NAME}-healthcheck-exploit-key"
 	RESOURCE="secrets/$${SECRET_NAME}"
 	kubectl get "$${RESOURCE}" >/dev/null 2>&1 && kubectl delete "$${RESOURCE}"
 	kubectl create secret generic "$${SECRET_NAME}" --from-file=exploit.key=healthcheck/gen/exploit.key
 	touch $@
 
-gen/healthcheck-secrets: $(shell find healthcheck/secrets) | cluster-config
+${CLUSTER_GEN}/healthcheck-secrets: $(shell find healthcheck/secrets) | cluster-config
 	kubectl apply -k healthcheck/secrets
 	touch $@
 
-gen/healthcheck-config: $(shell find healthcheck/config) | cluster-config
+${CLUSTER_GEN}/healthcheck-config: $(shell find healthcheck/config) | cluster-config
 	kubectl apply -k healthcheck/config
 	touch $@
 
@@ -127,3 +128,4 @@ cluster-config:
 	@  echo 'error: config not loaded'
 	@  exit 1
 	@fi
+	mkdir -p ${CLUSTER_GEN}
