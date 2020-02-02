@@ -2,35 +2,39 @@
 
 The purpose of this walkthrough is to teach you how to use the kCTF infrastructure.
 
+## Testing with just Docker
+
 Following this walkthrough requires a local linux machine capable of running docker.
 
-## Install docker
+This is the fastest way to get started with developing of challenges. You can also [test with a local kubernetes cluster](#testing-with-kubernetes) for emulating the production environment more closely.
+
+### Install docker
 ```
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 sudo usermod -aG docker $USER && newgrp docker
 ```
 
-## Download kCTF
+### Download kCTF
 ```
 sudo apt-get install -y subversion
 svn checkout https://github.com/google/google-ctf/trunk/infrastructure/kubernetes
 PATH=$PATH:$PWD/kubernetes/bin
 ```
 
-## Setup nsjail configuration
+### Setup nsjail configuration
 ```
 sudo mkdir -p /sys/fs/cgroup/memory/NSJAIL /sys/fs/cgroup/pids/NSJAIL /sys/fs/cgroup/cpu/NSJAIL
 sudo chmod o+w /sys/fs/cgroup/*/NSJAIL
 ```
 
-## Create basic demo challenge
+### Create basic demo challenge
 ```
 kctf-setup-chal-dir $(mktemp -d)
 kctf-chal-create test-1
 ```
 
-## Test connecting to the challenge
+### Test connecting to the challenge
 This will take a bit longer the first time it is run, as it has to build a chroot.
 ```
 kctf-chal-test-docker test-1
@@ -40,6 +44,23 @@ nc 127.0.0.1 1337
 
 If all went well, you should have a shell inside an nsjail bash, if you didn't, there might be some issues with your system (support for nsjail, docker, or else).
 
+## Testing with Kubernetes
+
+For testing challenges in the same environment as production, as well as to test challenges that require changes to the Kubernetes configuration, you can also test with a local Kubernetes cluster. This is the recommended method, although it takes a bit longer to setup.
+
+### Install a local Kubernetes cluster
+
+There are several options for installing a local Kubernetes cluster:
+
+1. **Minikube** - Most popular option. [Follow instructions here](https://kubernetes.io/docs/tasks/tools/install-minikube/).
+1. **KIND** - Similar to Minikube. [Follow instructions here](https://kind.sigs.k8s.io/docs/user/quick-start/).
+1. **Docker for Desktop** - Windows users can try the built-in Kubernetes cluster. See [WSL1 instructions here](#wsl1).
+
+### Running the challenge in kubernetes
+Once you run the command to create the cluster (`kind create cluster` or `minikube start`), you can try to run:
+```
+kctf-chal-test-k8s test-1
+```
 
 ## Debug failures
 
