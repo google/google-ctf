@@ -45,11 +45,9 @@ If all went well, you should have a shell inside an nsjail bash, if you didn't, 
 
 The instructions below might help you resolve errors in the setup.
 
-### Errors in Windows Subsystem for Linux
+### Errors with docker
 
-Users of WSL1 will need to do testing through a local kubernetes cluster (todo: add instructions).
-
-### Errors installing docker
+#### Errors installing docker
 
 If you get this error installing docker in Ubuntu:
 ```
@@ -60,7 +58,7 @@ Try to install Ubuntu's version of docker:
 sudo apt-get install -y docker.io
 ```
 
-### Errors running docker
+#### Permission denied on /var/run/docker.sock
 
 If you get an error like this:
 ```
@@ -71,8 +69,6 @@ Your user doesn't have permission to run docker, to fix this, run:
 ```
 sudo usermod -aG docker $USER && newgrp docker
 ```
-
-### Errors building the docker images
 
 #### Docker daemon error
 In some cases, docker leaves the socket on the FS, but it's no longer running. The error looks like this:
@@ -129,6 +125,44 @@ That probably means that unprivileged user namespaces are not enabled, you can f
 sudo service procps restart
 ```
 And then try connecting through netcat again.
+
+### Errors in Windows Subsystem for Linux
+
+#### WSL1
+
+The only **supported** method (see below for unsupported options) for testing on WSL1 is through a local Kubernetes cluster, and this is only possible for users with a Pro/Edu/Enterprise version of Windows 10. This is because [Docker for Windows](https://docs.docker.com/docker-for-windows/) requires [Hyper-V support](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/about/).
+
+You must download [Docker for Windows](https://download.docker.com/win/stable/Docker%20Desktop%20Installer.exe) (1GB in size). It already includes Kubernetes, but the cluster has to be manually started in the UI. Go to *Settings > Kubernetes* and click on *"Enable Kubernetes"*.
+
+Open WSL 1 and type:
+```
+echo -e '#!/bin/bash\n$(basename $0).exe $@' | tee  $HOME/.local/bin/docker $HOME/.local/bin/kubectl
+chmod +x $HOME/.local/bin/docker $HOME/.local/bin/kubectl
+```
+
+Make sure you are running the windows version of Docker and kubectl:
+```
+docker version --format {{.Client.Os}}
+kubectl version --client -o yaml | grep platform
+```
+If the commands say linux, you must uninstall the local linux versions, and make sure `~/.local/bin` is in your PATH.
+
+Testing using just docker isn't possible (for that you need to try the [WSL1 unsupported flow](#wsl1-unsupported-flow)), since docker for Windows doesn't have access to do the necessary bind mounts. So you need to run `scripts/challenge/test-k8s.sh` instead of test-docker.
+
+##### WSL1 unsupported flow
+
+You can try the **unsupported** option for running docker. Try to [follow this guide](https://medium.com/faun/docker-running-seamlessly-in-windows-subsystem-linux-6ef8412377aa).
+
+This is the only option available for WSL1 users on Windows 10 Home (other than running a VirtualBox VM).
+
+#### WSL2
+
+WSL2 should work out of the box, but it requires the user to be enrolled in Windows Insider, which has extra data collection by Microsoft and more Windows updates. The setup of WSL2 takes a while and multiple restarts.
+
+1. Register in [Windows Insider](https://insider.windows.com/en-us/register/)
+1. [Upgrade WSL to version 2](https://docs.microsoft.com/en-us/windows/wsl/wsl2-install)
+
+Alternatively, the instructions for running WSL1 also work for WSL2 users.
 
 ### Errors inside the challenge
 If you see errors like these:
