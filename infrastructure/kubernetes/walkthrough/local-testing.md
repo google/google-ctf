@@ -46,7 +46,7 @@ If all went well, you should have a shell inside an nsjail bash, if you didn't, 
 
 ## Testing with Kubernetes
 
-For testing challenges in the same environment as production, as well as to test challenges that require changes to the Kubernetes configuration, you can also test with a local Kubernetes cluster. This is the recommended method, although it takes a bit longer to setup.
+For testing challenges in the same environment as production, as well as to test challenges that require changes to the Kubernetes configuration, you can also test with a local Kubernetes cluster. This is the recommended method, although it takes a bit longer to setup, and is not available in Google Cloud Shell.
 
 ### Install a local Kubernetes cluster
 
@@ -56,7 +56,7 @@ There are several options for installing a local Kubernetes cluster:
 1. **KIND** - Similar to Minikube. [Follow instructions here](https://kind.sigs.k8s.io/docs/user/quick-start/).
 1. **Docker for Desktop** - Windows users can try the built-in Kubernetes cluster. See [WSL1 instructions here](#wsl1).
 
-### Running the challenge in kubernetes
+### Running the challenge in Kubernetes
 Once you run the command to create the cluster (`kind create cluster` or `minikube start`), you can try to run:
 ```
 kctf-chal-test-k8s test-1
