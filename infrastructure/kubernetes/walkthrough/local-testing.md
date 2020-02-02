@@ -50,10 +50,10 @@ For testing challenges in the same environment as production, as well as to test
 
 ### Install a local Kubernetes cluster
 
-There are several options for installing a local Kubernetes cluster:
+There are several options for installing a local Kubernetes cluster. You probably should give a try to Minikube first:
 
 1. **Minikube** - Most popular option. [Follow instructions here](https://kubernetes.io/docs/tasks/tools/install-minikube/).
-1. **KIND** - Similar to Minikube. [Follow instructions here](https://kind.sigs.k8s.io/docs/user/quick-start/).
+1. **KIND** - Lightweight alternative to Minikube. [Follow instructions here](https://kind.sigs.k8s.io/docs/user/quick-start/).
 1. **Docker for Desktop** - Windows users can try the built-in Kubernetes cluster. See [WSL1 instructions here](#wsl1).
 
 ### Running the challenge in Kubernetes
@@ -61,6 +61,10 @@ Once you run the command to create the cluster (`kind create cluster` or `miniku
 ```
 kctf-chal-test-k8s test-1
 ```
+
+If you get a docker error, you might need to load the docker image.
+- https://kind.sigs.k8s.io/docs/user/quick-start/#loading-an-image-into-your-cluster
+- https://kubernetes.io/docs/setup/learning-environment/minikube/#use-local-images-by-re-using-the-docker-daemon
 
 ## Debug failures
 
