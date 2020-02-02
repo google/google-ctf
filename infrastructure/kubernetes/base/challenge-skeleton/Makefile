@@ -11,7 +11,7 @@ ZONE:=CONFIGMISSING
 CHALLENGE_NAME:=$(shell basename ${PWD})
 IMAGE_NAME=eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}
 HEALTHCHECK_IMAGE_NAME=eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}-healthcheck
-CLUSTER_CONF_DIR=../kctf-conf/${PROJECT}_${ZONE}_${CLUSTER_NAME}/${CHALLENGE_NAME}
+DEPLOYMENT_CONF_DIR=gen/deployment-conf/${PROJECT}_${ZONE}_${CLUSTER_NAME}
 
 docker: gen/docker-image
 
@@ -27,9 +27,9 @@ gen/autoscaling: k8s/autoscaling.yaml | cluster-config
 	kubectl apply -f k8s/autoscaling.yaml
 	touch $@
 
-gen/deployment: ${CLUSTER_CONF_DIR} gen/image-pushed gen/healthcheck-image-pushed k8s/containers.yaml | cluster-config
+gen/deployment: ${DEPLOYMENT_CONF_DIR} gen/image-pushed gen/healthcheck-image-pushed k8s/containers.yaml | cluster-config
 	kubectl get "deployments/${CHALLENGE_NAME}" >/dev/null 2>&1 && kubectl delete "deployments/${CHALLENGE_NAME}"
-	kubectl create -k ${CLUSTER_CONF_DIR}
+	kubectl create -k ${DEPLOYMENT_CONF_DIR}
 	touch $@
 
 gen/secrets: $(shell find secrets) | cluster-config
@@ -95,7 +95,7 @@ gen/healthcheck-config: $(shell find healthcheck/config) | cluster-config
 
 define CLUSTER_KUSTOMIZATION
 bases:
-- "../../../${CHALLENGE_NAME}/k8s"
+- "../../../k8s"
 patchesStrategicMerge:
 - "update_image_name.yaml"
 endef
@@ -117,10 +117,10 @@ endef
 
 export CLUSTER_KUSTOMIZATION
 export UPDATE_IMAGE_NAME
-${CLUSTER_CONF_DIR}: | cluster-config
-	mkdir "${CLUSTER_CONF_DIR}"
-	echo "$${CLUSTER_KUSTOMIZATION}" > "${CLUSTER_CONF_DIR}/kustomization.yaml"
-	echo "$${UPDATE_IMAGE_NAME}" > "${CLUSTER_CONF_DIR}/update_image_name.yaml"
+${DEPLOYMENT_CONF_DIR}: | cluster-config
+	mkdir -p "${DEPLOYMENT_CONF_DIR}"
+	echo "$${CLUSTER_KUSTOMIZATION}" > "${DEPLOYMENT_CONF_DIR}/kustomization.yaml"
+	echo "$${UPDATE_IMAGE_NAME}" > "${DEPLOYMENT_CONF_DIR}/update_image_name.yaml"
 
 cluster-config:
 	@if [ "${PROJECT}" = "CONFIGMISSING" ]; then
