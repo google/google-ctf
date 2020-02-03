@@ -44,7 +44,6 @@ deploy-secrets: $(shell find secrets) | cluster-config
 
 deploy-config: $(shell find config) | cluster-config
 	kubectl apply -k config
-	touch $@
 
 gen/docker-image: Dockerfile $(shell find files) ../kctf-conf/base/nsjail-docker/gen/docker-image
 	docker build -t "kctf-chal-${CHALLENGE_NAME}" .
