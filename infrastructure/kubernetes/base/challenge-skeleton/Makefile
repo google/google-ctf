@@ -2,6 +2,7 @@
 
 SHELL := bash
 .ONESHELL:
+.SHELLFLAGS = -e -c
 
 PROJECT:=CONFIGMISSING
 CLUSTER_NAME:=CONFIGMISSING
@@ -69,8 +70,8 @@ ssh: .cluster-config
 	kubectl exec deployment/${CHALLENGE_NAME} -c challenge -it /bin/bash
 
 clean:
-	- rm -R gen/*
-	- rm -R healthcheck/gen/*
+	rm -R gen/* || true
+	rm -R healthcheck/gen/* || true
 
 .deploy: .autoscaling .deployment .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .cluster-config .maybe-expose
 
@@ -130,11 +131,12 @@ healthcheck/gen/exploit.cpio.enc: healthcheck/gen/exploit.cpio healthcheck/gen/e
 
 healthcheck/gen/exploit.cpio: $(shell find healthcheck/exploit)
 	pushd ${@D}
-	- rm -R exploit 2>/dev/null
+	rm -R exploit 2>/dev/null || true
 	cp -R ../exploit .
 	for f in $$(find exploit); do
 	  TZ="UTC" touch -a -m -t 198001010000.00 $$f
 	done
+	rm exploit.cpio || true
 	find exploit -print0 | sort -z | cpio -0 --reproducible -R 0:0 -o > exploit.cpio
 	rm -R exploit
 	popd
