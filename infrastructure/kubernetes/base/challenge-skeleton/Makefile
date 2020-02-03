@@ -1,4 +1,4 @@
-.PHONY: deploy do-deploy docker maybe-expose cluster-config deploy-healthcheck deployment autoscaling deploy-secrets deploy-config healthcheck-secrets healthcheck-exploit-key-secret healthcheck-config FORCE
+.PHONY: deploy .do-deploy docker .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -17,18 +17,18 @@ docker: gen/docker-image
 deploy:
 	source chal.conf
 	if [ $${DEPLOY} = "true" ]; then
-	  $(MAKE) do-deploy
+	  $(MAKE) .do-deploy
 	else
 	  echo "skipping deployment: DEPLOY=\"$${DEPLOY}\""
 	fi
-
-do-deploy: autoscaling deployment deploy-secrets deploy-config healthcheck-secrets healthcheck-exploit-key-secret healthcheck-config cluster-config maybe-expose
 
 clean:
 	- rm -R gen/*
 	- rm -R healthcheck/gen/*
 
-maybe-expose: | cluster-config
+.do-deploy: .autoscaling .deployment .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .cluster-config .maybe-expose
+
+.maybe-expose: | .cluster-config
 	source chal.conf
 	if [ "$${PUBLIC}" = "true" ]; then
 	  kubectl apply -f k8s/network.yaml
@@ -36,40 +36,44 @@ maybe-expose: | cluster-config
 	  kubectl get "service/${CHALLENGE_NAME}" >/dev/null 2>&1 && kubectl delete "service/${CHALLENGE_NAME}" || true
 	fi
 
-autoscaling: | cluster-config
+.autoscaling: | .cluster-config
 	kubectl apply -f k8s/autoscaling.yaml
 
-deployment: ${DEPLOYMENT_CONF_DIR} ${CLUSTER_GEN}/image-pushed ${CLUSTER_GEN}/remote-image ${CLUSTER_GEN}/healthcheck-image-pushed ${CLUSTER_GEN}/remote-healthcheck-image | cluster-config
+.deployment: ${DEPLOYMENT_CONF_DIR} ${CLUSTER_GEN}/image-pushed ${CLUSTER_GEN}/remote-image ${CLUSTER_GEN}/healthcheck-image-pushed ${CLUSTER_GEN}/remote-healthcheck-image | .cluster-config
 	kubectl apply -k ${DEPLOYMENT_CONF_DIR}
 	# update the challenge container if the image changed
-	PUSHED_IMAGE="$$(cat ${CLUSTER_GEN}/image-pushed)"
+	PUSHED_IMAGE="$$(cat ${CLUSTER_GEN}/image-tagged)"
 	CHAL_IMAGE="$$(cat ${CLUSTER_GEN}/remote-image)"
 	if [ $${CHAL_IMAGE} != $${PUSHED_IMAGE} ]; then
 	  kubectl set image "deployment/${CHALLENGE_NAME}" "challenge=$${PUSHED_IMAGE}"
 	fi
 	# update the healthcheck container if the image changed
-	PUSHED_HEALTHCHECK_IMAGE="$$(cat ${CLUSTER_GEN}/healthcheck-image-pushed)"
+	PUSHED_HEALTHCHECK_IMAGE="$$(cat ${CLUSTER_GEN}/healthcheck-image-tagged)"
 	HEALTHCHECK_IMAGE="$$(cat ${CLUSTER_GEN}/remote-healthcheck-image)"
 	if [ $${HEALTHCHECK_IMAGE} != $${PUSHED_HEALTHCHECK_IMAGE} ]; then
 	  kubectl set image "deployment/${CHALLENGE_NAME}" "healthcheck=$${HEALTHCHECK_IMAGE}"
 	fi
 
-deploy-secrets: $(shell find secrets) | cluster-config
+.secrets: $(shell find secrets) | .cluster-config
 	kubectl apply -k secrets
 
-deploy-config: $(shell find config) | cluster-config
+.config: $(shell find config) | .cluster-config
 	kubectl apply -k config
 
 gen/docker-image: Dockerfile $(shell find files) ../kctf-conf/base/nsjail-docker/gen/docker-image
 	docker build -t "kctf-chal-${CHALLENGE_NAME}" .
 	echo $$(docker image ls "kctf-chal-${CHALLENGE_NAME}" -q) > $@
 
-${CLUSTER_GEN}/image-pushed: gen/docker-image | cluster-config
+${CLUSTER_GEN}/image-tagged: gen/docker-image | .cluster-config
 	IMAGE_ID="$$(cat gen/docker-image)"
 	IMAGE_TAG="eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}:$${IMAGE_ID}"
 	docker tag "kctf-chal-${CHALLENGE_NAME}" "$${IMAGE_TAG}"
-	docker push "$${IMAGE_TAG}"
 	echo -n "$${IMAGE_TAG}" > $@
+
+${CLUSTER_GEN}/image-pushed: ${CLUSTER_GEN}/image-tagged
+	IMAGE_TAG="$$(cat ${CLUSTER_GEN}/image-tagged)"
+	docker push "$${IMAGE_TAG}"
+	touch $@
 
 gen/healthcheck-docker-image: healthcheck/Dockerfile healthcheck/gen/exploit.cpio.enc $(shell find healthcheck/files)
 	docker build -t "kctf-healthcheck-${CHALLENGE_NAME}" healthcheck
@@ -92,23 +96,27 @@ healthcheck/gen/exploit.cpio: $(shell find healthcheck/exploit)
 healthcheck/gen/exploit.key: healthcheck/gen/exploit.cpio
 	sha256sum healthcheck/gen/exploit.cpio | awk '{print $$1}' > $@
 
-${CLUSTER_GEN}/healthcheck-image-pushed: gen/healthcheck-docker-image | cluster-config
+${CLUSTER_GEN}/healthcheck-image-tagged: gen/healthcheck-docker-image | .cluster-config
 	IMAGE_ID="$$(cat gen/healthcheck-docker-image)"
 	IMAGE_TAG="eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}-healthcheck"
-	docker tag "kctf-healthcheck-${CHALLENGE_NAME}" "${IMAGE_TAG}"
-	docker push "${IMAGE_TAG}"
+	docker tag "kctf-healthcheck-${CHALLENGE_NAME}" "$${IMAGE_TAG}"
 	echo -n "$${IMAGE_TAG}" > $@
 
-healthcheck/gen/exploit-key.yaml: healthcheck/gen/exploit.key | cluster-config
+${CLUSTER_GEN}/healthcheck-image-pushed: ${CLUSTER_GEN}/healthcheck-image-tagged
+	IMAGE_TAG="$$(cat ${CLUSTER_GEN}/healthcheck-image-tagged)"
+	docker push "${IMAGE_TAG}"
+	touch $@
+
+healthcheck/gen/exploit-key.yaml: healthcheck/gen/exploit.key | .cluster-config
 	kubectl create secret generic "${CHALLENGE_NAME}-healthcheck-exploit-key" --from-file=exploit.key=healthcheck/gen/exploit.key --dry-run -o yaml > $@
 
-healthcheck-exploit-key-secret: healthcheck/gen/exploit-key.yaml | cluster-config
+.healthcheck-exploit-key-secret: healthcheck/gen/exploit-key.yaml | .cluster-config
 	kubectl apply -f healthcheck/gen/exploit-key.yaml
 
-healthcheck-secrets: $(shell find healthcheck/secrets) | cluster-config
+.healthcheck-secrets: $(shell find healthcheck/secrets) | .cluster-config
 	kubectl apply -k healthcheck/secrets
 
-healthcheck-config: $(shell find healthcheck/config) | cluster-config
+.healthcheck-config: $(shell find healthcheck/config) | .cluster-config
 	kubectl apply -k healthcheck/config
 
 ../kctf-conf/base/nsjail-docker/gen/docker-image: ../kctf-conf/base/nsjail-docker/Dockerfile $(shell find ../kctf-conf/base/nsjail-docker/files)
@@ -138,7 +146,7 @@ endef
 
 export CLUSTER_KUSTOMIZATION
 export UPDATE_IMAGE_NAME
-${DEPLOYMENT_CONF_DIR}: ${CLUSTER_GEN}/remote-image ${CLUSTER_GEN}/remote-healthcheck-image | cluster-config
+${DEPLOYMENT_CONF_DIR}: ${CLUSTER_GEN}/remote-image ${CLUSTER_GEN}/remote-healthcheck-image | .cluster-config
 	mkdir -p $@
 	echo "$${CLUSTER_KUSTOMIZATION}" > "${DEPLOYMENT_CONF_DIR}/kustomization.yaml"
 	CHAL_IMAGE="$$(cat ${CLUSTER_GEN}/remote-image)"
@@ -146,19 +154,19 @@ ${DEPLOYMENT_CONF_DIR}: ${CLUSTER_GEN}/remote-image ${CLUSTER_GEN}/remote-health
 	echo "$${UPDATE_IMAGE_NAME}" | sed "s#CHAL_IMAGE_PLACEHOLDER#$${CHAL_IMAGE}#" | sed "s#HEALTHCHECK_IMAGE_PLACEHOLDER#$${HEALTHCHECK_IMAGE}#" > "${DEPLOYMENT_CONF_DIR}/update_image_name.yaml"
 	touch $@
 
-${CLUSTER_GEN}/remote-image: ${CLUSTER_GEN}/image-pushed FORCE
-	PUSHED_IMAGE="$$(cat ${CLUSTER_GEN}/image-pushed)"
+${CLUSTER_GEN}/remote-image: ${CLUSTER_GEN}/image-tagged .FORCE
+	PUSHED_IMAGE="$$(cat ${CLUSTER_GEN}/image-tagged)"
 	(kubectl get deployment/${CHALLENGE_NAME} -o jsonpath='{.spec.template.spec.containers[?(@.name == "challenge")].image}' 2>/dev/null || echo -n "$${PUSHED_IMAGE}") > $@
 
-${CLUSTER_GEN}/remote-healthcheck-image: ${CLUSTER_GEN}/healthcheck-image-pushed FORCE
-	PUSHED_IMAGE="$$(cat ${CLUSTER_GEN}/healthcheck-image-pushed)"
+${CLUSTER_GEN}/remote-healthcheck-image: ${CLUSTER_GEN}/healthcheck-image-tagged .FORCE
+	PUSHED_IMAGE="$$(cat ${CLUSTER_GEN}/healthcheck-image-tagged)"
 	(kubectl get deployment/${CHALLENGE_NAME} -o jsonpath='{.spec.template.spec.containers[?(@.name == "healthcheck")].image}' 2>/dev/null || echo -n "$${PUSHED_IMAGE}") > $@
 
-cluster-config:
+.cluster-config:
 	@if [ "${PROJECT}" = "CONFIGMISSING" ]; then
 	@  echo 'error: config not loaded'
 	@  exit 1
 	@fi
 	mkdir -p ${CLUSTER_GEN}
 
-FORCE:
+.FORCE:
