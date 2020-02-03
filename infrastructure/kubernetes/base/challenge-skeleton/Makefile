@@ -1,4 +1,4 @@
-.PHONY: deploy .do-deploy docker ip .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
+.PHONY: start stop docker ip clean .deploy .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -14,13 +14,21 @@ DEPLOYMENT_CONF_DIR=${CLUSTER_GEN}/deployment-conf
 
 docker: gen/docker-image
 
-deploy:
+start:
 	source chal.conf
 	if [ $${DEPLOY} = "true" ]; then
-	  $(MAKE) .do-deploy
+	  $(MAKE) .deploy
 	else
 	  echo "skipping deployment: DEPLOY=\"$${DEPLOY}\""
 	fi
+
+stop: .cluster-config
+	for resource_type in deployment service secret configMap hpa; do
+	  kubectl get "$${resource_type}/${CHALLENGE_NAME}" >/dev/null 2>&1 && kubectl delete "$${resource_type}/${CHALLENGE_NAME}" || true
+	done
+	for resouce in "secret/${CHALLENGE_NAME}-healthcheck-exploit-key" "secret/${CHALLENGE_NAME}-healthcheck-secrets" "configMap/${CHALLENGE_NAME}-healthcheck-config"; do
+	  kubectl get "$${resource}" >/dev/null 2>&1 && kubectl delete "$${resource}" || true
+	done
 
 ip: .cluster-config
 	LB_IP=""
@@ -30,19 +38,11 @@ ip: .cluster-config
 	done
 	echo "$${LB_IP}"
 
-kill: .cluster-config
-	for resource_type in deployment service secret configMap hpa; do
-	  kubectl get "$${resource_type}/${CHALLENGE_NAME}" >/dev/null 2>&1 && kubectl delete "$${resource_type}/${CHALLENGE_NAME}" || true
-	done
-	for resouce in "secret/${CHALLENGE_NAME}-healthcheck-exploit-key" "secret/${CHALLENGE_NAME}-healthcheck-secrets" "configMap/${CHALLENGE_NAME}-healthcheck-config"; do
-	  kubectl get "$${resource}" >/dev/null 2>&1 && kubectl delete "$${resource}" || true
-	done
-
 clean:
 	- rm -R gen/*
 	- rm -R healthcheck/gen/*
 
-.do-deploy: .autoscaling .deployment .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .cluster-config .maybe-expose
+.deploy: .autoscaling .deployment .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .cluster-config .maybe-expose
 
 .maybe-expose: | .cluster-config
 	source chal.conf

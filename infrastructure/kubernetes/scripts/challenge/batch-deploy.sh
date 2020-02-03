@@ -21,7 +21,7 @@ for dir in ${CHAL_DIR}/*; do
     echo
     echo "= Deleting all resources for ${CHALLENGE_NAME} ="
     echo
-    make -C ${dir} kill
+    make -C ${dir} stop
     continue
   fi
 
@@ -29,7 +29,7 @@ for dir in ${CHAL_DIR}/*; do
   echo "= Deploying challenge ${CHALLENGE_NAME} ="
   echo
 
-  make -j -C "${dir}" deploy
+  make -j -C "${dir}" start
 done
 
 echo
