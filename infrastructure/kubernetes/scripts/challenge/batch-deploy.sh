@@ -13,10 +13,9 @@ for dir in ${CHAL_DIR}/*; do
   if [ ! -f "${dir}/chal.conf" ]; then
     continue
   fi
+  source "${dir}/chal.conf"
 
   CHALLENGE_NAME=$(basename "${dir}")
-  CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
-  source "${CHALLENGE_DIR}/chal.conf"
 
   if [ ! "${DEPLOY}" = "true" ]; then
     echo
@@ -30,7 +29,7 @@ for dir in ${CHAL_DIR}/*; do
   echo "= Deploying challenge ${CHALLENGE_NAME} ="
   echo
 
-  make -j -C "${CHALLENGE_DIR}" deploy
+  make -j -C "${dir}" deploy
 done
 
 echo
@@ -42,10 +41,7 @@ for dir in ${CHAL_DIR}/*; do
   if [ ! -f "${dir}/chal.conf" ]; then
     continue
   fi
-
-  CHALLENGE_NAME=$(basename "${dir}")
-  CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
-  source "${CHALLENGE_DIR}/chal.conf"
+  source "${dir}/chal.conf"
 
   if [ ! "${DEPLOY}" = "true" ]; then
     continue
@@ -55,7 +51,9 @@ for dir in ${CHAL_DIR}/*; do
     continue
   fi
 
-  LB_IP=$($DIR/scripts/challenge/ip.sh "${CHALLENGE_NAME}")
+  CHALLENGE_NAME=$(basename "${dir}")
+
+  LB_IP=$(make -C "${dir}" ip)
   echo "${CHALLENGE_NAME}: ${LB_IP}"
 
 done

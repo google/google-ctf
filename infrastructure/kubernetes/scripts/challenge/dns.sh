@@ -14,15 +14,12 @@ fi
 CHALLENGE_NAME=$1
 CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
 
-pushd $CHALLENGE_DIR/k8s
 if [ ! -z "${DOMAIN_NAME}" ]
 then
-    LB_IP=$($DIR/scripts/challenge/ip.sh "${CHALLENGE_NAME}")
+    LB_IP=$(make -C "${CHALLENGE_DIR}" ip)
     gcloud dns record-sets transaction start --zone="${CLUSTER_NAME}-dns-zone"
     gcloud dns record-sets transaction add --zone="${CLUSTER_NAME}-dns-zone" --ttl 30 --name "${CHALLENGE_NAME}.${DOMAIN_NAME}." --type A "${LB_IP}"
     gcloud dns record-sets transaction execute --zone="${CLUSTER_NAME}-dns-zone"
 else
     echo "DOMAIN_NAME not defined. Run ./scripts/setup/config.sh"
 fi
-
-popd

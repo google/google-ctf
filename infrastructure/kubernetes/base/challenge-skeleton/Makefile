@@ -1,4 +1,4 @@
-.PHONY: deploy .do-deploy docker .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
+.PHONY: deploy .do-deploy docker ip .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -21,6 +21,14 @@ deploy:
 	else
 	  echo "skipping deployment: DEPLOY=\"$${DEPLOY}\""
 	fi
+
+ip: .cluster-config
+	LB_IP=""
+	while [ -z "$${LB_IP}" ]; do
+	  LB_IP=$$(kubectl get "service/${CHALLENGE_NAME}" -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+	  sleep 3
+	done
+	echo "$${LB_IP}"
 
 clean:
 	- rm -R gen/*
