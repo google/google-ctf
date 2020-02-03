@@ -21,7 +21,7 @@ for dir in ${CHAL_DIR}/*; do
     echo
     echo "= Deleting all resources for ${CHALLENGE_NAME} ="
     echo
-    ${DIR}/scripts/challenge/kill.sh "${CHALLENGE_NAME}"
+    make -C ${dir} kill
     continue
   fi
 

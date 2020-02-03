@@ -30,6 +30,14 @@ ip: .cluster-config
 	done
 	echo "$${LB_IP}"
 
+kill: .cluster-config
+	for resource_type in deployment service secret configMap hpa; do
+	  kubectl get "$${resource_type}/${CHALLENGE_NAME}" >/dev/null 2>&1 && kubectl delete "$${resource_type}/${CHALLENGE_NAME}" || true
+	done
+	for resouce in "secret/${CHALLENGE_NAME}-healthcheck-exploit-key" "secret/${CHALLENGE_NAME}-healthcheck-secrets" "configMap/${CHALLENGE_NAME}-healthcheck-config"; do
+	  kubectl get "$${resource}" >/dev/null 2>&1 && kubectl delete "$${resource}" || true
+	done
+
 clean:
 	- rm -R gen/*
 	- rm -R healthcheck/gen/*
