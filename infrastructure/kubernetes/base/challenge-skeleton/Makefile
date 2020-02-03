@@ -104,7 +104,7 @@ ${CLUSTER_GEN}/healthcheck-image-tagged: gen/healthcheck-docker-image | .cluster
 
 ${CLUSTER_GEN}/healthcheck-image-pushed: ${CLUSTER_GEN}/healthcheck-image-tagged
 	IMAGE_TAG="$$(cat ${CLUSTER_GEN}/healthcheck-image-tagged)"
-	docker push "${IMAGE_TAG}"
+	docker push "$${IMAGE_TAG}"
 	touch $@
 
 healthcheck/gen/exploit-key.yaml: healthcheck/gen/exploit.key | .cluster-config
