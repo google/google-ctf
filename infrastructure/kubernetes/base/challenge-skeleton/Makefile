@@ -1,4 +1,4 @@
-.PHONY: start stop docker ip clean .deploy .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
+.PHONY: start stop docker ip logs clean .deploy .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -37,6 +37,9 @@ ip: .cluster-config
 	  sleep 3
 	done
 	echo "$${LB_IP}"
+
+logs: .cluster-config
+	kubectl logs -l "app=${CHALLENGE_NAME}"
 
 clean:
 	- rm -R gen/*
