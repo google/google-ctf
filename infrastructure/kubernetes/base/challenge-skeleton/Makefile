@@ -1,4 +1,4 @@
-.PHONY: start stop docker ip logs clean .deploy .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
+.PHONY: start stop docker ip logs ssh clean .deploy .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -40,6 +40,9 @@ ip: .cluster-config
 
 logs: .cluster-config
 	kubectl logs -l "app=${CHALLENGE_NAME}"
+
+ssh: .cluster-config
+	kubectl exec deployment/${CHALLENGE_NAME} -c challenge -it /bin/bash
 
 clean:
 	- rm -R gen/*
