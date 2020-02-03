@@ -22,12 +22,6 @@ svn checkout https://github.com/google/google-ctf/trunk/infrastructure/kubernete
 PATH=$PATH:$PWD/kubernetes/bin
 ```
 
-### Setup nsjail configuration
-```
-sudo mkdir -p /sys/fs/cgroup/memory/NSJAIL /sys/fs/cgroup/pids/NSJAIL /sys/fs/cgroup/cpu/NSJAIL
-sudo chmod o+w /sys/fs/cgroup/*/NSJAIL
-```
-
 ### Create basic demo challenge
 ```
 kctf-setup-chal-dir $(mktemp -d)
@@ -129,13 +123,6 @@ docker logs CONTAINER_NAME
 replacing CONTAINER_NAME with the name of the last ran container.
 
 That will output the logs of the last time the container ran.
-
-#### cgroup directory not found
-if you see errors like:
-```
-[W][2020-01-31T19:49:47+0000][1] bool cgroup::createCgroup(const string&, pid_t)():43 mkdir('/cgroup/memory/NSJAIL/NSJAIL.10', 0700) failed: No such file or directory
-```
-That probably means the NSJAIL cgroup directories didn't get created in the nsjail setup step above, try running the [setup nsjail configuration](#setup-nsjail-configuration) step again and then run `kctf-chal-test-docker` again.
 
 #### CLONE error in nsjail
 

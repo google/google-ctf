@@ -22,11 +22,8 @@ spec:
         image: google/apparmor-loader:latest
         securityContext:
           privileged: true
-        command: ["sh", "-c", "for res in cpu memory pids; do mkdir -p -m 0777 /sys/fs/cgroup/${res}/NSJAIL; done && while true; do for f in /profiles/*; do echo \"loading $f\"; apparmor_parser -r $f; sleep 30; done; done"]
+        command: ["sh", "-c", "while true; do for f in /profiles/*; do echo \"loading $f\"; apparmor_parser -r $f; sleep 30; done; done"]
         volumeMounts:
-        - name: cgroup
-          mountPath: /sys/fs/cgroup
-          readOnly: false
         - name: sys
           mountPath: /sys
           readOnly: true
@@ -37,9 +34,6 @@ spec:
           mountPath: /profiles
           readOnly: true
       volumes:
-      - name: cgroup
-        hostPath:
-          path: /sys/fs/cgroup
       - name: sys
         hostPath:
           path: /sys

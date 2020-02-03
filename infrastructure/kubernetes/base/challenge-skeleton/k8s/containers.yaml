@@ -28,6 +28,11 @@ spec:
             add: ["SYS_ADMIN"]
           readOnlyRootFilesystem: true
         command:
+        resources:
+          limits:
+            cpu: "1.5"
+          requests:
+            cpu: "0.9"
         volumeMounts:
         - name: "secrets"
           mountPath: "/secrets"
@@ -35,18 +40,6 @@ spec:
         - name: "config"
           mountPath: "/config"
           readOnly: true
-        - name: "cgroup"
-          subPath: "cpu/NSJAIL/challenge-skeleton"
-          mountPath: "/cgroup/cpu/NSJAIL"
-          readOnly: false
-        - name: "cgroup"
-          subPath: "memory/NSJAIL/challenge-skeleton"
-          mountPath: "/cgroup/memory/NSJAIL"
-          readOnly: false
-        - name: "cgroup"
-          subPath: "pids/NSJAIL/challenge-skeleton"
-          mountPath: "/cgroup/pids/NSJAIL"
-          readOnly: false
         livenessProbe:
           failureThreshold: 2
           httpGet:
@@ -58,6 +51,11 @@ spec:
       - name: "healthcheck"
         image: "challenge-skeleton-healthcheck"
         command:
+        resources:
+          limits:
+            cpu: "0.5"
+          requests:
+            cpu: "0.1"
         volumeMounts:
         - name: "healthcheck-secrets"
           mountPath: "/secrets"
@@ -68,17 +66,6 @@ spec:
         - name: "healthcheck-config"
           mountPath: "/config"
           readOnly: true
-      initContainers:
-      - name: "cgroup-setup"
-        image: "busybox"
-        securityContext:
-          capabilities:
-            add: ["SYS_ADMIN"]
-        command: ["sh", "-c", "for res in cpu memory pids; do mkdir -m 0777 -p /sys/fs/cgroup/${res}/NSJAIL/challenge-skeleton; done"]
-        volumeMounts:
-        - name: "cgroup"
-          mountPath: "/sys/fs/cgroup"
-          readOnly: false
       volumes:
       - name: "secrets"
         secret:
@@ -89,9 +76,6 @@ spec:
         configMap:
           # must be called ${challenge-dir}-config
           name: "challenge-skeleton-config"
-      - name: "cgroup"
-        hostPath:
-          path: /sys/fs/cgroup
       - name: "healthcheck-secrets"
         secret:
           # must be called ${challenge-dir}-healthcheck-secrets
