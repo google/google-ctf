@@ -120,7 +120,7 @@ healthcheck/gen/exploit-key.yaml: healthcheck/gen/exploit.key | .cluster-config
 	kubectl apply -k healthcheck/config
 
 ../kctf-conf/base/nsjail-docker/gen/docker-image: ../kctf-conf/base/nsjail-docker/Dockerfile $(shell find ../kctf-conf/base/nsjail-docker/files)
-	make -C ${@D}/.. gen/docker-image
+	$(MAKE) -C ${@D}/.. gen/docker-image
 
 define CLUSTER_KUSTOMIZATION
 bases:
