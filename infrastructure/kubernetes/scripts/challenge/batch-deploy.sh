@@ -29,8 +29,8 @@ for dir in ${CHAL_DIR}/*; do
   echo
   echo "= Deploying challenge ${CHALLENGE_NAME} ="
   echo
-  export KCTF_DONT_WAIT_LB="true"
-  ${DIR}/scripts/challenge/deploy.sh "${CHALLENGE_NAME}"
+
+  make -j -C "${CHALLENGE_DIR}" deploy
 done
 
 echo
