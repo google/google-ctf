@@ -1,4 +1,4 @@
-.PHONY: deploy docker expose cluster-config deploy-healthcheck network deployment autoscaling deploy-secrets deploy-config healthcheck-secrets healthcheck-exploit-key-secret healthcheck-config FORCE
+.PHONY: deploy do-deploy docker maybe-expose cluster-config deploy-healthcheck deployment autoscaling deploy-secrets deploy-config healthcheck-secrets healthcheck-exploit-key-secret healthcheck-config FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -14,16 +14,27 @@ DEPLOYMENT_CONF_DIR=${CLUSTER_GEN}/deployment-conf
 
 docker: gen/docker-image
 
-deploy: autoscaling deployment deploy-secrets deploy-config healthcheck-secrets healthcheck-exploit-key-secret healthcheck-config cluster-config
+deploy:
+	source chal.conf
+	if [ $${DEPLOY} = "true" ]; then
+	  $(MAKE) do-deploy
+	else
+	  echo "skipping deployment: DEPLOY=\"$${DEPLOY}\""
+	fi
 
-expose: network deploy cluster-config
+do-deploy: autoscaling deployment deploy-secrets deploy-config healthcheck-secrets healthcheck-exploit-key-secret healthcheck-config cluster-config maybe-expose
 
 clean:
 	- rm -R gen/*
 	- rm -R healthcheck/gen/*
 
-network: | cluster-config
-	kubectl apply -f k8s/network.yaml
+maybe-expose: | cluster-config
+	source chal.conf
+	if [ "$${PUBLIC}" = "true" ]; then
+	  kubectl apply -f k8s/network.yaml
+	else
+	  kubectl get "service/${CHALLENGE_NAME}" >/dev/null 2>&1 && kubectl delete "service/${CHALLENGE_NAME}" || true
+	fi
 
 autoscaling: | cluster-config
 	kubectl apply -f k8s/autoscaling.yaml

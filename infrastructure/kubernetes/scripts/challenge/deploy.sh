@@ -17,20 +17,9 @@ CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
 
 pushd "${CHALLENGE_DIR}"
 
-source chal.conf
+source "${CHALLENGE_DIR}/chal.conf"
 
-if [ ! "${DEPLOY}" = "true" ]; then
-  echo "aborting: DEPLOY=${DEPLOY} in chal.conf"
-  exit 1
-fi
-
-if [ "${PUBLIC}" = "true" ]; then
-  make -C "${CHALLENGE_DIR}" -j expose
-else
-  make -C "${CHALLENGE_DIR}" -j deploy
-  # if not marked as public, try to delete an existing load balancer
-  delete_resource "service/${CHALLENGE_NAME}"
-fi
+make -C "${CHALLENGE_DIR}" -j deploy
 
 if [ "${PUBLIC}" = "true" ]; then
   echo '== CHALLENGE IS PUBLIC =='
