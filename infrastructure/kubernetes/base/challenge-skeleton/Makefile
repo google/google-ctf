@@ -1,4 +1,4 @@
-.PHONY: deploy docker expose cluster-config deploy-healthcheck network deployment autoscaling deploy-secrets deploy-config healthcheck-secrets healthcheck-exploit-key-secret healthcheck-config
+.PHONY: deploy docker expose cluster-config deploy-healthcheck network deployment autoscaling deploy-secrets deploy-config healthcheck-secrets healthcheck-exploit-key-secret healthcheck-config FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -128,9 +128,9 @@ ${DEPLOYMENT_CONF_DIR}: ${CLUSTER_GEN}/remote-image | cluster-config
 	echo "$${UPDATE_IMAGE_NAME}" | sed "s#CHAL_IMAGE_PLACEHOLDER#$${CHAL_IMAGE}#" > "${DEPLOYMENT_CONF_DIR}/update_image_name.yaml"
 	touch $@
 
-# TODO instead of busybox, use the current image as the fallback
-${CLUSTER_GEN}/remote-image: FORCE
-	(kubectl get deployment/${CHALLENGE_NAME} -o jsonpath='{.spec.template.spec.containers[?(@.name == "challenge")].image}' 2>/dev/null || echo -n 'busybox') > $@
+${CLUSTER_GEN}/remote-image: ${CLUSTER_GEN}/image-pushed FORCE
+	PUSHED_IMAGE="$$(cat ${CLUSTER_GEN}/image-pushed)"
+	(kubectl get deployment/${CHALLENGE_NAME} -o jsonpath='{.spec.template.spec.containers[?(@.name == "challenge")].image}' 2>/dev/null || echo -n "$${PUSHED_IMAGE}") > $@
 
 cluster-config:
 	@if [ "${PROJECT}" = "CONFIGMISSING" ]; then
