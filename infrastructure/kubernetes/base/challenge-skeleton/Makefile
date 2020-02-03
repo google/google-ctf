@@ -1,4 +1,4 @@
-.PHONY: start stop docker ip logs ssh clean .deploy .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
+.PHONY: start stop docker ip status logs ssh clean .deploy .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -37,6 +37,30 @@ ip: .cluster-config
 	  sleep 3
 	done
 	echo "$${LB_IP}"
+
+status: .cluster-config
+	@echo "= INSTANCES / PODs ="
+	@echo
+	@echo "Challenge execution status"
+	@echo "This shows you how many instances of the challenges are running."
+	@echo
+	@kubectl get pods -l "app=${CHALLENGE_NAME}" -o wide
+	@echo
+	@echo
+	@echo "= DEPLOYMENTS ="
+	@echo
+	@echo "Challenge deployment status"
+	@echo "This shows you if the challenge was deployed to the cluster."
+	@echo
+	@kubectl get deployments -l "app=${CHALLENGE_NAME}" -o wide
+	@echo
+	@echo "= EXTERNAL SERVICES ="
+	@echo
+	@echo "Challenge external status"
+	@echo "This shows you if the challenge is exposed externally."
+	@echo
+	@kubectl get services -l "app=${CHALLENGE_NAME}" -o wide
+	@echo
 
 logs: .cluster-config
 	kubectl logs -l "app=${CHALLENGE_NAME}"
