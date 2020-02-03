@@ -63,7 +63,7 @@ status: .cluster-config
 	@echo
 
 logs: .cluster-config
-	kubectl logs -l "app=${CHALLENGE_NAME}"
+	kubectl logs -l "app=${CHALLENGE_NAME}" -c challenge
 
 ssh: .cluster-config
 	kubectl exec deployment/${CHALLENGE_NAME} -c challenge -it /bin/bash
