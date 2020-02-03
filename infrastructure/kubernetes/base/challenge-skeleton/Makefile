@@ -9,7 +9,6 @@ ZONE:=CONFIGMISSING
 -include ~/.config/kctf/cluster.conf
 
 CHALLENGE_NAME:=$(shell basename ${PWD})
-HEALTHCHECK_IMAGE_NAME=eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}-healthcheck
 CLUSTER_GEN=gen/${PROJECT}_${ZONE}_${CLUSTER_NAME}
 DEPLOYMENT_CONF_DIR=${CLUSTER_GEN}/deployment-conf
 
@@ -29,14 +28,19 @@ network: | cluster-config
 autoscaling: | cluster-config
 	kubectl apply -f k8s/autoscaling.yaml
 
-
-#TODO set image on healthcheck image too
-deployment: ${DEPLOYMENT_CONF_DIR} ${CLUSTER_GEN}/image-pushed ${CLUSTER_GEN}/remote-image ${CLUSTER_GEN}/healthcheck-image-pushed | cluster-config
+deployment: ${DEPLOYMENT_CONF_DIR} ${CLUSTER_GEN}/image-pushed ${CLUSTER_GEN}/remote-image ${CLUSTER_GEN}/healthcheck-image-pushed ${CLUSTER_GEN}/remote-healthcheck-image | cluster-config
 	kubectl apply -k ${DEPLOYMENT_CONF_DIR}
+	# update the challenge container if the image changed
 	PUSHED_IMAGE="$$(cat ${CLUSTER_GEN}/image-pushed)"
 	CHAL_IMAGE="$$(cat ${CLUSTER_GEN}/remote-image)"
 	if [ $${CHAL_IMAGE} != $${PUSHED_IMAGE} ]; then
 	  kubectl set image "deployment/${CHALLENGE_NAME}" "challenge=$${PUSHED_IMAGE}"
+	fi
+	# update the healthcheck container if the image changed
+	PUSHED_HEALTHCHECK_IMAGE="$$(cat ${CLUSTER_GEN}/healthcheck-image-pushed)"
+	HEALTHCHECK_IMAGE="$$(cat ${CLUSTER_GEN}/remote-healthcheck-image)"
+	if [ $${HEALTHCHECK_IMAGE} != $${PUSHED_HEALTHCHECK_IMAGE} ]; then
+	  kubectl set image "deployment/${CHALLENGE_NAME}" "healthcheck=$${HEALTHCHECK_IMAGE}"
 	fi
 
 deploy-secrets: $(shell find secrets) | cluster-config
@@ -78,12 +82,15 @@ healthcheck/gen/exploit.key: healthcheck/gen/exploit.cpio
 	sha256sum healthcheck/gen/exploit.cpio | awk '{print $$1}' > $@
 
 ${CLUSTER_GEN}/healthcheck-image-pushed: gen/healthcheck-docker-image | cluster-config
-	docker tag "kctf-healthcheck-${CHALLENGE_NAME}" "${HEALTHCHECK_IMAGE_NAME}"
-	docker push "${HEALTHCHECK_IMAGE_NAME}"
-	touch $@
+	IMAGE_ID="$$(cat gen/healthcheck-docker-image)"
+	IMAGE_TAG="eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}-healthcheck"
+	docker tag "kctf-healthcheck-${CHALLENGE_NAME}" "${IMAGE_TAG}"
+	docker push "${IMAGE_TAG}"
+	echo -n "$${IMAGE_TAG}" > $@
 
 healthcheck/gen/exploit-key.yaml: healthcheck/gen/exploit.key | cluster-config
 	kubectl create secret generic "${CHALLENGE_NAME}-healthcheck-exploit-key" --from-file=exploit.key=healthcheck/gen/exploit.key --dry-run -o yaml > $@
+
 healthcheck-exploit-key-secret: healthcheck/gen/exploit-key.yaml | cluster-config
 	kubectl apply -f healthcheck/gen/exploit-key.yaml
 
@@ -115,21 +122,26 @@ spec:
       - name: challenge
         image: CHAL_IMAGE_PLACEHOLDER
       - name: healthcheck
-        image: eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}-healthcheck
+        image: HEALTHCHECK_IMAGE_PLACEHOLDER
 endef
 
 export CLUSTER_KUSTOMIZATION
 export UPDATE_IMAGE_NAME
-${DEPLOYMENT_CONF_DIR}: ${CLUSTER_GEN}/remote-image | cluster-config
+${DEPLOYMENT_CONF_DIR}: ${CLUSTER_GEN}/remote-image ${CLUSTER_GEN}/remote-healthcheck-image | cluster-config
 	mkdir -p $@
 	echo "$${CLUSTER_KUSTOMIZATION}" > "${DEPLOYMENT_CONF_DIR}/kustomization.yaml"
 	CHAL_IMAGE="$$(cat ${CLUSTER_GEN}/remote-image)"
-	echo "$${UPDATE_IMAGE_NAME}" | sed "s#CHAL_IMAGE_PLACEHOLDER#$${CHAL_IMAGE}#" > "${DEPLOYMENT_CONF_DIR}/update_image_name.yaml"
+	HEALTHCHECK_IMAGE="$$(cat ${CLUSTER_GEN}/remote-healthcheck-image)"
+	echo "$${UPDATE_IMAGE_NAME}" | sed "s#CHAL_IMAGE_PLACEHOLDER#$${CHAL_IMAGE}#" | sed "s#HEALTHCHECK_IMAGE_PLACEHOLDER#$${HEALTHCHECK_IMAGE}#" > "${DEPLOYMENT_CONF_DIR}/update_image_name.yaml"
 	touch $@
 
 ${CLUSTER_GEN}/remote-image: ${CLUSTER_GEN}/image-pushed FORCE
 	PUSHED_IMAGE="$$(cat ${CLUSTER_GEN}/image-pushed)"
 	(kubectl get deployment/${CHALLENGE_NAME} -o jsonpath='{.spec.template.spec.containers[?(@.name == "challenge")].image}' 2>/dev/null || echo -n "$${PUSHED_IMAGE}") > $@
+
+${CLUSTER_GEN}/remote-healthcheck-image: ${CLUSTER_GEN}/healthcheck-image-pushed FORCE
+	PUSHED_IMAGE="$$(cat ${CLUSTER_GEN}/healthcheck-image-pushed)"
+	(kubectl get deployment/${CHALLENGE_NAME} -o jsonpath='{.spec.template.spec.containers[?(@.name == "healthcheck")].image}' 2>/dev/null || echo -n "$${PUSHED_IMAGE}") > $@
 
 cluster-config:
 	@if [ "${PROJECT}" = "CONFIGMISSING" ]; then
