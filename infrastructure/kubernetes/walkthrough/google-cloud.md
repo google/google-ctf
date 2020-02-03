@@ -37,7 +37,7 @@ You can use the default values for all other settings.
 ## And finally, create the cluster
 Run the following command:
 ```
-kctf-cluster-create
+kctf-cluster-start
 ```
 This only needs to be done once per CTF. A "cluster" is essentially a group of VMs with a "master" that defines what to run there.
 
@@ -160,7 +160,7 @@ You also probably want to kill the cluster, so you are not charged for the VMs a
 
 To kill the cluster, run:
 ```
-kctf-cluster-kill
+kctf-cluster-stop
 ```
 
 This will kill the cluster, and all the challenges with it, so only do that if you really want to kill it permanently.
