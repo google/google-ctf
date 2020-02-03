@@ -53,7 +53,7 @@ for dir in ${CHAL_DIR}/*; do
 
   CHALLENGE_NAME=$(basename "${dir}")
 
-  LB_IP=$(make -C "${dir}" ip)
+  LB_IP=$(make -s -C "${dir}" ip)
   echo "${CHALLENGE_NAME}: ${LB_IP}"
 
 done

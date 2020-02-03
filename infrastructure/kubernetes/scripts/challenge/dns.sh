@@ -16,7 +16,7 @@ CHALLENGE_DIR=$(readlink -f "${CHAL_DIR}/${CHALLENGE_NAME}")
 
 if [ ! -z "${DOMAIN_NAME}" ]
 then
-    LB_IP=$(make -C "${CHALLENGE_DIR}" ip)
+    LB_IP=$(make -s -C "${CHALLENGE_DIR}" ip)
     gcloud dns record-sets transaction start --zone="${CLUSTER_NAME}-dns-zone"
     gcloud dns record-sets transaction add --zone="${CLUSTER_NAME}-dns-zone" --ttl 30 --name "${CHALLENGE_NAME}.${DOMAIN_NAME}." --type A "${LB_IP}"
     gcloud dns record-sets transaction execute --zone="${CLUSTER_NAME}-dns-zone"
