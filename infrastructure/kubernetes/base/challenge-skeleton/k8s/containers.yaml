@@ -30,7 +30,7 @@ spec:
         command:
         resources:
           limits:
-            cpu: "1.5"
+            cpu: "1.8"
           requests:
             cpu: "0.9"
         volumeMounts:
@@ -53,7 +53,7 @@ spec:
         command:
         resources:
           limits:
-            cpu: "0.5"
+            cpu: "0.2"
           requests:
             cpu: "0.1"
         volumeMounts:
