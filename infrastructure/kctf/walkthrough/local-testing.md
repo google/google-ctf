@@ -19,7 +19,7 @@ sudo usermod -aG docker $USER && newgrp docker
 ```
 sudo apt-get install -y subversion
 svn checkout https://github.com/google/google-ctf/trunk/infrastructure/kubernetes
-PATH=$PATH:$PWD/kubernetes/bin
+PATH=$PATH:$PWD/kctf/bin
 ```
 
 ### Create basic demo challenge

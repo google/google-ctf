@@ -12,7 +12,7 @@ Before we start, you need to have billing set up, and the compute API enabled. L
 ### Add the bin directory to your PATH
 
 ```
-PATH="$PATH:$(pwd)/infrastructure/kubernetes/bin"
+PATH="$PATH:$(pwd)/infrastructure/kctf/bin"
 ```
 
 ### And run the configuration script

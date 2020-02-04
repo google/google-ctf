@@ -6,7 +6,7 @@ import secrets
 import sys
 import socket
 
-SOLVER_URL = 'https://github.com/google/google-ctf/blob/master/infrastructure/kubernetes/base/nsjail-docker/proof_of_work/pow.py'
+SOLVER_URL = 'https://github.com/google/google-ctf/blob/master/infrastructure/kctf/base/nsjail-docker/proof_of_work/pow.py'
 
 def stdin_is_localhost_socket():
     try:
