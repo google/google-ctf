@@ -9,7 +9,7 @@ CLUSTER_NAME:=CONFIGMISSING
 ZONE:=CONFIGMISSING
 -include ~/.config/kctf/cluster.conf
 
-CHALLENGE_NAME:=$(shell basename ${PWD})
+CHALLENGE_NAME:=$(shell basename ${CURDIR})
 CLUSTER_GEN=gen/${PROJECT}_${ZONE}_${CLUSTER_NAME}
 DEPLOYMENT_CONF_DIR=${CLUSTER_GEN}/deployment-conf
 
