@@ -109,9 +109,12 @@ clean:
 .config: $(shell find config) | .cluster-config
 	kubectl apply -k config
 
-gen/docker-image: Dockerfile $(shell find files) ../kctf-conf/base/nsjail-docker/gen/docker-image
+gen/docker-image: Dockerfile files gen/src $(shell find files) ../kctf-conf/base/nsjail-docker/gen/docker-image
 	docker build -t "kctf-chal-${CHALLENGE_NAME}" .
 	echo $$(docker image ls "kctf-chal-${CHALLENGE_NAME}" -q) > $@
+
+gen/src: .FORCE
+	$(MAKE) -C src ../gen/src
 
 ${CLUSTER_GEN}/image-tagged: gen/docker-image | .cluster-config
 	IMAGE_ID="$$(cat gen/docker-image)"
