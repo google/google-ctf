@@ -22,7 +22,7 @@ read_config() {
 }
 
 if [ -d ${CONFIG_DIR}/challenges ]; then
-    CHAL_DIR=$(readlink ${CONFIG_DIR}/challenges)
+    load_chal_dir
     echo
     echo "Configuring cluster for challenge directory ${CHAL_DIR}"
 else
@@ -32,13 +32,10 @@ else
     if [[ $CHAL_DIR == ~\/* ]]; then
         CHAL_DIR="${HOME}/${CHAL_DIR:2}"
     fi
-    if [ ! -d "${CHAL_DIR}" ]; then
-        echo "creating ${CHAL_DIR}"
-        mkdir -p "${CHAL_DIR}"
-    fi
 
-    CHAL_DIR=$(realpath -L "${CHAL_DIR}")
-    ln -nfs "${CHAL_DIR}" "${CONFIG_DIR}/challenges"
+    "${DIR}/scripts/setup/challenge-directory.sh" "${CHAL_DIR}"
+
+    load_chal_dir
 fi
 
 echo
@@ -103,11 +100,14 @@ echo "${config}" > "${CLUSTER_CONFIG}"
 
 ln -fs "${CLUSTER_CONFIG}" "${CONFIG_FILE}"
 
-echo
-read -p "Start the cluster now (y/N)? " SHOULD_START
-echo
-if [[ ${SHOULD_START} =~ ^[Yy]$ ]]; then
-    "${DIR}/scripts/cluster/create.sh"
-fi
-exit 0
+create_gcloud_config
 
+# there might be an existing cluster, try to get the creds
+if ! get_cluster_creds 2>/dev/null; then
+    echo
+    read -p "Start the cluster now (y/N)? " SHOULD_START
+    echo
+    if [[ ${SHOULD_START} =~ ^[Yy]$ ]]; then
+        "${DIR}/scripts/cluster/start.sh"
+    fi
+fi

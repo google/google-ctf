@@ -7,7 +7,9 @@ SHELL := bash
 PROJECT:=CONFIGMISSING
 CLUSTER_NAME:=CONFIGMISSING
 ZONE:=CONFIGMISSING
--include ~/.config/kctf/cluster.conf
+-include $(HOME)/.config/kctf/cluster.conf
+KUBECONFIG=$(HOME)/.config/kctf/kube.conf
+export KUBECONFIG
 
 CHALLENGE_NAME:=$(shell basename ${CURDIR})
 CLUSTER_GEN=gen/${PROJECT}_${ZONE}_${CLUSTER_NAME}
@@ -215,6 +217,7 @@ ${CLUSTER_GEN}/remote-healthcheck-image: ${CLUSTER_GEN}/healthcheck-image-tagged
 	@  echo 'error: config not loaded'
 	@  exit 1
 	@fi
+	kubectl config use-context "kctf_${PROJECT}_${ZONE}_${CLUSTER_NAME}"
 	mkdir -p ${CLUSTER_GEN}
 
 .FORCE:

@@ -6,4 +6,4 @@ source "${DIR}/scripts/lib/config.sh"
 
 load_config
 
-gcloud container clusters delete ${CLUSTER_NAME}
+get_cluster_creds
