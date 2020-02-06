@@ -38,7 +38,7 @@ function load_config {
   load_gcloud_config
 
   # try to load the kube config
-  if ! kubectl config use-context "kctf_${PROJECT}_${ZONE}_${CLUSTER_NAME}" 2> /dev/null; then
+  if ! kubectl config use-context "kctf_${PROJECT}_${ZONE}_${CLUSTER_NAME}" > /dev/null 2>&1; then
     # fall back to an empty config
     kubectl config set-context nocluster
     kubectl config use-context nocluster
