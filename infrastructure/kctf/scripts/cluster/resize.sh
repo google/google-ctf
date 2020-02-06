@@ -9,7 +9,7 @@ load_config
 gcloud config set project ${PROJECT}
 gcloud config set compute/zone ${ZONE}
 
-OLD_POOL_NAME=$(gcloud container node-pools list --cluster ctf-cluster-eu --format 'csv(name)' | tail -n+2)
+OLD_POOL_NAME=$(gcloud container node-pools list --cluster ctf-cluster-eu --format 'value(name)')
 if [ $(echo "${OLD_POOL_NAME}" | wc -l) != "1" ]; then
   echo 'error: this script expects exactly one node pool'
   echo '== node pools =='
