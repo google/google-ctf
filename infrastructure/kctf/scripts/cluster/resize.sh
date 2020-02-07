@@ -78,7 +78,8 @@ gcloud container node-pools create "${NEW_POOL_NAME}" \
   --num-nodes="${NUM_NODES}" \
   --enable-autoscaling \
   --min-nodes="${MIN_NODES}" \
-  --max-nodes="${MAX_NODES}"
+  --max-nodes="${MAX_NODES}" \
+  --node-labels=cloud.google.com/gke-smt-disabled=true
 
 for node in $(kubectl get nodes -l cloud.google.com/gke-nodepool="${OLD_POOL_NAME}" -o=name); do
   kubectl cordon "$node"

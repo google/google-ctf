@@ -20,3 +20,5 @@ kubectl create -f "${DIR}/config/daemon.yaml"
 kubectl create -f "${DIR}/config/network-policy.yaml"
 kubectl create -f "${DIR}/config/allow-dns.yaml"
 kubectl patch ServiceAccount default --patch "automountServiceAccountToken: false"
+# https://cloud.google.com/kubernetes-engine/docs/security-bulletins#may-14-2019
+kubectl create -f "https://raw.githubusercontent.com/GoogleCloudPlatform/k8s-node-tools/master/disable-smt/gke/disable-smt.yaml"
