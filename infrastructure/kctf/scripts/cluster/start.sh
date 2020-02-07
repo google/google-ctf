@@ -7,11 +7,11 @@ source "${DIR}/scripts/lib/config.sh"
 load_config
 
 MIN_NODES="1"
-MAX_NODES="1"
-NUM_NODES="1"
-MACHINE_TYPE="n1-standard-2"
+MAX_NODES="8"
+NUM_NODES="4"
+MACHINE_TYPE="n1-standard-1"
 
-gcloud container clusters create --enable-network-policy --enable-autoscaling --min-nodes ${MIN_NODES} --max-nodes ${MAX_NODES} --num-nodes ${NUM_NODES} --enable-autorepair --machine-type ${MACHINE_TYPE} ${CLUSTER_NAME}
+gcloud container clusters create --enable-network-policy --enable-autoscaling --min-nodes ${MIN_NODES} --max-nodes ${MAX_NODES} --num-nodes ${NUM_NODES} --enable-autorepair --preemptible --machine-type ${MACHINE_TYPE} ${CLUSTER_NAME}
 
 get_cluster_creds
 
