@@ -1,0 +1,10 @@
+configMapGenerator:
+- name: xss-bot-config
+  files:
+  - pow
+generatorOptions:
+  disableNameSuffixHash: true
+  labels:
+    type: generated
+  annotations:
+    note: generated

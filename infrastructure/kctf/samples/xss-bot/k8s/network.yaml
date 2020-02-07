@@ -1,0 +1,15 @@
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "xss-bot"
+  namespace: "default"
+  labels:
+    app: "xss-bot"
+spec:
+  type: "LoadBalancer"
+  selector:
+    app: "xss-bot"
+  ports:
+  - protocol: "TCP"
+    port: 1
+    targetPort: 1337
