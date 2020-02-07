@@ -11,5 +11,5 @@ spec:
     name: "challenge-skeleton"
     apiVersion: "apps/v1beta1"
   minReplicas: 1
-  maxReplicas: 5
-  targetCPUUtilizationPercentage: 80
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 40
