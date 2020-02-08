@@ -1,4 +1,4 @@
-.PHONY: start stop docker ip status logs ssh port-forward test-docker test-kind clean .deploy .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
+.PHONY: start stop docker ip status logs ssh port-forward test-docker test-kind test-d4w .test-local clean .deploy .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -82,12 +82,17 @@ test-docker: docker
 	docker run -d -p 1337 --mount type=bind,source="$(CURDIR)"/config,target=/config --mount type=bind,source="$(CURDIR)"/secrets,target=/secrets --privileged -it "kctf-chal-${CHALLENGE_NAME}"
 	docker ps -f ancestor=kctf-chal-${CHALLENGE_NAME}
 
-test-kind: PROJECT="kctf-testing"
-test-kind: gen/kind-kubeconfig
-	kubectl config rename-context "$(shell kubectl config current-context --kubeconfig="gen/kind-kubeconfig")" "kctf_${PROJECT}_${ZONE}_${CLUSTER_NAME}" --kubeconfig="gen/kind-kubeconfig" || true
-	$(MAKE) .deploy PUSH_TARGET="KIND" PROJECT=${PROJECT} ZONE=${ZONE} CLUSTER_NAME=${CLUSTER_NAME} KUBECONFIG="gen/kind-kubeconfig"
-	# Disable apparmor annotation for KIND deployments
-	kubectl patch deployment ${CHALLENGE_NAME}  --type json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/container.apparmor.security.beta.kubernetes.io~1challenge"}]' --kubeconfig=gen/kind-kubeconfig
+test-kind: LOCAL_KUBECONFIG="gen/kind-kubeconfig"
+test-kind: | gen/kind-kubeconfig .test-local
+
+test-d4w: LOCAL_KUBECONFIG="gen/d4w-kubeconfig"
+test-d4w: | gen/d4w-kubeconfig .test-local
+
+.test-local: PROJECT="kctf-testing"
+.test-local:
+	kubectl config rename-context "$(shell kubectl config current-context --kubeconfig="${LOCAL_KUBECONFIG}")" "kctf_${PROJECT}_${ZONE}_${CLUSTER_NAME}" --kubeconfig="${LOCAL_KUBECONFIG}" || true
+	$(MAKE) .deploy PUSH_TARGET="KIND" PROJECT=${PROJECT} ZONE=${ZONE} CLUSTER_NAME=${CLUSTER_NAME} KUBECONFIG="${LOCAL_KUBECONFIG}"
+	kubectl patch deployment ${CHALLENGE_NAME}  --type json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/container.apparmor.security.beta.kubernetes.io~1challenge"}]' --kubeconfig=${LOCAL_KUBECONFIG}
 
 clean:
 	rm -R gen/* || true
@@ -134,6 +139,10 @@ gen/docker-image: Dockerfile files gen/src $(shell find files) ../kctf-conf/base
 gen/kind-kubeconfig: .FORCE
 	@command -v kind || (echo "error: kind not installed. Visit https://kind.sigs.k8s.io/" && false)
 	kind get kubeconfig > $@
+
+gen/d4w-kubeconfig: .FORCE
+	@command -v docker.exe || (echo "error: docker for windows not installed." && false)
+	docker.exe context export default --kubeconfig $@
 
 gen/src: .FORCE
 	$(MAKE) -C src ../gen/src
