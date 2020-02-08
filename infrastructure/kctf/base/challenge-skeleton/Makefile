@@ -79,9 +79,7 @@ test-docker: docker
 	docker run -d -p 1337 --mount type=bind,source="$(CURDIR)"/config,target=/config --mount type=bind,source="$(CURDIR)"/secrets,target=/secrets --privileged -it "kctf-chal-${CHALLENGE_NAME}"
 	docker ps -f ancestor=kctf-chal-${CHALLENGE_NAME}
 
-test-kind: PROJECT="TESTING"
-test-kind: ZONE="TESTING"
-test-kind: CLUSTER_NAME="TESTING"
+test-kind: PROJECT="kctf-testing"
 test-kind: gen/kind-kubeconfig
 	kubectl config rename-context "$(shell kubectl config current-context --kubeconfig="gen/kind-kubeconfig")" "kctf_${PROJECT}_${ZONE}_${CLUSTER_NAME}" --kubeconfig="gen/kind-kubeconfig"
 	$(MAKE) .deploy PUSH_TARGET="KIND" PROJECT=${PROJECT} ZONE=${ZONE} CLUSTER_NAME=${CLUSTER_NAME} KUBECONFIG="gen/kind-kubeconfig"
