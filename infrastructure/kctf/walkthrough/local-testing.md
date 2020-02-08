@@ -24,14 +24,16 @@ PATH=$PATH:$PWD/kctf/bin
 
 ### Create basic demo challenge
 ```
-kctf-setup-chal-dir $(mktemp -d)
+CHALDIR=$(mktemp -d)
+kctf-setup-chal-dir $CHALDIR
 kctf-chal-create test-1
 ```
 
 ### Test connecting to the challenge
 This will take a bit longer the first time it is run, as it has to build a chroot.
 ```
-kctf-chal-test-docker test-1
+cd $CHALDIR/test-1
+make test-docker
 sudo apt-get install -y netcat
 nc 127.0.0.1 1337
 ```
@@ -55,7 +57,7 @@ Once you run the command to create the cluster (`kind create cluster`), you can 
 make test-kind
 ```
 
-This will deploy the challenge and healthcheck remotely.
+This will deploy the challenge and healthcheck in the local kubernetes cluster.
 
 ## Debug failures
 
