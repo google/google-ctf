@@ -82,13 +82,9 @@ test-docker: docker
 test-kind: PROJECT="TESTING"
 test-kind: ZONE="TESTING"
 test-kind: CLUSTER_NAME="TESTING"
-test-kind:
-	@if [ -x $(shell command -v kind) ]; then
-	@	kubectl config set-context kctf_${PROJECT}_${ZONE}_${CLUSTER_NAME} --kubeconfig="$(shell kind get kubeconfig-path)"
-	@	$(MAKE) .deploy PUSH_TARGET="KIND" PROJECT=${PROJECT} ZONE=${ZONE} CLUSTER_NAME=${CLUSTER_NAME} KUBECONFIG="$(shell kind get kubeconfig-path)"
-	@else
-	@	echo 'error: command "kind" not found. Visit https://kind.sigs.k8s.io/'
-	@fi
+test-kind: gen/kind-kubeconfig
+	kubectl config rename-context "$(shell kubectl config current-context)" "kctf_${PROJECT}_${ZONE}_${CLUSTER_NAME}" --kubeconfig="gen/kind-kubeconfig"
+	$(MAKE) .deploy PUSH_TARGET="KIND" PROJECT=${PROJECT} ZONE=${ZONE} CLUSTER_NAME=${CLUSTER_NAME} KUBECONFIG="gen/kind-kubeconfig"
 
 test-remote: .cluster-config
 	kubectl port-forward deployment/${CHALLENGE_NAME} :1337
@@ -134,6 +130,10 @@ clean:
 gen/docker-image: Dockerfile files gen/src $(shell find files) ../kctf-conf/base/nsjail-docker/gen/docker-image
 	docker build -t "kctf-chal-${CHALLENGE_NAME}" .
 	echo $$(docker image ls "kctf-chal-${CHALLENGE_NAME}" -q) > $@
+
+gen/kind-kubeconfig:
+	@command -v kind || (echo "error: kind not installed. Visit https://kind.sigs.k8s.io/" && false)
+	kind get kubeconfig > $@
 
 gen/src: .FORCE
 	$(MAKE) -C src ../gen/src
