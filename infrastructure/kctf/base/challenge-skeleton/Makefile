@@ -1,8 +1,10 @@
-.PHONY: start stop docker ip status logs ssh clean .deploy .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
+.PHONY: start stop docker ip status logs ssh test-docker test-kind test-remotely clean .deploy .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
 
 SHELL := bash
 .ONESHELL:
 .SHELLFLAGS = -e -c
+
+PUSH_TARGET="REMOTE"
 
 PROJECT:=CONFIGMISSING
 CLUSTER_NAME:=CONFIGMISSING
@@ -72,6 +74,25 @@ logs: .cluster-config
 ssh: .cluster-config
 	kubectl exec deployment/${CHALLENGE_NAME} -c challenge -it /bin/bash
 
+test-docker: PUSH_TARGET="LOCAL_DOCKER"
+test-docker: docker
+	docker run -d -p 1337 --mount type=bind,source="$(CURDIR)"/config,target=/config --mount type=bind,source="$(CURDIR)"/secrets,target=/secrets --privileged -it "kctf-chal-${CHALLENGE_NAME}"
+	docker ps -f ancestor=kctf-chal-${CHALLENGE_NAME}
+
+test-kind: PROJECT="TESTING"
+test-kind: ZONE="TESTING"
+test-kind: CLUSTER_NAME="TESTING"
+test-kind:
+	@if [ -x $(shell command -v kind) ]; then
+	@	kubectl config set-context kctf_${PROJECT}_${ZONE}_${CLUSTER_NAME} --kubeconfig="$(shell kind get kubeconfig-path)"
+	@	$(MAKE) .deploy PUSH_TARGET="KIND" PROJECT=${PROJECT} ZONE=${ZONE} CLUSTER_NAME=${CLUSTER_NAME} KUBECONFIG="$(shell kind get kubeconfig-path)"
+	@else
+	@	echo 'error: command "kind" not found. Visit https://kind.sigs.k8s.io/'
+	@fi
+
+test-remote: .cluster-config
+	kubectl port-forward deployment/${CHALLENGE_NAME} :1337
+
 clean:
 	rm -R gen/* || true
 	rm -R healthcheck/gen/* || true
@@ -125,7 +146,13 @@ ${CLUSTER_GEN}/image-tagged: gen/docker-image | .cluster-config
 
 ${CLUSTER_GEN}/image-pushed: ${CLUSTER_GEN}/image-tagged
 	IMAGE_TAG="$$(cat ${CLUSTER_GEN}/image-tagged)"
-	docker push "$${IMAGE_TAG}"
+	if [ ${{PUSH_TARGET}} == "REMOTE" ]; then
+		docker push "$${IMAGE_TAG}"
+	fi
+	if [ ${{PUSH_TARGET}} == "KIND" ]; then
+		kind load docker-image "$${IMAGE_TAG}"
+	fi
+	# LOCAL_DOCKER doesn't need to be pushed
 	touch $@
 
 gen/healthcheck-docker-image: healthcheck/Dockerfile healthcheck/gen/exploit.cpio.enc $(shell find healthcheck/files)
@@ -194,8 +221,10 @@ spec:
       containers:
       - name: challenge
         image: CHAL_IMAGE_PLACEHOLDER
+        imagePullPolicy: IfNotPresent
       - name: healthcheck
         image: HEALTHCHECK_IMAGE_PLACEHOLDER
+        imagePullPolicy: IfNotPresent
 endef
 
 export CLUSTER_KUSTOMIZATION
@@ -218,7 +247,7 @@ ${CLUSTER_GEN}/remote-healthcheck-image: ${CLUSTER_GEN}/healthcheck-image-tagged
 
 .cluster-config:
 	@if [ "${PROJECT}" = "CONFIGMISSING" ]; then
-	@  echo 'error: config not loaded'
+	@  echo 'error: cluster config not loaded. Run kctf-config-create or kctf-config-load'
 	@  exit 1
 	@fi
 	kubectl config use-context "kctf_${PROJECT}_${ZONE}_${CLUSTER_NAME}"
