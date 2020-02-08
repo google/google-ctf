@@ -158,7 +158,12 @@ kubectl version --client -o yaml | grep platform
 ```
 If the commands say linux, you must uninstall the local linux versions, and make sure `~/.local/bin` is in your PATH.
 
-Testing using just docker isn't possible (for that you need to try the [WSL1 unsupported flow](#wsl1-unsupported-flow)), since docker for Windows doesn't have access to do the necessary bind mounts. So you need to run `scripts/challenge/test-k8s.sh` instead of test-docker.
+To run on docker for windows use the command:
+```
+make test-d4w
+```
+
+That will launch the docker image in a kubernetes cluster.
 
 ##### WSL1 unsupported flow
 
@@ -168,12 +173,18 @@ This is the only option available for WSL1 users on Windows 10 Home (other than 
 
 #### WSL2
 
-WSL2 should work out of the box, but it requires the user to be enrolled in Windows Insider, which has extra data collection by Microsoft and more Windows updates. The setup of WSL2 takes a while and multiple restarts.
+WSL2 should work out of the box with KIND, but WSL2 requires the user to be enrolled in Windows Insider, which has extra data collection by Microsoft and more Windows updates. The setup of WSL2 takes a while and multiple restarts.
 
 1. Register in [Windows Insider](https://insider.windows.com/en-us/register/)
 1. [Upgrade WSL to version 2](https://docs.microsoft.com/en-us/windows/wsl/wsl2-install)
+1. [Enable WSL2 docker engine](https://docs.docker.com/docker-for-windows/wsl-tech-preview/)
 
-Alternatively, the instructions for running WSL1 also work for WSL2 users.
+To run on docker for windows use the command:
+```
+make test-d4w
+```
+
+Alternatively, the instructions for running KIND also work for WSL2 users.
 
 ### Errors inside the challenge
 If you see errors like these:
