@@ -88,7 +88,6 @@ test-kind: gen/kind-kubeconfig
 	$(MAKE) .deploy PUSH_TARGET="KIND" PROJECT=${PROJECT} ZONE=${ZONE} CLUSTER_NAME=${CLUSTER_NAME} KUBECONFIG="gen/kind-kubeconfig"
 	# Disable apparmor annotation for KIND deployments
 	kubectl patch deployment ${CHALLENGE_NAME}  --type json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/container.apparmor.security.beta.kubernetes.io~1challenge"}]' --kubeconfig=gen/kind-kubeconfig
-	kubectl port-forward deployment/${CHALLENGE_NAME} :1337 --kubeconfig=gen/kind-kubeconfig &
 
 clean:
 	rm -R gen/* || true
