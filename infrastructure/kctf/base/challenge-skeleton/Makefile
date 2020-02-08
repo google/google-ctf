@@ -83,15 +83,17 @@ test-docker: docker
 	docker ps -f ancestor=kctf-chal-${CHALLENGE_NAME}
 
 test-kind: LOCAL_KUBECONFIG="gen/kind-kubeconfig"
+test-kind: PUSH_TARGET="KIND"
 test-kind: | gen/kind-kubeconfig .test-local
 
 test-d4w: LOCAL_KUBECONFIG="gen/d4w-kubeconfig"
+test-d4w: PUSH_TARGET="LOCAL_DOCKER"
 test-d4w: | gen/d4w-kubeconfig .test-local
 
 .test-local: PROJECT="kctf-testing"
 .test-local:
 	kubectl config rename-context "$(shell kubectl config current-context --kubeconfig="${LOCAL_KUBECONFIG}")" "kctf_${PROJECT}_${ZONE}_${CLUSTER_NAME}" --kubeconfig="${LOCAL_KUBECONFIG}" || true
-	$(MAKE) .deploy PUSH_TARGET="KIND" PROJECT=${PROJECT} ZONE=${ZONE} CLUSTER_NAME=${CLUSTER_NAME} KUBECONFIG="${LOCAL_KUBECONFIG}"
+	$(MAKE) .deploy PUSH_TARGET=${PUSH_TARGET} PROJECT=${PROJECT} ZONE=${ZONE} CLUSTER_NAME=${CLUSTER_NAME} KUBECONFIG="${LOCAL_KUBECONFIG}"
 	kubectl patch deployment ${CHALLENGE_NAME}  --type json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/container.apparmor.security.beta.kubernetes.io~1challenge"}]' --kubeconfig=${LOCAL_KUBECONFIG}
 
 clean:
