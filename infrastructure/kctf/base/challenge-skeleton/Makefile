@@ -86,7 +86,7 @@ test-kind: gen/kind-kubeconfig
 	# Disable apparmor annotation for KIND deployments
 	kubectl patch deployment ${CHALLENGE_NAME}  --type json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/container.apparmor.security.beta.kubernetes.io~1challenge"}]' --kubeconfig=gen/kind-kubeconfig
 
-test-remote: .cluster-config
+test-remotely: .cluster-config
 	kubectl port-forward deployment/${CHALLENGE_NAME} :1337
 
 clean:
@@ -131,7 +131,7 @@ gen/docker-image: Dockerfile files gen/src $(shell find files) ../kctf-conf/base
 	docker build -t "kctf-chal-${CHALLENGE_NAME}" .
 	echo $$(docker image ls "kctf-chal-${CHALLENGE_NAME}" -q) > $@
 
-gen/kind-kubeconfig:
+gen/kind-kubeconfig: .FORCE
 	@command -v kind || (echo "error: kind not installed. Visit https://kind.sigs.k8s.io/" && false)
 	kind get kubeconfig > $@
 
