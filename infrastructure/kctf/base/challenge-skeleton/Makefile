@@ -142,6 +142,7 @@ gen/kind-kubeconfig: .FORCE
 
 gen/d4w-kubeconfig: .FORCE
 	@command -v docker.exe || (echo "error: docker for windows not installed." && false)
+	rm -f $@
 	docker.exe context export default --kubeconfig $@
 
 gen/src: .FORCE
