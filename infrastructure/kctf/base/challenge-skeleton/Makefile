@@ -1,4 +1,4 @@
-.PHONY: start stop docker ip status logs ssh test-docker test-kind test-remotely clean .deploy .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
+.PHONY: start stop docker ip status logs ssh port-forward test-docker test-kind clean .deploy .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -74,6 +74,9 @@ logs: .cluster-config
 ssh: .cluster-config
 	kubectl exec deployment/${CHALLENGE_NAME} -c challenge -it /bin/bash
 
+port-forward: .cluster-config
+	kubectl port-forward deployment/${CHALLENGE_NAME} :1337 &
+
 test-docker: PUSH_TARGET="LOCAL_DOCKER"
 test-docker: docker
 	docker run -d -p 1337 --mount type=bind,source="$(CURDIR)"/config,target=/config --mount type=bind,source="$(CURDIR)"/secrets,target=/secrets --privileged -it "kctf-chal-${CHALLENGE_NAME}"
@@ -85,9 +88,7 @@ test-kind: gen/kind-kubeconfig
 	$(MAKE) .deploy PUSH_TARGET="KIND" PROJECT=${PROJECT} ZONE=${ZONE} CLUSTER_NAME=${CLUSTER_NAME} KUBECONFIG="gen/kind-kubeconfig"
 	# Disable apparmor annotation for KIND deployments
 	kubectl patch deployment ${CHALLENGE_NAME}  --type json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/container.apparmor.security.beta.kubernetes.io~1challenge"}]' --kubeconfig=gen/kind-kubeconfig
-
-test-remotely: .cluster-config
-	kubectl port-forward deployment/${CHALLENGE_NAME} :1337
+	kubectl port-forward deployment/${CHALLENGE_NAME} :1337 --kubeconfig=gen/kind-kubeconfig &
 
 clean:
 	rm -R gen/* || true
