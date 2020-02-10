@@ -199,7 +199,7 @@ healthcheck/gen/exploit.key: healthcheck/gen/exploit.cpio
 
 ${CLUSTER_GEN}/healthcheck-image-tagged: gen/healthcheck-docker-image | .cluster-config
 	IMAGE_ID="$$(cat gen/healthcheck-docker-image)"
-	IMAGE_TAG="eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}-healthcheck"
+	IMAGE_TAG="eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}-healthcheck:$${IMAGE_ID}"
 	docker tag "kctf-healthcheck-${CHALLENGE_NAME}" "$${IMAGE_TAG}"
 	echo -n "$${IMAGE_TAG}" > $@
 
