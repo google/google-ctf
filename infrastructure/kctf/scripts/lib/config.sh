@@ -60,6 +60,7 @@ function gcloud_config_name {
 }
 
 function create_gcloud_config {
+  touch "${KUBECONFIG}"
   gcloud_config_name
   CONFIG_NAME="${ret}"
   ACTIVE_ACCOUNT="$(gcloud config get-value core/account)"
