@@ -19,6 +19,7 @@ if [ -d "${CHALLENGE_DIR}" ]; then
   exit 1
 fi
 
+umask a+rx
 cp -r "${CHAL_DIR}/kctf-conf/base/challenge-skeleton" "${CHALLENGE_DIR}"
 
 pushd "${CHALLENGE_DIR}"
