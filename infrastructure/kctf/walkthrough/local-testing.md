@@ -66,6 +66,12 @@ make test-kind
 
 This will deploy the challenge and healthcheck in the local kubernetes cluster.
 
+### Connect to the challenge
+
+```
+kubectl port-forward deployment/test-1 :1337 &
+```
+
 ## Debug failures
 
 The instructions below might help you resolve errors in the setup.
