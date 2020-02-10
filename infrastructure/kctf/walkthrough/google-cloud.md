@@ -146,6 +146,14 @@ This connects you to the challenge with a proof of work in front. Just type **00
 
 And that's it, now that you saw how to push a challenge and update it, let's clean up to save some resources.
 
+## Inspect the Kubernetes deployment
+To debug the Kubernetes deployment, you can setup the following alias:
+```
+alias kctf-kubectl="kubectl --kubeconfig=${HOME}/.config/kctf/kube.conf"
+```
+
+Now you can use [kubectl commands](https://kubernetes.io/docs/reference/kubectl/cheatsheet/) with kctf-kubectl.
+
 ## Let's just clean the challenge
 This is the last step of the walkthrough, and this step you probably want to do at the end of the CTF to save resources.
 
