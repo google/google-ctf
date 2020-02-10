@@ -2,6 +2,13 @@
 
 The purpose of this walkthrough is to teach you how to use the kCTF infrastructure.
 
+## Set the right umask
+
+Since nsjail will run commands as another user, it is necessary that the challenge files are readable by all users. To make this possible, set the following umask:
+```
+umask a+rx
+```
+
 ## Testing with just Docker
 
 Following this walkthrough requires a local linux machine capable of running docker.
