@@ -24,6 +24,7 @@ CHAL_DIR=$(realpath -L ${CHAL_DIR})
 # copy the base files to the chal dir
 if [ ! -d "${CHAL_DIR}/kctf-conf" ]; then
     mkdir -p "${CHAL_DIR}/kctf-conf"
+    umask o+rx
     cp -R "${DIR}/base" "${CHAL_DIR}/kctf-conf/"
 fi
 
