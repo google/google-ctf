@@ -40,6 +40,14 @@ spec:
         - name: "config"
           mountPath: "/config"
           readOnly: true
+        readinessProbe:
+          failureThreshold: 2
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 20
+          timeoutSeconds: 3
+          periodSeconds: 30
         livenessProbe:
           failureThreshold: 2
           httpGet:
