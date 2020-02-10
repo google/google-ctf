@@ -134,7 +134,7 @@ clean:
 .config: $(shell find config) | .cluster-config
 	kubectl apply -k config
 
-gen/docker-image: Dockerfile files gen/src $(shell find files) ../kctf-conf/base/nsjail-docker/gen/docker-image
+gen/docker-image: Dockerfile files gen/src $(shell find files) $(shell find secrets) $(shell find config) ../kctf-conf/base/nsjail-docker/gen/docker-image
 	docker build -t "kctf-chal-${CHALLENGE_NAME}" .
 	echo $$(docker image ls "kctf-chal-${CHALLENGE_NAME}" -q) > $@
 
