@@ -24,7 +24,7 @@ kctf-config-create
 ### Configuration properties
 Type a path for storing the challenges
 ```
-kctf-demo
+~/demo-ctf-cluster
 ```
 
 Type your project id:
@@ -79,16 +79,23 @@ In the next step you'll find out how to create a docker image with the newly cre
 To deploy the challenge run the following command, this builds and deploys the challenge, **but doesn't expose it to the internet.**
 
 ```
-kctf-chal-deploy demo-challenge
+cd ~/demo-ctf-cluster/demo-challenge
+make start
 ```
 
 This will deploy the image to your cluster, and will soon be consuming CPU resources. The challenge will automatically scale based on CPU usage.
 
 ## And finally, expose it to the internet
-Run the following command, this exposes the challenge to the internet **(must be deployed first)**.
+Run the following command, this exposes the challenge to the internet.
 
 ```
-kctf-chal-expose demo-challenge
+emacs ~/demo-ctf-cluster/demo-challenge/chal.conf
+```
+
+Modify the file and type `PUBLIC="true"`, then type again:
+
+```
+make start
 ```
 
 This step might take a minute, it will reserve an IP address for your challenge, and redirect traffic to your docker containers when someone connects to it. Wait for it to finish before continuing.
@@ -105,7 +112,7 @@ Now we have a challenge up and running, and we need to test it to make sure it w
 Run the following command, this connects you to the challenge.
 
 ```
-telnet $(kctf-chal-ip demo-challenge) 1
+telnet $(make ip) 1
 ```
 
 If all went well, you should see a shell. Now, let's add a proof of work to the task to avoid people abusing it too much.
@@ -126,7 +133,7 @@ Edit <walkthrough-editor-select-regex filePath="kctf-demo/demo-challenge/pow.yam
 
 Once that's done,  run
 ```
-kctf-chal-update demo-challenge
+make start
 ```
 this enables the proof of work.
 
@@ -146,7 +153,7 @@ This is the last step of the walkthrough, and this step you probably want to do 
 
 To delete a challenge, run:
 ```
-kctf-chal-kill demo-challenge
+make stop
 ```
 
 You can test this worked by running:
