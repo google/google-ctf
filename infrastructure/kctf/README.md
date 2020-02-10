@@ -9,7 +9,7 @@
 
 # Introduction
 
-If you want to read what is kCTF take a look at [kCTF in 8 minutes](introduction.md). A quick 8 minutes summary of what is kCTF and how it interacts with Kubernetes.
+If you want to read what is kCTF take a look at [kCTF in 8 minutes](walkthrough/introduction.md). A quick 8 minutes summary of what is kCTF and how it interacts with Kubernetes.
 
 # DNS Support
 If you point a domain or subdomain to Google Cloud DNS, you can use `kctf-setup-dns` and `kctf-chal-dns` to map *challenge_name.yourdomain.com* to your challenge.
