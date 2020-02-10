@@ -53,6 +53,8 @@ This all ensures the availability of the challenges, and saves some computing re
 
 Anyway, hopefully by now the cluster is already created and we can continue with the walkthrough.
 
+If you are curious and have some more time, take a look at this [kCTF introduction](introduction.md), which includes a quick 8 minutes summary of what is kCTF and how it interacts with Kubernetes.
+
 # Step 2 - Create a challenge
 Now that we have a cluster setup, we need to create a challenge.
 
