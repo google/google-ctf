@@ -35,10 +35,8 @@ Type your project id:
 You can use the default values for all other settings.
 
 ## And finally, create the cluster
-Run the following command:
-```
-kctf-cluster-start
-```
+After this is done, the cluster will be created.
+
 This only needs to be done once per CTF. A "cluster" is essentially a group of VMs with a "master" that defines what to run there.
 
 This can take a while, you can expect to see `Creating cluster ... in ... Cluster is being health-checked...` and in a minute or so, you'll get a message telling you it's done.
