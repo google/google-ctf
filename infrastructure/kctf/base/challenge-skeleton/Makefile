@@ -158,10 +158,10 @@ ${CLUSTER_GEN}/image-tagged: gen/docker-image | .cluster-config
 
 ${CLUSTER_GEN}/image-pushed: ${CLUSTER_GEN}/image-tagged
 	IMAGE_TAG="$$(cat ${CLUSTER_GEN}/image-tagged)"
-	if [ $${PUSH_TARGET} == "REMOTE" ]; then
+	if [ "${PUSH_TARGET}" == "REMOTE" ]; then
 		docker push "$${IMAGE_TAG}"
 	fi
-	if [ $${PUSH_TARGET} == "KIND" ]; then
+	if [ "${PUSH_TARGET}" == "KIND" ]; then
 		kind load docker-image "$${IMAGE_TAG}"
 	fi
 	# LOCAL_DOCKER doesn't need to be pushed
@@ -197,10 +197,10 @@ ${CLUSTER_GEN}/healthcheck-image-tagged: gen/healthcheck-docker-image | .cluster
 
 ${CLUSTER_GEN}/healthcheck-image-pushed: ${CLUSTER_GEN}/healthcheck-image-tagged
 	IMAGE_TAG="$$(cat ${CLUSTER_GEN}/healthcheck-image-tagged)"
-	if [ $${PUSH_TARGET} == "REMOTE" ]; then
+	if [ "${PUSH_TARGET}" == "REMOTE" ]; then
 		docker push "$${IMAGE_TAG}"
 	fi
-	if [ $${PUSH_TARGET} == "KIND" ]; then
+	if [ "${PUSH_TARGET}" == "KIND" ]; then
 		kind load docker-image "$${IMAGE_TAG}"
 	fi
 	touch $@
