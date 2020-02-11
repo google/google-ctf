@@ -1,0 +1,6 @@
+bases:
+- ../.base/deployment
+
+patchesStrategicMerge:
+- autoscaling.yaml
+- containers.yaml

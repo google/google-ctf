@@ -24,6 +24,6 @@ cp -r "${CHAL_DIR}/kctf-conf/base/challenge-skeleton" "${CHALLENGE_DIR}"
 
 pushd "${CHALLENGE_DIR}"
 
-sed -i "s/challenge-skeleton/${CHALLENGE_NAME}/g" */*.yaml healthcheck/*/*.yaml
+sed -i "s/challenge-skeleton/${CHALLENGE_NAME}/g" */*.yaml k8s/.base/deployment/*.yaml k8s/.base/network/*.yaml healthcheck/*/*.yaml
 
 popd

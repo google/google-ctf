@@ -6,7 +6,7 @@
 #
 #
 
-.PHONY: start stop docker ip status logs ssh ssh-healthcheck port-forward test-docker test-kind test-d4w .test-local clean .deploy .maybe-expose .cluster-config .deployment .autoscaling .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
+.PHONY: start stop docker ip status logs ssh ssh-healthcheck port-forward test-docker test-kind test-d4w .test-local clean .deploy .maybe-expose .cluster-config .deployment .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -111,18 +111,15 @@ clean:
 	rm -R gen/* || true
 	rm -R healthcheck/gen/* || true
 
-.deploy: .autoscaling .deployment .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .cluster-config .maybe-expose
+.deploy: .deployment .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .cluster-config .maybe-expose
 
 .maybe-expose: | .cluster-config
 	source chal.conf
 	if [ "$${PUBLIC}" = "true" ]; then
-	  kubectl apply -f k8s/network.yaml
+	  kubectl apply -k k8s/network
 	else
 	  kubectl get "service/${CHALLENGE_NAME}" >/dev/null 2>&1 && kubectl delete "service/${CHALLENGE_NAME}" || true
 	fi
-
-.autoscaling: | .cluster-config
-	kubectl apply -f k8s/autoscaling.yaml
 
 .deployment: ${DEPLOYMENT_CONF_DIR} ${CLUSTER_GEN}/image-pushed ${CLUSTER_GEN}/remote-image ${CLUSTER_GEN}/healthcheck-image-pushed ${CLUSTER_GEN}/remote-healthcheck-image | .cluster-config
 	kubectl apply -k ${DEPLOYMENT_CONF_DIR}
@@ -233,7 +230,7 @@ healthcheck/gen/exploit-key.yaml: healthcheck/gen/exploit.key | .cluster-config
 
 define CLUSTER_KUSTOMIZATION
 bases:
-- ../../../k8s
+- ../../../k8s/deployment
 patchesStrategicMerge:
 - update_image_name.yaml
 endef
@@ -242,7 +239,7 @@ define UPDATE_IMAGE_NAME
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${CHALLENGE_NAME}
+  name: chal
 spec:
   template:
     spec:

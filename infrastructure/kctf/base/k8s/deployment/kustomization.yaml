@@ -1,0 +1,3 @@
+resources:
+- autoscaling.yaml
+- containers.yaml

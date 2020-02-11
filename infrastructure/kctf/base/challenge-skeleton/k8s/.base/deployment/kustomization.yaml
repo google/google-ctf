@@ -1,0 +1,22 @@
+bases:
+- ../../../../kctf-conf/base/k8s/deployment
+
+commonLabels:
+  app: "challenge-skeleton"
+
+patchesJson6902:
+- target:
+    group: "apps"
+    version: "v1"
+    kind: "Deployment"
+    name: "chal"
+  path: challenge_name.yaml
+- target:
+    group: "autoscaling"
+    version: "v1"
+    kind: "HorizontalPodAutoscaler"
+    name: "chal"
+  path: challenge_name.yaml
+
+patchesStrategicMerge:
+- containers.yaml

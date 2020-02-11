@@ -1,0 +1,12 @@
+apiVersion: "autoscaling/v1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "chal"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "chal"
+    apiVersion: "apps/v1beta1"
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 50

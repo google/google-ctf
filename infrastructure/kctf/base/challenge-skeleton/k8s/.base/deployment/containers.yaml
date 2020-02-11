@@ -1,0 +1,23 @@
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "chal"
+spec:
+  template:
+    spec:
+      volumes:
+      - name: "secrets"
+        secret:
+          secretName: "challenge-skeleton-secrets"
+      - name: "config"
+        configMap:
+          name: "challenge-skeleton-config"
+      - name: "healthcheck-secrets"
+        secret:
+          secretName: "challenge-skeleton-healthcheck-secrets"
+      - name: "healthcheck-exploit-key"
+        secret:
+          secretName: "challenge-skeleton-healthcheck-exploit-key"
+      - name: "healthcheck-config"
+        configMap:
+          name: "challenge-skeleton-healthcheck-config"

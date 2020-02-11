@@ -1,26 +1,17 @@
 apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
-  name: "challenge-skeleton"
-  namespace: "default"
-  labels:
-    app: "challenge-skeleton"
+  name: "chal"
 spec:
   replicas: 1
-  selector:
-    matchLabels:
-      app: "challenge-skeleton"
   template:
     metadata:
-      labels:
-        app: "challenge-skeleton"
       annotations:
         container.apparmor.security.beta.kubernetes.io/challenge: localhost/ctf-profile
     spec:
       containers:
       - name: "challenge"
-        # this will be updated to eu.gcr.io/$project/$challenge-dir using kustomization.yaml in the kctf-conf
-        image: "challenge-skeleton"
+        image: "challenge"
         ports:
         - containerPort: 1337
         securityContext:
@@ -56,7 +47,7 @@ spec:
           timeoutSeconds: 3
           periodSeconds: 30
       - name: "healthcheck"
-        image: "challenge-skeleton-healthcheck"
+        image: "healthcheck"
         command:
         resources:
           limits:
@@ -76,24 +67,19 @@ spec:
       volumes:
       - name: "secrets"
         secret:
-          # must be called ${challenge-dir}-secrets
-          secretName: "challenge-skeleton-secrets"
+          secretName: "secrets"
           defaultMode: 0444
       - name: "config"
         configMap:
-          # must be called ${challenge-dir}-config
-          name: "challenge-skeleton-config"
+          name: "config"
       - name: "healthcheck-secrets"
         secret:
-          # must be called ${challenge-dir}-healthcheck-secrets
-          secretName: "challenge-skeleton-healthcheck-secrets"
+          secretName: "healthcheck-secrets"
           defaultMode: 0444
       - name: "healthcheck-exploit-key"
         secret:
-          # must be called ${challenge-dir}-healthcheck-exploit-key
-          secretName: "challenge-skeleton-healthcheck-exploit-key"
+          secretName: "healthcheck-exploit-key"
           defaultMode: 0444
       - name: "healthcheck-config"
         configMap:
-          # must be called ${challenge-dir}-healthcheck-config
-          name: "challenge-skeleton-healthcheck-config"
+          name: "healthcheck-config"

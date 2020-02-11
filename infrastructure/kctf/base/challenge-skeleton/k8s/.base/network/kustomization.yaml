@@ -1,0 +1,12 @@
+bases:
+- ../../../../kctf-conf/base/k8s/network
+
+commonLabels:
+  app: "challenge-skeleton"
+
+patchesJson6902:
+- target:
+    version: "v1"
+    kind: "Service"
+    name: "chal"
+  path: challenge_name.yaml
