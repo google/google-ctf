@@ -31,39 +31,6 @@ spec:
         - name: "config"
           mountPath: "/config"
           readOnly: true
-        livenessProbe:
-          failureThreshold: 2
-          httpGet:
-            path: /healthz
-            port: 8080
-          initialDelaySeconds: 45
-          timeoutSeconds: 3
-          periodSeconds: 30
-        readinessProbe:
-          httpGet:
-            path: /healthz
-            port: 8080
-          initialDelaySeconds: 30
-          timeoutSeconds: 3
-          periodSeconds: 30
-      - name: "healthcheck"
-        image: "healthcheck"
-        command:
-        resources:
-          limits:
-            cpu: "1"
-          requests:
-            cpu: "0.05"
-        volumeMounts:
-        - name: "healthcheck-secrets"
-          mountPath: "/secrets"
-          readOnly: true
-        - name: "healthcheck-exploit-key"
-          mountPath: "/keys"
-          readOnly: true
-        - name: "healthcheck-config"
-          mountPath: "/config"
-          readOnly: true
       volumes:
       - name: "secrets"
         secret:
@@ -72,14 +39,3 @@ spec:
       - name: "config"
         configMap:
           name: "config"
-      - name: "healthcheck-secrets"
-        secret:
-          secretName: "healthcheck-secrets"
-          defaultMode: 0444
-      - name: "healthcheck-exploit-key"
-        secret:
-          secretName: "healthcheck-exploit-key"
-          defaultMode: 0444
-      - name: "healthcheck-config"
-        configMap:
-          name: "healthcheck-config"

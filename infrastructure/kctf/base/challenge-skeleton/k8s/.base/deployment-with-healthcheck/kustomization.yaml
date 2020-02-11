@@ -1,0 +1,7 @@
+bases:
+- ../deployment
+- ../../../healthcheck/config
+- ../../../healthcheck/secrets
+
+patchesStrategicMerge:
+- containers.yaml

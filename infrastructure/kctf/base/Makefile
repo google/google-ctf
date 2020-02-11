@@ -6,7 +6,7 @@
 #
 #
 
-.PHONY: start stop docker ip status logs ssh ssh-healthcheck port-forward test-docker test-kind test-d4w .test-local clean .deploy .maybe-expose .cluster-config .deployment .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
+.PHONY: start stop docker ip status logs ssh ssh-healthcheck port-forward test-docker test-kind test-d4w .test-local clean .deploy .maybe-expose .cluster-config .deployment .healthcheck-exploit-key-secret .FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -112,7 +112,7 @@ clean:
 	rm -R gen/* || true
 	rm -R healthcheck/gen/* || true
 
-.deploy: .deployment .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .cluster-config .maybe-expose
+.deploy: .deployment .healthcheck-exploit-key-secret .cluster-config .maybe-expose
 
 .maybe-expose: | .cluster-config
 	source chal.conf
@@ -213,12 +213,6 @@ healthcheck/gen/exploit-key.yaml: healthcheck/gen/exploit.key | .cluster-config
 
 .healthcheck-exploit-key-secret: healthcheck/gen/exploit-key.yaml | .cluster-config
 	kubectl apply -f healthcheck/gen/exploit-key.yaml
-
-.healthcheck-secrets: $(shell find healthcheck/secrets) | .cluster-config
-	kubectl apply -k healthcheck/secrets
-
-.healthcheck-config: $(shell find healthcheck/config) | .cluster-config
-	kubectl apply -k healthcheck/config
 
 ../kctf-conf/base/nsjail-docker/gen/docker-image: .FORCE
 	$(MAKE) -C ${@D}/.. gen/docker-image

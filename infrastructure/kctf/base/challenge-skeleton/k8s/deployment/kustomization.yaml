@@ -1,5 +1,5 @@
 bases:
-- ../.base/deployment
+- ../.base/deployment-with-healthcheck
 
 patchesStrategicMerge:
 - autoscaling.yaml
