@@ -22,10 +22,10 @@ KUBECONFIG=$(HOME)/.config/kctf/kube.conf
 export KUBECONFIG
 
 CHALLENGE_NAME:=$(shell basename ${CURDIR})
-CLUSTER_GEN=gen/${PROJECT}_${ZONE}_${CLUSTER_NAME}
+CLUSTER_GEN=.gen/${PROJECT}_${ZONE}_${CLUSTER_NAME}
 DEPLOYMENT_CONF_DIR=${CLUSTER_GEN}/deployment-conf
 
-docker: gen/docker-image
+docker: .gen/docker-image
 
 start:
 	source chal.conf
@@ -94,13 +94,13 @@ test-docker: docker
 	docker run -d -p 1337 --mount type=bind,source="$(CURDIR)"/config,target=/config --mount type=bind,source="$(CURDIR)"/secrets,target=/secrets --privileged -it "kctf-chal-${CHALLENGE_NAME}"
 	docker ps -f ancestor=kctf-chal-${CHALLENGE_NAME}
 
-test-kind: LOCAL_KUBECONFIG="gen/kind-kubeconfig"
+test-kind: LOCAL_KUBECONFIG=".gen/kind-kubeconfig"
 test-kind: PUSH_TARGET="KIND"
-test-kind: | gen/kind-kubeconfig .test-local
+test-kind: | .gen/kind-kubeconfig .test-local
 
-test-d4w: LOCAL_KUBECONFIG="gen/d4w-kubeconfig"
+test-d4w: LOCAL_KUBECONFIG=".gen/d4w-kubeconfig"
 test-d4w: PUSH_TARGET="LOCAL_DOCKER"
-test-d4w: | gen/d4w-kubeconfig .test-local
+test-d4w: | .gen/d4w-kubeconfig .test-local
 
 .test-local: PROJECT="kctf-testing"
 .test-local:
@@ -109,8 +109,8 @@ test-d4w: | gen/d4w-kubeconfig .test-local
 	kubectl patch deployment ${CHALLENGE_NAME}  --type json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/container.apparmor.security.beta.kubernetes.io~1challenge"}]' --kubeconfig=${LOCAL_KUBECONFIG}
 
 clean:
-	rm -R gen/* || true
-	rm -R healthcheck/gen/* || true
+	rm -R .gen/* || true
+	rm -R healthcheck/.gen/* || true
 
 .deploy: .deployment .healthcheck-exploit-key-secret .cluster-config .maybe-expose
 
@@ -137,24 +137,24 @@ clean:
 	  kubectl set image "deployment/${CHALLENGE_NAME}" "healthcheck=$${HEALTHCHECK_IMAGE}"
 	fi
 
-gen/docker-image: Dockerfile files gen/src $(shell find files) $(shell find secrets) $(shell find config) ../kctf-conf/base/nsjail-docker/gen/docker-image
+.gen/docker-image: Dockerfile files .gen/src $(shell find files) $(shell find secrets) $(shell find config) ../kctf-conf/base/nsjail-docker/gen/docker-image
 	docker build -t "kctf-chal-${CHALLENGE_NAME}" .
 	echo $$(docker image ls "kctf-chal-${CHALLENGE_NAME}" -q) > $@
 
-gen/kind-kubeconfig: .FORCE
+.gen/kind-kubeconfig: .FORCE
 	@command -v kind || (echo "error: kind not installed. Visit https://kind.sigs.k8s.io/" && false)
 	kind get kubeconfig > $@
 
-gen/d4w-kubeconfig: .FORCE
+.gen/d4w-kubeconfig: .FORCE
 	@command -v docker.exe || (echo "error: docker for windows not installed." && false)
 	rm -f $@
 	docker.exe context export default --kubeconfig $@
 
-gen/src: .FORCE
-	$(MAKE) -C src ../gen/src
+.gen/src: .FORCE
+	$(MAKE) -C src ../.gen/src
 
-${CLUSTER_GEN}/image-tagged: gen/docker-image | .cluster-config
-	IMAGE_ID="$$(cat gen/docker-image)"
+${CLUSTER_GEN}/image-tagged: .gen/docker-image | .cluster-config
+	IMAGE_ID="$$(cat .gen/docker-image)"
 	IMAGE_TAG="eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}:$${IMAGE_ID}"
 	docker tag "kctf-chal-${CHALLENGE_NAME}" "$${IMAGE_TAG}"
 	echo -n "$${IMAGE_TAG}" > $@
@@ -170,14 +170,14 @@ ${CLUSTER_GEN}/image-pushed: ${CLUSTER_GEN}/image-tagged
 	# LOCAL_DOCKER doesn't need to be pushed
 	touch $@
 
-gen/healthcheck-docker-image: healthcheck/Dockerfile healthcheck/gen/exploit.cpio.enc $(shell find healthcheck/files)
+.gen/healthcheck-docker-image: healthcheck/Dockerfile healthcheck/.gen/exploit.cpio.enc $(shell find healthcheck/files)
 	docker build -t "kctf-healthcheck-${CHALLENGE_NAME}" healthcheck
 	echo $$(docker image ls "kctf-healthcheck-${CHALLENGE_NAME}" -q) > $@
 
-healthcheck/gen/exploit.cpio.enc: healthcheck/gen/exploit.cpio healthcheck/gen/exploit.key
-	openssl aes-256-cbc -e -in healthcheck/gen/exploit.cpio -out $@ -K "$$(cat healthcheck/gen/exploit.key)" -nosalt -iv 00000000000000000000000000000000
+healthcheck/.gen/exploit.cpio.enc: healthcheck/.gen/exploit.cpio healthcheck/.gen/exploit.key
+	openssl aes-256-cbc -e -in healthcheck/.gen/exploit.cpio -out $@ -K "$$(cat healthcheck/.gen/exploit.key)" -nosalt -iv 00000000000000000000000000000000
 
-healthcheck/gen/exploit.cpio: $(shell find healthcheck/exploit)
+healthcheck/.gen/exploit.cpio: $(shell find healthcheck/exploit)
 	pushd ${@D}
 	rm -R exploit 2>/dev/null || true
 	cp -R ../exploit .
@@ -189,11 +189,11 @@ healthcheck/gen/exploit.cpio: $(shell find healthcheck/exploit)
 	rm -R exploit
 	popd
 
-healthcheck/gen/exploit.key: healthcheck/gen/exploit.cpio
-	sha256sum healthcheck/gen/exploit.cpio | awk '{print $$1}' > $@
+healthcheck/.gen/exploit.key: healthcheck/.gen/exploit.cpio
+	sha256sum healthcheck/.gen/exploit.cpio | awk '{print $$1}' > $@
 
-${CLUSTER_GEN}/healthcheck-image-tagged: gen/healthcheck-docker-image | .cluster-config
-	IMAGE_ID="$$(cat gen/healthcheck-docker-image)"
+${CLUSTER_GEN}/healthcheck-image-tagged: .gen/healthcheck-docker-image | .cluster-config
+	IMAGE_ID="$$(cat .gen/healthcheck-docker-image)"
 	IMAGE_TAG="eu.gcr.io/${PROJECT}/${CHALLENGE_NAME}-healthcheck:$${IMAGE_ID}"
 	docker tag "kctf-healthcheck-${CHALLENGE_NAME}" "$${IMAGE_TAG}"
 	echo -n "$${IMAGE_TAG}" > $@
@@ -208,11 +208,11 @@ ${CLUSTER_GEN}/healthcheck-image-pushed: ${CLUSTER_GEN}/healthcheck-image-tagged
 	fi
 	touch $@
 
-healthcheck/gen/exploit-key.yaml: healthcheck/gen/exploit.key | .cluster-config
-	kubectl create secret generic "${CHALLENGE_NAME}-healthcheck-exploit-key" --from-file=exploit.key=healthcheck/gen/exploit.key --dry-run -o yaml > $@
+healthcheck/.gen/exploit-key.yaml: healthcheck/.gen/exploit.key | .cluster-config
+	kubectl create secret generic "${CHALLENGE_NAME}-healthcheck-exploit-key" --from-file=exploit.key=healthcheck/.gen/exploit.key --dry-run -o yaml > $@
 
-.healthcheck-exploit-key-secret: healthcheck/gen/exploit-key.yaml | .cluster-config
-	kubectl apply -f healthcheck/gen/exploit-key.yaml
+.healthcheck-exploit-key-secret: healthcheck/.gen/exploit-key.yaml | .cluster-config
+	kubectl apply -f healthcheck/.gen/exploit-key.yaml
 
 ../kctf-conf/base/nsjail-docker/gen/docker-image: .FORCE
 	$(MAKE) -C ${@D}/.. gen/docker-image

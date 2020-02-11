@@ -1,6 +1,6 @@
 # Output files should go to ../files
 
-../gen/src: ../files/shell
+../.gen/src: ../files/shell
 	touch $@
 
 ../files/shell: shell.c

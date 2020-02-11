@@ -8,7 +8,7 @@ RUN pip install pwntools
 
 RUN apt-get -y install cpio
 
-COPY gen/exploit.cpio.enc /
+COPY .gen/exploit.cpio.enc /
 
 RUN /usr/sbin/useradd --no-create-home -u 1000 user
 COPY files /home/user
