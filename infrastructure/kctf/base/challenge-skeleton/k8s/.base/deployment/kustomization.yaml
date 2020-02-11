@@ -1,4 +1,6 @@
 bases:
+- ../../../config
+- ../../../secrets
 - ../../../../kctf-conf/base/k8s/deployment
 
 commonLabels:

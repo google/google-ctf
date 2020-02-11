@@ -6,7 +6,7 @@
 #
 #
 
-.PHONY: start stop docker ip status logs ssh ssh-healthcheck port-forward test-docker test-kind test-d4w .test-local clean .deploy .maybe-expose .cluster-config .deployment .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
+.PHONY: start stop docker ip status logs ssh ssh-healthcheck port-forward test-docker test-kind test-d4w .test-local clean .deploy .maybe-expose .cluster-config .deployment .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -112,7 +112,7 @@ clean:
 	rm -R gen/* || true
 	rm -R healthcheck/gen/* || true
 
-.deploy: .deployment .secrets .config .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .cluster-config .maybe-expose
+.deploy: .deployment .healthcheck-secrets .healthcheck-exploit-key-secret .healthcheck-config .cluster-config .maybe-expose
 
 .maybe-expose: | .cluster-config
 	source chal.conf
@@ -136,12 +136,6 @@ clean:
 	if [ $${HEALTHCHECK_IMAGE} != $${PUSHED_HEALTHCHECK_IMAGE} ]; then
 	  kubectl set image "deployment/${CHALLENGE_NAME}" "healthcheck=$${HEALTHCHECK_IMAGE}"
 	fi
-
-.secrets: $(shell find secrets) | .cluster-config
-	kubectl apply -k secrets
-
-.config: $(shell find config) | .cluster-config
-	kubectl apply -k config
 
 gen/docker-image: Dockerfile files gen/src $(shell find files) $(shell find secrets) $(shell find config) ../kctf-conf/base/nsjail-docker/gen/docker-image
 	docker build -t "kctf-chal-${CHALLENGE_NAME}" .
