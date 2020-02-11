@@ -19,9 +19,9 @@ spec:
           httpGet:
             path: /healthz
             port: 8080
-          initialDelaySeconds: 30
+          initialDelaySeconds: 5
           timeoutSeconds: 3
-          periodSeconds: 30
+          periodSeconds: 5
       - name: "healthcheck"
         image: "healthcheck"
         command:
