@@ -91,7 +91,7 @@ port-forward: .cluster-config
 
 test-docker: PUSH_TARGET="LOCAL_DOCKER"
 test-docker: docker
-	docker run -d -p 1337 --mount type=bind,source="$(CURDIR)"/config,target=/config --mount type=bind,source="$(CURDIR)"/secrets,target=/secrets --privileged -it "kctf-chal-${CHALLENGE_NAME}"
+	docker run -d -p 1337 --mount type=bind,source="$(CURDIR)/challenge/config,target=/config" --mount type=bind,source="$(CURDIR)/challenge/secrets",target=/secrets --privileged -it "kctf-chal-${CHALLENGE_NAME}"
 	docker ps -f ancestor=kctf-chal-${CHALLENGE_NAME}
 
 test-kind: LOCAL_KUBECONFIG=".gen/kind-kubeconfig"
@@ -137,8 +137,8 @@ clean:
 	  kubectl set image "deployment/${CHALLENGE_NAME}" "healthcheck=$${HEALTHCHECK_IMAGE}"
 	fi
 
-.gen/docker-image: Dockerfile files .gen/src $(shell find files) $(shell find secrets) $(shell find config) ../kctf-conf/base/nsjail-docker/gen/docker-image
-	docker build -t "kctf-chal-${CHALLENGE_NAME}" .
+.gen/docker-image: challenge/Dockerfile .gen/src $(shell find challenge/files) ../kctf-conf/base/nsjail-docker/gen/docker-image
+	docker build -t "kctf-chal-${CHALLENGE_NAME}" challenge
 	echo $$(docker image ls "kctf-chal-${CHALLENGE_NAME}" -q) > $@
 
 .gen/kind-kubeconfig: .FORCE
@@ -151,7 +151,7 @@ clean:
 	docker.exe context export default --kubeconfig $@
 
 .gen/src: .FORCE
-	$(MAKE) -C src ../.gen/src
+	$(MAKE) -C challenge/src ../../.gen/src
 
 ${CLUSTER_GEN}/image-tagged: .gen/docker-image | .cluster-config
 	IMAGE_ID="$$(cat .gen/docker-image)"
