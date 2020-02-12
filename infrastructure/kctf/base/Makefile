@@ -122,7 +122,7 @@ clean:
 
 .deploy: .deployment .cluster-config .network
 
-.network: | .cluster-config
+.network: .gen/k8s | .cluster-config
 ifeq ($(PUBLIC), true)
 	kubectl apply -k k8s/network
 else
