@@ -9,7 +9,7 @@ if [ $# != 1 ]; then
     exit 1
 fi
 
-CONFIG_FILE=$1
+CONFIG_FILE="$(realpath -L $1)"
 source ${CONFIG_FILE}
 
 # sanity check
