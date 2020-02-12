@@ -6,7 +6,7 @@ source "${DIR}/scripts/lib/config.sh"
 
 load_config
 
-MIN_NODES="1"
+MIN_NODES="3"
 MAX_NODES="8"
 NUM_NODES="4"
 MACHINE_TYPE="n1-standard-1"
