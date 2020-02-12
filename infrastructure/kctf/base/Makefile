@@ -179,18 +179,6 @@ ${CLUSTER_GEN}/image-pushed: ${CLUSTER_GEN}/image-tagged
 	# LOCAL_DOCKER doesn't need to be pushed
 	touch $@
 
-.maybe-healthcheck:
-	source chal.conf
-	if [ "$${HEALTHCHECK}" = "true" ]; then
-	  $(MAKE) .healthcheck-exploit-key-secret ${CLUSTER_GEN}/healthcheck-image-pushed ${CLUSTER_GEN}/remote-healthcheck-image
-	fi
-
-.maybe-remote-healthcheck-image:
-	source chal.conf
-	if [ "$${HEALTHCHECK}" = "true" ]; then
-	  $(MAKE) ${CLUSTER_GEN}/remote-healthcheck-image
-	fi
-
 .gen/healthcheck-docker-image: healthcheck/Dockerfile healthcheck/.gen/exploit.cpio.enc $(shell find healthcheck/files)
 	docker build -t "kctf-healthcheck-${CHALLENGE_NAME}" healthcheck
 	echo $$(docker image ls "kctf-healthcheck-${CHALLENGE_NAME}" -q) > $@
