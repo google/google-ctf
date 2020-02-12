@@ -6,7 +6,7 @@
 #
 #
 
-.PHONY: start stop docker ip status logs ssh ssh-healthcheck port-forward test-docker test-kind test-d4w .test-local clean .deploy .maybe-expose .cluster-config .deployment .healthcheck-exploit-key-secret .maybe-healthcheck .maybe-remote-healthcheck-image .FORCE
+.PHONY: start stop docker ip status logs ssh ssh-healthcheck port-forward test-docker test-kind test-d4w .test-local clean .deploy .network .cluster-config .deployment .healthcheck-exploit-key-secret .FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -17,6 +17,8 @@ PUSH_TARGET="REMOTE"
 PROJECT:=CONFIGMISSING
 CLUSTER_NAME:=CONFIGMISSING
 ZONE:=CONFIGMISSING
+# sets DEPLOY, PUBLIC and HEALTHCHECK
+include chal.conf
 -include $(HOME)/.config/kctf/cluster.conf
 KUBECONFIG=$(HOME)/.config/kctf/kube.conf
 export KUBECONFIG
@@ -24,15 +26,22 @@ export KUBECONFIG
 CHALLENGE_NAME:=$(shell basename ${CURDIR})
 CLUSTER_GEN=.gen/${PROJECT}_${ZONE}_${CLUSTER_NAME}
 
+ifeq ($(HEALTHCHECK), true)
+MAYBE_REMOTE_HEALTHCHECK_IMAGE=${CLUSTER_GEN}/remote-healthcheck-image
+MAYBE_HEALTHCHECK=.healthcheck-exploit-key-secret ${CLUSTER_GEN}/healthcheck-image-pushed ${CLUSTER_GEN}/remote-healthcheck-image
+else
+MAYBE_REMOTE_HEALTHCHECK_IMAGE=
+MAYBE_HEALTHCHECK=
+endif
+
 docker: .gen/docker-image
 
 start:
-	source chal.conf
-	if [ $${DEPLOY} = "true" ]; then
+ifeq ($(DEPLOY), true)
 	  $(MAKE) .deploy
-	else
+else
 	  echo "skipping deployment: DEPLOY=\"$${DEPLOY}\""
-	fi
+endif
 
 stop: .cluster-config
 	for resource_type in deployment service hpa; do
@@ -111,18 +120,16 @@ clean:
 	rm -R .gen/* || true
 	rm -R healthcheck/.gen/* || true
 
-.deploy: .deployment .cluster-config .maybe-expose
+.deploy: .deployment .cluster-config .network
 
-.maybe-expose: | .cluster-config
-	source chal.conf
-	if [ "$${PUBLIC}" = "true" ]; then
-	  kubectl apply -k k8s/network
-	else
-	  kubectl get "service/${CHALLENGE_NAME}" >/dev/null 2>&1 && kubectl delete "service/${CHALLENGE_NAME}" || true
-	fi
+.network: | .cluster-config
+ifeq ($(PUBLIC), true)
+	kubectl apply -k k8s/network
+else
+	kubectl get "service/${CHALLENGE_NAME}" >/dev/null 2>&1 && kubectl delete "service/${CHALLENGE_NAME}" || true
+endif
 
-.deployment: .gen/k8s ${CLUSTER_GEN}/image-pushed ${CLUSTER_GEN}/remote-image .maybe-healthcheck | .cluster-config
-	source chal.conf
+.deployment: .gen/k8s ${CLUSTER_GEN}/image-pushed ${CLUSTER_GEN}/remote-image ${MAYBE_HEALTHCHECK} | .cluster-config
 	kubectl apply -k k8s/deployment
 	# update the challenge container if the image changed
 	PUSHED_IMAGE="$$(cat ${CLUSTER_GEN}/image-tagged)"
@@ -130,14 +137,14 @@ clean:
 	if [ "$${CHAL_IMAGE}" != "$${PUSHED_IMAGE}" ]; then
 	  kubectl set image "deployment/${CHALLENGE_NAME}" "challenge=$${PUSHED_IMAGE}"
 	fi
-	if [ "$${HEALTHCHECK}" = "true" ]; then
-	  # update the healthcheck container if the image changed
-	  PUSHED_HEALTHCHECK_IMAGE="$$(cat ${CLUSTER_GEN}/healthcheck-image-tagged)"
-	  HEALTHCHECK_IMAGE="$$(cat ${CLUSTER_GEN}/remote-healthcheck-image)"
-	  if [ "$${HEALTHCHECK_IMAGE}" != "$${PUSHED_HEALTHCHECK_IMAGE}" ]; then
-	    kubectl set image "deployment/${CHALLENGE_NAME}" "healthcheck=$${HEALTHCHECK_IMAGE}"
-	  fi
+ifeq ($(HEALTHCHECK), true)
+	# update the healthcheck container if the image changed
+	PUSHED_HEALTHCHECK_IMAGE="$$(cat ${CLUSTER_GEN}/healthcheck-image-tagged)"
+	HEALTHCHECK_IMAGE="$$(cat ${CLUSTER_GEN}/remote-healthcheck-image)"
+	if [ "$${HEALTHCHECK_IMAGE}" != "$${PUSHED_HEALTHCHECK_IMAGE}" ]; then
+	  kubectl set image "deployment/${CHALLENGE_NAME}" "healthcheck=$${HEALTHCHECK_IMAGE}"
 	fi
+endif
 
 .gen/docker-image: challenge/Dockerfile .gen/src $(shell find challenge/files) ../kctf-conf/base/nsjail-docker/gen/docker-image
 	docker build -t "kctf-chal-${CHALLENGE_NAME}" challenge
@@ -171,18 +178,6 @@ ${CLUSTER_GEN}/image-pushed: ${CLUSTER_GEN}/image-tagged
 	fi
 	# LOCAL_DOCKER doesn't need to be pushed
 	touch $@
-
-.maybe-healthcheck:
-	source chal.conf
-	if [ "$${HEALTHCHECK}" = "true" ]; then
-	  $(MAKE) .healthcheck-exploit-key-secret ${CLUSTER_GEN}/healthcheck-image-pushed ${CLUSTER_GEN}/remote-healthcheck-image
-	fi
-
-.maybe-remote-healthcheck-image:
-	source chal.conf
-	if [ "$${HEALTHCHECK}" = "true" ]; then
-	  $(MAKE) ${CLUSTER_GEN}/remote-healthcheck-image
-	fi
 
 .gen/healthcheck-docker-image: healthcheck/Dockerfile healthcheck/.gen/exploit.cpio.enc $(shell find healthcheck/files)
 	docker build -t "kctf-healthcheck-${CHALLENGE_NAME}" healthcheck
@@ -344,32 +339,31 @@ export NETWORK_KUSTOMIZATION
 export HEALTHCHECK_CONTAINERS
 # This target doesn't live in a cluster specific directory since we need the name to be predictable
 # To make up for it, we FORCE execution every time
-.gen/k8s: ${CLUSTER_GEN}/remote-image .maybe-remote-healthcheck-image .FORCE | .cluster-config
-	source chal.conf
+.gen/k8s: ${CLUSTER_GEN}/remote-image ${MAYBE_REMOTE_HEALTHCHECK_IMAGE} .FORCE | .cluster-config
 	mkdir -p $@
 	# deployment
 	mkdir -p $@/deployment
 	echo "$${REPLACE_CHAL_NAME}" > "$@/deployment/challenge_name.yaml"
 	echo "$${DEPLOYMENT_KUSTOMIZATION_BASES}" > "$@/deployment/kustomization.yaml"
-	if [ "$${HEALTHCHECK}" = "true" ]; then
-	  echo "$${HEALTHCHECK_KUSTOMIZATION_BASES}" >> "$@/deployment/kustomization.yaml"
-	  echo "- ../../../../kctf-conf/base/k8s/deployment-with-healthcheck" >> "$@/deployment/kustomization.yaml"
-	else
-	  echo "- ../../../../kctf-conf/base/k8s/deployment" >> "$@/deployment/kustomization.yaml" 
-	fi
+ifeq ($(HEALTHCHECK), true)
+	echo "$${HEALTHCHECK_KUSTOMIZATION_BASES}" >> "$@/deployment/kustomization.yaml"
+	echo "- ../../../../kctf-conf/base/k8s/deployment-with-healthcheck" >> "$@/deployment/kustomization.yaml"
+else
+	echo "- ../../../../kctf-conf/base/k8s/deployment" >> "$@/deployment/kustomization.yaml" 
+endif
 	CHAL_IMAGE="$$(cat ${CLUSTER_GEN}/remote-image)"
 	CHAL_IMAGE=($${CHAL_IMAGE//:/ })
 	echo -e "\nimages:\n- name: challenge\n  newName: $${CHAL_IMAGE[0]}\n  newTag: $${CHAL_IMAGE[1]}" >> "$@/deployment/kustomization.yaml"
-	if [ "$${HEALTHCHECK}" = "true" ]; then
-	  HEALTHCHECK_IMAGE="$$(cat ${CLUSTER_GEN}/remote-healthcheck-image)"
-	  HEALTHCHECK_IMAGE=($${HEALTHCHECK_IMAGE//:/ })
-	  echo -e "- name: healthcheck\n  newName: $${HEALTHCHECK_IMAGE[0]}\n  newTag: $${HEALTHCHECK_IMAGE[1]}" >> "$@/deployment/kustomization.yaml"
-	fi
+ifeq ($(HEALTHCHECK), true)
+	HEALTHCHECK_IMAGE="$$(cat ${CLUSTER_GEN}/remote-healthcheck-image)"
+	HEALTHCHECK_IMAGE=($${HEALTHCHECK_IMAGE//:/ })
+	echo -e "- name: healthcheck\n  newName: $${HEALTHCHECK_IMAGE[0]}\n  newTag: $${HEALTHCHECK_IMAGE[1]}" >> "$@/deployment/kustomization.yaml"
+endif
 	echo "$${DEPLOYMENT_KUSTOMIZATION}" >> "$@/deployment/kustomization.yaml"
 	echo "$${CHAL_CONTAINERS}" > "$@/deployment/containers.yaml"
-	if [ "$${HEALTHCHECK}" = "true" ]; then
-	  echo "$${HEALTHCHECK_CONTAINERS}" >> "$@/deployment/containers.yaml"
-	fi
+ifeq ($(HEALTHCHECK), true)
+	echo "$${HEALTHCHECK_CONTAINERS}" >> "$@/deployment/containers.yaml"
+endif
 	# network
 	mkdir -p $@/network
 	echo "$${REPLACE_CHAL_NAME}" > "$@/network/challenge_name.yaml"
