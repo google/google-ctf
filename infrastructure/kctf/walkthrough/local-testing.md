@@ -136,6 +136,15 @@ replacing CONTAINER_NAME with the name of the last ran container.
 
 That will output the logs of the last time the container ran.
 
+#### Permission denied in nsjail
+
+If you see an error in the docker logs that says that it can't access /config/nsjail.cfg
+```
+[W][2020-02-13T15:14:36+0000][1] bool config::parseFile(nsjconf_t*, const char*)():300 Couldn't open config file '/config/nsjail.cfg': Permission denied
+```
+
+That probably means that you didn't [set your umask](#set-the-right-umask) correctly.
+
 #### CLONE error in nsjail
 
 If the error is like this:
