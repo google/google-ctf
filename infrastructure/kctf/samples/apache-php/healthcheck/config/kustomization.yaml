@@ -1,0 +1,10 @@
+configMapGenerator:
+- name: challenge-skeleton-healthcheck-config
+  files:
+  - env
+generatorOptions:
+  disableNameSuffixHash: true
+  labels:
+    type: generated
+  annotations:
+    note: generated

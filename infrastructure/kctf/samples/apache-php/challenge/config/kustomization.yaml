@@ -1,0 +1,12 @@
+configMapGenerator:
+- name: challenge-skeleton-config
+  files:
+  - pow
+  - nsjail-php.cfg
+  - apache2-nsjail-php.conf
+generatorOptions:
+  disableNameSuffixHash: true
+  labels:
+    type: generated
+  annotations:
+    note: generated

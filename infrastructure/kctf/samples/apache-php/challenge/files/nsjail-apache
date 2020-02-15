@@ -1,0 +1,8 @@
+#!/bin/bash
+
+service apache2 start
+
+wget -O - http://127.0.0.1:1337/?apache-is-running
+
+/usr/bin/k8s_nsjail_setup.sh
+tail -f /var/log/apache2/*
