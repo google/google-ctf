@@ -5,6 +5,7 @@ metadata:
 spec:
   type: "LoadBalancer"
   ports:
-  - protocol: "TCP"
+  - name: "netcat"
+    protocol: "TCP"
     port: 1
     targetPort: 1337
