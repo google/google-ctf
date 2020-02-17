@@ -103,19 +103,23 @@ test-docker: .gen/docker-id
 healthcheck-test-docker: .gen/healthcheck-docker-id
 	docker ps -f ancestor=kctf-healthcheck-${CHALLENGE_NAME}
 
-.gen/healthcheck-docker-id: .gen/docker-name
-	test -f .gen/healthcheck-docker-id && docker kill $$(cat .gen/healthcheck-docker-id) || true
-	docker run -d -it --network "container:$$(cat .gen/docker-name)" "kctf-healthcheck-${CHALLENGE_NAME}" > $@
+.gen/healthcheck-docker-id: .gen/docker-name .gen/healthcheck-docker-image
+	test -s .gen/healthcheck-docker-id && docker kill $$(cat .gen/healthcheck-docker-id) || true
+	docker run -d -it --network "container:$$(cat .gen/docker-name)" \
+		--mount "type=bind,source=$(CURDIR)/healthcheck/config,target=/config"\
+		--mount "type=bind,source=$(CURDIR)/healthcheck/secrets,target=/secrets"\
+		--mount "type=bind,source=$(CURDIR)/healthcheck/.gen/exploit.key,target=/keys/exploit.key"\
+		"kctf-healthcheck-${CHALLENGE_NAME}" > $@
 
 .gen/docker-name: .gen/docker-id
 	docker ps --all -f id=$$(cat .gen/docker-id) --format {{.Names}} > $@
 
 .gen/docker-id: PUSH_TARGET="LOCAL_DOCKER"
 .gen/docker-id: docker
-	test -f .gen/docker-id && docker kill $$(cat .gen/docker-id) || true
+	test -s .gen/docker-id && docker kill $$(cat .gen/docker-id) || true
 	docker run -d -it -p 1337 \
-		--mount type=bind,source="$(CURDIR)/challenge/config,target=/config"\
-		--mount type=bind,source="$(CURDIR)/challenge/secrets,target=/secrets"\
+		--mount "type=bind,source=$(CURDIR)/challenge/config,target=/config"\
+		--mount "type=bind,source=$(CURDIR)/challenge/secrets,target=/secrets"\
 		--privileged "kctf-chal-${CHALLENGE_NAME}" > $@
 
 test-kind: LOCAL_KUBECONFIG=".gen/kind-kubeconfig"
