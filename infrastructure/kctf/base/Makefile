@@ -105,7 +105,7 @@ healthcheck-test-docker: .gen/healthcheck-docker-id
 
 .gen/healthcheck-docker-id: .gen/docker-name
 	test -f .gen/healthcheck-docker-id && docker kill $$(cat .gen/healthcheck-docker-id) || true
-	docker run -d -it --network "container:$$(cat .gen/docker-name)" "kctf-healthcheck-${CHALLENGE_NAME}"
+	docker run -d -it --network "container:$$(cat .gen/docker-name)" "kctf-healthcheck-${CHALLENGE_NAME}" > $@
 
 .gen/docker-name: .gen/docker-id
 	docker ps --all -f id=$$(cat .gen/docker-id) --format {{.Names}} > $@
