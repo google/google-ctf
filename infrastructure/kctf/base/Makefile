@@ -6,7 +6,7 @@
 #
 #
 
-.PHONY: start stop docker ip status logs ssh ssh-healthcheck port-forward test-docker test-kind test-d4w .test-local clean .deploy .network .cluster-config .deployment .healthcheck-exploit-key-secret .FORCE
+.PHONY: start stop docker ip status logs ssh healthcheck-ssh port-forward test-docker healthcheck-test-docker test-kind test-d4w .test-local clean .deploy .network .cluster-config .deployment .healthcheck-exploit-key-secret .FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -91,16 +91,36 @@ logs: .cluster-config
 ssh: .cluster-config
 	kubectl exec deployment/${CHALLENGE_NAME} -c challenge -it /bin/bash
 
-ssh-healthcheck: .cluster-config
+healthcheck-ssh: .cluster-config
 	kubectl exec deployment/${CHALLENGE_NAME} -c healthcheck -it /bin/bash
 
 port-forward: .cluster-config
 	kubectl port-forward deployment/${CHALLENGE_NAME} :1337 &
 
-test-docker: PUSH_TARGET="LOCAL_DOCKER"
-test-docker: docker
-	docker run -d -p 1337 --mount type=bind,source="$(CURDIR)/challenge/config,target=/config" --mount type=bind,source="$(CURDIR)/challenge/secrets",target=/secrets --privileged -it "kctf-chal-${CHALLENGE_NAME}"
+test-docker: .gen/docker-id
 	docker ps -f ancestor=kctf-chal-${CHALLENGE_NAME}
+
+healthcheck-test-docker: .gen/healthcheck-docker-id
+	docker ps -f ancestor=kctf-healthcheck-${CHALLENGE_NAME}
+
+.gen/healthcheck-docker-id: .gen/docker-name .gen/healthcheck-docker-image
+	test -s .gen/healthcheck-docker-id && docker kill $$(cat .gen/healthcheck-docker-id) || true
+	docker run -d -it --network "container:$$(cat .gen/docker-name)" \
+		--mount "type=bind,source=$(CURDIR)/healthcheck/config,target=/config"\
+		--mount "type=bind,source=$(CURDIR)/healthcheck/secrets,target=/secrets"\
+		--mount "type=bind,source=$(CURDIR)/healthcheck/.gen/exploit.key,target=/keys/exploit.key"\
+		"kctf-healthcheck-${CHALLENGE_NAME}" > $@
+
+.gen/docker-name: .gen/docker-id
+	docker ps --all -f id=$$(cat .gen/docker-id) --format {{.Names}} > $@
+
+.gen/docker-id: PUSH_TARGET="LOCAL_DOCKER"
+.gen/docker-id: docker
+	test -s .gen/docker-id && docker kill $$(cat .gen/docker-id) || true
+	docker run -d -it -p 1337 \
+		--mount "type=bind,source=$(CURDIR)/challenge/config,target=/config"\
+		--mount "type=bind,source=$(CURDIR)/challenge/secrets,target=/secrets"\
+		--privileged "kctf-chal-${CHALLENGE_NAME}" > $@
 
 test-kind: LOCAL_KUBECONFIG=".gen/kind-kubeconfig"
 test-kind: PUSH_TARGET="KIND"
@@ -176,7 +196,6 @@ ${CLUSTER_GEN}/image-pushed: ${CLUSTER_GEN}/image-tagged
 	if [ "${PUSH_TARGET}" == "KIND" ]; then
 	  kind load docker-image "$${IMAGE_TAG}"
 	fi
-	# LOCAL_DOCKER doesn't need to be pushed
 	touch $@
 
 .gen/healthcheck-docker-image: healthcheck/Dockerfile healthcheck/.gen/exploit.cpio.enc $(shell find healthcheck/files)
