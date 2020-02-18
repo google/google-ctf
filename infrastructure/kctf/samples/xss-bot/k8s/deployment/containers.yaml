@@ -1,0 +1,16 @@
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "chal"
+spec:
+  template:
+    spec:
+      containers:
+      - name: "challenge"
+        volumeMounts:
+        - name: "tmp"
+          mountPath: "/tmp"
+      volumes:
+      - name: "tmp"
+        emptyDir:
+          medium: "Memory"

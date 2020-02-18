@@ -1,4 +1,4 @@
 # Output files should go to ../files
 
-../gen/src:
+../../.gen/src:
 	touch $@

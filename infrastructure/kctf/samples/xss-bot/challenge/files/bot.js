@@ -15,6 +15,9 @@ const crypto = require("crypto");
 
   function ask_for_pow(socket) {
     let pow_difficulty = Number.parseInt(fs.readFileSync('/config/pow'));
+    if (socket.address().address == "::ffff:127.0.0.1") {
+      pow_difficulty = 0;
+    }
     if (pow_difficulty) {
       socket.write('Proof-of-work enabled.\n');
       verifier = new pow.Verifier({
