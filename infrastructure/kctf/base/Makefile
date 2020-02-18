@@ -162,7 +162,7 @@ ifeq ($(HEALTHCHECK), true)
 	PUSHED_HEALTHCHECK_IMAGE="$$(cat ${CLUSTER_GEN}/healthcheck-image-tagged)"
 	HEALTHCHECK_IMAGE="$$(cat ${CLUSTER_GEN}/remote-healthcheck-image)"
 	if [ "$${HEALTHCHECK_IMAGE}" != "$${PUSHED_HEALTHCHECK_IMAGE}" ]; then
-	  kubectl set image "deployment/${CHALLENGE_NAME}" "healthcheck=$${HEALTHCHECK_IMAGE}"
+	  kubectl set image "deployment/${CHALLENGE_NAME}" "healthcheck=$${PUSHED_HEALTHCHECK_IMAGE}"
 	fi
 endif
 
