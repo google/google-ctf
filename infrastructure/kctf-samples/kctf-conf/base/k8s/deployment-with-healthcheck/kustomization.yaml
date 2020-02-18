@@ -1,0 +1,4 @@
+bases:
+- ../deployment
+patchesStrategicMerge:
+- containers.yaml

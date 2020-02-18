@@ -1,0 +1,41 @@
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "chal"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/challenge: localhost/ctf-profile
+    spec:
+      containers:
+      - name: "challenge"
+        image: "challenge"
+        ports:
+        - containerPort: 1337
+        securityContext:
+          capabilities:
+            add: ["SYS_ADMIN"]
+          readOnlyRootFilesystem: true
+        command:
+        resources:
+          limits:
+            cpu: "0.9"
+          requests:
+            cpu: "0.45"
+        volumeMounts:
+        - name: "secrets"
+          mountPath: "/secrets"
+          readOnly: true
+        - name: "config"
+          mountPath: "/config"
+          readOnly: true
+      volumes:
+      - name: "secrets"
+        secret:
+          secretName: "secrets"
+          defaultMode: 0444
+      - name: "config"
+        configMap:
+          name: "config"
