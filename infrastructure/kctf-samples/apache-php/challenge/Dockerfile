@@ -26,8 +26,6 @@ COPY files/html/ /chroot/var/www/html/
 COPY files/cgi-bin/ /usr/lib/cgi-bin/
 COPY files/root/ /root/
 
-RUN chmod 0755 /chroot/var/www/html
-RUN chmod 0755 /usr/lib/cgi-bin/nsjail-php-cgi
-RUN chmod 0755 /root/launch-apache
+RUN chmod 0755 /chroot/var/www/html /usr/lib/cgi-bin/nsjail-php-cgi /root/launch-apache
 
 CMD /root/launch-apache
