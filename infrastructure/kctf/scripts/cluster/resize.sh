@@ -22,7 +22,7 @@ echo '= Current node pool ='
 echo
 gcloud container node-pools describe "${OLD_POOL_NAME}" --cluster ${CLUSTER_NAME} --format 'table(name, config.machineType, initialNodeCount, autoscaling.minNodeCount, autoscaling.maxNodeCount)'
 
-MACHINE_TYPE="n1-standard-2"
+MACHINE_TYPE="n2-standard-4"
 MIN_NODES="1"
 MAX_NODES="1"
 NUM_NODES="1"
@@ -56,7 +56,7 @@ echo "  n1-highmem-4 means a 4 vCPUs VM of N1 gen with more RAM (27G for 4CPUs).
 echo "  n1-highcpu-4 means a 4 vCPUs VM of N1 gen with less RAM (3G for 4CPUs)."
 echo
 echo -n "  Available machine types: (Loading...)"
-gcloud compute machine-types list --zones="${ZONE}" --format="csv[no-heading](name)" | xargs echo -e "\r  Available machine types: "
+gcloud compute machine-types list --zones="${ZONE}" --format="csv[no-heading](name)" | egrep '^n2' | xargs echo -e "\r  Available machine types: "
 read -e -p "  Machine type: " -i "${MACHINE_TYPE}" MACHINE_TYPE
 
 echo '= New config ='
@@ -78,8 +78,7 @@ gcloud container node-pools create "${NEW_POOL_NAME}" \
   --num-nodes="${NUM_NODES}" \
   --enable-autoscaling \
   --min-nodes="${MIN_NODES}" \
-  --max-nodes="${MAX_NODES}" \
-  --node-labels=cloud.google.com/gke-smt-disabled=true
+  --max-nodes="${MAX_NODES}"
 
 for node in $(kubectl get nodes -l cloud.google.com/gke-nodepool="${OLD_POOL_NAME}" -o=name); do
   kubectl cordon "$node"

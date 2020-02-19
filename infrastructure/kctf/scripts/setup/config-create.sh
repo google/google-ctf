@@ -69,7 +69,7 @@ echo " Used for cluster configuration"
 echo "  The zone defines the geographic location of the cluster."
 echo
 echo -n "  Available zones: (Loading...)"
-gcloud compute zones list --format="csv[no-heading](name)" | xargs echo -e "\r  Available zones: "
+gcloud compute machine-types list --filter="name=( n2-standard-4 )" --format 'value(zone)' | xargs echo -e "\r  Available zones: "
 echo
 read_config ZONE "GCP Zone"
 echo
