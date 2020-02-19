@@ -25,7 +25,7 @@ CHAL_DIR=$(realpath -L ${CHAL_DIR})
 if [ ! -d "${CHAL_DIR}/kctf-conf" ]; then
     mkdir -p "${CHAL_DIR}/kctf-conf"
     umask o+rx
-    cp -R "${DIR}/base" "${CHAL_DIR}/kctf-conf/"
+    cp -p -R "${DIR}/base" "${CHAL_DIR}/kctf-conf/"
 fi
 
 mkdir -p "${CONFIG_DIR}"
