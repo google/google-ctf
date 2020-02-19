@@ -11,7 +11,10 @@ MAX_NODES="8"
 NUM_NODES="4"
 MACHINE_TYPE="n1-standard-1"
 
-gcloud container clusters create --enable-network-policy --enable-autoscaling --min-nodes ${MIN_NODES} --max-nodes ${MAX_NODES} --num-nodes ${NUM_NODES} --enable-autorepair --preemptible --machine-type ${MACHINE_TYPE} ${CLUSTER_NAME}
+gcloud container clusters create --enable-network-policy --enable-autoscaling --min-nodes ${MIN_NODES} --max-nodes ${MAX_NODES} --num-nodes ${NUM_NODES} --create-subnetwork name=kctf-${CLUSTER_NAME}-subnet --no-enable-master-authorized-networks --enable-ip-alias --enable-private-nodes --master-ipv4-cidr 172.16.0.32/28 --enable-autorepair --preemptible --machine-type ${MACHINE_TYPE} ${CLUSTER_NAME}
+
+gcloud compute routers create kctf-${CLUSTER_NAME}-nat-router --network=default --region ${ZONE::-2}
+gcloud compute routers nats create kctf-${CLUSTER_NAME}-nat-config --router-region europe-west4 --router kctf-${CLUSTER_NAME}-nat-router --nat-all-subnet-ip-ranges --auto-allocate-nat-external-ips
 
 get_cluster_creds
 

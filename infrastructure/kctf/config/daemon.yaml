@@ -19,7 +19,7 @@ spec:
         effect: NoSchedule
       containers:
       - name: ctf-daemon
-        image: google/apparmor-loader:latest
+        image: eu.gcr.io/google_containers/apparmor-loader
         securityContext:
           privileged: true
         command: ["sh", "-c", "while true; do for f in /profiles/*; do echo \"loading $f\"; apparmor_parser -r $f; sleep 30; done; done"]

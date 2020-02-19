@@ -10,8 +10,8 @@ mkdir -p "${CONFIG_DIR}"
 
 CHAL_DIR=""
 PROJECT=""
-ZONE="europe-west3-c"
-CLUSTER_NAME="ctf-cluster-eu"
+ZONE="europe-west4-b"
+CLUSTER_NAME="kctf-cluster"
 DOMAIN_NAME=""
 
 config=""
