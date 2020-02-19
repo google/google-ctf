@@ -1,0 +1,29 @@
+name: "php-cgi-nsjail-configuration"
+description: "PHP CGI nsjail configuration for web RCE CTF task."
+
+mode: ONCE
+chroot_dir: "/chroot"
+uidmap {inside_id: "1000"}
+gidmap {inside_id: "1000"}
+mount_proc: true
+keep_env: true
+rlimit_as_type: HARD
+rlimit_cpu_type: HARD
+rlimit_nofile_type: HARD
+rlimit_nproc_type: HARD
+
+mount: [{
+		src: "/secrets"
+      		dst: "/secrets"
+		is_bind: true
+	},
+	{
+		src: "/config"
+		          dst: "/config"
+			      is_bind: true
+			        }
+				]
+
+exec_bin {
+    path: "/usr/lib/cgi-bin/php"
+}

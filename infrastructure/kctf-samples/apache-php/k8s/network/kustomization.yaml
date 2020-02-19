@@ -1,0 +1,5 @@
+bases:
+- ../../.gen/k8s/network
+
+patchesStrategicMerge:
+- network.yaml

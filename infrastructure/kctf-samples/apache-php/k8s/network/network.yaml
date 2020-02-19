@@ -1,0 +1,11 @@
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "chal"
+spec:
+  type: "LoadBalancer"
+  ports:
+  - name: "http"
+    protocol: "TCP"
+    port: 80
+    targetPort: 1337
