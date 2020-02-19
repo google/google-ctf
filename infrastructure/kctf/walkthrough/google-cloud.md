@@ -5,9 +5,26 @@ The purpose of this walkthrough is to guide you along the way to configure the i
 ## First, enable the necessary GCP features
 Before we start, you need to have billing set up, and the compute API enabled. Let's do that now.
 1. <walkthrough-project-billing-setup>Select a project and enable billing.</walkthrough-project-billing-setup>
-1. <walkthrough-enable-apis apis="compute.googleapis.com">Enable the compute API.</walkthrough-enable-apis>
+1. <walkthrough-enable-apis apis="compute.googleapis.com,container.googleapis.com,containerregistry.googleapis.com">Enable the compute API.</walkthrough-enable-apis>
+
+You can enable APIs from the command line with:
+```
+gcloud services enable compute container containerregistry.googleapis.com
+```
 
 ## Then, configure the project
+
+### Make sure your umask allows copying executable files
+
+```
+umask 0022
+```
+
+### Enable docker integration with Google Container Registry
+
+```
+gcloud auth configure-docker
+```
 
 ### Add the bin directory to your PATH
 
