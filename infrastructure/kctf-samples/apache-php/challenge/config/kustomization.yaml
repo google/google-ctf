@@ -1,7 +1,7 @@
 configMapGenerator:
 - name: apache-php-config
   files:
-  - apache-nsjail-php.conf
+  - apache2-nsjail-php.conf
   - nsjail-php.cfg
 generatorOptions:
   disableNameSuffixHash: true
