@@ -20,7 +20,7 @@ if [ -d "${CHALLENGE_DIR}" ]; then
 fi
 
 umask a+rx
-cp -r "${CHAL_DIR}/kctf-conf/base/challenge-skeleton" "${CHALLENGE_DIR}"
+cp -p -r "${CHAL_DIR}/kctf-conf/base/challenge-skeleton" "${CHALLENGE_DIR}"
 
 pushd "${CHALLENGE_DIR}"
 
