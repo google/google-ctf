@@ -1,0 +1,11 @@
+configMapGenerator:
+- name: apache-php-config
+  files:
+  - apache-nsjail-php.conf
+  - nsjail-php.cfg
+generatorOptions:
+  disableNameSuffixHash: true
+  labels:
+    type: generated
+  annotations:
+    note: generated
