@@ -12,11 +12,11 @@ SUFFIX=$(echo "${PROJECT}-${CLUSTER_NAME}-${ZONE}" | sha1sum)
 BUCKET_NAME="kctf-gcsfuse-${SUFFIX:0:16}"
 GSA_NAME="${BUCKET_NAME}"
 
-GSA_EMAIL=$(gcloud iam service-accounts list --filter name:gcsfuse-gsa --format 'get(email)' || true)
+GSA_EMAIL=$(gcloud iam service-accounts list --filter "name:${GSA_NAME}" --format 'get(email)' || true)
 
 if [ -z "${GSA_EMAIL}" ]; then
   gcloud iam service-accounts create "${GSA_NAME}" --description "service account used for GCS filesystem ${PROJECT} ${CLUSTER_NAME} ${ZONE}" --display-name "kCTF GCSFUSE service account ${PROJECT} ${CLUSTER_NAME} ${ZONE}"
-  GSA_EMAIL=$(gcloud iam service-accounts list --filter name:gcsfuse-gsa --format 'get(email)')
+  GSA_EMAIL=$(gcloud iam service-accounts list --filter "name:${GSA_NAME}" --format 'get(email)')
 fi
 
 if ! gsutil du "gs://${BUCKET_NAME}/"; then
@@ -36,3 +36,5 @@ kubectl create secret generic gcsfuse-secrets --dry-run -o yaml --from-file="${K
 rm -rf $KEY_PATH
 
 kubectl create configmap gcsfuse-config --dry-run -o yaml --from-literal=gcs_bucket="${BUCKET_NAME}" --namespace kube-system | kubectl replace -f -
+
+kctf-kubectl rollout restart daemonset/ctf-daemon-gcsfuse --namespace kube-system
