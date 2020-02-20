@@ -18,8 +18,12 @@ gcloud compute routers nats create kctf-${CLUSTER_NAME}-nat-config --router-regi
 
 get_cluster_creds
 
+kubectl create configmap gcsfuse-config --namespace kube-system
+kubectl create secret generic gcsfuse-secrets --namespace kube-system
+
 kubectl create -f "${DIR}/config/apparmor.yaml"
 kubectl create -f "${DIR}/config/daemon.yaml"
+kubectl create -f "${DIR}/config/daemon-gcsfuse.yaml"
 kubectl create -f "${DIR}/config/network-policy.yaml"
 kubectl create -f "${DIR}/config/allow-dns.yaml"
 kubectl patch ServiceAccount default --patch "automountServiceAccountToken: false"
