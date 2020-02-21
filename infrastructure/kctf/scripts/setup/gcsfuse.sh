@@ -32,7 +32,7 @@ gcloud iam service-accounts keys create "${KEY_PATH}" --iam-account "${GSA_EMAIL
 
 kubectl create secret generic gcsfuse-secrets --dry-run -o yaml --from-file="${KEY_PATH}" --namespace kube-system | kubectl replace -f -
 
-rm -rf $KEY_PATH
+rm -rf $(dirname "${KEY_PATH}")
 
 kubectl create configmap gcsfuse-config --dry-run -o yaml --from-literal=gcs_bucket="${BUCKET_NAME}" --namespace kube-system | kubectl replace -f -
 
