@@ -24,8 +24,7 @@ if ! gsutil du "gs://${BUCKET_NAME}/"; then
   gsutil uniformbucketlevelaccess set on "gs://${BUCKET_NAME}/"
 fi
 
-gcloud projects add-iam-policy-binding "${PROJECT}" --member "serviceAccount:${GSA_EMAIL}" --role roles/storage.objectViewer
-gcloud projects add-iam-policy-binding "${PROJECT}" --member "serviceAccount:${GSA_EMAIL}" --role roles/storage.objectCreator
+gcloud projects add-iam-policy-binding "${PROJECT}" --member "serviceAccount:${GSA_EMAIL}" --role roles/storage.objectAdmin
 
 KEY_PATH=$(mktemp -d)/key.json
 
@@ -37,4 +36,4 @@ rm -rf $KEY_PATH
 
 kubectl create configmap gcsfuse-config --dry-run -o yaml --from-literal=gcs_bucket="${BUCKET_NAME}" --namespace kube-system | kubectl replace -f -
 
-kctf-kubectl rollout restart daemonset/ctf-daemon-gcsfuse --namespace kube-system
+kubectl rollout restart daemonset/ctf-daemon-gcsfuse --namespace kube-system
