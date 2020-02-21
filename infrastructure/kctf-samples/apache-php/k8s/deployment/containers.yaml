@@ -2,3 +2,15 @@ apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
   name: "chal"
+spec:
+  template:
+    spec:
+      containers:
+      - name: challenge
+        volumeMounts:
+        - name: gcstask
+          mountPath: /mnt/disks/gcs-task
+      volumes:
+      - name: gcstask
+        hostPath:
+          path: /mnt/disks/gcs/apache-php
