@@ -2,3 +2,11 @@ apiVersion: "v1"
 kind: "Service"
 metadata:
   name: "chal"
+#spec:
+#  ports:
+#  - name: "netcat"
+#    protocol: "TCP"
+## This will be the public port
+#    port: 1
+## This is the port exposed by the pod
+#    targetPort: 1337
