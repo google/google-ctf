@@ -22,6 +22,10 @@ RUN ln -s /config/apache2-nsjail-php.conf /etc/apache2/conf-enabled/nsjail-php.c
 RUN rm -rf /var/www
 RUN ln -s /chroot/var/www /var/www
 
+RUN rm -rf /chroot/var/lib/php/sessions
+RUN chroot /chroot rm -rf /var/lib/php/sessions
+RUN chroot /chroot ln -s /mnt/disks/gcs-task/sessions /var/lib/php/sessions
+
 COPY files/html/ /chroot/var/www/html/
 COPY files/cgi-bin/ /usr/lib/cgi-bin/
 COPY files/root/ /root/
