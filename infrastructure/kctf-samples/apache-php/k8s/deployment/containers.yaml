@@ -8,9 +8,14 @@ spec:
       containers:
       - name: challenge
         volumeMounts:
-        - name: gcstask
-          mountPath: /mnt/disks/gcs-task
+        - name: sessions
+          mountPath: /mnt/disks/sessions
+        - name: uploads
+          mountPath: /mnt/disks/uploads
       volumes:
-      - name: gcstask
+      - name: sessions
         hostPath:
-          path: /mnt/disks/gcs/apache-php
+          path: /mnt/disks/gcs/apache-php/sessions
+      - name: uploads
+        hostPath:
+          path: /mnt/disks/gcs/apache-php/uploads

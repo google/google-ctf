@@ -13,7 +13,7 @@ if (isset($_FILES['file'])) {
    print_r($_FILES['file']);
    $filename = uniqid('file_', true);
    echo $filename;
-   move_uploaded_file($_FILES['file']['tmp_name'], '/mnt/disks/gcs-task/uploads/'. $filename);
+   move_uploaded_file($_FILES['file']['tmp_name'], '/mnt/disks/uploads/'. $filename);
 }
 ?>
 </pre>

@@ -24,7 +24,7 @@ RUN ln -s /chroot/var/www /var/www
 
 RUN rm -rf /chroot/var/lib/php/sessions
 RUN chroot /chroot rm -rf /var/lib/php/sessions
-RUN chroot /chroot ln -s /mnt/disks/gcs-task/sessions /var/lib/php/sessions
+RUN chroot /chroot ln -s /mnt/disks/sessions /var/lib/php/sessions
 
 COPY files/html/ /chroot/var/www/html/
 COPY files/cgi-bin/ /usr/lib/cgi-bin/
