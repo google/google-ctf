@@ -1,7 +1,5 @@
 #!/bin/bash
 
-mkdir -p /mnt/disks/gcs-task/sessions /mnt/disks/gcs-task/uploads
-
 /usr/bin/k8s_nsjail_setup.sh
 
 service apache2 start
