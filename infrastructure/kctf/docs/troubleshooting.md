@@ -204,29 +204,6 @@ In addition, you can run any kubectl command under the kCTF cluter by configurin
 alias kctf-kubectl="kubectl --kubeconfig=${HOME}/.config/kctf/kube.conf"
 ```
 
-### Restarting and redeploying
-
-A good first step is to just restart the challenge. This can be done if you just run:
-```
-kctf-kubectl rollout restart deployment/kctf-chal-troubleshooting
-```
-
-To make kubernetes automatically restart flaky challenges, you should have a healthcheck.
-
-To redeploy the challenge (for example, if the challenge works well locally in a local cluster), you can run:
-```
-make start
-```
-
-This will deploy the working challenge to the remote cluster.
-
-To undo a bad rollout, you can run:
-```
-kubectl rollout undo deployment/kctf-chal-troubleshooting
-```
-
-Although, next time you run make start (and rollout a new deployment), you'll likely break the task again. You can also run:
-
 ### Restarting or redeploying
 
 A good first step is to just restart the challenge. This can be done if you just run:
