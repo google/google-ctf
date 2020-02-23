@@ -6,12 +6,12 @@ Users are reporting a challenge is down, when you connect, you see nothing. Let'
 
 To play this game, we need to simulate a broken challenge, so we have one in samples. Run:
 ```
-kctf-setup-chal-dir $PWD/samples
+kctf-setup-chal-dir kctf-samples
 ```
 
 This will setup the samples directory as a challenge directory, and now let's go to the challenge directory.
 ```
-cd samples/troubleshooting
+cd samples/troubleshooting-docker
 ```
 
 Now here, we want to test in docker:
