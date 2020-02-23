@@ -7,7 +7,7 @@ kCTF is a template for deploying tasks using Kubernetes that uses NsJail for iso
 
 A good mental model for kCTF is to think of things as:
 
-![Image describing the relationship between clusters, deployments, the containers, and nsjail](https://raw.githubusercontent.com/google/google-ctf/master/infrastructure/kctf/walkthrough/images/introduction-k8s.png)
+![Image describing the relationship between clusters, deployments, the containers, and nsjail](images/introduction-k8s.png)
 
 *   A Cluster has a bunch of Challenges
     *   A Challenge is configured as a Deployment in Kubernetes.
