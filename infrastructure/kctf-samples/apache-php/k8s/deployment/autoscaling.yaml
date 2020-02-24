@@ -2,5 +2,6 @@ apiVersion: "autoscaling/v1"
 kind: "HorizontalPodAutoscaler"
 metadata:
   name: "chal"
-#spec:
-#  maxReplicas: 3
+spec:
+  minReplicas: 2
+  maxReplicas: 2
