@@ -166,7 +166,7 @@ ifeq ($(HEALTHCHECK), true)
 	fi
 endif
 
-.gen/docker-image: challenge/Dockerfile .gen/src $(shell find challenge/files) ../kctf-conf/base/nsjail-docker/gen/docker-image
+.gen/docker-image: challenge/Dockerfile .gen/src $(shell find challenge/files) ../kctf-conf/base/nsjail-docker/.gen/docker-image
 	docker build -t "kctf-chal-${CHALLENGE_NAME}" challenge
 	echo $$(docker image ls "kctf-chal-${CHALLENGE_NAME}" -q) > $@
 
@@ -242,8 +242,8 @@ healthcheck/.gen/exploit-key.yaml: healthcheck/.gen/exploit.key | .cluster-confi
 .healthcheck-exploit-key-secret: healthcheck/.gen/exploit-key.yaml | .cluster-config
 	kubectl apply -f healthcheck/.gen/exploit-key.yaml
 
-../kctf-conf/base/nsjail-docker/gen/docker-image: .FORCE
-	$(MAKE) -C ${@D}/.. gen/docker-image
+../kctf-conf/base/nsjail-docker/.gen/docker-image: .FORCE
+	$(MAKE) -C ${@D}/.. .gen/docker-image
 
 ${CLUSTER_GEN}/remote-image: ${CLUSTER_GEN}/image-tagged .FORCE
 	PUSHED_IMAGE="$$(cat ${CLUSTER_GEN}/image-tagged)"
