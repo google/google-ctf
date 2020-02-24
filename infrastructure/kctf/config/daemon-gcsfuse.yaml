@@ -22,7 +22,7 @@ spec:
         image: ubuntu:19.10
         securityContext:
           privileged: true
-        command: ["sh", "-c", "apt-get update && apt-get install -y wget fuse && wget -q https://github.com/GoogleCloudPlatform/gcsfuse/releases/download/v0.29.0/gcsfuse_0.29.0_amd64.deb && dpkg -i gcsfuse_0.29.0_amd64.deb && mkdir -p /mnt/disks/gcs && ((test -f /config/gcs_bucket && gcsfuse --foreground --debug_fuse --debug_gcs --stat-cache-ttl 0 -type-cache-ttl 0 -o allow_other --file-mode 0777 --dir-mode 0777 --uid 1000 --gid 1000 --key-file=$(ls /secrets/*.json|head -n 1) $(cat /config/gcs_bucket) /mnt/disks/gcs) || echo NO GCS BUCKET CONFIGURED>&2; chmod 0777 /mnt/disks/gcs && chown 1000:1000 /mnt/disks/gcs; true)"]
+        command: ["sh", "-c", "apt-get update && apt-get install -y wget fuse && wget -q https://github.com/GoogleCloudPlatform/gcsfuse/releases/download/v0.29.0/gcsfuse_0.29.0_amd64.deb && dpkg -i gcsfuse_0.29.0_amd64.deb && mkdir -p /mnt/disks/gcs && ((test -f /config/gcs_bucket && gcsfuse --foreground --debug_fuse --debug_gcs --stat-cache-ttl 0 -type-cache-ttl 0 -o allow_other -o nonempty --file-mode 0777 --dir-mode 0777 --uid 1000 --gid 1000 --key-file=$(ls /secrets/*.json|head -n 1) $(cat /config/gcs_bucket) /mnt/disks/gcs))"]
         volumeMounts:
         - name: mnt-disks-gcs
           mountPath: /mnt/disks/gcs
