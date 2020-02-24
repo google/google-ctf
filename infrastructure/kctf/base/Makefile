@@ -6,7 +6,7 @@
 #
 #
 
-.PHONY: start stop docker ip status logs ssh healthcheck-ssh port-forward test-docker healthcheck-test-docker test-kind test-d4w .test-local clean .deploy .network .cluster-config .deployment .healthcheck-exploit-key-secret .FORCE
+.PHONY: start stop docker ip status logs healthcheck-logs ssh healthcheck-ssh port-forward test-docker healthcheck-test-docker test-kind test-d4w .test-local clean .deploy .network .cluster-config .deployment .healthcheck-exploit-key-secret .FORCE
 
 SHELL := bash
 .ONESHELL:
@@ -87,6 +87,9 @@ status: .cluster-config
 
 logs: .cluster-config
 	kubectl logs -l "app=${CHALLENGE_NAME}" -c challenge
+
+healthcheck-logs: .cluster-config
+	kubectl logs -l "app=${CHALLENGE_NAME}" -c healthcheck
 
 ssh: .cluster-config
 	kubectl exec deployment/${CHALLENGE_NAME} -c challenge -it /bin/bash
