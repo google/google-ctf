@@ -34,7 +34,7 @@ get_cluster_creds
 SUFFIX=$(echo "${PROJECT}-${CLUSTER_NAME}-${ZONE}" | sha1sum)
 BUCKET_NAME="kctf-gcsfuse-${SUFFIX:0:16}"
 GSA_NAME="${BUCKET_NAME}"
-GSA_EMAIL=$(gcloud iam service-accounts list --filter "name:${GSA_NAME}" --format 'get(email)' || true)
+GSA_EMAIL=$(gcloud iam service-accounts list --filter "name=${GSA_NAME}" --format 'get(email)' || true)
 
 if [ -z "${GSA_EMAIL}" ]; then
   gcloud iam service-accounts create "${GSA_NAME}" --description "kCTF GCSFUSE service account ${CLUSTER_NAME} ${ZONE}" --display-name "kCTF GCSFUSE ${CLUSTER_NAME} ${ZONE}"
