@@ -1,5 +1,0 @@
-#!/bin/bash
-
-echo '== Welcome to the kctf sample challenge =='
-
-exec /home/user/shell

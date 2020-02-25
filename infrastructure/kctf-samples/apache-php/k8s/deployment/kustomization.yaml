@@ -1,6 +1,0 @@
-bases:
-- ../../.gen/k8s/deployment
-
-patchesStrategicMerge:
-- autoscaling.yaml
-- containers.yaml
