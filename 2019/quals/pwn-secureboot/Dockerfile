@@ -11,7 +11,7 @@ RUN set -e -x ;\
 	chmod 0444 /home/sb/OVMF.fd; \
 	chmod 0444 /home/sb/contents/*; \
   apt-get update; \
-  apt-get install -y python3 qemu-system-x86
+  apt-get --no-install-recommends install -y python3 qemu-system-x86
 USER sb
 CMD cd /home/sb && ./run.py
 

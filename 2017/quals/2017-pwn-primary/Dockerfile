@@ -4,7 +4,7 @@ FROM ubuntu:14.04
 RUN set -e -x ;\
         apt-get update ;\
         apt-get -y upgrade ;\
-        apt-get install -y libgoogle-perftools-dev clang-3.8 ;\
+        apt-get --no-install-recommends install -y libgoogle-perftools-dev clang-3.8 ;\
         rm -rf /var/lib/apt/lists/*
 
 RUN set -e -x ;\

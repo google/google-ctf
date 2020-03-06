@@ -5,7 +5,7 @@ RUN set -e -x; \
   useradd -g 1337 -u 1337 -m www
 # Install deps
 RUN apt-get update
-RUN apt-get install -y curl python python-dev build-essential gcc supervisor
+RUN apt-get --no-install-recommends install -y curl python python-dev build-essential gcc supervisor
 RUN rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py

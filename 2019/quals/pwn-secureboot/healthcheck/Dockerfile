@@ -1,5 +1,5 @@
 FROM ubuntu:18.04
-RUN apt-get update && apt-get install python2.7 python-pip python-dev git libssl-dev libffi-dev build-essential python3-pip -y
+RUN apt-get update && apt-get --no-install-recommends install python2.7 python-pip python-dev git libssl-dev libffi-dev build-essential python3-pip -y
 RUN pip3 install nameko
 RUN pip install git+https://github.com/Gallopsled/pwntools.git@dev
 RUN set -e -x ;\

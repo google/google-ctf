@@ -2,7 +2,7 @@ FROM debian:stable
 
 RUN apt-get update
 RUN apt-get -y upgrade
-RUN apt-get -y install python chromium strace gdb nano libatk-bridge2.0-0 libgtk-3-0
+RUN apt-get -y --no-install-recommends install python chromium strace gdb nano libatk-bridge2.0-0 libgtk-3-0
 
 RUN set -e -x; \
     groupadd -g 1337 user; \

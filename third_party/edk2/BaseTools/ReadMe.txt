@@ -34,7 +34,7 @@ the base directory of the project.
 On Ubuntu, the following command should install all the necessary build
 packages to build all the C BaseTools:
 
-  sudo apt-get install build-essential uuid-dev
+  sudo apt-get --no-install-recommends install build-essential uuid-dev
 
 === Python sqlite3 module ===
 On Windows, the cx_freeze will not copy the sqlite3.dll to the frozen

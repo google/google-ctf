@@ -16,7 +16,7 @@ FROM ubuntu:19.04
 
 RUN apt update && apt upgrade -y
 
-RUN apt-get install -y \
+RUN apt-get --no-install-recommends install -y \
     autoconf \
     bison \
     flex \

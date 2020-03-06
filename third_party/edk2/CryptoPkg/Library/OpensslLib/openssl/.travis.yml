@@ -177,7 +177,7 @@ script:
       fi;
     - if [ -z "$BUILDONLY" ]; then
           if [ -n "$CROSS_COMPILE" ]; then
-              sudo apt-get -yq install wine;
+              sudo apt-get --no-install-recommends -yq install wine;
               export EXE_SHELL="wine" WINEPREFIX=`pwd`;
           fi;
           HARNESS_VERBOSE=yes make test;

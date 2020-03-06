@@ -89,7 +89,7 @@
         $ apt-cache search Text::Template
         ...
         libtext-template-perl - perl module to process text templates
-        $ sudo apt-get install libtext-template-perl
+        $ sudo apt-get --no-install-recommends install libtext-template-perl
 
     Perl modules in Debian based distributions use package names like
     the name of the module in question, with "lib" prepended and

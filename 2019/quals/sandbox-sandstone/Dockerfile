@@ -14,7 +14,7 @@
 
 FROM ubuntu:19.04
 
-RUN apt update && apt install -y wget build-essential libseccomp-dev
+RUN apt-get update && apt-get --no-install-recommends -q install -y wget build-essential libseccomp-dev
 ENV CARGO_HOME=/opt/cargo RUSTUP_HOME=/opt/rustup PATH="${PATH}:/opt/cargo/bin"
 ADD https://sh.rustup.rs /rustup-init
 RUN chmod a+x /rustup-init && /rustup-init -y --default-toolchain nightly-2019-05-18 && rm /rustup-init

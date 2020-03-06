@@ -1,5 +1,5 @@
 FROM ubuntu:16.10
-RUN apt-get update && apt-get install -y wget xz-utils openjdk-8-jre xvfb python python-pil
+RUN apt-get update && apt-get --no-install-recommends install -y wget xz-utils openjdk-8-jre xvfb python python-pil
 
 ENV ARDUINO_IDE_VERSION 1.8.1
 RUN wget -q -O /opt/arduino.tar.xz https://downloads.arduino.cc/arduino-${ARDUINO_IDE_VERSION}-linux64.tar.xz && tar xvf /opt/arduino.tar.xz -C /opt/

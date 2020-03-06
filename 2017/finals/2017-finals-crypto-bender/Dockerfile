@@ -1,7 +1,7 @@
 FROM ubuntu:17.04
 
 RUN apt-get update
-RUN apt-get install -y python
+RUN apt-get --no-install-recommends install -y python
 
 RUN set -e -x ;\
         groupadd -g 1337 user ;\

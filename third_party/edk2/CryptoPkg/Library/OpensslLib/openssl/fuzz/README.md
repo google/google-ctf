@@ -9,7 +9,7 @@ Starting from a vanilla+OpenSSH server Ubuntu install.
 
 Use Chrome's handy recent build of clang. Older versions may also work.
 
-    $ sudo apt-get install git
+    $ sudo apt-get --no-install-recommends install git
     $ mkdir git-work
     $ git clone https://chromium.googlesource.com/chromium/src/tools/clang
     $ clang/scripts/update.py
@@ -24,7 +24,7 @@ Get and build libFuzzer (there is a git mirror at
 https://github.com/llvm-mirror/llvm/tree/master/lib/Fuzzer if you prefer):
 
     $ cd
-    $ sudo apt-get install subversion
+    $ sudo apt-get --no-install-recommends install subversion
     $ mkdir svn-work
     $ cd svn-work
     $ svn co http://llvm.org/svn/llvm-project/llvm/trunk/lib/Fuzzer
@@ -39,7 +39,7 @@ Configure for fuzzing:
             --with-fuzzer-include=../../svn-work/Fuzzer \
             --with-fuzzer-lib=../../svn-work/Fuzzer/libFuzzer \
             -DPEDANTIC enable-asan enable-ubsan no-shared
-    $ sudo apt-get install make
+    $ sudo apt-get --no-install-recommends install make
     $ LDCMD=clang++ make -j
     $ fuzz/helper.py $FUZZER
 
@@ -55,7 +55,7 @@ AFL
 
 Configure for fuzzing:
 
-    $ sudo apt-get install afl-clang
+    $ sudo apt-get --no-install-recommends install afl-clang
     $ CC=afl-clang-fast ./config enable-fuzz-afl no-shared
     $ make
 

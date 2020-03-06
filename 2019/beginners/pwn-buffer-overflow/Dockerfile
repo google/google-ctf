@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 LABEL maintainer="David Wearing <wearing@google.com>"
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y qemu qemu-user-static
+RUN apt-get --no-install-recommends install -y qemu qemu-user-static
 RUN set -e -x; \
         groupadd -g 1337 user; \
         useradd -g 1337 -u 1337 -m user
