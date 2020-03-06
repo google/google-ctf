@@ -4,20 +4,20 @@ RUN apt-get update
 
 
 # Use UTF-8
-RUN apt-get --no-install-recommends install -y locales
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https locales
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-RUN apt-get --no-install-recommends install -y socat
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https socat
 
 # For debugging
-RUN apt-get --no-install-recommends install -y vim-common
-RUN apt-get --no-install-recommends install -y less
-RUN apt-get --no-install-recommends install -y gdb-multiarch
-RUN apt-get --no-install-recommends install -y git
-RUN apt-get --no-install-recommends install -y sudo
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https vim-common
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https less
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https gdb-multiarch
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https git
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https sudo
 
 RUN git clone https://github.com/pwndbg/pwndbg.git
 RUN cd pwndbg && bash setup.sh
@@ -25,7 +25,7 @@ RUN cd pwndbg && bash setup.sh
 RUN git clone https://github.com/Gallopsled/pwntools.git
 RUN cd pwntools && pip install -Ue .
 
-RUN apt-get --no-install-recommends install -y tmux
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https tmux
 
 
 RUN mkdir                /challenge

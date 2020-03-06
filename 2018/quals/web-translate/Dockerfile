@@ -25,10 +25,10 @@ RUN set -e -x; \
 
 # Install deps
 RUN apt-get update
-RUN apt-get --no-install-recommends install -y curl gnupg sudo memcached supervisor strace
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https curl gnupg sudo memcached supervisor strace
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get update
-RUN apt-get --no-install-recommends install -y nodejs && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https nodejs && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 # Get the CTF files there
 ADD chall /usr/local/chall

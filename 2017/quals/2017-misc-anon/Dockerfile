@@ -6,9 +6,9 @@ ENV LANGUAGE C.UTF-8
 ENV LC_ALL C.UTF-8
 
 RUN apt-get update
-RUN apt-get --no-install-recommends install -y perl
-RUN apt-get --no-install-recommends install -y netcat
-RUN apt-get --no-install-recommends install -y libjson-perl libdigest-hmac-perl
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https perl
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https netcat
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https libjson-perl libdigest-hmac-perl
 
 ADD ./misc_rjamet.pl /chall/
 ADD ./flag.txt /chall/

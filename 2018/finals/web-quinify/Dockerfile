@@ -6,11 +6,11 @@ RUN set -e -x; \
 
 
 RUN apt-get update
-RUN apt-get --no-install-recommends install -y curl gnupg
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https curl gnupg
 
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get update
-RUN apt-get --no-install-recommends install -y nodejs && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https nodejs && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 ADD app /app
 WORKDIR /app

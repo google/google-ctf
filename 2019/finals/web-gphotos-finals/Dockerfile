@@ -1,6 +1,6 @@
 FROM debian
 RUN apt-get update -y
-RUN apt-get --no-install-recommends install -y python3-pip python3-dev build-essential imagemagick libmagickwand-dev supervisor
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https python3-pip python3-dev build-essential imagemagick libmagickwand-dev supervisor
 
 RUN set -e -x; groupadd -g 1337 user; useradd -g 1337 -u 1337 -m user
 RUN set -e -x; groupadd -g 1338 admin; useradd -g 1338 -u 1338 -m admin

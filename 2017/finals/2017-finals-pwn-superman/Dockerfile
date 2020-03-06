@@ -3,7 +3,7 @@ FROM ubuntu:xenial
 RUN apt-get update
 
 # Use UTF-8
-RUN apt-get --no-install-recommends install -y locales
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https locales
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
