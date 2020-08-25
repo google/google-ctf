@@ -1,0 +1,96 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "com.example.app"
+        minSdkVersion 23
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(':ads-api')
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
+
+android.applicationVariants.all { variant ->
+    if (variant.name == "release" || 1 == 1) {
+        variant.mergeAssetsProvider.get().dependsOn ":ads-impl:apk:assembleRelease"
+        variant.mergeAssetsProvider.get().doLast {
+            copy {
+                from "../ads-impl/apk/build/outputs/apk/release/apk-release-unsigned.apk"
+                into variant.mergeAssetsProvider.get().outputDir
+                rename("apk-release-unsigned.apk", "ads-impl.apk")
+            }
+        }
+        variant.mergeAssetsProvider.get().doLast {
+            exec {
+                commandLine "jarsigner", "-verbose",
+                        "-sigalg", "SHA1withRSA",
+                        "-digestalg", "SHA1",
+                        "-keystore", "../release-key.jks",
+                        "-storepass", "password",
+                        "-keypass", "password",
+                        variant.mergeAssetsProvider.get().outputDir.get().toString() + "/ads-impl.apk",
+                        "key0"
+
+            }
+        }
+    } else {
+        variant.mergeAssetsProvider.get().dependsOn ":ads-impl:apk:assembleDebug"
+        variant.mergeAssetsProvider.get().doLast {
+            copy {
+                from "../ads-impl/apk/build/outputs/apk/debug/apk-debug.apk"
+                into variant.mergeAssetsProvider.get().outputDir
+                rename("apk-debug.apk", "ads-impl.apk")
+            }
+        }
+    }
+}
+//
+//android.applicationVariants.debug { variant ->
+//    variant.mergeAssetsProvider.get().dependsOn ":ads-impl:apk:assembleDebug"
+//    variant.mergeAssetsProvider.get().doLast {
+//        copy {
+//            from "../ads-impl/apk/build/outputs/apk/debug/apk-debug.apk"
+//            into variant.mergeAssetsProvider.get().outputDir
+//            rename("apk-debug.apk", "ads-impl.apk")
+//        }
+//    }
+//    //task "bundleAdsImpl${variant.name.capitalize()}" (type: Zip) {
+//    //    dependsOn(":ads-impl:dex${variant.name.capitalize()}")
+//    //    archiveFileName = "ads-impl.jar"
+//    //    from tasks.getByPath(":ads-impl:dex${variant.name.capitalize()}").output
+//    //}
+//    //variant.mergeAssetsProvider.get().dependsOn "bundleAdsImpl${variant.name.capitalize()}"
+//    //variant.mergeAssetsProvider.get().doLast {
+//    //    copy {
+//    //        from tasks.getByPath("bundleAdsImpl${variant.name.capitalize()}").archiveFile
+//    //        into variant.mergeAssetsProvider.get().outputDir
+//    //    }
+//    //}
+//}

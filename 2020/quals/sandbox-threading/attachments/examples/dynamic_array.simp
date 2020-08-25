@@ -1,0 +1,18 @@
+def int32 main() {
+  array<int64> data = make_array<int64>(3);
+  data[0] = 0;
+  data[1] = 1;
+  data[2] = 2;
+  resize(data, 5);
+  data[3] = 3;
+  data[4] = 9223372036854775807;
+  print(data);
+  
+  resize(data, 2);
+  print(data);
+  
+  data = make_array<int64>(7);
+  print(data);
+  
+  return 0;
+}

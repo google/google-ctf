@@ -1,0 +1,217 @@
+diff --git a/examples/board_simduino/simduino.c b/examples/board_simduino/simduino.c
+index 007b383..7f4fc30 100644
+--- a/examples/board_simduino/simduino.c
++++ b/examples/board_simduino/simduino.c
+@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
+ 	char boot_path[1024] = "ATmegaBOOT_168_atmega328.ihex";
+ 	uint32_t boot_base, boot_size;
+ 	char * mmcu = "atmega328p";
+-	uint32_t freq = 16000000;
++	uint32_t freq = 1000000;
+ 	int debug = 0;
+ 	int verbose = 0;
+ 
+@@ -130,14 +130,14 @@ int main(int argc, char *argv[])
+ 		mmcu = "atmega2560";
+ 		freq = 20000000;
+ 	}
+-	printf("%s booloader 0x%05x: %d bytes\n", mmcu, boot_base, boot_size);
++	//printf("%s booloader 0x%05x: %d bytes\n", mmcu, boot_base, boot_size);
+ 
+ 	snprintf(flash_data.avr_flash_path, sizeof(flash_data.avr_flash_path),
+ 			"simduino_%s_flash.bin", mmcu);
+ 	flash_data.avr_flash_fd = 0;
+ 	// register our own functions
+-	avr->custom.init = avr_special_init;
+-	avr->custom.deinit = avr_special_deinit;
++	//avr->custom.init = avr_special_init;
++	//avr->custom.deinit = avr_special_deinit;
+ 	avr->custom.data = &flash_data;
+ 	avr_init(avr);
+ 	avr->frequency = freq;
+diff --git a/examples/parts/uart_pty.c b/examples/parts/uart_pty.c
+index 1aba826..df68335 100644
+--- a/examples/parts/uart_pty.c
++++ b/examples/parts/uart_pty.c
+@@ -157,6 +157,7 @@ uart_pty_thread(
+ 		void * param)
+ {
+ 	uart_pty_t * p = (uart_pty_t*)param;
++	int ti = 0;
+ 
+ 	while (1) {
+ 		fd_set read_set, write_set;
+@@ -164,16 +165,14 @@ uart_pty_thread(
+ 		FD_ZERO(&read_set);
+ 		FD_ZERO(&write_set);
+ 
+-		for (int ti = 0; ti < 2; ti++) if (p->port[ti].s) {
+-			// read more only if buffer was flushed
+-			if (p->port[ti].buffer_len == p->port[ti].buffer_done) {
+-				FD_SET(p->port[ti].s, &read_set);
+-				max = p->port[ti].s > max ? p->port[ti].s : max;
+-			}
+-			if (!uart_pty_fifo_isempty(&p->port[ti].in)) {
+-				FD_SET(p->port[ti].s, &write_set);
+-				max = p->port[ti].s > max ? p->port[ti].s : max;
+-			}
++		// read more only if buffer was flushed
++		if (p->port[ti].buffer_len == p->port[ti].buffer_done) {
++			FD_SET(0, &read_set);
++			max = 0 > max ? 0 : max;
++		}
++		if (!uart_pty_fifo_isempty(&p->port[ti].in)) {
++			FD_SET(1, &write_set);
++			max = 1 > max ? 1 : max;
+ 		}
+ 
+ 		// short, but not too short interval
+@@ -183,48 +182,42 @@ uart_pty_thread(
+ 		if (ret < 0)
+ 			break;
+ 
+-		for (int ti = 0; ti < 2; ti++) if (p->port[ti].s) {
+-			if (FD_ISSET(p->port[ti].s, &read_set)) {
+-				ssize_t r = read(p->port[ti].s, p->port[ti].buffer,
+-									sizeof(p->port[ti].buffer)-1);
+-				p->port[ti].buffer_len = r;
+-				p->port[ti].buffer_done = 0;
+-				TRACE(if (!p->port[ti].tap)
+-						hdump("pty recv", p->port[ti].buffer, r);)
+-			}
+-			if (p->port[ti].buffer_done < p->port[ti].buffer_len) {
+-				// write them in fifo
+-				while (p->port[ti].buffer_done < p->port[ti].buffer_len &&
+-						!uart_pty_fifo_isfull(&p->port[ti].out)) {
+-					int index = p->port[ti].buffer_done++;
+-					TRACE(int wi = p->port[ti].out.write;)
+-					uart_pty_fifo_write(&p->port[ti].out,
+-							p->port[ti].buffer[index]);
+-					TRACE(printf("w %3d:%02x (%d/%d) %s\n",
+-								wi, p->port[ti].buffer[index],
+-								p->port[ti].out.read,
+-								p->port[ti].out.write,
+-								p->xon ? "XON" : "XOFF");)
+-				}
++		if (FD_ISSET(0, &read_set)) {
++			ssize_t r = read(0, p->port[ti].buffer,
++								sizeof(p->port[ti].buffer)-1);
++			p->port[ti].buffer_len = r;
++			p->port[ti].buffer_done = 0;
++			TRACE(if (!p->port[ti].tap)
++					hdump("pty recv", p->port[ti].buffer, r);)
++		}
++		if (p->port[ti].buffer_done < p->port[ti].buffer_len) {
++			// write them in fifo
++			while (p->port[ti].buffer_done < p->port[ti].buffer_len &&
++					!uart_pty_fifo_isfull(&p->port[ti].out)) {
++				int index = p->port[ti].buffer_done++;
++				TRACE(int wi = p->port[ti].out.write;)
++				uart_pty_fifo_write(&p->port[ti].out,
++						p->port[ti].buffer[index]);
++				TRACE(printf("w %3d:%02x (%d/%d) %s\n",
++							wi, p->port[ti].buffer[index],
++							p->port[ti].out.read,
++							p->port[ti].out.write,
++							p->xon ? "XON" : "XOFF");)
+ 			}
+-			if (FD_ISSET(p->port[ti].s, &write_set)) {
+-				uint8_t buffer[512];
+-				// write them in fifo
+-				uint8_t * dst = buffer;
+-				while (!uart_pty_fifo_isempty(&p->port[ti].in) &&
+-						(dst - buffer) < sizeof(buffer)) {
+-					*dst = uart_pty_fifo_read(&p->port[ti].in);
+-					dst++;
+-				}
+-				size_t len = dst - buffer;
+-				TRACE(size_t r =) write(p->port[ti].s, buffer, len);
+-				TRACE(if (!p->port[ti].tap) hdump("pty send", buffer, r);)
++		}
++		if (FD_ISSET(1, &write_set)) {
++			uint8_t buffer[512];
++			// write them in fifo
++			uint8_t * dst = buffer;
++			while (!uart_pty_fifo_isempty(&p->port[ti].in) &&
++					(dst - buffer) < sizeof(buffer)) {
++				*dst = uart_pty_fifo_read(&p->port[ti].in);
++				dst++;
+ 			}
++			size_t len = dst - buffer;
++			TRACE(size_t r =) write(1, buffer, len);
++			TRACE(if (!p->port[ti].tap) hdump("pty send", buffer, r);)
+ 		}
+-		/* DO NOT call this, this create a concurency issue with the
+-		 * FIFO that can't be solved cleanly with a memory barrier
+-			uart_pty_flush_incoming(p);
+-		  */
+ 	}
+ 	return NULL;
+ }
+@@ -244,30 +237,7 @@ uart_pty_init(
+ 	p->avr = avr;
+ 	p->irq = avr_alloc_irq(&avr->irq_pool, 0, IRQ_UART_PTY_COUNT, irq_names);
+ 	avr_irq_register_notify(p->irq + IRQ_UART_PTY_BYTE_IN, uart_pty_in_hook, p);
+-
+-	int hastap = (getenv("SIMAVR_UART_TAP") && atoi(getenv("SIMAVR_UART_TAP"))) ||
+-			(getenv("SIMAVR_UART_XTERM") && atoi(getenv("SIMAVR_UART_XTERM"))) ;
+-
+-	for (int ti = 0; ti < 1 + hastap; ti++) {
+-		int m, s;
+-
+-		if (openpty(&m, &s, p->port[ti].slavename, NULL, NULL) < 0) {
+-			fprintf(stderr, "%s: Can't create pty: %s", __FUNCTION__, strerror(errno));
+-			return ;
+-		}
+-		struct termios tio;
+-		tcgetattr(m, &tio);
+-		cfmakeraw(&tio);
+-		tcsetattr(m, TCSANOW, &tio);
+-		p->port[ti].s = m;
+-		p->port[ti].tap = ti != 0;
+-		p->port[ti].crlf = ti != 0;
+-		printf("uart_pty_init %s on port *** %s ***\n",
+-				ti == 0 ? "bridge" : "tap", p->port[ti].slavename);
+-	}
+-
+ 	pthread_create(&p->thread, NULL, uart_pty_thread, p);
+-
+ }
+ 
+ void
+@@ -307,22 +277,5 @@ uart_pty_connect(
+ 	if (xoff)
+ 		avr_irq_register_notify(xoff, uart_pty_xoff_hook, p);
+ 
+-	for (int ti = 0; ti < 1; ti++) if (p->port[ti].s) {
+-		char link[128];
+-		sprintf(link, "/tmp/simavr-uart%s%c", ti == 1 ? "tap" : "", uart);
+-		unlink(link);
+-		if (symlink(p->port[ti].slavename, link) != 0) {
+-			fprintf(stderr, "WARN %s: Can't create %s: %s", __func__, link, strerror(errno));
+-		} else {
+-			printf("%s: %s now points to %s\n", __func__, link, p->port[ti].slavename);
+-		}
+-	}
+-	if (getenv("SIMAVR_UART_XTERM") && atoi(getenv("SIMAVR_UART_XTERM"))) {
+-		char cmd[256];
+-		sprintf(cmd, "xterm -e picocom -b 115200 %s >/dev/null 2>&1 &",
+-				p->tap.slavename);
+-		system(cmd);
+-	} else
+-		printf("note: export SIMAVR_UART_XTERM=1 and install picocom to get a terminal\n");
+ }
+ 
+diff --git a/examples/parts/uart_pty.h b/examples/parts/uart_pty.h
+index a75f9f5..9e7ddb9 100644
+--- a/examples/parts/uart_pty.h
++++ b/examples/parts/uart_pty.h
+@@ -33,7 +33,7 @@ enum {
+ 	IRQ_UART_PTY_COUNT
+ };
+ 
+-DECLARE_FIFO(uint8_t,uart_pty_fifo, 512);
++DECLARE_FIFO(uint8_t,uart_pty_fifo, 65536);
+ 
+ typedef struct uart_pty_port_t {
+ 	unsigned int	tap : 1, crlf : 1;

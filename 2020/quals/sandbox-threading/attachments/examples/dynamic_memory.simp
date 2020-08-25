@@ -1,0 +1,12 @@
+def void increment(ref<int32> x) {
+  deref(x) = deref(x) + 1;
+}
+
+def int32 main() {
+  ref<int32> y = new<int32>(4);
+  increment(y);
+  print(deref(y));
+  print("\n");
+  
+  return 0;
+}

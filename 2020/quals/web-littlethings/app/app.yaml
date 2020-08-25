@@ -1,0 +1,21 @@
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+runtime: nodejs10
+service: littlethings-vwatzbndzbawnsfs
+
+env_variables:
+  NODE_SECRET_KEY: "beUJUaqC1PQ+GXKba4yjvSZbpIAaTaV7r7eOZY7Iyjc="
+  FLAG: "CTF{When_the_w0rld_c0mes_t0_an_end_all_that_matters_are_these_little_things}"
+  COOKIE_SECRET: "JIxlOzqAhNFSuVGNM1MYvcmOzlVeH9ql46MoQX6RpHE"

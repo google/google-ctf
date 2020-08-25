@@ -1,0 +1,89 @@
+<!--
+Copyright 2020 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="/static/styles/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles/bootstrap.css">
+    <script src="/static/scripts/dompurify.js"></script>
+    <script src="/static/scripts/captcha.js"></script>
+</head>
+
+<body>
+    <%- include('nav') %>
+    
+  
+    <div class=container>
+        <div class="container pt-5 w-75">
+
+            <div class=card>
+                <div class="card-header">
+                    <a id="note-title" class="card-title"></a>
+                </div>
+                <div class="card-body">
+                    <div id="note-content"></div>
+                </div>
+
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item p-0">
+                        <form action="/report/<%= id %>" method="POST" class="form row">
+                            <%-captcha%>
+                            <button type="submit" class="btn btn-link col-md-6 border-right">share with TJMike🎤</button>
+                            <button type="button" id=back class="btn btn-link col-md-6">back</button>
+                        </form>
+                    </li>
+                </ul>
+
+            </div>
+            <br>
+            <div id="alert-container" class="card">
+                <div id="alert" class="card-body"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TODO: Fix b/1337 in /source that could lead to XSS -->
+    
+    <script>
+        const note = "<%- content %>";
+        const note_id = "<%- id %>";
+        const note_el = document.getElementById('note-content');
+        const note_url_el = document.getElementById('note-title');
+        const clean = DOMPurify.sanitize(note);
+        note_el.innerHTML = clean;
+        note_url_el.href = `/${note_id}`;
+        note_url_el.innerHTML = `${note_id}`;
+    </script>
+
+    <script>
+        const msg = (new URL(location)).searchParams.get('msg');
+        const back = document.getElementById('back');
+        const alert_div = document.getElementById('alert');
+        const alert_container = document.getElementById('alert-container');
+        back.onclick = () => history.back();
+        if (msg) {
+            alert_div.innerText = msg;
+            alert_container.style.display = "block";
+            setTimeout(() => {
+                alert_container.style.display = "none";
+            }, 4000);
+        }
+    </script>
+</body>
+
+</html>

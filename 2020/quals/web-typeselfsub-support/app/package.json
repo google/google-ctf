@@ -1,0 +1,15 @@
+{
+  "name": "chat_support",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "jpginc",
+  "license": "ISC",
+  "description": "Support site for another challenge",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

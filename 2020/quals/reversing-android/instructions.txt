@@ -1,0 +1,15 @@
+# Unzip the base APK to a folder
+mv base.apk base.zip
+unzip app.zip -d app/
+
+# Use smali to build new classes.dex
+java -jar smali-2.2.4.jar ass src/ -o app/classes.dex -a 26
+
+# Build the APK again
+cd app
+zip -r out.apk *
+mv out.apk /tmp/out.apk
+
+# Sign it
+cd $ANDROID_HOME/Sdk/build-tools/28.0.2/lib
+java -jar apksigner.jar sign --ks ~/.android/debug.keystore /tmp/out.apk

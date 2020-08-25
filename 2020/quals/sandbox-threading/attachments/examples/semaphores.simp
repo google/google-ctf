@@ -1,0 +1,52 @@
+
+semaphore sem1 = 1;
+semaphore sem2 = 0;
+
+def void t_func() {
+  down(sem1);
+  print(1);
+  up(sem2);
+  
+  down(sem1);
+  print(3);
+  up(sem2);
+  
+  down(sem1);
+  print(5);
+  up(sem2);
+  
+  down(sem1);
+  print(7);
+  up(sem2);
+  
+  down(sem1);
+  print(9);
+  up(sem2);
+}
+
+def int32 main() {
+  thread t = make_thread(t_func);
+  
+  down(sem2);
+  print(2);
+  up(sem1);
+  
+  down(sem2);
+  print(4);
+  up(sem1);
+  
+  down(sem2);
+  print(6);
+  up(sem1);
+  
+  down(sem2);
+  print(8);
+  up(sem1);
+  
+  down(sem2);
+  print(10);
+  up(sem1);
+  
+  print("\n");
+  return 0;
+}

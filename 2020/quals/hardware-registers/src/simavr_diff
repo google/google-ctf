@@ -1,0 +1,1834 @@
+diff --git a/Makefile.common b/Makefile.common
+index 60df96a..61f54bf 100644
+--- a/Makefile.common
++++ b/Makefile.common
+@@ -114,7 +114,7 @@ OBJ 		:= obj-${shell $(CC) -dumpmachine}
+ LIBDIR		:= ${shell pwd}/${SIMAVR}/${OBJ}
+ LDFLAGS 	+= -L${LIBDIR} -lsimavr -lm
+ 
+-LDFLAGS 	+= -lelf
++LDFLAGS 	+= -lelf -lz -lpthread
+ 
+ ifeq (${WIN}, Msys)
+ LDFLAGS      += -lws2_32
+diff --git a/examples/board_i2ctest/Makefile b/examples/board_i2ctest/Makefile
+index 73d8983..9d8de96 100644
+--- a/examples/board_i2ctest/Makefile
++++ b/examples/board_i2ctest/Makefile
+@@ -16,7 +16,7 @@
+ #	You should have received a copy of the GNU General Public License
+ #	along with simavr.  If not, see <http://www.gnu.org/licenses/>.
+ 
+-target=	i2ctest
++target=	matter
+ firm_src = ${wildcard at*${board}.c}
+ firmware = ${firm_src:.c=.axf}
+ simavr = ../..
+@@ -31,14 +31,13 @@ VPATH = .
+ VPATH += ${simavr}/examples/shared
+ VPATH += ${simavr}/examples/parts
+ 
++LDFLAGS = -static
+ 
+ all: obj ${firmware} ${target} 
+ 
+ include ${simavr}/Makefile.common
+ 
+-atmega1280_${target}.axf: atmega1280_${target}.c twimaster.c
+-atmega1280_${target}.axf: ${simavr}/examples/shared/avr_twi_master.c
+-atmega1280_${target}.axf: ${simavr}/examples/shared/avr_twi_master.h
++atmega2560_${target}.axf: atmega2560_${target}.c twimaster.c
+ 
+ board = ${OBJ}/${target}.elf
+ 
+diff --git a/examples/board_i2ctest/atmega1280_i2ctest.c b/examples/board_i2ctest/atmega1280_i2ctest.c
+deleted file mode 100644
+index 8bab174..0000000
+--- a/examples/board_i2ctest/atmega1280_i2ctest.c
++++ /dev/null
+@@ -1,140 +0,0 @@
+-/*
+-	atmega48_i2ctest.c
+-
+-	Copyright 2008-2011 Michel Pollet <buserror@gmail.com>
+-
+- 	This file is part of simavr.
+-
+-	simavr is free software: you can redistribute it and/or modify
+-	it under the terms of the GNU General Public License as published by
+-	the Free Software Foundation, either version 3 of the License, or
+-	(at your option) any later version.
+-
+-	simavr is distributed in the hope that it will be useful,
+-	but WITHOUT ANY WARRANTY; without even the implied warranty of
+-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-	GNU General Public License for more details.
+-
+-	You should have received a copy of the GNU General Public License
+-	along with simavr.  If not, see <http://www.gnu.org/licenses/>.
+- */
+-
+-#include <avr/io.h>
+-#include <avr/interrupt.h>
+-#include <avr/sleep.h>
+-
+-// for linker, emulator, and programmer's sake
+-#include "avr_mcu_section.h"
+-AVR_MCU(F_CPU, "atmega1280");
+-
+-#include "../shared/avr_twi_master.h"
+-#include "../shared/twimaster.h"
+-
+-#include <stdio.h>
+-
+-#define EEPROM_ADDR	0xA0
+-
+-static int uart_putchar(char c, FILE *stream) {
+-  if (c == '\n')
+-    uart_putchar('\r', stream);
+-  loop_until_bit_is_set(UCSR0A, UDRE0);
+-  UDR0 = c;
+-  return 0;
+-}
+-
+-static FILE mystdout = FDEV_SETUP_STREAM(uart_putchar, NULL,
+-                                         _FDEV_SETUP_WRITE);
+-
+-static void
+-test_twi_with_atmel_driver(void)
+-{
+-	TWI_Master_Initialise();
+-
+-	{	// write 2 bytes at some random address
+-		uint8_t msg[8] = {
+-				EEPROM_ADDR, // TWI address,
+-				0xaa, 0x01, // eeprom address, in little endian
+-				0xde, 0xad,	// data bytes
+-		};
+-		TWI_Start_Transceiver_With_Data(msg, 5, 1);
+-
+-		while (TWI_Transceiver_Busy())
+-			sleep_mode();
+-	}
+-	{
+-		uint8_t msg[8] = {
+-				EEPROM_ADDR, // TWI address,
+-				0xa8, 0x01, // eeprom address, in little endian
+-		};
+-		TWI_Start_Transceiver_With_Data(msg, 3, 0); // dont send stop!
+-
+-		while (TWI_Transceiver_Busy())
+-			sleep_mode();
+-	}
+-	{
+-		uint8_t msg[9] = {
+-				EEPROM_ADDR + 1, // TWI address,
+-		};
+-		TWI_Start_Transceiver_With_Data(msg, 9, 1); // write 1 byte, read 8, send stop
+-
+-		while (TWI_Transceiver_Busy())
+-			sleep_mode();
+-	}
+-}
+-
+-/*
+- * Tests the TWI using a commonly used and non-interrupt driven
+- * alternative to the Atmel driver:
+- *
+- * "I2C master library using hardware TWI interface"
+- * Author:   Peter Fleury <pfleury@gmx.ch>  http://jump.to/fleury
+- */
+-static void
+-test_twi_with_pf_driver(void)
+-{
+-	/*
+-	 * This init followed by a start condition is enough to overwrite all TWI
+-	 * related bits set by TWI_Master_Initialise () in the Atmel driver.
+-	 */
+-	i2c_init();
+-
+-	i2c_start(EEPROM_ADDR + I2C_WRITE);
+-	// eeprom address, in little endian
+-	i2c_write(0xaa);
+-	i2c_write(0x01);
+-	// data bytes
+-	i2c_write(0xd0);
+-	i2c_write(0x0d);
+-	i2c_stop();
+-
+-	i2c_start(EEPROM_ADDR + I2C_WRITE);
+-	// set address
+-	i2c_write(0xa8);
+-	i2c_write(0x01);
+-	// Don't stop
+-
+-	// Read back data
+-	i2c_start (EEPROM_ADDR + I2C_READ);
+-	for (uint8_t i = 0; i < 8; ++i) {
+-		i2c_readNak();
+-	};
+-	i2c_stop();
+-}
+-
+-int main()
+-{
+-	stdout = &mystdout;
+-
+-	sei();
+-
+-	test_twi_with_atmel_driver();
+-
+-	/*
+-	 * This should produce *exactly* the same output as above, except
+-	 * the data written should be D00D as opposed to DEAD.
+-	 */
+-	test_twi_with_pf_driver ();
+-
+-	cli();
+-	sleep_mode();
+-}
+diff --git a/examples/board_i2ctest/atmega2560_matter.c b/examples/board_i2ctest/atmega2560_matter.c
+new file mode 100644
+index 0000000..ad7c37f
+--- /dev/null
++++ b/examples/board_i2ctest/atmega2560_matter.c
+@@ -0,0 +1,259 @@
++// Copyright 2020 Google LLC
++//
++// Licensed under the Apache License, Version 2.0 (the "License");
++// you may not use this file except in compliance with the License.
++// You may obtain a copy of the License at
++//
++//     https://www.apache.org/licenses/LICENSE-2.0
++//
++// Unless required by applicable law or agreed to in writing, software
++// distributed under the License is distributed on an "AS IS" BASIS,
++// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++// See the License for the specific language governing permissions and
++// limitations under the License.
++#define ANSI_STDIO
++
++#include <stdio.h>
++#include <string.h>
++#include <stdlib.h>
++#include <ctype.h>
++
++#include <avr/io.h>
++#include <avr/interrupt.h>
++#include <avr/eeprom.h>
++#include <avr/sleep.h>
++
++#include "../shared/twimaster.h"
++
++#include "avr_mcu_section.h"
++AVR_MCU(F_CPU, "atmega2560");
++
++#define EEPROM_ADDR 0xA0
++
++#define USE_USART_ISR 1
++
++static int uart_putchar(char c, FILE *stream)
++{
++  loop_until_bit_is_set(UCSR0A, UDRE0);
++  UDR0 = c;
++  return 0;
++}
++
++#if USE_USART_ISR
++volatile char uart_ready;
++
++ISR(USART0_RX_vect) {
++  uart_ready = 1;
++}
++
++int
++uart_getchar(FILE *stream)
++{
++  while (1) {
++    cli();
++    if (!uart_ready) {
++      sleep_enable();
++      sei();
++      sleep_cpu();
++      sleep_disable();
++    }
++    cli();
++    if (uart_ready) {
++      uart_ready = 0;
++      if (UCSR0A & _BV(FE0)) {
++        return _FDEV_EOF;
++      } else if (UCSR0A & _BV(DOR0)) {
++        return _FDEV_ERR;
++      }
++      uint8_t c = UDR0;
++      sei();
++      return c;
++    }
++    sei();
++  }
++}
++#else
++int
++uart_getchar(FILE *stream)
++{
++  loop_until_bit_is_set(UCSR0A, RXC0);
++
++  if (UCSR0A & _BV(FE0)) {
++    return _FDEV_EOF;
++  } else if (UCSR0A & _BV(DOR0)) {
++    return _FDEV_ERR;
++  }
++
++  return UDR0;
++}
++#endif
++
++
++static FILE uart_str = FDEV_SETUP_STREAM(uart_putchar, uart_getchar,
++                                         _FDEV_SETUP_RW);
++
++
++int read_cmd(char *param) {
++  char cmd[6];
++
++  fgets(cmd, 1024, stdin); // param == NULL ? cmd : param, 1024, stdin);
++  return atoi(cmd); // param == NULL ? cmd : param);
++}
++
++int dump_eeprom(int start, int count) {
++  uint8_t line[16];
++
++  start <<= 7;
++  count <<= 7;
++
++  printf("=== EEPROM dump (0x%02X - 0x%02X) ===\n", start, start + count);
++
++  if (start + count > 4096) {
++    printf("### ERROR: read beyond flash boundaries\n\n");
++    return -1;
++  }
++
++  i2c_init();
++
++  i2c_start(EEPROM_ADDR + I2C_WRITE);
++  // Set address
++  i2c_write(start & 0xff);
++  i2c_write((start >> 8) & 0xff);
++  // Don't stop
++
++  // Read back data
++  i2c_start (EEPROM_ADDR + I2C_READ);
++  printf("%04X: ", start);
++  for (int i = 0; i < count; ++i) {
++    line[i % 16] = i2c_readNak();
++    printf("%02X ", line[i % 16]);
++    if ((i % 16) == 7) {
++      printf(" ");
++    }
++    if ((i % 16) == 15) {
++      printf(" |  ");
++      for (int k = 0; k < 16; k++) {
++        printf("%c", isprint(line[k]) ? line[k] : '.');
++      }
++      if (i != count-1) {
++        printf("\n%04X: ", start + i + 1);
++      }
++    }
++  }
++  printf("\n");
++  i2c_stop();
++
++  return 0;
++}
++
++
++int cmd_magic(int a, int b) {
++  printf("Wheee: %d, %d!\n", a, b);
++  return 0;
++}
++
++
++int cmd_no_magic(int a, int b) {
++  printf("No magic for %d, %d :(\n", a, b);
++  return b;
++}
++
++
++int cmd_no_real_magic(int a, int b) {
++  printf("You are not a Wizard for Real magic of %d, %d :(\n", a, b);
++  return b;
++}
++
++
++int cmd_read_eeprom(char *param) {
++  while (1) {
++    printf("Enter start sector (16-31, 0 to exit): ");
++    int start = read_cmd(param);
++    if (start == 0) {
++      return 0;
++    }
++    if (start < 0 || start > 31) {
++      printf(" -> wrong start sector number\n");
++      continue;
++    }
++    if (start < 16) {
++      printf("### DENIED: access to software-protected area!\n");
++      continue;
++    }
++    printf("Enter number of sectors to read (1-16): ");
++    int count = read_cmd(param);
++    if (count < 1 || count > 16) {
++      printf(" -> wrong sectors number\n");
++      continue;
++    }
++    if (start + count > 32) {
++      printf(" -> read beyound flash boundaries\n");
++      continue;
++    }
++    return dump_eeprom(start, count);
++  }
++}
++
++typedef int (*func_t)(int p1, int p2);
++
++int menu_loop(char *exsp)
++{
++  int p1 = 0;
++  int p2 = 0;
++  func_t func[] = {
++    cmd_magic,
++    cmd_no_magic
++  };
++  int do_menu = 1;
++
++  while (do_menu) {
++    printf("Menu:\n");
++    printf("1. Read from EEPROM\n");
++    printf("2. Magic function\n");
++    printf("0. Exit\n");
++    printf("Choice (do not enter more than 5 chars): ");
++
++    int n = read_cmd(NULL);
++    switch (n) {
++    case 1:
++      cmd_read_eeprom(exsp);
++      break;
++
++    case 2:
++      printf("Enter Magic component number A and then B:\n");
++      p1 = read_cmd(exsp);
++      p2 = read_cmd(exsp);
++      if (p1 >= 0 && p1 < sizeof(func)/sizeof(func_t)) {
++        func[p1](p1, p2);
++      } else {
++        cmd_no_real_magic(p1, p2);
++      }
++      break;
++
++    case 0:
++      do_menu = 0;
++      break;
++
++    default:
++      printf("Unknown choice.\n");
++      break;
++    }
++  }
++
++  return 0;
++}
++
++int main(int argc, char **argv)
++{
++  char exsp[1025];
++  stdout = stdin = &uart_str;
++
++  menu_loop(exsp);
++
++  cli();
++  sleep_enable();
++  sleep_cpu();
++  while (1);
++
++  return 0;
++}
+diff --git a/examples/board_i2ctest/matter.c b/examples/board_i2ctest/matter.c
+new file mode 100644
+index 0000000..7de4a5e
+--- /dev/null
++++ b/examples/board_i2ctest/matter.c
+@@ -0,0 +1,83 @@
++/*
++	matter.c
++
++	Copyright 2020 Google LLC
++
++ 	This file is part of simavr.
++
++	simavr is free software: you can redistribute it and/or modify
++	it under the terms of the GNU General Public License as published by
++	the Free Software Foundation, either version 3 of the License, or
++	(at your option) any later version.
++
++	simavr is distributed in the hope that it will be useful,
++	but WITHOUT ANY WARRANTY; without even the implied warranty of
++	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++	GNU General Public License for more details.
++
++	You should have received a copy of the GNU General Public License
++	along with simavr.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <stdlib.h>
++#include <stdio.h>
++#include <string.h>
++
++#include "sim_avr.h"
++#include "sim_elf.h"
++#include "avr_twi.h"
++#include "i2c_eeprom.h"
++
++#include "protocol.h"
++
++static i2c_eeprom_t i2c_ee;
++
++int main(int argc, char *argv[])
++{
++	struct proto_st *proto = NULL;
++	avr_t * avr = NULL;
++	elf_firmware_t f;
++	int gdb_port = 0;
++	const char *fname;
++	uint8_t i2c_data[4096];
++
++	if (argc < 2 || argc > 3) {
++		proto_exc("Internal error");
++		return 1;
++	}
++
++	fname = argv[1];
++	if (argc == 3) {
++		gdb_port = atoi(argv[2]);
++	}
++
++	elf_read_firmware(fname, &f);
++
++	avr = avr_make_mcu_by_name(f.mmcu);
++	if (!avr) {
++		proto_exc("Internal error");
++		return 1;
++	}
++
++	proto = protocol_init(avr, gdb_port);
++
++	memset(i2c_data, 0, sizeof(i2c_data));
++	if (protocol_is_challenge(proto)) {
++		memcpy(i2c_data, "CTF{r361573r59073773r}", sizeof("CTF{r361573r59073773r}"));
++	} else {
++		memcpy(i2c_data, "CTF{DEBUG_MODE,NOT A FLAG}", sizeof("CTF{DEBUG_MODE,NOT A FLAG}"));
++	}
++	memcpy(i2c_data + 16 * 128, "Hello there!", sizeof("Hello there!"));
++
++	i2c_eeprom_init(avr, &i2c_ee, 0xa0, 0x01, i2c_data, sizeof(i2c_data));
++
++	i2c_eeprom_attach(avr, &i2c_ee, AVR_IOCTL_TWI_GETIRQ(0));
++	i2c_ee.verbose = 0;
++
++	avr_load_firmware(avr, &f);
++	avr->program_size = f.flashsize - 1;
++
++	protocol_run(proto);
++
++	return 0;
++}
+diff --git a/examples/parts/i2c_eeprom.c b/examples/parts/i2c_eeprom.c
+index d1de5c8..0aa3eb8 100644
+--- a/examples/parts/i2c_eeprom.c
++++ b/examples/parts/i2c_eeprom.c
+@@ -47,7 +47,7 @@ i2c_eeprom_in_hook(
+ 		if (p->selected) {
+ 			// it was us !
+ 			if (p->verbose)
+-				printf("eeprom received stop\n");
++				printf("#eeprom received stop$");
+ 		}
+ 		p->selected = 0;
+ 		p->index = 0;
+@@ -63,7 +63,7 @@ i2c_eeprom_in_hook(
+ 		if ((p->addr_base & ~p->addr_mask) == (v.u.twi.addr & ~p->addr_mask)) {
+ 			// it's us !
+ 			if (p->verbose)
+-				printf("eeprom received start\n");
++				printf("#eeprom received start$");
+ 			p->selected = v.u.twi.addr;
+ 			avr_raise_irq(p->irq + TWI_IRQ_INPUT,
+ 					avr_twi_irq_msg(TWI_COND_ACK, p->selected, 1));
+@@ -90,11 +90,11 @@ i2c_eeprom_in_hook(
+ 					// add the slave address, if relevant
+ 					p->reg_addr += ((p->selected & 1) - p->addr_base) << 7;
+ 					if (p->verbose)
+-						printf("eeprom set address to 0x%04x\n", p->reg_addr);
++						printf("#eeprom set address to 0x%04x$", p->reg_addr);
+ 				}
+ 			} else {
+ 				if (p->verbose)
+-					printf("eeprom WRITE data 0x%04x: %02x\n", p->reg_addr, v.u.twi.data);
++					printf("#eeprom WRITE data 0x%04x: %02x$", p->reg_addr, v.u.twi.data);
+ 				p->ee[p->reg_addr++] = v.u.twi.data;
+ 			}
+ 			p->reg_addr &= (p->size -1);
+@@ -105,7 +105,7 @@ i2c_eeprom_in_hook(
+ 		 */
+ 		if (v.u.twi.msg & TWI_COND_READ) {
+ 			if (p->verbose)
+-				printf("eeprom READ data 0x%04x: %02x\n", p->reg_addr, p->ee[p->reg_addr]);
++				printf("#eeprom READ data 0x%04x: %02x$", p->reg_addr, p->ee[p->reg_addr]);
+ 			uint8_t data = p->ee[p->reg_addr++];
+ 			avr_raise_irq(p->irq + TWI_IRQ_INPUT,
+ 					avr_twi_irq_msg(TWI_COND_READ, p->selected, data));
+diff --git a/simavr/Makefile b/simavr/Makefile
+index a754467..bd5c291 100644
+--- a/simavr/Makefile
++++ b/simavr/Makefile
+@@ -24,7 +24,7 @@ SIMAVR_REVISION	= 2
+ 
+ target	= run_avr
+ 
+-CFLAGS	+= -Werror
++CFLAGS	+= -Werror -Wno-error=unused-variable -Wno-error=unused-but-set-variable
+ # tracing is useful especialy if you develop simavr core.
+ # it otherwise eat quite a bit of few cycles, even disabled
+ #CFLAGS	+= -DCONFIG_SIMAVR_TRACE=1
+@@ -36,7 +36,7 @@ all:
+ include ../Makefile.common
+ 
+ cores	:= ${wildcard cores/*.c}
+-sim		:= ${wildcard sim/sim_*.c} ${wildcard sim/avr_*.c}
++sim		:= ${wildcard sim/sim_*.c} ${wildcard sim/avr_*.c} sim/protocol.c
+ sim_o 	:= ${patsubst sim/%.c, ${OBJ}/%.o, ${sim}}
+ 
+ VPATH	= cores
+@@ -44,6 +44,7 @@ VPATH	+= sim
+ 
+ IPATH	+= sim
+ IPATH	+= .
++IPATH	+= cores
+ IPATH	+= ../../shared
+ 
+ #
+diff --git a/simavr/sim/avr_uart.c b/simavr/sim/avr_uart.c
+index 4e3db86..4ac3f95 100644
+--- a/simavr/sim/avr_uart.c
++++ b/simavr/sim/avr_uart.c
+@@ -192,7 +192,7 @@ avr_uart_read(
+ 	if (!avr_regbit_get(avr, p->rxen) ||
+ 			!avr_regbit_get(avr, p->rxc.raised) // rxc flag not raised - nothing to read!
+ 			) {
+-		AVR_LOG(avr, LOG_TRACE, "UART%c: attempt to read empty rx buffer\n", p->name);
++//		AVR_LOG(avr, LOG_TRACE, "UART%c: attempt to read empty rx buffer\n", p->name);
+ 		avr->data[addr] = 0;
+ 		// made to trigger potential watchpoints
+ 		avr_core_watch_read(avr, addr);
+@@ -209,7 +209,7 @@ avr_uart_read(
+ 			p->rx_cnt = 0;
+ 		}
+ 	} else {
+-		AVR_LOG(avr, LOG_TRACE, "UART%c: BUG: rxc raised with empty rx buffer\n", p->name);
++//		AVR_LOG(avr, LOG_TRACE, "UART%c: BUG: rxc raised with empty rx buffer\n", p->name);
+ 	}
+ 
+ //	TRACE(printf("UART read %02x %s\n", v, uart_fifo_isempty(&p->input) ? "EMPTY!" : "");)
+@@ -249,13 +249,13 @@ avr_uart_baud_write(
+ 	int cycles_per_bit = (val+1)*8;
+ 	if (!avr_regbit_get(avr, p->u2x))
+ 		cycles_per_bit *= 2;
+-	double baud = ((double)avr->frequency) / cycles_per_bit; // can be less than 1
++//	double baud = ((double)avr->frequency) / cycles_per_bit; // can be less than 1
+ 	p->cycles_per_byte = cycles_per_bit * word_size;
+ 
+-	AVR_LOG(avr, LOG_TRACE, "UART: %c configured to %04x = %.4f bps (x%d), %d data %d stop\n",
+-			p->name, val, baud, avr_regbit_get(avr, p->u2x)?2:1, db, sb);
+-	AVR_LOG(avr, LOG_TRACE, "UART: Roughly %d usec per byte\n",
+-			avr_cycles_to_usec(avr, p->cycles_per_byte));
++//	AVR_LOG(avr, LOG_TRACE, "UART: %c configured to %04x = %.4f bps (x%d), %d data %d stop\n",
++//			p->name, val, baud, avr_regbit_get(avr, p->u2x)?2:1, db, sb);
++//	AVR_LOG(avr, LOG_TRACE, "UART: Roughly %d usec per byte\n",
++//			avr_cycles_to_usec(avr, p->cycles_per_byte));
+ }
+ 
+ static void
+@@ -287,19 +287,23 @@ avr_uart_udr_write(
+ 		p->stdio_out[p->stdio_len] = 0;
+ 		if (v == '\n' || p->stdio_len == maxsize) {
+ 			p->stdio_len = 0;
++#if 0
+ 			AVR_LOG(avr, LOG_OUTPUT,
+ 					FONT_GREEN "%s\n" FONT_DEFAULT, p->stdio_out);
++#endif
+ 		}
+ 	}
+-	TRACE(printf("UDR%c(%02x) = %02x\n", p->name, addr, v);)
++//	TRACE(printf("UDR%c(%02x) = %02x\n", p->name, addr, v);)
+ 	// tell other modules we are "outputting" a byte
+ 	if (avr_regbit_get(avr, p->txen)) {
+ 		avr_raise_irq(p->io.irq + UART_IRQ_OUTPUT, v);
+ 		p->tx_cnt++;
++#if 0
+ 		if (p->tx_cnt > 2) // AVR actually has 1-character UART tx buffer, plus shift register
+ 			AVR_LOG(avr, LOG_TRACE,
+ 					"UART%c: tx buffer overflow %d\n",
+ 					p->name, (int)p->tx_cnt);
++#endif
+ 		if (avr_cycle_timer_status(avr, avr_uart_txc_raise, p) == 0)
+ 			avr_cycle_timer_register(avr, p->cycles_per_byte,
+ 					avr_uart_txc_raise, p); // start the tx pump
+@@ -439,11 +443,11 @@ avr_uart_irq_input(
+ 	if (!avr_regbit_get(avr, p->dor)) { // otherwise newly received character must be rejected
+ 		uart_fifo_write(&p->input, value); // add to fifo
+ 	} else {
+-		AVR_LOG(avr, LOG_ERROR, "UART%c: %s: RX buffer overrun, lost char=%c=0x%02X\n", p->name, __func__,
+-				(char)value, (uint8_t)value );
++//		AVR_LOG(avr, LOG_ERROR, "UART%c: %s: RX buffer overrun, lost char=%c=0x%02X\n", p->name, __func__,
++//				(char)value, (uint8_t)value );
+ 	}
+ 
+-	TRACE(printf("UART IRQ in %02x (%d/%d) %s\n", value, p->input.read, p->input.write, uart_fifo_isfull(&p->input) ? "FULL!!" : "");)
++//	TRACE(printf("UART IRQ in %02x (%d/%d) %s\n", value, p->input.read, p->input.write, uart_fifo_isfull(&p->input) ? "FULL!!" : "");)
+ 
+ 	if (uart_fifo_isfull(&p->input))
+ 		avr_raise_irq(p->io.irq + UART_IRQ_OUT_XOFF, 1);
+diff --git a/simavr/sim/protocol.c b/simavr/sim/protocol.c
+new file mode 100644
+index 0000000..ca930d9
+--- /dev/null
++++ b/simavr/sim/protocol.c
+@@ -0,0 +1,859 @@
++#define _GNU_SOURCE
++
++#include <errno.h>
++
++#include "sim_avr.h"
++#include "sim_core.h"
++#include "sim_gdb.h"
++//#include "../cores/sim_mega2560.h"
++
++#include "protocol.h"
++
++#include <stdarg.h>
++#include <stdio.h>
++#include <string.h>
++#include <termios.h>
++#include <stdlib.h>
++#include <signal.h>
++
++#include <sys/select.h>
++#include <sys/time.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <pthread.h>
++
++#include "avr_eeprom.h"
++#include "avr_flash.h"
++#include "avr_watchdog.h"
++#include "avr_extint.h"
++#include "avr_ioport.h"
++#include "avr_uart.h"
++#include "avr_adc.h"
++#include "avr_timer.h"
++#include "avr_spi.h"
++#include "avr_twi.h"
++#include "avr_acomp.h"
++
++struct mcu_t {
++	avr_t			core;
++	avr_eeprom_t	eeprom;
++	avr_flash_t		selfprog;
++	avr_watchdog_t	watchdog;
++	avr_extint_t	extint;
++	avr_ioport_t	porta, portb, portc, portd, porte, portf, portg, porth, portj, portk, portl;
++	avr_uart_t		uart0,uart1;
++	avr_uart_t		uart2,uart3;
++	avr_acomp_t		acomp;
++	avr_adc_t		adc;
++	avr_timer_t		timer0,timer1,timer2,timer3,timer4,timer5;
++	avr_spi_t		spi;
++	avr_twi_t		twi;
++ };
++
++struct breakpoint_st {
++	avr_flashaddr_t addr;
++	int enabled;
++};
++
++struct proto_st {
++  avr_t *avr;
++  avr_irq_t *uart_irq;
++
++  pthread_mutex_t lock;
++  int trace;
++  avr_cycle_count_t steps;
++  avr_cycle_count_t cycle;
++  int challenge_mode;
++  int mode_is_set;
++
++  pthread_t thread;
++  pthread_cond_t th_cond;
++  pthread_mutex_t th_lock;
++
++  char cmd_buf[8192];
++  int cmd_buf_len;
++
++  struct breakpoint_st *bps;
++  int bps_count;
++  int bps_size;
++} proto_t;
++
++
++static struct proto_st *proto_instance = NULL;
++
++enum {
++	IRQ_UART_PROTO_BYTE_IN = 0,
++	IRQ_UART_PROTO_BYTE_OUT,
++	IRQ_UART_PROTO_COUNT
++};
++
++
++static const char * irq_names[IRQ_UART_PROTO_COUNT] = {
++	[IRQ_UART_PROTO_BYTE_IN] = "8<uart_proto.in",
++	[IRQ_UART_PROTO_BYTE_OUT] = "8>uart_proto.out",
++};
++
++
++int cmd_registers(struct proto_st *proto)
++{
++  avr_t *avr = proto->avr;
++  uint8_t sreg;
++  READ_SREG_INTO(avr, sreg);
++  int sp = avr->data[R_SPH] << 8 | avr->data[R_SPL];
++
++  proto_printf("*I|%" PRId64 ",%02X%02X%02X,%04X,%02X",
++               proto->cycle,
++               (avr->pc >> 16) & 0xff, (avr->pc >> 8) & 0xff, avr->pc & 0xff,
++               sp,
++               sreg);
++
++  for (int i = 0; i < 32; i++) {
++    proto_printf(",%02X", avr->data[i]);
++  }
++
++  proto_printf(",");
++  for (int i = 0; i < 3; i++) {
++    proto_printf("%02X", (avr->data[sp + i]));
++  }
++  proto_printf("$");
++
++  return 0;
++}
++
++
++int cmd_break(struct proto_st *proto, int op, int num, int value)
++{
++    switch (op) {
++    case PROTO_DBG_BRK_LIST:
++        /* Just show the breakpoints */
++        proto_printf("*B#");
++        for (int i=0; i < proto->bps_count; i++) {
++          proto_printf("%c%04X", proto->bps[i].enabled ? '+' : '-', proto->bps[i].addr);
++        }
++        proto_printf("$");
++        break;
++
++    case PROTO_DBG_BRK_ADD:
++        if (proto->bps_count == proto->bps_size - 1) {
++          proto->bps_size <<= 1;
++          proto->bps = realloc(proto->bps, proto->bps_size * sizeof(struct breakpoint_st));
++        }
++        proto->bps[proto->bps_count].addr = value & ((1 << 24)-1);
++        proto->bps[proto->bps_count].enabled = 1;
++        proto->bps_count++;
++        break;
++
++    case PROTO_DBG_BRK_DEL:
++        if (num > proto->bps_count) {
++          proto_infof("No such breakpoint");
++          break;
++        }
++        if (proto->bps_count > 1) {
++//          proto_infof("dst: %02d src: %02d cnt: %d bps_cnt=%d", num-1, num, proto->bps_count - num, proto->bps_count);
++          memmove(proto->bps + num - 1, proto->bps + num, (proto->bps_count - num) * sizeof(struct breakpoint_st));
++        }
++        proto->bps_count--;
++        break;
++
++    case PROTO_DBG_BRK_TOGGLE:
++        if (num > proto->bps_count) {
++          proto_infof("No such breakpoint");
++          break;
++        }
++        proto->bps[num-1].enabled ^= 1;
++        break;
++
++    default:
++        proto_exc("Malformed request");
++    }
++
++    return 0;
++}
++
++
++int cmd_examine(struct proto_st *proto, int addr)
++{
++    if ( addr != -1  ) {
++        int    i;
++
++        proto_printf("*X");
++        for ( i = 0; i < 128; i++ ) {
++            proto_printf("FF");
++        }
++        proto_printf("$");
++    }
++    return 0;
++}
++
++
++int cmd_set(struct proto_st *proto, char *new_regs)
++{
++  const char rs[] = ",";
++  char *token;
++
++  token = strtok(new_regs, rs);
++
++  while (token != NULL) {
++    int val;
++    int reg;
++    char *value;
++
++    value = index(token, '=');
++    if (value == NULL) {
++      proto_exc("Malformed request");
++    }
++    *value = '\0';
++    reg = strtol(token, NULL, 10);
++    val = strtol(value + 1, NULL, 16);
++
++    if (reg < 0 || reg > 31) {
++      proto_exc("Malformed request");
++    }
++
++    proto->avr->data[reg] = val & 0xff;
++
++    token = strtok(NULL, rs);
++  }
++
++  return 0;
++}
++
++
++int cmd_trace(struct proto_st *proto)
++{
++    proto->trace ^= 1;
++    proto_infof("Trace %s", proto->trace ? "enabled" : "disabled");
++    return 0;
++}
++
++
++int cmd_quit(struct proto_st *proto, int rc)
++{
++    proto->avr->state = cpu_Done;
++    proto_infof("Bye-Bye, GDI!");
++    exit(rc);
++}
++
++
++int proto_process_cmd(struct proto_st *proto, int non_block) {
++  char buf[4096];
++  int stdin_fd = fileno(stdin);
++  int exit_loop = 0;
++
++  fd_set read_fds;
++  ssize_t nbytes;
++
++  FD_ZERO(&read_fds);
++  for (;;) {
++    int retry_read = 0;
++    struct timeval tv;
++
++    tv.tv_sec = 0;
++    tv.tv_usec = 0;
++
++    FD_SET(stdin_fd, &read_fds);
++    if (select(stdin_fd+1, &read_fds, NULL, NULL, non_block ? &tv : NULL) < 0) {
++      proto_exc("Internal error");
++    }
++
++    if (!FD_ISSET(stdin_fd, &read_fds)) {
++      if (non_block) {
++        return exit_loop;
++      }
++      continue;
++    }
++
++    while (!retry_read) {
++      int idx = 0;
++      char *p;
++
++      nbytes = read(stdin_fd, buf, sizeof(buf));
++      if (nbytes < 0) {
++        switch (errno) {
++        case EINTR:
++          continue;
++
++        case EWOULDBLOCK:
++          return exit_loop;
++
++        case ECONNRESET:
++        case ENOTCONN:
++        case ESHUTDOWN:
++        case ECONNABORTED:
++        case EPIPE:
++        case EBADF:
++        case ECONNREFUSED:
++        case ETIMEDOUT:
++        default:
++          proto_exc("Internal error");
++        }
++
++        break;
++      } else if (nbytes == 0) {
++        proto_exc("Malformed request");
++      }
++
++      memcpy(proto->cmd_buf + proto->cmd_buf_len, buf, nbytes);
++      proto->cmd_buf_len += nbytes;
++      proto->cmd_buf[proto->cmd_buf_len] = '\0';
++
++      if (proto->cmd_buf_len < 2) {
++        proto_exc("Malformed request");
++      }
++
++      for (idx = 0; !retry_read && idx < proto->cmd_buf_len;) {
++        switch (proto->cmd_buf[idx]) {
++        case '\n':
++        case '\r':
++          idx++;
++          continue;
++
++        case '&':
++          if (proto->cmd_buf_len - idx < 2) {
++            retry_read = 1;
++            break;
++          }
++          if (proto->cmd_buf[idx+1] == 'T') {
++            cmd_quit(proto, 0);
++          }
++          if (!proto->mode_is_set) {
++            proto->mode_is_set = 1;
++            switch (proto->cmd_buf[idx+1]) {
++            case 'd':
++            case 'D':
++              idx += 2;
++              proto->mode_is_set = PROTO_MODE_DEBUGGER;
++              break;
++
++            case 'C':
++            case 'c':
++              idx += 2;
++              proto->mode_is_set = PROTO_MODE_CHALLENGE;
++              break;
++
++            default:
++              proto_exc("Malformed request");
++            }
++
++          } else {
++            proto_exc("Operation denied: %c%c", proto->cmd_buf[idx], proto->cmd_buf[idx+1]);
++          }
++          break;
++
++        case '@': {
++          if (!proto->mode_is_set) {
++            proto_exc("Operation denied");
++          }
++          if (proto->cmd_buf_len - idx < 4) {
++            retry_read = 1;
++            break;
++          }
++          if (proto->cmd_buf[idx+1] != 'W') {
++            proto_exc("Malformed request");
++          }
++          int byte = strtol(proto->cmd_buf + idx + 2, &p, 16);
++          if (proto->cmd_buf + idx + 2 == p || p - proto->cmd_buf != idx + 2 + 2) {
++            proto_exc("Malformed request");
++          }
++          avr_raise_irq(proto->uart_irq + IRQ_UART_PROTO_BYTE_OUT, byte);
++          usleep(850);
++          idx = p - proto->cmd_buf;
++          }
++          break;
++
++        case '*':
++          if (proto->cmd_buf_len - idx < 2) {
++            retry_read = 1;
++            break;
++          }
++
++          if (proto->mode_is_set == PROTO_MODE_CHALLENGE) {
++            proto_exc("Operation denied");
++          }
++
++          switch (proto->cmd_buf[idx+1]) {
++          case 'S':
++            if (proto->cmd_buf_len - idx < 2) {
++              retry_read = 1;
++              break;
++            }
++            pthread_mutex_lock(&proto->lock);
++            if (proto->cmd_buf_len - idx >= 3 && proto->cmd_buf[idx+2] == '|') {
++              p = index(proto->cmd_buf + idx + 3, '$');
++              if (p == NULL) {
++                // Not enough input data
++                if (idx == 0) {
++                  // None of the requests should exceeds 4096 bytes
++                  proto_exc("Malformed request");
++                }
++                pthread_mutex_unlock(&proto->lock);
++                retry_read = 1;
++                break;
++              }
++              *p = '\0';
++              proto->steps = strtoll(proto->cmd_buf + idx + 3, &p, 10);
++              if (proto->cmd_buf + idx + 3 == p) {
++                pthread_mutex_unlock(&proto->lock);
++                proto_exc("Malformed request");
++              }
++              idx = p - proto->cmd_buf + 1;
++            } else {
++              idx += 2;
++              proto->steps = 1;
++            }
++            pthread_mutex_unlock(&proto->lock);
++
++            proto->avr->state = cpu_Step;
++            pthread_mutex_lock(&proto->th_lock);
++            pthread_cond_signal(&proto->th_cond);
++            pthread_mutex_unlock(&proto->th_lock);
++            exit_loop = 1;
++            break;
++
++          case 'B': {
++            int value;
++
++            if (proto->cmd_buf_len - idx < 3) {
++              retry_read = 1;
++              break;
++            }
++
++            switch (proto->cmd_buf[idx+2]) {
++            case '?':
++              idx += 3;
++              pthread_mutex_lock(&proto->lock);
++              exit_loop |= cmd_break(proto, PROTO_DBG_BRK_LIST, 0, 0);
++              pthread_mutex_unlock(&proto->lock);
++              break;
++
++            case '+':
++              if (proto->cmd_buf_len - idx < 7) {
++                retry_read = 1;
++                break;
++              }
++              value = strtol(proto->cmd_buf + idx + 3, &p, 16);
++              if (proto->cmd_buf + idx + 3 == p || p - proto->cmd_buf != idx + 3 + 4) {
++                proto_exc("Malformed request");
++              }
++              idx = p - proto->cmd_buf;
++              pthread_mutex_lock(&proto->lock);
++              exit_loop |= cmd_break(proto, PROTO_DBG_BRK_ADD, -1, value);
++              pthread_mutex_unlock(&proto->lock);
++              break;
++
++            case '-':
++              if (proto->cmd_buf_len - idx < 7) {
++                retry_read = 1;
++                break;
++              }
++              value = strtol(proto->cmd_buf + idx + 3, &p, 10);
++              if (proto->cmd_buf + idx + 3 == p || p - proto->cmd_buf != idx + 3 + 4) {
++                proto_exc("Malformed request");
++              }
++              idx = p - proto->cmd_buf;
++              pthread_mutex_lock(&proto->lock);
++              exit_loop |= cmd_break(proto, PROTO_DBG_BRK_DEL, value, -1);
++              pthread_mutex_unlock(&proto->lock);
++              break;
++
++            case '!':
++              if (proto->cmd_buf_len - idx < 7) {
++                retry_read = 1;
++                break;
++              }
++              value = strtol(proto->cmd_buf + idx + 3, &p, 10);
++              if (proto->cmd_buf + idx + 3 == p || p - proto->cmd_buf != idx + 3 + 4) {
++                proto_exc("Malformed request");
++              }
++              idx = p - proto->cmd_buf;
++              pthread_mutex_lock(&proto->lock);
++              exit_loop |= cmd_break(proto, PROTO_DBG_BRK_TOGGLE, value, -1);
++              pthread_mutex_unlock(&proto->lock);
++              break;
++
++            default:
++              proto_exc("Malformed request");
++            }
++            }
++            break;
++
++          case 'R': {
++            if (proto->cmd_buf_len - idx < 3) {
++              retry_read = 1;
++              break;
++            }
++            switch (proto->cmd_buf[idx+2]) {
++            case '?':
++              idx += 3;
++              pthread_mutex_lock(&proto->lock);
++              exit_loop |= cmd_registers(proto);
++              pthread_mutex_unlock(&proto->lock);
++              break;
++
++            case '|':
++              p = index(proto->cmd_buf + idx + 3, '$');
++              if (p == NULL) {
++                // Not enough input data
++                if (idx == 0) {
++                  // None of the requests should exceeds 4096 bytes
++                  proto_exc("Malformed request");
++                }
++                retry_read = 1;
++                break;
++              }
++              *p = '\0';
++              pthread_mutex_lock(&proto->lock);
++              exit_loop |= cmd_set(proto, proto->cmd_buf + idx + 3);
++              pthread_mutex_unlock(&proto->lock);
++              idx = p - proto->cmd_buf + 1;
++              break;
++
++            default:
++              proto_exc("Malformed request");
++            }
++            }
++            break;
++
++          case 'K':
++            idx += 2;
++            pthread_mutex_lock(&proto->lock);
++            if (proto->avr->state == cpu_Stopped || proto->avr->state == cpu_StepDone) {
++              pthread_mutex_unlock(&proto->lock);
++              break;
++            }
++            cmd_registers(proto);
++            proto->avr->state = cpu_Stopped;
++            pthread_mutex_unlock(&proto->lock);
++
++            pthread_mutex_lock(&proto->th_lock);
++            pthread_cond_signal(&proto->th_cond);
++            pthread_mutex_unlock(&proto->th_lock);
++            break;
++
++          case 'C':
++            idx += 2;
++            pthread_mutex_lock(&proto->lock);
++            if (proto->avr->state == cpu_Running) {
++              pthread_mutex_unlock(&proto->lock);
++              break;
++            }
++            cmd_registers(proto);
++            proto->avr->state = cpu_Running;
++            pthread_mutex_unlock(&proto->lock);
++
++            pthread_mutex_lock(&proto->th_lock);
++            pthread_cond_signal(&proto->th_cond);
++            pthread_mutex_unlock(&proto->th_lock);
++            exit_loop = 1;
++            break;
++
++          case 'T':
++            idx += 2;
++            exit_loop |= cmd_trace(proto);
++            break;
++
++          case 'X':
++            if (proto->cmd_buf_len - idx < 7) {
++              retry_read = 1;
++              break;
++            }
++            if (proto->cmd_buf[idx+2] == '|') {
++              int addr = strtol(proto->cmd_buf + idx + 3, &p, 16);
++              if (proto->cmd_buf + idx + 3 == p || p - proto->cmd_buf != idx + 3 + 4) {
++                proto_exc("Malformed request");
++              }
++              idx = p - proto->cmd_buf;
++              pthread_mutex_lock(&proto->lock);
++              exit_loop |= cmd_examine(proto, addr);
++              pthread_mutex_unlock(&proto->lock);
++            } else {
++              proto_exc("Malformed request");
++            }
++            break;
++
++          default:
++            proto_exc("Malformed request==");
++          }
++
++          break;
++
++        default:
++          proto_exc("Malformed request");
++        }
++      }
++
++      if (idx != proto->cmd_buf_len) {
++        int remain = proto->cmd_buf_len - idx;
++        memmove(proto->cmd_buf, proto->cmd_buf + idx, remain);
++        memset(proto->cmd_buf + remain, 0, sizeof(proto->cmd_buf) - remain);
++      }
++      proto->cmd_buf_len -= idx;
++      if (retry_read) {
++        // Force non-blocking operation
++        non_block = 1;
++      }
++    }
++  }
++
++  return exit_loop;
++}
++
++static int _is_fatal(int saved_errno) {
++  return saved_errno != EAGAIN && saved_errno != EWOULDBLOCK &&
++         saved_errno != EFAULT && saved_errno != EINTR &&
++         saved_errno != EINVAL && saved_errno != ENOMEM;
++}
++
++ssize_t proto_printf(const char *fmt, ...) {
++  ssize_t len;
++  ssize_t wrote = 0;
++  char *buf;
++  char *p;
++  va_list ap;
++
++  va_start(ap, fmt);
++  len = vasprintf(&buf, fmt, ap);
++  va_end(ap);
++
++  p = buf;
++  while (wrote < len) {
++    ssize_t s = write(1, p, len - wrote);
++    if ((s < 0 && _is_fatal(errno)) || s == 0) {
++      exit(2);
++    } else if (s < 0) {
++      continue;
++    }
++    p += s;
++    wrote += s;
++  }
++
++  free(buf);
++
++  return wrote;
++}
++
++int proto_exc(const char *fmt, ...) {
++  char *buf;
++  va_list ap;
++
++  va_start(ap, fmt);
++  vasprintf(&buf, fmt, ap);
++  va_end(ap);
++
++  proto_printf("!%s$", buf);
++  free(buf);
++  exit(1);
++
++  return 0;
++}
++
++
++static void buf_output_cb(struct avr_irq_t *irq, uint32_t value, void *param) {
++	proto_printf("@W%02X", value & 0xff);
++	if (value > 0xff) {
++		proto_printf("@W%02X", (value >> 8) & 0xff);
++	}
++}
++
++
++static void *proto_cmd_thread(void *param) {
++  struct proto_st *proto = (struct proto_st *)param;
++
++  while (1) {
++    proto_process_cmd(proto, 0);
++  }
++
++  return NULL;
++}
++
++
++static int proto_handle_breakpoints(struct proto_st *proto) {
++	pthread_mutex_lock(&proto->lock);
++	for (int i=0; i<proto->bps_count; i++) {
++		if (proto->bps[i].addr == proto->avr->pc && proto->bps[i].enabled) {
++			proto->avr->state = cpu_Stopped;
++			cmd_registers(proto);
++            proto_printf("*B|%04d", i+1);
++			break;
++		}
++	}
++	pthread_mutex_unlock(&proto->lock);
++
++	return 0;
++}
++
++
++static void proto_cmd_deinit(avr_t *avr, void *param) {
++  struct proto_st *proto = (struct proto_st *)param;
++
++  void *ret;
++  pthread_kill(proto->thread, SIGINT);
++  pthread_join(proto->thread, &ret);
++}
++
++
++struct proto_st *protocol_init(avr_t *avr, int gdb_port)
++{
++	struct proto_st *proto;
++
++	proto_instance = proto = calloc(1, sizeof(struct proto_st));
++	proto->bps_size = 16;
++	proto->bps = calloc(proto->bps_size, sizeof(struct breakpoint_st));
++	proto->avr = avr;
++	proto->avr->custom.deinit = proto_cmd_deinit;
++	proto->avr->custom.data = proto;
++	avr_init(avr);
++	avr->log = 0;
++
++	avr->gdb_port = gdb_port;
++	if (avr->gdb_port != 0) {
++		avr->state = cpu_Stopped;
++		avr_gdb_init(avr);
++	}
++
++	proto->uart_irq = avr_alloc_irq(&avr->irq_pool, 0, IRQ_UART_PROTO_COUNT, irq_names);
++	avr_irq_register_notify(proto->uart_irq + IRQ_UART_PROTO_BYTE_IN, buf_output_cb, proto);
++
++	char uart = '0';
++
++	uint32_t flg = 0;
++	avr_ioctl(avr, AVR_IOCTL_UART_GET_FLAGS(uart), &flg);
++	flg &= ~AVR_UART_FLAG_STDIO;
++	avr_ioctl(avr, AVR_IOCTL_UART_SET_FLAGS(uart), &flg);
++
++	avr_irq_t * src = avr_io_getirq(avr, AVR_IOCTL_UART_GETIRQ(uart), UART_IRQ_OUTPUT);
++	avr_irq_t * dst = avr_io_getirq(avr, AVR_IOCTL_UART_GETIRQ(uart), UART_IRQ_INPUT);
++	if (src && dst) {
++		avr_connect_irq(src, proto->uart_irq + IRQ_UART_PROTO_BYTE_IN);
++		avr_connect_irq(proto->uart_irq + IRQ_UART_PROTO_BYTE_OUT, dst);
++	}
++
++	struct mcu_t * mcu = (struct mcu_t*)avr;
++
++	/* Init UART */
++	avr_set_r(avr, mcu->uart0.ubrrl.reg, 0xc);
++	avr_set_r(avr, mcu->uart0.ucsz.reg, 0x6);
++	avr_set_r(avr, mcu->uart0.ucsz.reg, 0x6);
++	avr_set_r(avr, mcu->uart0.r_ucsrb, 0x98); // (1<<RXEN)|(1<<TXEN)|(1<<RXCIE)
++//	avr_regbit_set(avr, mcu->uart.txen);
++//	avr_regbit_set(avr, mcu->uart.rxen);
++//	avr_regbit_set(avr, mcu->uart.rxen);
++//	avr_regbit_set(avr, mcu->uart.rxc);
++
++
++    flg = fcntl(fileno(stdin), F_GETFL, 0);
++    if (fcntl(fileno(stdin), F_SETFL, flg | O_NONBLOCK) == -1) {
++      proto_exc("Internal error");
++    }
++
++    if (avr->gdb_port == 0) {
++      proto_printf("&M");
++
++      proto_process_cmd(proto, 0);
++    } else {
++      proto->mode_is_set = PROTO_MODE_DEBUGGER;
++    }
++
++    switch (proto->mode_is_set) {
++    case PROTO_MODE_DEBUGGER:
++        proto->challenge_mode = 0;
++        avr->state = cpu_Stopped;
++        break;
++
++    case PROTO_MODE_CHALLENGE:
++        proto->challenge_mode = 1;
++        break;
++
++    default:
++        proto_exc("Malformed request");
++    }
++
++    pthread_create(&proto->thread, NULL, proto_cmd_thread, proto);
++    return proto;
++}
++
++
++int protocol_is_challenge(struct proto_st *proto) {
++	return proto->challenge_mode == 1;
++}
++
++void protocol_run(struct proto_st *proto) {
++	avr_cycle_count_t do_steps = 0;
++	avr_t *avr = proto->avr;
++	while (1) {
++		if (avr->gdb_port != 0) {
++			avr_gdb_processor(avr, avr->state == cpu_Stopped);
++			if (avr->state == cpu_Step) {
++                pthread_mutex_lock(&proto->lock);
++				do_steps = proto->steps = 1;
++                pthread_mutex_unlock(&proto->lock);
++            }
++		} else if (avr->state == cpu_StepDone || avr->state == cpu_Stopped) {
++            int state = avr->state;
++            pthread_mutex_lock(&proto->th_lock);
++            pthread_cond_wait(&proto->th_cond, &proto->th_lock);
++            if (state == cpu_Stopped) {
++              do_steps = proto->steps;
++            }
++            pthread_mutex_unlock(&proto->th_lock);
++        }
++
++		// if we are stepping one instruction, we "run" for one..
++		int step = avr->state == cpu_Step;
++		if (step)
++			avr->state = cpu_Running;
++
++		avr_flashaddr_t new_pc = avr->pc;
++
++		if (avr->state == cpu_Running) {
++			new_pc = avr_run_one(avr);
++            proto->cycle++;
++#if CONFIG_SIMAVR_TRACE
++			avr_dump_state(avr);
++#endif
++		}
++
++		// run the cycle timers, get the suggested sleep time
++		// until the next timer is due
++		avr_cycle_count_t sleep = avr_cycle_timer_process(avr);
++
++		avr->pc = new_pc;
++		proto_handle_breakpoints(proto);
++		if (proto->trace) {
++            pthread_mutex_lock(&proto->lock);
++        	cmd_registers(proto);
++            pthread_mutex_unlock(&proto->lock);
++		}
++
++		if (avr->state == cpu_Sleeping) {
++			if (!avr->sreg[S_I]) {
++				avr->state = cpu_Done;
++				break;
++			}
++			/*
++			 * try to sleep for as long as we can (?)
++			 */
++			avr->sleep(avr, sleep);
++			avr->cycle += 1 + sleep;
++		}
++		// Interrupt servicing might change the PC too, during 'sleep'
++		if (avr->state == cpu_Running || avr->state == cpu_Sleeping)
++			avr_service_interrupts(avr);
++
++		// if we were stepping, use this state to inform remote gdb
++		if (step) {
++            pthread_mutex_lock(&proto->lock);
++			if (--proto->steps <= 0) {
++				avr->state = cpu_StepDone;
++				if (do_steps) {
++                  cmd_registers(proto);
++                }
++			} else {
++				avr->state = cpu_Step;
++			}
++            pthread_mutex_unlock(&proto->lock);
++		}
++	}
++
++	proto_infof("Bye-Bye, GDI!");
++}
+diff --git a/simavr/sim/protocol.h b/simavr/sim/protocol.h
+new file mode 100644
+index 0000000..0781449
+--- /dev/null
++++ b/simavr/sim/protocol.h
+@@ -0,0 +1,51 @@
++#ifndef _PROTOCOL_H
++#define _PROTOCOL_H 1
++
++#include "sim_avr.h"
++#include <unistd.h>
++
++struct proto_st;
++
++struct proto_st *protocol_init(avr_t *avr, int gdb_port);
++int protocol_is_challenge(struct proto_st *proto);
++void protocol_run(struct proto_st *proto);
++int proto_process_cmd(struct proto_st *proto, int non_block);
++ssize_t proto_printf(const char *fmt, ...);
++int proto_exc(const char *fmt, ...);
++
++enum {
++  PROTO_UNKNOWN = 0,
++  PROTO_MODE_DEBUGGER,
++  PROTO_MODE_CHALLENGE,
++  PROTO_TERMINATE,
++
++  PROTO_EXCEPTION,
++  PROTO_INFO,
++
++  PROTO_APP_READ = 0x10,
++  PROTO_APP_WRITE,
++
++  PROTO_DBG_INFO = 0x20,
++
++  PROTO_DBG_STEP,
++  PROTO_DBG_STEP_OVER,
++  PROTO_DBG_CONT,
++  PROTO_DBG_STOP,
++
++  PROTO_DBG_TRACE,
++
++  PROTO_DBG_BRK_LIST,
++  PROTO_DBG_BRK_HIT,
++  PROTO_DBG_BRK_ADD,
++  PROTO_DBG_BRK_DEL,
++  PROTO_DBG_BRK_TOGGLE,
++
++  PROTO_DBG_REG_SET,
++
++  PROTO_DBG_MEM_DUMP,
++};
++
++#define proto_infof(fmt, ...) \
++  proto_printf("#" fmt "$", ## __VA_ARGS__)
++
++#endif
+diff --git a/simavr/sim/sim_avr.h b/simavr/sim/sim_avr.h
+index 3553976..bd1f87f 100644
+--- a/simavr/sim/sim_avr.h
++++ b/simavr/sim/sim_avr.h
+@@ -346,6 +346,9 @@ typedef struct avr_t {
+ 		uint32_t size;
+ 		uint32_t len;
+ 	} io_console_buffer;
++
++	int program_size;
++	int secure_flash;
+ } avr_t;
+ 
+ 
+diff --git a/simavr/sim/sim_core.c b/simavr/sim/sim_core.c
+index 73d7e5c..ba1af34 100644
+--- a/simavr/sim/sim_core.c
++++ b/simavr/sim/sim_core.c
+@@ -28,6 +28,7 @@
+ #include "sim_gdb.h"
+ #include "avr_flash.h"
+ #include "avr_watchdog.h"
++#include "protocol.h"
+ 
+ // SREG bit names
+ const char * _sreg_bit_name = "cznvshti";
+@@ -124,17 +125,17 @@ _avr_flash_read16le(
+ void avr_core_watch_write(avr_t *avr, uint16_t addr, uint8_t v)
+ {
+ 	if (addr > avr->ramend) {
+-		AVR_LOG(avr, LOG_WARNING,
+-				"CORE: *** Wrapping write address "
+-				"PC=%04x SP=%04x O=%04x v=%02x Address %04x %% %04x --> %04x\n",
+-				avr->pc, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc), v, addr, (avr->ramend + 1), addr % (avr->ramend + 1));
++//		AVR_LOG(avr, LOG_WARNING,
++//				"CORE: *** Wrapping write address "
++//				"PC=%04x SP=%04x O=%04x v=%02x Address %04x %% %04x --> %04x\n",
++//				avr->pc, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc), v, addr, (avr->ramend + 1), addr % (avr->ramend + 1));
+ 		addr = addr % (avr->ramend + 1);
+ 	}
+ 	if (addr < 32) {
+-		AVR_LOG(avr, LOG_ERROR, FONT_RED
+-				"CORE: *** Invalid write address PC=%04x SP=%04x O=%04x Address %04x=%02x low registers\n"
+-				FONT_DEFAULT,
+-				avr->pc, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc), addr, v);
++//		AVR_LOG(avr, LOG_ERROR, FONT_RED
++//				"CORE: *** Invalid write address PC=%04x SP=%04x O=%04x Address %04x=%02x low registers\n"
++//				FONT_DEFAULT,
++//				avr->pc, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc), addr, v);
+ 		crash(avr);
+ 	}
+ #if AVR_STACK_WATCH
+@@ -144,9 +145,9 @@ void avr_core_watch_write(avr_t *avr, uint16_t addr, uint8_t v)
+ 	 * frame and is munching on it's own return address.
+ 	 */
+ 	if (avr->trace_data->stack_frame_index > 1 && addr > avr->trace_data->stack_frame[avr->trace_data->stack_frame_index-2].sp) {
+-		printf( FONT_RED "%04x : munching stack "
+-				"SP %04x, A=%04x <= %02x\n" FONT_DEFAULT,
+-				avr->pc, _avr_sp_get(avr), addr, v);
++//		printf( FONT_RED "%04x : munching stack "
++//				"SP %04x, A=%04x <= %02x\n" FONT_DEFAULT,
++//				avr->pc, _avr_sp_get(avr), addr, v);
+ 	}
+ #endif
+ 
+@@ -160,11 +161,13 @@ void avr_core_watch_write(avr_t *avr, uint16_t addr, uint8_t v)
+ uint8_t avr_core_watch_read(avr_t *avr, uint16_t addr)
+ {
+ 	if (addr > avr->ramend) {
++#if 0
+ 		AVR_LOG(avr, LOG_WARNING,
+ 				"CORE: *** Wrapping read address "
+ 				"PC=%04x SP=%04x O=%04x Address %04x %% %04x --> %04x\n"
+ 				FONT_DEFAULT,
+ 				avr->pc, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc), addr, (avr->ramend + 1), addr % (avr->ramend + 1));
++#endif
+ 		addr = addr % (avr->ramend + 1);
+ 	}
+ 
+@@ -205,6 +208,31 @@ static inline void _avr_set_r(avr_t * avr, uint16_t r, uint8_t v)
+ 		avr->data[r] = v;
+ }
+ 
++void avr_set_r(avr_t * avr, uint16_t r, uint8_t v)
++{
++	REG_TOUCH(avr, r);
++
++	if (r == R_SREG) {
++		avr->data[R_SREG] = v;
++		// unsplit the SREG
++		SET_SREG_FROM(avr, v);
++		SREG();
++	}
++	if (r > 31) {
++		avr_io_addr_t io = AVR_DATA_TO_IO(r);
++		if (avr->io[io].w.c)
++			avr->io[io].w.c(avr, r, v, avr->io[io].w.param);
++		else
++			avr->data[r] = v;
++		if (avr->io[io].irq) {
++			avr_raise_irq(avr->io[io].irq + AVR_IOMEM_IRQ_ALL, v);
++			for (int i = 0; i < 8; i++)
++				avr_raise_irq(avr->io[io].irq + i, (v >> i) & 1);
++		}
++	} else
++		avr->data[r] = v;
++}
++
+ static inline void
+ _avr_set_r16le(
+ 	avr_t * avr,
+@@ -348,6 +376,7 @@ const char * avr_regname(uint8_t reg)
+  */
+ static void _avr_invalid_opcode(avr_t * avr)
+ {
++#if 0
+ #if CONFIG_SIMAVR_TRACE
+ 	printf( FONT_RED "*** %04x: %-25s Invalid Opcode SP=%04x O=%04x \n" FONT_DEFAULT,
+ 			avr->pc, avr->trace_data->codeline[avr->pc>>1]->symbol, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc));
+@@ -355,6 +384,9 @@ static void _avr_invalid_opcode(avr_t * avr)
+ 	AVR_LOG(avr, LOG_ERROR, FONT_RED "CORE: *** %04x: Invalid Opcode SP=%04x O=%04x \n" FONT_DEFAULT,
+ 			avr->pc, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc));
+ #endif
++#else
++	proto_exc("Invalid opcode @ %04x", avr->pc);
++#endif
+ }
+ 
+ #if CONFIG_SIMAVR_TRACE
+@@ -987,14 +1019,16 @@ run_one_again:
+ 					uint16_t z = avr->data[R_ZL] | (avr->data[R_ZH] << 8);
+ 					STATE("lpm %s, (Z[%04x])\n", avr_regname(0), z);
+ 					cycle += 2; // 3 cycles
+-					_avr_set_r(avr, 0, avr->flash[z]);
++					_avr_set_r(avr, 0, avr->secure_flash ? 0xff : avr->flash[z]);
++					if (z >= avr->program_size) avr->secure_flash = 1;
+ 				}	break;
+ 				case 0x95d8: {	// ELPM -- Load Program Memory R0 <- (Z) -- 1001 0101 1101 1000
+ 					if (!avr->rampz)
+ 						_avr_invalid_opcode(avr);
+ 					uint32_t z = avr->data[R_ZL] | (avr->data[R_ZH] << 8) | (avr->data[avr->rampz] << 16);
+ 					STATE("elpm %s, (Z[%02x:%04x])\n", avr_regname(0), z >> 16, z & 0xffff);
+-					_avr_set_r(avr, 0, avr->flash[z]);
++					_avr_set_r(avr, 0, avr->secure_flash ? 0xff : avr->flash[z]);
++					if (z >= avr->program_size) avr->secure_flash = 1;
+ 					cycle += 2; // 3 cycles
+ 				}	break;
+ 				default:  {
+@@ -1013,7 +1047,8 @@ run_one_again:
+ 							uint16_t z = avr->data[R_ZL] | (avr->data[R_ZH] << 8);
+ 							int op = opcode & 1;
+ 							STATE("lpm %s, (Z[%04x]%s)\n", avr_regname(d), z, op ? "+" : "");
+-							_avr_set_r(avr, d, avr->flash[z]);
++							_avr_set_r(avr, d, avr->secure_flash ? 0xff : avr->flash[z]);
++							if (z >= avr->program_size) avr->secure_flash = 1;
+ 							if (op) {
+ 								z++;
+ 								_avr_set_r16le_hl(avr, R_ZL, z);
+@@ -1028,7 +1063,8 @@ run_one_again:
+ 							get_d5(opcode);
+ 							int op = opcode & 1;
+ 							STATE("elpm %s, (Z[%02x:%04x]%s)\n", avr_regname(d), z >> 16, z & 0xffff, op ? "+" : "");
+-							_avr_set_r(avr, d, avr->flash[z]);
++							_avr_set_r(avr, d, avr->secure_flash ? 0xff : avr->flash[z]);
++							if (z >= avr->program_size) avr->secure_flash = 1;
+ 							if (op) {
+ 								z++;
+ 								_avr_set_r(avr, avr->rampz, z >> 16);
+@@ -1364,7 +1400,7 @@ run_one_again:
+ 			switch (opcode & 0xfe00) {
+ 				case 0xf100: {	/* simavr special opcodes */
+ 					if (opcode == 0xf1f1) { // AVR_OVERFLOW_OPCODE
+-						printf("FLASH overflow, soft reset\n");
++						//printf("FLASH overflow, soft reset\n");
+ 						new_pc = 0;
+ 						TRACE_JUMP();
+ 					}
+diff --git a/simavr/sim/sim_core.h b/simavr/sim/sim_core.h
+index 403c119..9ff4ae6 100644
+--- a/simavr/sim/sim_core.h
++++ b/simavr/sim/sim_core.h
+@@ -48,6 +48,9 @@ uint16_t _avr_sp_get(avr_t * avr);
+ void _avr_sp_set(avr_t * avr, uint16_t sp);
+ int _avr_push_addr(avr_t * avr, avr_flashaddr_t addr);
+ 
++void avr_set_r(avr_t * avr, uint16_t r, uint8_t v);
++
++
+ #if CONFIG_SIMAVR_TRACE
+ 
+ /*
+diff --git a/simavr/sim/sim_elf.c b/simavr/sim/sim_elf.c
+index 4c28959..91578d1 100644
+--- a/simavr/sim/sim_elf.c
++++ b/simavr/sim/sim_elf.c
+@@ -415,14 +415,14 @@ elf_read_firmware(
+ 	if (data_text) {
+ 	//	hdump("code", data_text->d_buf, data_text->d_size);
+ 		memcpy(firmware->flash + offset, data_text->d_buf, data_text->d_size);
+-		AVR_LOG(NULL, LOG_DEBUG, "Loaded %zu .text at address 0x%x\n",
+-				(unsigned int)data_text->d_size, firmware->flashbase);
++//		AVR_LOG(NULL, LOG_DEBUG, "Loaded %x .text at address 0x%x\n",
++//				(unsigned int)data_text->d_size, firmware->flashbase);
+ 		offset += data_text->d_size;
+ 	}
+ 	if (data_data) {
+ 	//	hdump("data", data_data->d_buf, data_data->d_size);
+ 		memcpy(firmware->flash + offset, data_data->d_buf, data_data->d_size);
+-		AVR_LOG(NULL, LOG_DEBUG, "Loaded %zu .data\n", data_data->d_size);
++//		AVR_LOG(NULL, LOG_DEBUG, "Loaded %x .data\n", data_data->d_size);
+ 		offset += data_data->d_size;
+ 		firmware->datasize = data_data->d_size;
+ 	}

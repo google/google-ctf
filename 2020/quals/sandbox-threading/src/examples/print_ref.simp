@@ -1,0 +1,5 @@
+def int32 main() {
+  ref<int32> x = new<int32>(5);
+  print(x);
+  return 0;
+}

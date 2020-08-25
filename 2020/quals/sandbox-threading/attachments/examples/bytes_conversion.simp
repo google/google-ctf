@@ -1,0 +1,21 @@
+def int32 main() {
+  print(bytes8("A"));
+  print("\n");
+  print(bytes32("WXYZ"));
+  print("\n");
+  print(bytes64("12345678"));
+  print("\n");
+  
+  char c = 65;
+  print(to_bytes(c));
+  print("\n");
+  uint32 x = 1094861636;
+  print(to_bytes(x));
+  print("\n");
+  int64 y = 4702394921427289928;
+  print(to_bytes(y));
+  print("\n");
+  print("\n");
+  
+  return 0;
+}

@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+package nsfs;
+
+enum Action {
+  READ = 0;
+  WRITE = 1;
+  DELETE = 2;
+  SYMLINK = 3;
+}
+
+message Operation {
+  required Action action = 1;
+  required string path = 2;
+  optional bytes data = 3;
+  optional uint32 length = 4;
+  optional uint32 offset = 5;
+}

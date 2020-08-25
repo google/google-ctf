@@ -1,0 +1,21 @@
+def string concatenate(string left, string right) {
+  string s = make_string(size(left) + size(right));
+  int32 i = 0;
+  while (i < size(left)) {
+    s[i] = left[i];
+    i = i + 1;
+  }
+  int32 j = 0;
+  while(j < size(right)) {
+    s[i] = right[j];
+    i = i + 1;
+    j = j + 1;
+  }
+  return s;
+}
+
+def int32 main() {
+  print(concatenate("foo", "bar"));
+  print("\n");
+  return 0;
+}

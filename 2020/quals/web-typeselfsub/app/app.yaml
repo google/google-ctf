@@ -1,0 +1,9 @@
+runtime: nodejs12
+service: typeselfsub
+
+env_variables:
+  DB_USER: ctf
+  DB_PASS: ""
+  DB_NAME: ctf
+  INSTANCE_CONNECTION_NAME: your instance here
+

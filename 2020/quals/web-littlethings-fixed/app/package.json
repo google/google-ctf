@@ -1,0 +1,23 @@
+{
+  "name": "web_all_the_little_things",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "terjanq",
+  "license": "ISC",
+  "description": "gCTF: All the Little things",
+  "dependencies": {
+    "@google-cloud/datastore": "^6.1.0",
+    "@google-cloud/tasks": "^2.1.0",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "cookie-session": "^1.4.0",
+    "ejs": "^3.1.2",
+    "express": "^4.17.1",
+    "uuid": "^8.0.0"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "challenge": {
+    "name": "App Ads",
+    "description": "Check out our new super secure ad framework! We're so confident in it that we are using it to monetize our login page.\n\nThe flag is in the password field, can you read it?",
+    "identifier": "app-ads",
+    "category": "pwn",
+    "flag": "CTF{something_something_pun_about_polyglots}",
+    "host": "app-ads.2020.ctfcompetition.com 1337\napp-ads2.2020.ctfcompetition.com 1337",
+    "vulnbox": {
+      "compute_image": "projects/gctf-builders/global/images/pwn-app-ads-20200821180140",
+      "jails": [
+        {
+          "type": "stdio",
+          "entrypoint": "/setup_emulator.py",
+          "aslimit": "max",
+          "cpulimit": "max",
+          "fsizelimit": "max",
+          "nofilelimit": "max",
+	        "memlimit": "max",
+	        "pidlimit": 1024,
+	        "timeout": "600",
+	        "environment": "PATH=/usr/bin:/bin:/opt/android/sdk/tools/bin",
+          "extra_jail_opts": "--disable_clone_newnet -m none:/home/user:tmpfs:size=5368709120 -m none:/tmp:tmpfs:size=5368709120 -R /dev/kvm -R /dev/urandom -R /dev/random -R /srv/challenge.resolv.conf:/etc/resolv.conf",
+	        "extra_systemd_opts": "ExecStartPre=/bin/sh -c '/bin/chown unprivileged /dev/kvm || true'",
+          "healthcheck": "./healthcheck"
+        }
+      ],
+      "replicas": 1,
+      "machine": "n1-standard-64"
+    },
+    "released": true
+  }
+}

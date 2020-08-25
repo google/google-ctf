@@ -1,0 +1,87 @@
+<!--
+Copyright 2020 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('head') %>
+</head>
+
+<body>
+    <%- include('nav') %>
+    <main>
+        <div class="container pt-5 w-50">
+            <h1>Settings</h1>
+            <hr class="featurette-divider">
+
+            <form class="form" id="settings" method="POST">
+                <label class=active for=username>Name:</label>
+                <input class="form-control" id=username name=username value="<%= user.username %>">
+                <label class=active for=img>Profile picture:</label>
+                <input class="form-control" placeholder="https://" type=url id=img name=img value="<%= user.img %>">
+                <label class=active for=script-choice>Theme:</label>
+                <select class="form-control" id=script-choice name=script-choice>
+                    <option value=1 <%= user.theme.choice == 1 ? "selected": "" %>>Light Mode</option>
+                    <option value=2 <%= user.theme.choice == 2 ? "selected": "" %>>Dark Mode</option>
+                </select>
+                <input name="csrf" value="<%- csrf %>" hidden>
+                <button class="mt-3 btn btn-primary btn-block" type="submit">
+                    Submit
+                </button>
+            </form>
+        </div>
+    </main>
+
+
+
+    <!-- ?__debug__ -->
+    <% if (is_debug) { %>
+    <div class="container w-50 pt-5">
+        <h1>Debug</h1>
+        <form class="form" id="debug">
+            <textarea class="form-control" name="json"></textarea>
+            <button class="mt-3 btn btn-primary btn-block">update</button>
+        </form>
+        <pre id="debugJson"></pre>
+        <script nonce="<%= nonce %>">
+            (function () {
+                const debugJsonEl = document.getElementById("debugJson");
+                const form = document.getElementById("debug");
+                function updateInfo() {
+                    try {
+                        let info = JSON.stringify(JSON.parse(name), null, 4);
+                        console.log(info);
+                        debug.json.value = info;
+                        debugJsonEl.innerText = info;
+                    } catch (e) {
+                        throw /Nice try/;
+                    }
+                }
+                form.onsubmit = function (e) {
+                    e.preventDefault();
+                    window.name = form.json.value;
+                    updateInfo();
+                    return false;
+                }
+                updateInfo();
+            })();
+        </script>
+    </div>
+    <% } %>
+
+</body>
+
+</html>

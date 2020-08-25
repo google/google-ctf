@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2020 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<project version="4">
+  <component name="IssueNavigationConfiguration">
+    <option name="links">
+      <list>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="\bb/(\d+)(#\w+)?\b" />
+          <option name="linkRegexp" value="https://buganizer.corp.google.com/issues/$1$2" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="\b(?:BUG=|FIXED=)(\d+)\b" />
+          <option name="linkRegexp" value="https://buganizer.corp.google.com/issues/$1" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="\b(?:cl/|cr/|OCL=|DIFFBASE=|ROLLBACK_OF=)(\d+)\b" />
+          <option name="linkRegexp" value="https://critique.corp.google.com/$1" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="\bomg/(\d+)\b" />
+          <option name="linkRegexp" value="https://omg.corp.google.com/$1" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="\b(?:go/|goto/)([^,.&lt;&gt;()&quot;\s]+(?:[.,][^,.&lt;&gt;()&quot;\s]+)*)" />
+          <option name="linkRegexp" value="https://goto.google.com/$1" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="\bcs/([^\s]+[\w$])" />
+          <option name="linkRegexp" value="https://cs.corp.google.com/search/?q=$1" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="(LINT\.IfChange)|(LINT\.ThenChange)" />
+          <option name="linkRegexp" value="https://goto.google.com/ifthisthenthatlint" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="\bb/(\d+)(#\w+)?\b" />
+          <option name="linkRegexp" value="https://buganizer.corp.google.com/issues/$1$2" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="\b(?:BUG=|FIXED=)(\d+)\b" />
+          <option name="linkRegexp" value="https://buganizer.corp.google.com/issues/$1" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="\b(?:cl/|cr/|OCL=|DIFFBASE=|ROLLBACK_OF=)(\d+)\b" />
+          <option name="linkRegexp" value="https://critique.corp.google.com/$1" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="\bomg/(\d+)\b" />
+          <option name="linkRegexp" value="https://omg.corp.google.com/$1" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="\b(?:go/|goto/)([^,.&lt;&gt;()&quot;\s]+(?:[.,][^,.&lt;&gt;()&quot;\s]+)*)" />
+          <option name="linkRegexp" value="https://goto.google.com/$1" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="\bcs/([^\s]+[\w$])" />
+          <option name="linkRegexp" value="https://cs.corp.google.com/search/?q=$1" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="(LINT\.IfChange)|(LINT\.ThenChange)" />
+          <option name="linkRegexp" value="https://goto.google.com/ifthisthenthatlint" />
+        </IssueNavigationLink>
+      </list>
+    </option>
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/../.." vcs="Git" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+  </component>
+</project>

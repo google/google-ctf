@@ -1,0 +1,4 @@
+def int32 main() {
+    print("Hello, World!\n");
+    return 0;
+}

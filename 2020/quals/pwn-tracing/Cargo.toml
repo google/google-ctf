@@ -1,0 +1,15 @@
+[package]
+name = "pwn-tracing"
+version = "0.1.0"
+authors = ["Robin McCorkell <rmccorkell@google.com>"]
+edition = "2018"
+
+[dependencies]
+log = "0.4.8"
+env_logger = "0.7.1"
+futures = "0.3.5"
+uuid = "0.8.1"
+
+[dependencies.async-std]
+version = "1.6.1"
+features = ["attributes"]

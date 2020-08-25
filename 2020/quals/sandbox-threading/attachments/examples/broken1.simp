@@ -1,0 +1,3 @@
+def int32 main() {
+    return "this is not an integer.";
+}

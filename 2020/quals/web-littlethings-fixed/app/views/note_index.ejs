@@ -1,0 +1,50 @@
+<!--
+Copyright 2020 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('head') %>
+</head>
+
+<body>
+    <%- include('nav') %>
+    <div class="container pt-5 w-50">
+        <h3>Your notes</h3>
+        <hr class="featurette-divider">
+        <ul>
+            <% for(let {note_id:id, public} of notes) { %>
+            <li><a <%if (public==1){%>class="public" <% } %>href="/note/<%= id %>"><%= id %></a></li>
+            <% } %>
+        </ul>
+        <hr class="featurette-divider">
+        <h3>Create new note</h3>
+        <hr class="featurette-divider">
+        <form class="form" method="post">
+            <label for="note-content">Note: </label>
+            <textarea class="form-control" id="note-content" name="content"></textarea>
+            <input name="csrf" value="<%= csrf %>" hidden>
+            <label for="vis">Visibility: </label>
+            <select class="form-control" id="vis" name="visibility">
+                <option>private</option>
+                <option>public</option>
+            </select>
+            <input class="mt-3 btn btn-primary btn-block" type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+def int32 main() {
+  print(hex8("41"));
+  print("\n");
+  print(hex32("aaaaffff"));
+  print("\n");
+  print(hex64("11223344aabbccdd"));
+  print("\n");
+  print("\n");
+  
+  char c = 65;
+  print(to_hex(c));
+  print("\n");
+  uint32 x = 2863333375;
+  print(to_hex(x));
+  print("\n");
+  int64 y = 1234605617868164317;
+  print(to_hex(y));
+  print("\n");
+  print("\n");
+  
+  print(hex_to_bytes("414243444546"));
+  print("\n");
+  print("\n");
+  
+  print(bytes_to_hex("ZZZZZ"));
+  print("\n");
+  
+  return 0;
+}

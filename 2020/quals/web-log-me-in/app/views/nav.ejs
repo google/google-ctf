@@ -1,0 +1,48 @@
+<!--
+Copyright 2020 Google LLC
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+     https://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<header>
+<nav class="navbar navbar-expand-md navbar-dark ">
+	<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="/">Home</a>
+		<a class="btn btn-secondary" href="/about">About</a>
+	    	<a class="btn btn-secondary" href="/me">Profile</a>
+	    	<a class="btn btn-warning" href="/flag">Flag</a>
+		<% if (locals.username) { %>
+		    <a class="btn btn-secondary" href="/logout">Logout</a>
+		<% } else { %>
+		    <a class="btn btn-secondary" href="/login">Login</a>
+		<% } %>
+	</div>
+	</div>
+</nav>
+</header>
+
+<main>
+<div class="container">
+
+	<% if (locals.error) { %>
+	<div class="alert alert-danger alert-dismissible show">
+		<h3>Error</h3>
+		<p><%=error%></p>
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+	</div>
+	<% } %>
+	<% if (locals.message) { %>
+	<div class="alert alert-info alert-dismissible show">
+		<p id="message"><%=message%></p>
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+	</div>
+	<% } %>
+
+</div>

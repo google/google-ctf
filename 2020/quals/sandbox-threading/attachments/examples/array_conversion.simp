@@ -1,0 +1,18 @@
+def int32 main() {
+  array<int32, 4> arr;
+  arr[0] = 0;
+  arr[1] = 1;
+  arr[2] = 2;
+  arr[3] = 3;
+  
+  int32 i = 0;
+  array<int32> dyn_arr = make_array<int32>(size(arr));
+  while (i < size(arr)) {
+    dyn_arr[i] = arr[i];
+    i = i + 1;
+  }
+  
+  print(dyn_arr);
+  print("\n");
+  return 0;
+}

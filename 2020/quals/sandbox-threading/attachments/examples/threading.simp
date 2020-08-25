@@ -1,0 +1,10 @@
+def void t_func(string arg) {
+  print(arg);
+}
+
+def int32 main() {
+  string message = "Hello, World!\n";
+  thread t = make_thread(t_func, message);
+  join(t);
+  return 0;
+}

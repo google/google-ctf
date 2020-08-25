@@ -1,0 +1,39 @@
+<!--
+Copyright 2020 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="/static/styles/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles/bootstrap.css">
+</head>
+
+<body>
+    <%- include('nav') %>
+    <div class="container w-50 pt-5">
+        <h3>Create new paste</h3>
+        <form class="form" method="post">
+            <textarea class="form-control" name="content"></textarea>
+            <input type="submit" class="mt-3 btn btn-primary btn-block" value="Submit">
+        </form>
+
+    </div>
+    
+    <a href="/source" style="display:none">Source</a>
+    
+</body>
+
+</html>
