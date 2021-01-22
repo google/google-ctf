@@ -28,8 +28,8 @@ import sqlite3
 app = Flask(__name__)
 app.secret_key = os.urandom(128)
 
-BLACKLIST = ['#', '<', '>', '=', '%', '-']
-BLACKLIST_WORDS = ['or', 'is', 'like', 'join', '0', 'limit', 'char']
+FORBIDDEN_CHARS = ['#', '<', '>', '=', '%', '-']
+FORBIDDEN_WORDS = ['or', 'is', 'like', 'join', '0', 'limit', 'char']
 
 
 def get_db():
@@ -56,10 +56,10 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 def check_parameter(name):
-  for c in BLACKLIST:
+  for c in FORBIDDEN_CHARS:
     if c in name:
       return False
-  for w in BLACKLIST_WORDS:
+  for w in FORBIDDEN_WORDS:
     if w in name:
       return False
   return True
