@@ -1079,12 +1079,12 @@ limitations under the License.
             return true;
           }
         });
-        var blacklist = [
+        var actions = [
           'dropped a bear', 'rocked up', 'shot through', 'joined the telly', 'gave this task to the garbo'
         ].indexOf(what);
-        if (blacklist > -1) {
+        if (actions > -1) {
           div.dataset.showNickname = true;
-          document.body.dataset.dropbear = !blacklist;
+          document.body.dataset.dropbear = !actions;
         } else if (!mentioned && taskFavorites[where] && who != username) {
           sendNotification(`#${where}`, {
             body: `${who}: ${what}`,
