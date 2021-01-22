@@ -311,14 +311,14 @@ const is_debug = (req, res, next) => {
 /* jsonp endpoint */
 const jsonp = (req, res, next) => {
   res.jsonp = function (obj = {}) {
-    const blacklist = /[^\w\.=]/ugi;
+    const pattern = /[^\w\.=]/ugi;
     let cb = req.query.cb || 'console.log';
     this.set('Content-type', 'text/javascript; charset=utf-8');
 
     if (Array.isArray(cb)) {
       cb = cb[0]
     }
-    cb = cb.replace(blacklist, '');
+    cb = cb.replace(pattern, '');
     body = `${cb}(${JSON.stringify(obj)})`
     return this.send(body)
   }
