@@ -85,7 +85,7 @@ def send():
   result = {"profile_url": "/static/img/profile.png",
             "username": "brewtoot",
            }
-  blacklist = [
+  bad_words = [
       "script",
       "alert",
       "iframe",
@@ -96,7 +96,7 @@ def send():
       "console",
   ]
   message = request.form["message"]
-  if any([bad_word in message for bad_word in blacklist]):
+  if any([bad_word in message for bad_word in bad_words]):
     message = "HACKER ALERT!"
   elif "<" in message: # Spare xssbot useless messages
     xss(message)
