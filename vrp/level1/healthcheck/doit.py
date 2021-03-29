@@ -23,7 +23,7 @@ def handle_pow(r):
     p = pwnlib.tubes.process.process(['kctf_bypass_pow', challenge])
     solution = p.readall().strip()
     r.sendline(solution)
-    print(r.recvuntil(b'Correct\n'))
+    print(r.recvuntil(b'Correct'))
 
 r = pwnlib.tubes.remote.remote('127.0.0.1', 1337)
 print(r.recvuntil('== proof-of-work: '))
