@@ -20,6 +20,7 @@ COPY chal /home/user/
 FROM gcr.io/kctf-docker/challenge@sha256:6dd60da626bc43bf3175d9d7436006db5acc7710d5d1b7006ab53e718fe51e40
 
 COPY --from=chroot / /chroot
+RUN cd /chroot/dev && touch null zero urandom random full
 
 COPY nsjail.cfg /home/user/
 
