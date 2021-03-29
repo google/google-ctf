@@ -13,6 +13,7 @@
 # limitations under the License.
 FROM ubuntu:20.04 as chroot
 
+RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y build-essential curl wget git python3 netcat socat gdb
 RUN /usr/sbin/useradd --no-create-home -u 1000 user
 
 COPY chal /home/user/
