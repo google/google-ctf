@@ -37,7 +37,7 @@ COPY web-servers /web-servers
 
 COPY flag /
 
-FROM gcr.io/kctf-docker/challenge@sha256:e550af5df266cb89a26ace1ba5dcc685981f01d1cb61e45a898cce0c9753de7a
+FROM gcr.io/kctf-docker/challenge@sha256:6dd60da626bc43bf3175d9d7436006db5acc7710d5d1b7006ab53e718fe51e40
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends tzdata apache2 \
