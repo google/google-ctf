@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kctf-operator
+  namespace: kctf-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: kctf-operator
+  template:
+    metadata:
+      labels:
+        name: kctf-operator
+    spec:
+      serviceAccountName: kctf-operator
+      containers:
+        - name: kctf-operator
+          image: gcr.io/kctf-docker/kctf-operator@sha256:d9cebd766fbdbe898add623a2b3dc1c2574096d64d3b8d88bfd04a75378aea63
+          command:
+          - kctf-operator
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "kctf-operator"
+          readinessProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/initialized
+            initialDelaySeconds: 5
+            periodSeconds: 5

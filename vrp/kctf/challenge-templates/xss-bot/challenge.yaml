@@ -1,0 +1,19 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: xss-bot
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: false
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+  # You can allow the bot to connect to other challenges internally.
+  # This can be useful during testing so that you don't have to make your
+  # challenge public.
+  # The challenge will be reachable at $name.default.svc.cluster.local or
+  # simply at $name with the default k8s search list.
+  #allowConnectTo:
+  #  - otherchallenge

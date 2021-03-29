@@ -1,0 +1,4 @@
+config/*
+bin/kind
+bin/kubectl
+bin/yq
