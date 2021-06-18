@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  game:
+    build: ./game
+    ports:
+      - "4567:4567"
+  ingamectf2:
+    build: ./ingamectf2
+    expose:
+      - "1"
+  outofgamectf1:
+    build: ./outofgamectf1
+    ports:
+      - "4568:80"

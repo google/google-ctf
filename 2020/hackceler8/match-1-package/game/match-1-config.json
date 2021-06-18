@@ -1,0 +1,58 @@
+{
+  "fw": {
+    "filter_by_ip": false,
+    "filter_list": "allowed_ips.txt"
+  },
+  "map": {
+    "path": "map/",
+    "file": "quals_match_1.json"
+  },
+  "players": {
+    "player": {
+      "hash": "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
+      "name": "Test Team"
+    }
+  },
+  "challenges": [
+    {
+      "id": "map-1",
+      "flag": "daada37a1bd295bc3b3c0261b7a17fd2cd77baaa06df25785b6d21d814184afa",
+      "comment": "Gynvael's top challenge",
+      "text": "The flag is: HCL8{DidYouGoToTheTopFirst?}\n"
+    },
+    {
+      "id": "map-2",
+      "flag": "8e55c8766c087d2ff54e8ec28ddca0f519395c787ad5416571e03ab6772d887e",
+      "comment": "Gynvael's bottom challenge",
+      "text": "The flag is: HCL8{OldestTrickInTheBook}\n"
+    },
+    {
+      "id": "in-game-ctf-1",
+      "flag": "8bfa4db5f7a2b6a9b306325e2c4cad2e56cf19a71514bdad264d3abc3410570b",
+      "text": "Title: nostatic\nDescription: Nothing a couple of well-placed breakpoints can't solve.\nDownload: GameServer/match-1-0827bc39457e7c723738db29226f9c9a-a.out"
+    },
+    {
+      "id": "in-game-ctf-2",
+      "host": "ingamectf2",
+      "port": 1,
+      "flag": "35a736aa9b13ed151cb2e2357564038c4f12993732ac009041854340bd33f107",
+      "text": "Title: fpeu\nDescription: Is this the Signal thingy everybody is chatting about?\n\n"
+    },
+    {
+      "id": "in-game-ctf-3",
+      "flag": "618974fb227b580739bf74d591de9ea7f1a35d7c4361d96ac1b5a0355bcfa737",
+      "text": "Title: Crockme\nDescription: Lookin' good\nDownload: GameServer/match-1-efdbad8266d3980324e916544644d3be-bin"
+    },
+    {
+      "id": "in-game-ctf-4",
+      "flag": "2d12e5819b5419b7ad208da896575ad25b8561edf549a328348a554bc174d19f",
+      "text": "Title: Mers\nDescription: Time for paper and pen?\n\n",
+      "file": "match-1-85be0c7eb77563a49b7ebf5dbbea8ab8-main.py"
+    },
+    {
+      "id": "out-of-game-ctf-1",
+      "flag": "598a24b19f502ec17a0770951df5c4ce362f2baecf94445bbb6add8c10e649d5",
+      "text": "This challenge is located at http://GameServer:4568\n"
+    }
+  ]
+}

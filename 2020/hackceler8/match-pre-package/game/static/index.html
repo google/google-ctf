@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Game</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/common/utils.js"></script>
+    <script src="/resource-manager.js"></script>
+    <script src="/common/map-utils.js"></script>
+    <script src="/common/entities.js"></script>
+    <script src="/common/game-state.js"></script>
+    <script src="/terminal.js"></script>
+    <script src="/flag-console.js"></script>
+    <script src="/visuals.js"></script>
+    <script src="/game.js"></script>
+    <script src="/main.js"></script>
+  </head>
+  <body>
+    <div id="scene-login">
+      <div class="container rounded-box">
+        <form>
+          <div class="form-section">
+            <label for="username">Player Id:</label>
+            <input name="username" id="username" autocomplete="username" class="rounded">
+          </div>
+          <div class="form-section">
+            <label for="password">Access code:</label>
+            <input name="password" id="password" type="password" autocomplete="current-password" class="rounded">
+          </div>
+          <div class="form-section">
+            <button id="login-submit" class="rounded">Enter</button>
+          </div>
+        <form>
+      </div>
+    </div>
+    <div id="scene-game">
+      <div id="game">
+        <div id="background"><img src="/bg.png"></div>
+        <div id="parallax"></div>
+        <div id="front"></div>
+        <div id="overlay"></div>
+        <div id="hud">
+          <div id="area-name"></div>
+          <div id="respawn-panel">
+            <div class="respawn-panel-title">You are dead</div>
+            <div class="respawn-panel-info">
+              Respawn in <span id="respawn-panel-counter"></span> seconds.
+            </div>
+          </div>
+          <div id="end-panel">Match Completed!</div>
+        </div>
+      </div>
+    </div>
+    <div id="error-box" class="rounded-box">
+      Error.
+    </div>
+    <div id="progress-box" class="rounded-box">?</div>
+  </body>
+
+  <template id="terminal">
+    <div class="terminal-box">
+      <div class="terminal-output"></div>
+      <div class="terminal-input">
+        <span class="terminal-prompt">&nbsp;</span><input class="terminal-input-v"></input>
+      </div>
+    </div>
+  </template>
+
+  <template id="flag-console">
+    <div class="flag-console-box">
+      <div class="flag-console-output"></div>
+      <input class="flag-console-input" placeholder="HCL8{...}"></input>
+    </div>
+  </template>
+
+</html>

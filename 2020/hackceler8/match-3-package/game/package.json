@@ -1,0 +1,33 @@
+{
+  "name": "Hackceler8",
+  "version": "1.0.0",
+  "description": "Hackceler8 Match 3",
+  "main": "main.js",
+  "dependencies": {
+    "bufferutil": "^4.0.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "utf-8-validate": "^5.0.2",
+    "ws": "^7.4.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "auth_service.js",
+    "base_service.js",
+    "challenge_connector.js",
+    "game_service.js",
+    "local_player_db.js",
+    "main.js",
+    "player_connection.js",
+    "player_db.js",
+    "common/"
+  ],
+  "author": "Gynvael Coldwind <gynvael@google.com> (https://google.com/)",
+  "contributors": [
+    "Ian Eldred Pudney <puddles@google.com> (https://google.com/)"
+  ],
+  "license": "Apache-2.0"
+}

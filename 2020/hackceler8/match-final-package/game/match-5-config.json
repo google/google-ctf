@@ -1,0 +1,59 @@
+{
+  "fw": {
+    "filter_by_ip": false,
+    "filter_list": "allowed_ips.txt"
+  },
+  "map": {
+    "path": "map/",
+    "file": "finals.json"
+  },
+  "players": {
+    "player": {
+      "hash": "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
+      "name": "Test Team",
+      "frameSet": "player"
+    }
+  },
+  "challenges": [
+    {
+      "id": "map-3",
+      "flag": "9ba7a061224b6056a072857e7255e7d0d4386ec719640aa9b5961720e9e4343e",
+      "text": "The flag is: HCL8{DarknessInTheSky==Overdark!}\n"
+    },
+    {
+      "id": "map-4",
+      "flag": "69bc5fb773792b6ab1def577032b9abe8b29ccdbdfc19c6cf0403143cb43afd8",
+      "text": "The flag is: HCL8{SidesteppingDeathLikeAPro}\n"
+    },
+    {
+      "id": "in-game-5",
+      "flag": "de59207e194f38995a39e467bc3653cc4d170123da1b491ddb4d6a0d430bed49",
+      "text": "The flag is: HCL8{nothing-you-haven't-seen-before}\n"
+    },
+    {
+      "id": "in-game-ctf-14",
+      "flag": "2929c8c03c4428eb2dd81ed8c526367d185118370f7ae6383f6b05320416a08a",
+      "text": "Title: mk\nDescription: why.\nYou can download the file at: GameServer/match-5-f37366592c3ee21e98b34cb532f3c2d4-Makefile\nBut, you can also look at it here:\n\n",
+      "file": "static/match-5-f37366592c3ee21e98b34cb532f3c2d4-Makefile"
+    },
+    {
+      "id": "in-game-ctf-15",
+      "flag": "10566d525529037a6fd4a8cec0db5205e5d8bab619ee4d1877540154d809575e",
+      "text": "Title: optimus\nDescription: I need to upgrade my computer, this is taking ages...\nBinary data starts here:",
+      "file": "static/match-5-f232146dac071f71a71e8babdb76defb-opt.cpython-37.pyc"
+    },
+    {
+      "id": "in-game-ctf-16",
+      "flag": "df67bb64be32ec134d003c3a687f0c508b2c3b07e17f1ec0c3c0f92eba5692eb",
+      "text": "Title: Guessceler8\nDescription: Can you guess the flag?\nDownload: GameServer/match-5-fa95ba798094f2452cef69f152813b02-main.py\nCONNECTING...\n\n",
+      "host": "ingamectf16",
+      "port": 1
+    },
+    {
+      "id": "in-game-ctf-17",
+      "flag": "892db155262c01590ff2ef899794d5e6a1b476943590a7ddab74fd5701aa9480",
+      "host": "ingamectf17",
+      "port": 1
+    }
+  ]
+}

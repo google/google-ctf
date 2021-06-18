@@ -1,0 +1,57 @@
+{
+  "fw": {
+    "filter_by_ip": false,
+    "filter_list": "allowed_ips.txt"
+  },
+  "map": {
+    "path": "map/",
+    "file": "quals_match_2.json"
+  },
+  "players": {
+    "player": {
+      "hash": "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
+      "name": "Test Team"
+    }
+  },
+  "challenges": [
+    {
+      "id": "map-1",
+      "flag": "18c85144a0847d1bfa7432ff1f028b83783c9c2e174da2fc404f20a0cc21ed5f",
+      "comment": "Gynvael's top",
+      "text": "The flag is: HCL8{HopeYouDidn'tGoUpstairsFirst}\n\n"
+    },
+    {
+      "id": "map-2",
+      "flag": "4cfbb4188be847f2ee5dea06352707df6402b47cfcece77d9d46c3f817a334bb",
+      "comment": "Gynvael's bottom",
+      "text": "The flag is: HCL8{Respawns!HowDoTheyWork?!}\n\n"
+    },
+    {
+      "id": "in-game-2",
+      "flag": "2898d4744e8253014534f4452c0761f6b2c707fc8812114e76428ff7da2bc953",
+      "text": "The flag is: HCL8{stale-reference-manipulation/use-after-free}\n\n",
+      "comment": "Ian's amazing stuff"
+    },
+    {
+      "id": "in-game-ctf-5",
+      "flag": "be3d6714c979b927265e9a4e3b9679f7d667af178838f083cf0a15ca2d49dec4",
+      "text": "Title: b\nDescription: On the bright side, this challenge could have been a Perl one...\nDownload: GameServer/match-2-28933a9f6b35e6f80d7818e9f8cbf64f-main.sh\n\n"
+    },
+    {
+      "id": "in-game-ctf-6",
+      "flag": "9d14330a2be1d9ec9d468aebac8b6f4160e2ad9013fbb3153eacc6dc7478c161",
+      "text": "Title: gogogo\nDescription: Simple, reliable, and efficient software, except at assembly level...\nDownload: GameServer/match-2-6d77a6e8bb0b5170e124a4073dab0bfe-main\n\n"
+    },
+    {
+      "id": "in-game-ctf-7",
+      "flag": "6f62013168a0d28f2b4585835c5ec5b0507d6b0768845124cf2fa333e0209aba",
+      "text": "Title: Wat\nDescription: What could this weird mathematical operation be?!\n\nBinary Data Starts Here:",
+      "file": "static/match-2-8cc6969e86938745425cbe4d4287f4e4-a.zip"
+    },
+    {
+      "id": "out-of-game-ctf-2",
+      "flag": "51dbfbc1d9e0d15ddc1c2dfea3d5ad739301d1f49163becb767694c0602f8514",
+      "text": "This challenge is located at: nc GameServer 4568\n\n"
+    }
+  ]
+}

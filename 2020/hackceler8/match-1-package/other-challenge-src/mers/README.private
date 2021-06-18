@@ -1,0 +1,3 @@
+Flag: HCL8{147573952589676412927}
+How-to: The equation is equivalent to 2**67 - 1 = a * b, which is a mersenne non-prime number: https://twitter.com/fermatslibrary/status/128846103140941005M
+Deployment: Python file displayed on server

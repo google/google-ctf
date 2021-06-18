@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  game:
+    build: ./game
+    ports:
+      - "4567:4567"
+  task1:
+    build: ./task1
+    expose:
+      - "7000"
+  task2:
+    build: ./task2
+    expose:
+      - "7001"
+  task3:
+    build: ./task3
+    expose:
+      - "7002"
+

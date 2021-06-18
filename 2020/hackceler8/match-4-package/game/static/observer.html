@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Game</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/common/utils.js"></script>
+    <script src="/resource-manager.js"></script>
+    <script src="/common/map-utils.js"></script>
+    <script src="/common/entities.js"></script>
+    <script src="/common/game-state.js"></script>
+    <script src="/terminal.js"></script>
+    <script src="/flag-console.js"></script>
+    <script src="/visuals.js"></script>
+    <script src="/game.js"></script>
+    <script src="/main.js"></script>
+  </head>
+  <body>
+    <div id="scene-login">
+      <div class="container rounded-box">
+        <form>
+          <div class="form-section">
+            <span style="color: aqua">Observer Mode</span>
+          </div>
+          <div class="form-section">
+            <label for="username">Player Id:</label>
+            <input name="username" id="username" autocomplete="username" class="rounded">
+          </div>
+          <div class="form-section">
+            <label for="password">Access code:</label>
+            <input name="password" id="password" type="password" autocomplete="current-password" class="rounded">
+          </div>
+          <div class="form-section">
+            <input name="use_observer_mode" id="use_observer_mode" type="hidden" value="true" />
+            <button id="login-submit" class="rounded">Enter</button>
+          </div>
+        <form>
+      </div>
+    </div>
+    <div id="scene-game">
+      <div id="game">
+        <div id="background"><img src="/bg.png"></div>
+        <div id="parallax"></div>
+        <div id="front"></div>
+        <div id="overlay"></div>
+        <div id="hud" style="background-image:none">
+          <div id="timer"></div>
+          <div id="obsname" style="display: block"></div>
+          <div id="area-name"></div>
+          <div id="flags" style="display:none">
+            <img src="/orb.png" id="flag-0">
+            <img src="/orb.png" id="flag-1">
+            <img src="/orb.png" id="flag-2">
+            <img src="/orb.png" id="flag-3">
+            <img src="/orb.png" id="flag-4">
+            <img src="/orb.png" id="flag-5">
+            <img src="/orb.png" id="flag-6">
+            <img src="/orb.png" id="flag-7">
+          </div>
+          <div id="respawn-panel">
+            <div class="respawn-panel-title">You are dead</div>
+            <div class="respawn-panel-info">
+              Respawn in <span id="respawn-panel-counter"></span> seconds.
+            </div>
+          </div>
+          <div id="end-panel">Match Completed!</div>
+        </div>
+      </div>
+    </div>
+    <div id="error-box" class="rounded-box">
+      Error.
+    </div>
+    <div id="progress-box" class="rounded-box">?</div>
+  </body>
+
+  <template id="terminal">
+    <div class="terminal-box">
+      <div class="terminal-output"></div>
+      <div class="terminal-input">
+        <span class="terminal-prompt">&nbsp;</span><input class="terminal-input-v"></input>
+      </div>
+    </div>
+  </template>
+
+  <template id="flag-console">
+    <div class="flag-console-box">
+      <div class="flag-console-output"></div>
+      <input class="flag-console-input" placeholder="HCL8{...}"></input>
+    </div>
+  </template>
+
+</html>

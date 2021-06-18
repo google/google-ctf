@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  game:
+    build: ./game
+    ports:
+      - "4567:4567"
+  outofgamectf4:
+    build: ./outofgamectf4
+    security_opt:
+      - seccomp:unconfined
+    ports:
+      - "4568:4568"
+  ingamectf12:
+    build: ./ingamectf12
+    expose:
+      - "1"

@@ -1,0 +1,36 @@
+{
+  "fw": {
+    "filter_by_ip": false,
+    "filter_list": "allowed_ips.txt"
+  },
+  "map": {
+    "path": "./bundle-testmap",
+    "file": "testmap.json"
+  },
+  "players": {
+    "player": {
+      "hash": "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
+      "name": "Test Team"
+    }
+  },
+  "challenges": [
+    {
+      "id": "test_challenge",
+      "host": "task1",
+      "port": 7000,
+      "flag": "f092d714a3df0633034b896969088e56912fe015cb91105ce234bef6961fdc3d"
+    },
+    {
+      "id": "test_challenge_2",
+      "host": "task2",
+      "port": 7001,
+      "flag": "ed5536be24ef2779b53d1ec47f36b42fe7be6d9c522dff3654ed8c9877dcb5be"
+    },
+    {
+      "id": "test_challenge_3",
+      "host": "task3",
+      "port": 7002,
+      "flag": "d71ff14ade6ff28919a2e6b406fbd7bd0dbe6183c700ff0c6431e6943c3ef3ad"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+ Flag: HCL8{Isnt_vimscript_bett3r_than_LISP}
+ How-to solve: Reverse the file by hand. Tips:
+	- Anything after " is a comment
+	- The file opened by vim is the stirng being processed,
+		so you'll have to open a file named `HCL8{Isnt_vimscript_bett3r_than_LISP}`
+	- it's bascially a ord2chr(chr2ord(g:t)+ 3)
+Deployment: The vimscript file is diplsayed by the server

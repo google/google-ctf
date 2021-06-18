@@ -1,0 +1,9 @@
+Flag: HCL8{why_0pt1miz3_1f_i7_w0rk5?}
+How-to:
+    0. Give players only for_players.py!
+    1. The code is deoptimized opt.py (sum of i**i%M up to 31337)
+    2. pow is repeated mul, mul is repeated add, add is repeated inc
+    3. mod is repeated sub, sub is repeated dec
+    4. Just reverse the deoptimization (bonus points for modular
+       exponentiation, though it's not necessary - works in under
+       2 minutes without)

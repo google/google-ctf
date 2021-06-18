@@ -1,0 +1,59 @@
+{
+  "fw": {
+    "filter_by_ip": false,
+    "filter_list": "allowed_ips.txt"
+  },
+  "map": {
+    "path": "map/",
+    "file": "quals_match_4.json"
+  },
+  "players": {
+    "player": {
+      "hash": "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
+      "name": "Test Team"
+    }
+  },
+  "challenges": [
+    {
+      "id": "map-1",
+      "flag": "157e809d36d3ee927f1095c031bfb9f2de5d8e4b2348fe17a0af71706d132072",
+      "comment": "Gynvael's top challenge",
+      "text": "The flag is: HCL8{Don'tTellMeIHaveToGoBackUp}\n\n"
+    },
+    {
+      "id": "map-2",
+      "flag": "967c6427caf1f506988ff037f8fd211e4bbe15166c0c0eba1cebe5702b25281d",
+      "comment": "Gynvael's bottom challenge",
+      "text": "The flag is: HCL8{TelerespawningIsAThing}\n\n"
+    },
+    {
+      "id": "in-game-4",
+      "flag": "04a6193fd13d869c4cdd219d4d176609d9ad7097a45d535ee4e8e87dc188422b",
+      "text": "The flag is: HCL8{skeleton-key}\n\n"
+    },
+    {
+      "id": "in-game-ctf-11",
+      "flag": "b093141bd7de6b79e9d474b0238e9450051d32734ba90b8b8d4b0599921c22cd",
+      "text": "Title: Prym\nDescription: Should have done it in matlab instead.\n\n",
+      "file": "static/match-4-93857c71662f2239fa7bcff15e3e40f3-main.py"
+    },
+    {
+      "id": "in-game-ctf-12",
+      "flag": "670fa63fad9f6f225d4b42d65ac5cf2b9ead9d7036fca7f60895be0d23802d03",
+      "text": "Title: modded\nDownload: GameServer/match-4-c005f5386bff123716f1fb0d1d57b125-modded_redacted.py\n\nConnecting to the challenge...\n\n",
+      "host": "ingamectf12",
+      "port": 1
+    },
+    {
+      "id": "in-game-ctf-13",
+      "flag": "c3d34f30c3c47372007958da9123e0ed9a297e94bda253853b98b201b4f37c50",
+      "text": "Title: Packman\nDescription: Who doesn't like unpacking nested VM on a tight time budget?\n\nBinary data starts here:",
+      "file": "static/match-4-38bbbc9280edcee3af0db8e5d4843b15-main"
+    },
+    {
+      "id": "out-of-game-ctf-4",
+      "flag": "0bf687f77403e9db135dbb3f96d9f5af2d47dabe97fd25f54d116f304bcd4594",
+      "text": "This challenge is located at: nc GameServer 4568\n\n"
+    }
+  ]
+}

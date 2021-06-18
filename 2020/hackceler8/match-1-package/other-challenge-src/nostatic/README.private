@@ -1,0 +1,7 @@
+Flag: HCL8{I_h0pe_you_didnt_do_it_statically}
+How-to:
+	1. patch all the anti-debug (alternatively put EB FE in main and attach gdb)
+	2. put breakpoints on the checks
+	2. ./a.out 48132 2147483647 170893
+Deployment: File downloaded by the players
+

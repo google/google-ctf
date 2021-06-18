@@ -1,0 +1,3 @@
+Flag: HCL8{The_magical_number_is_256}
+How-to: It's a simple sum. Even if you can't see it, there is a low-hanging check for x = 1337, so it's just a matter of bruteforcing y.
+Deployment: THe players are downloading the binary

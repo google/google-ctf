@@ -1,0 +1,5 @@
+Flag: HCL8{WHY_RUST_WHEN_[BASH]_IS_ALREADY_MEMORY_SAFE?}
+How-to:
+ Nothing particular, just read the manpage.
+ The correct input is hcl8{why_rust_when_[bash]_is_already_memory_safe?}
+Deployment: bash file displayed by the server

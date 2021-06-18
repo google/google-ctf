@@ -1,0 +1,58 @@
+{
+  "fw": {
+    "filter_by_ip": false,
+    "filter_list": "allowed_ips.txt"
+  },
+  "map": {
+    "path": "map/",
+    "file": "quals_match_3.json"
+  },
+  "players": {
+    "player": {
+      "hash": "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
+      "name": "Test Team"
+    }
+  },
+  "challenges": [
+    {
+      "id": "map-1",
+      "flag": "09a51fe913e421b563a45b6f3d0a30318ea6b807f3d1d7f149a7b39086f1b89b",
+      "comment": "Gynvael's top challenge",
+      "text": "The flag is: HCL8{ImagineYouForgotToReadThisFirst}\n\n"
+    },
+    {
+      "id": "map-2",
+      "flag": "52a73434ef90e74f630ca23c09e356d353b6d4644dc198326dee6da704054a97",
+      "comment": "Gynvael's bottom challenge",
+      "text": "The flag is: HCL8{SoMuchDustHereHuh}\n\n"
+    },
+    {
+      "id": "in-game-3",
+      "flag": "c58989a411e4737e448377336acbde34aceca82c9ff6a9ee76022e2041513ba7",
+      "comment": "Think we have enough doors?",
+      "text": "The flag is: HCL8{telepathy-is-really-useful}\n\n"
+    },
+    {
+      "id": "in-game-ctf-8",
+      "flag": "072047a2421fa77955e0baa92f9d38169c60aab1f2ba59fd2069cdc358153c79",
+      "text": "Title: :q\nDescription: How do you quit emacs anyway?\nDownload: GameServer/match-3-997fcba024690dc5257bdef86b5ec20a-main.vim\n\n"
+    },
+    {
+      "id": "in-game-ctf-9",
+      "flag": "72289f5781eac24269b9d3d57a805c4c109e2be1f65e03fc3dfd92e4dfa3b3fb",
+      "text": "Title: wait\nDescription: Good thing that you're not in a hurry.\n\nBinary Data Starts Here:",
+      "file": "static/match-3-83a731a13247a2d9fb6cfa16d8c2d3b5-a.zip"
+    },
+    {
+      "id": "in-game-ctf-10",
+      "flag": "cccb37edf8c28ce4b8f804a54696ef31f5031655c44a2d032126073440223848",
+      "text": "Title: inv\nDescription: We lost some data in the transmission, can you recover it?\n\n",
+      "file": "static/match-3-7a07cbd7a75e55dcc61fd0f74222f29e-main.py"
+    },
+    {
+      "id": "out-of-game-ctf-3",
+      "flag": "712649c8011fb9ca1ef748c298bf83452ee179ecac5da8f536e5daa6c50d3961",
+      "text": "This challenge is located at:\nhttp://GameServer:4568/\n\n"
+    }
+  ]
+}

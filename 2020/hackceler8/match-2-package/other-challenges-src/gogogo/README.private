@@ -1,0 +1,3 @@
+Flag: HCL8{At_least_there_were_symbolz}
+How-to: Load into IDA, notice the loop with a +3, find the string, map(+3, …)
+Deployement: Players are downloading the binary

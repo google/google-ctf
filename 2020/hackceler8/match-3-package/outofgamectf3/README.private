@@ -1,0 +1,4 @@
+Flag: HCL8{Code_injection_in_php_because_why_n0t}
+How-to solve: PHP being PHP, there is a code injection in the implementation
+  of create_function: https://github.com/php/php-src/commit/ee16d99504f0014c3d292809da927fb622293f41#diff-3ea93da7d1026a9f53948a5d14b1f7bdL1913-L1934
+	So it's simply a matter of injecting whatever code there to get it executed.

@@ -1,0 +1,422 @@
+@font-face {
+  font-family: 'Unifont';
+  font-style: normal;
+  font-display: swap;
+  src: local('Unifont'), url('/third_party/font_unifont/EUA6CLEOvQxi7CFwoAJ7_1KPGs1ZzpMvnHX-7fPOuAc.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  font-family: 'Unifont', monospace;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+}
+
+button, input {
+  font-family: 'Unifont', monospace;
+}
+
+input.rounded {
+  padding: 0.5em;
+  color: white;
+  /*border-radius: 0.5em;*/
+  background-color: rgba(0, 0, 0);
+  width: 25em;
+}
+
+button.rounded {
+  padding: 0.5em;
+  color: white;
+  /*border-radius: 0.5em;*/
+  background-color: rgba(75, 75, 75);
+}
+
+div#scene-login {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+div#scene-login label {
+  display: block;
+}
+
+div#scene-login button {
+  display: block;
+  width: 100%;
+}
+
+div#scene-login .form-section {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+div#scene-login div.container {
+  position: absolute;
+  margin-top: 37%;
+}
+
+div#scene-game {
+  z-index: 0;
+  position: absolute;
+  color: green;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+div#game {
+  position: absolute;
+
+  /* Keep aspect ratio at 16:9 */
+  width: 100vw;
+  height: 56.25vw;
+  max-width: 177.7vh;
+  max-height: 100vh;
+
+  overflow: hidden;
+}
+
+div#game div#background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+div#game div#background img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+  image-rendering: pixelated;
+}
+
+div#game div#parallax {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+div#game div#parallax img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+div#game div#parallax {
+  /*filter: hue-rotate(0deg) saturate(0.9) brightness(1.1);*/
+  /*filter: hue-rotate(0deg) saturate(1.5) brightness(1.5);*/
+  /*filter: hue-rotate(245deg) saturate(1.5) brightness(1.5);*/
+  /*filter: hue-rotate(498deg) saturate(1.5) brightness(1.6);*/
+}
+
+div#game div#front {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+div#game div#overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 500;
+  /*filter: hue-rotate(245deg) saturate(1) brightness(1);*/
+  /*filter: hue-rotate(245deg);*/
+}
+
+div#game div#overlay canvas {
+  /*filter: opacity(60%);*/
+  /*filter: hue-rotate(498deg) opacity(60%);*/
+  display: none;  /* UI is the overlay now */
+}
+
+div#game canvas {
+  position: absolute;
+
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+  image-rendering: pixelated;
+}
+
+div#game div#hud {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  background-image: url("/ui.png");
+  background-size: cover;
+}
+
+div#game div#hud div#timer {
+  position: absolute;
+  top: 2.3%;
+  right: 15.2%;
+  color: white;
+  font-size: 5.2vmin;
+}
+
+div#game div#hud div#flags img {
+  position: absolute;
+  display: block;
+  right: -0.9%;
+  width: 7.3%;
+  height: 13.1%;
+}
+
+div#game div#hud div#flags img#flag-0 {
+  bottom: 20.3%;
+  display: none;
+}
+
+div#game div#hud div#flags img#flag-1 {
+  bottom: 26.9%;
+  display: none;
+}
+
+div#game div#hud div#flags img#flag-2 {
+  bottom: 33.65%;
+  display: none;
+}
+
+div#game div#hud div#flags img#flag-3 {
+  bottom: 40.3%;
+  display: none;
+}
+
+div#game div#hud div#flags img#flag-4 {
+  bottom: 46.95%;
+  display: none;
+}
+
+div#game div#hud div#flags img#flag-5 {
+  bottom: 53.6%;
+  display: none;
+}
+
+div#game div#hud div#flags img#flag-6 {
+  bottom: 60.35%;
+  display: none;
+}
+
+div#game div#hud div#flags img#flag-7 {
+  bottom: 67%;
+  display: none;
+}
+
+div#game div#hud div#area-name {
+  position: absolute;
+  bottom: 8%;
+  left: 7%;
+  color: white;
+  font-size: 4.0vmin;
+}
+
+div#game div#hud div#end-panel {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  top: 85%;
+  left: 0;
+  color: white;
+  font-size: 10.0vmin;
+
+  display: none;
+}
+
+div#game div#hud div#respawn-panel {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  top: 35%;
+  left: 0;
+  color: white;
+  font-size: 4.0vmin;
+
+  display: none;
+}
+
+div#game div#hud div.respawn-panel-title {
+  font-size: 8.0vmin;
+}
+
+.terminal-box {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  top: 10%;
+  left: 10%;
+  z-index: 2000;
+  background-color: rgba(0, 0, 0, 0.6);
+
+  display: none;  /* Hidden when being created. */
+}
+
+.terminal-box .terminal-output {
+  position: absolute;
+  left: 1%;
+  top: 2%;
+  width: 96%;
+  height: 82%;
+  color: #0f0;
+  background-color: rgba(0, 0, 0, 0.6);
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-size: 2.5vmin;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 1%;
+}
+
+.terminal-box .terminal-prompt {
+  width: 5%;
+  display: inline-block;
+  text-align: center;
+  height: 100%;
+}
+
+.terminal-box .terminal-input {
+  color: #0f0;
+  position: absolute;
+  left: 1%;
+  bottom: 1%;
+  width: 98%;
+  height: 10%;
+}
+
+.terminal-box .terminal-input input {
+  position: absolute;
+
+  left: 6%;
+  width: 92%;
+  height: 100%;
+  color: #0f0;
+  font-size: 2.5vmin;
+  background-color: black;
+  border: 1px solid #040;
+  margin: 0;
+  padding: 0;
+  padding-left: 1%;
+  padding-right: 1%;
+  margin-top: -1px;
+  margin-left: -2px;
+}
+
+.terminal-box .terminal-input input:focus {
+  border: 1px solid #0f0;
+  outline: none;
+}
+
+.terminal-box .terminal-output::-webkit-scrollbar {
+  width: 0.75em;
+}
+
+.terminal-box .terminal-output::-webkit-scrollbar-track {
+  background-color: #111;
+}
+
+.terminal-box .terminal-output::-webkit-scrollbar-thumb {
+  background-color: #0f0;
+}
+
+.flag-console-box {
+  position: absolute;
+  width: 50%;
+  height: 12%;
+  top: 33%;
+  left: 25%;
+  z-index: 2000;
+  background-color: rgba(0, 0, 0, 0.8);
+
+  display: none;  /* Hidden when being created. */
+}
+
+.flag-console-box .flag-console-output {
+  position: absolute;
+  left: 1%;
+  top: 1%;
+  width: 96%;
+  height: 48%;
+  /*color: #d895fa;*/
+  color: white;
+  /*background-color: rgba(0, 0, 0, 0.6);*/
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-size: 2.5vmin;
+  padding: 1%;
+}
+
+.flag-console-box input.flag-console-input {
+  position: absolute;
+  top: 45%;
+  left: 3%;
+  width: 92%;
+  height: 46%;
+  color: #d895fa;
+  font-size: 2.5vmin;
+  background-color: black;
+  border: 1px solid #d895fa;
+  margin: 0;
+  padding: 0;
+  padding-left: 1%;
+  padding-right: 1%;
+  margin-top: -1px;
+  margin-left: -2px;
+}
+
+.flag-console-box input.flag-console-input:focus {
+  border: 1px solid #d895fa;
+  outline: none;
+}
+
+div#error-box {
+  position: absolute;
+  height: auto;
+  top: 0em;
+  left: 0em;
+  right: 0em;
+
+  transition: opacity 1s;
+  display: none;
+}
+
+div#progress-box {
+  position: absolute;
+  height: auto;
+  text-align: center;
+  bottom: 0.5em;
+  left: 0.5em;
+  right: 0.5em;
+
+  transition: opacity 1s;
+  display: none;
+}
+
+div.rounded-box {
+  padding: 1em;
+  color: white;
+  /*border-radius: 0.5em;*/
+  background-color: rgba(0, 0, 0, 0.8);
+}

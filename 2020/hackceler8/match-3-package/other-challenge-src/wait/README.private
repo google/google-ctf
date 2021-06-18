@@ -1,0 +1,3 @@
+Flag: HCL8{So_was_it_worth_the_wait?}
+How-to: Either patch the sleep(), or check the destructors, and see that it's a simple xor(6, flag)
+Deployment: The file is downlaoded by the players

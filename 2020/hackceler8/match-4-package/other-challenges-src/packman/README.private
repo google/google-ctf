@@ -1,0 +1,9 @@
+Flag: HCL8{Woody_W00d_packer}
+How to solve it:
+	1. Open it in IDA
+	2. Notice that:
+		a. there are some letters pushing on the stack
+		b. a call to sub_2A6B3, which is heavily obfuscated with a custom packer
+		c. a call to sub_AC4C (strcmp) containing som calls to sub_AE7B (strlen)
+	3. put a breakpoint on sub_AC4C, and dump the flag
+Deployment: The players are downloading the binary
