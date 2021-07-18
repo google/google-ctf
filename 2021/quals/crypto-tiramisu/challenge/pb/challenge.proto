@@ -1,0 +1,57 @@
+// Copyright 2021 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+package challenge;
+
+option go_package="/pb";
+
+message Point {
+  bytes x = 1;
+  bytes y = 2;
+}
+
+message Ciphertext {
+	bytes iv = 1;
+	bytes data = 2;
+	bytes mac = 3;
+}
+
+message EcdhKey {
+  enum CurveID {
+    RESERVED = 0;
+    SECP224R1 = 1;
+    SECP256R1 = 2;
+  }
+  CurveID curve = 1;
+  Point public = 2;
+}
+
+message EcdhPrivateKey {
+  EcdhKey key = 1;
+  bytes private = 2;
+}
+
+message ServerHello {
+  EcdhKey key = 1;
+	Ciphertext encrypted_flag = 2;
+}
+
+message ClientHello {
+  EcdhKey key = 1;
+}
+
+message SessionMessage {
+  Ciphertext encrypted_data = 1;
+}
+

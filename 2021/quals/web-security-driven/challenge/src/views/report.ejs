@@ -1,0 +1,39 @@
+<%- include('head') %>
+<div class="container p-5">
+  <div class="card mx-auto">
+    <div class="card-header">
+      <h1>Report</h1>
+    </div>
+    <div class="card-body">
+      <p class="card-text">Found a public file violating our ToS? Send as the file id and we shall take appropriate action!</p>
+
+
+        <form method=POST>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3"><code>https://secdriven.dev/file?id=</code></span>
+              </div>
+              <input placeholder="133711377731" type="text" class="form-control" name="fileid">
+              <div class="input-group-append">
+                <button class="btn btn-primary">Report</button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+        </form>
+
+
+    </div>
+
+  <% if(locals.error){ %>
+    <div class="alert"><%= error %></div>
+  <% } %>
+  </div>
+</div>
+
+
+
+<%- include('foot') %>

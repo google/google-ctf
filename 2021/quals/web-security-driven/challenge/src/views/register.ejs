@@ -1,0 +1,28 @@
+<%- include('head') %>
+<div class="container p-5">
+  <div class="card mx-auto">
+    <div class="card-header">
+      <h1>Register</h1>
+    </div>
+    <div class="card-body">
+      <form method="POST">
+        <div class="form-group">
+          <label for="username">username</label><input class="form-control" name="username">
+          <label for="password">password</label><input class="form-control" name="password">
+          <input type="hidden" name="_csrf" value="<%= _csrf %>">
+          <button class="btn btn-primary">Register</button>
+        </div>
+      </form>
+    </div>
+
+    <% if(locals.error){ %>
+      <div class="alert"><%= error %></div>
+      <% } %>
+  </div>
+
+</div>
+
+
+
+
+<%- include('foot') %>

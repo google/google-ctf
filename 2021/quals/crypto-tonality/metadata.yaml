@@ -1,0 +1,23 @@
+# Human readable task name
+name: tonality
+# Long form description.
+description: |+
+  In this challenge, you have access to a signing oracle.
+  Good luck!
+# The flag
+flag: CTF{TheySayTheEmptyCanRattlesTheMost}
+# Task category. (one of hw, crypto, pwn, rev, web, net, misc)
+category: crypto
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# host/port for non-web challenges
+host: 'tonality.2021.ctfcompetition.com 1337'
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: false

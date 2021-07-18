@@ -1,0 +1,7 @@
+chromium/
+chromium_build/
+chromium.tar.xz
+rootfs.img
+rootfs.img.xz
+rootfs/
+fullchain.zip

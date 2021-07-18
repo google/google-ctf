@@ -1,0 +1,220 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+From 7916a60a6edbcc1337853eb74c823a26c34d7ecc Mon Sep 17 00:00:00 2001
+From: Kevin Hamacher <hamacher@google.com>
+Date: Mon, 21 Jun 2021 15:13:36 +0200
+Subject: [PATCH] CTF modifications for the emulator
+
+---
+ src/cpu.rs        |  4 ++--
+ src/device/mod.rs |  1 +
+ src/device/pci.rs | 42 ++++++++++++++++++++++++++++++++++++++++++
+ src/lib.rs        | 31 +++++++++++++++++++++++++++++--
+ src/mmu.rs        |  8 +++++++-
+ 5 files changed, 81 insertions(+), 5 deletions(-)
+ create mode 100644 src/device/pci.rs
+
+diff --git a/src/cpu.rs b/src/cpu.rs
+index aa20266..e3818e0 100644
+--- a/src/cpu.rs
++++ b/src/cpu.rs
+@@ -218,7 +218,7 @@ impl Cpu {
+ 	///
+ 	/// # Arguments
+ 	/// * `Terminal`
+-	pub fn new(terminal: Box<dyn Terminal>) -> Self {
++	pub fn new(terminal: Box<dyn Terminal>, pci_devices: crate::GuestPCIDevices) -> Self {
+ 		let mut cpu = Cpu {
+ 			clock: 0,
+ 			xlen: Xlen::Bit64,
+@@ -228,7 +228,7 @@ impl Cpu {
+ 			f: [0.0; 32],
+ 			pc: 0,
+ 			csr: [0; CSR_CAPACITY],
+-			mmu: Mmu::new(Xlen::Bit64, terminal),
++			mmu: Mmu::new(Xlen::Bit64, terminal, pci_devices),
+ 			reservation: 0,
+ 			is_reservation_set: false,
+ 			_dump_flag: false,
+diff --git a/src/device/mod.rs b/src/device/mod.rs
+index caa3739..cca1533 100644
+--- a/src/device/mod.rs
++++ b/src/device/mod.rs
+@@ -2,3 +2,4 @@ pub mod clint;
+ pub mod plic;
+ pub mod uart;
+ pub mod virtio_block_disk;
++pub mod pci;
+\ No newline at end of file
+diff --git a/src/device/pci.rs b/src/device/pci.rs
+new file mode 100644
+index 0000000..9974e6d
+--- /dev/null
++++ b/src/device/pci.rs
+@@ -0,0 +1,42 @@
++use crate::GuestPCIDevices;
++
++pub struct Pci {
++	// PCI bars
++	pci_devices: GuestPCIDevices,
++}
++
++impl Pci {
++	pub fn new(pci_devices: GuestPCIDevices) -> Self {
++		Self {
++			pci_devices
++		}
++	}
++
++	pub fn tick(&mut self) {}
++	pub fn is_interrupting(&self) -> bool { false }
++
++	pub fn load(&mut self, address: u64) -> u8 {
++		let address = address - 0x1337_0000;
++		let idx = address / 0x1000;
++
++		if let Some(ref x) = self.pci_devices.get(idx as usize) {
++			x.lock().unwrap().memory[address as usize % 0x1000]
++		} else {
++			0
++		}
++	}
++
++	pub fn store(&mut self, address: u64, value: u8) {
++		let address = address - 0x1337_0000;
++		let idx = address / 0x1000;
++
++		if let Some(ref mut x) = self.pci_devices.get(idx as usize) {
++			let mut dev = x.lock().unwrap();
++			if address % 0x1000 == 0xFFF {
++				(dev.irq)(&dev);
++			} else {
++				dev.memory[address as usize % 0x1000] = value;
++			}
++		}
++	}
++}
+diff --git a/src/lib.rs b/src/lib.rs
+index 8c2d644..1c9f379 100644
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -47,15 +47,42 @@ pub struct Emulator {
+ 	tohost_addr: u64
+ }
+ 
++pub struct GuestPCIDevice {
++    pub memory: [u8; 0x1000],
++    pub ctx: Option<*mut std::ffi::c_void>,
++    pub irq: Box<fn(&GuestPCIDevice)>,
++}
++pub type GuestPCIDevices = std::sync::Arc<[std::sync::Mutex<GuestPCIDevice>; 2]>;
++
++// vfu_ctx_t should be fine to send according to the docs
++// "Currently there is one, single-threaded, application instance per device, however the application can employ any form of concurrency needed.
++//  In the future we plan to make libvfio-user multi-threaded."
++unsafe impl Send for GuestPCIDevice {}
++
++impl GuestPCIDevice {
++	pub fn with_irq_fn(f: fn(&GuestPCIDevice)) -> Self {
++		Self {
++			memory: [0u8; 0x1000],
++			ctx: None,
++			irq: Box::new(f),
++		}
++	}
++
++	pub fn set_context(&mut self, ctx: *mut std::ffi::c_void) {
++		self.ctx = Some(ctx);
++	}
++}
++
++
+ impl Emulator {
+ 	/// Creates a new `Emulator`. [`Terminal`](terminal/trait.Terminal.html)
+ 	/// is internally used for transferring input/output data to/from `Emulator`.
+ 	/// 
+ 	/// # Arguments
+ 	/// * `terminal`
+-	pub fn new(terminal: Box<dyn Terminal>) -> Self {
++	pub fn new(terminal: Box<dyn Terminal>, pci_devices: GuestPCIDevices) -> Self {
+ 		Emulator {
+-			cpu: Cpu::new(terminal),
++			cpu: Cpu::new(terminal, pci_devices),
+ 
+ 			symbol_map: FnvHashMap::default(),
+ 
+diff --git a/src/mmu.rs b/src/mmu.rs
+index 82104ae..58489d9 100644
+--- a/src/mmu.rs
++++ b/src/mmu.rs
+@@ -14,6 +14,7 @@ use device::virtio_block_disk::VirtioBlockDisk;
+ use device::plic::Plic;
+ use device::clint::Clint;
+ use device::uart::Uart;
++use device::pci::Pci;
+ use terminal::Terminal;
+ 
+ /// Emulates Memory Management Unit. It holds the Main memory and peripheral
+@@ -33,6 +34,7 @@ pub struct Mmu {
+ 	plic: Plic,
+ 	clint: Clint,
+ 	uart: Uart,
++	pci: Pci,
+ 
+ 	/// Address translation can be affected `mstatus` (MPRV, MPP in machine mode)
+ 	/// then `Mmu` has copy of it.
+@@ -84,7 +86,7 @@ impl Mmu {
+ 	/// # Arguments
+ 	/// * `xlen`
+ 	/// * `terminal`
+-	pub fn new(xlen: Xlen, terminal: Box<dyn Terminal>) -> Self {
++	pub fn new(xlen: Xlen, terminal: Box<dyn Terminal>, pci_devices: crate::GuestPCIDevices) -> Self {
+ 		let mut dtb = vec![0; DTB_SIZE];
+ 
+ 		// Load default device tree binary content
+@@ -105,6 +107,7 @@ impl Mmu {
+ 			plic: Plic::new(),
+ 			clint: Clint::new(),
+ 			uart: Uart::new(terminal),
++			pci: Pci::new(pci_devices),
+ 			mstatus: 0,
+ 			page_cache_enabled: false,
+ 			fetch_page_cache: FnvHashMap::default(),
+@@ -173,6 +176,7 @@ impl Mmu {
+ 		self.disk.tick(&mut self.memory);
+ 		self.uart.tick();
+ 		self.plic.tick(self.disk.is_interrupting(), self.uart.is_interrupting(), mip);
++		self.pci.tick();
+ 		self.clock = self.clock.wrapping_add(1);
+ 	}
+ 
+@@ -472,6 +476,7 @@ impl Mmu {
+ 				0x0C000000..=0x0fffffff => self.plic.load(effective_address),
+ 				0x10000000..=0x100000ff => self.uart.load(effective_address),
+ 				0x10001000..=0x10001FFF => self.disk.load(effective_address),
++				0x13370000..=0x1337FFFF => self.pci.load(effective_address),
+ 				_ => panic!("Unknown memory mapping {:X}.", effective_address)
+ 			}
+ 		}
+@@ -553,6 +558,7 @@ impl Mmu {
+ 				0x0c000000..=0x0fffffff => self.plic.store(effective_address, value),
+ 				0x10000000..=0x100000ff => self.uart.store(effective_address, value),
+ 				0x10001000..=0x10001FFF => self.disk.store(effective_address, value),
++				0x13370000..=0x1337FFFF => self.pci.store(effective_address, value),
+ 				_ => panic!("Unknown memory mapping {:X}.", effective_address)
+ 			}
+ 		};
+-- 
+2.31.1
+

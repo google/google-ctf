@@ -1,0 +1,23 @@
+# Human readable task name
+name: H1
+# Long form description.
+description: |+
+  Crypto is not real hacking, they say.
+# The flag
+flag: CTF{But_in_real_life_devs_would_never_use_such_a_buggy_RNG_right?}
+
+# Task category. (one of hw, crypto, pwn, rev, web, net, misc)
+category: crypto
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# host/port for non-web challenges
+host: ''
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: false

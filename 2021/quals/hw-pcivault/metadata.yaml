@@ -1,0 +1,28 @@
+# Human readable task name
+name: PCIVault 1
+# Long form description.
+description: |+
+  We plan to extend our cloud offering with a secure key-value store. Right now
+  it is already a groundbreaking dedicated device that can store your data, but
+  in the future we will provide military-grade encryption capability.
+  You are one of the selected few that may test this offering in its alpha stage
+  so that we can send you a quick, three hour survey afterwards.
+  The login for your dedicated VM is `root:password`.
+
+# The flag
+flag: CTF{D1ff3r3nT_D3v1Ce_S4mE_Tr1Ckz}
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: hardware
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# host/port for non-web challenges
+host: 'pcivault.2021.ctfcompetition.com 1337'
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: false

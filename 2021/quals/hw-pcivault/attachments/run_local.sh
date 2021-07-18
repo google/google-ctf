@@ -1,0 +1,1 @@
+../challenge/run_local.sh

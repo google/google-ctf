@@ -1,0 +1,10 @@
+--- linux-5.12.2/include/linux/bpf_verifier.h	2021-05-07 03:53:26.000000000 -0700
++++ linux-5.12.2-modified/include/linux/bpf_verifier.h	2021-06-15 20:06:53.019787853 -0700
+@@ -156,6 +156,7 @@
+ 	enum bpf_reg_liveness live;
+ 	/* if (!precise && SCALAR_VALUE) min/max/tnum don't affect safety */
+ 	bool precise;
++        bool auth_map;
+ };
+ 
+ enum bpf_stack_slot_type {

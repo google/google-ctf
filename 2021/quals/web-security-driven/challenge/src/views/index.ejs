@@ -1,0 +1,160 @@
+<%- include('head')
+    %>
+  <div class="container p-5">
+    <div class="row">
+      <div class="col">
+        <h1>Welcome <%= session.username %>
+        </h1>
+        <p>Your id is <code><%= session.uid %></code></p>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <h2>Upload file</h2>
+        <form  method="POST" action="/upload" encType="multipart/form-data">
+        <div class = "form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroupFileAddon01">Upload (max 500kb)</span>
+            </div>
+            <div class="custom-file">
+              <input type="file" class="" id="inputGroupFile01"
+                name="file">
+              <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+            </div>
+            <select class="custom-select" name="visibility">
+              <option selected>private</option>
+              <option>public</option>
+            </select>
+            <input type="hidden" name="_csrf" value="<%= _csrf %>">
+            <div class="input-group-append">
+              <button class="btn btn-primary">Upload</button>
+            </div>
+
+          </div>
+
+
+
+
+        </div>
+
+        </form>
+      </div>
+      </div>
+    <div class="row">
+      <div class="col-sm">
+        <h2>Your files</h2>
+        <ul class="list-group" id="userFiles"></ul>
+      </div>
+      <div class="col-sm">
+        <h2>Shared with you</h2>
+        <ul class="list-group" id="sharedFiles"></ul>
+      </div>
+    </div>
+
+  </div>
+
+  <script nonce="<%= locals.csp.nonce %>">
+    const user_id = <%= session.uid %>;
+
+    /*  https://stackoverflow.com/a/18650828  */
+    function formatBytes(bytes, decimals = 2) {
+      if (bytes === 0) return '0 Bytes';
+
+      const k = 1024;
+      const dm = decimals < 0 ? 0 : decimals;
+      const sizes = ['b', 'kb', 'mb'];
+
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + sizes[i];
+    }
+
+    function shareFile(file) {
+      let ids = prompt("Please provide list of users's ids separated by ,") || '';
+      ids = ids.split(',').map(e => parseInt(e)).filter(e => !isNaN(e));
+      const message = `Are you sure you want to share ${file.name} to: ${ids.join(', ')}?`
+      const _csrf = document.querySelector('meta[name=_csrf]').content;
+      if (ids.length > 0 && confirm(message)) {
+        fetch('/file/share', {
+          credentials: 'include',
+          method: 'POST',
+          body: JSON.stringify({
+            file_id: file.id,
+            to: ids,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            'x-csrf-token': _csrf
+          }
+        });
+        console.log(ids);
+      }
+    }
+
+    function appendNewLi(file) {
+      const li = document.createElement('li');
+      li.className = 'list-group-item';
+      if(location.hash == '#file-' + file.id) li.classList.add('list-group-item-warning');
+      const a = document.createElement('a');
+      a.style.paddingRight = '5px';
+      a.target = "_blank";
+      a.href = "/file?id=" + file.id;
+      a.innerText = file.name;
+      li.appendChild(a);
+
+      const size_span = document.createElement('span');
+      size_span.className = 'badge badge-pill badge-info';
+      size_span.innerText = formatBytes(file.size);
+      li.appendChild(size_span);
+
+      if (file.isPublic) {
+        const public_span = document.createElement('span');
+        public_span.className = 'badge badge-pill badge-secondary';
+        public_span.innerText = file.isPublic ? 'public' : 'private';
+        li.appendChild(public_span);
+      }
+
+      if(user_id === file.owner){
+        const share_button = document.createElement('button');
+        share_button.innerText = 'share';
+        share_button.className = 'badge badge-pill btn btn-primary btn-sm p-1'
+        share_button.onclick = () => shareFile(file)
+        li.appendChild(share_button)
+      }
+
+
+      if (file.isMedia) {
+        const media_preview = document.createElement('button');
+        media_preview.innerText = 'preview';
+        media_preview.className = 'badge badge-pill btn btn-warning btn-sm p-1'
+        media_preview.onclick = () => {
+          media_preview.onclick = null;
+          const object = document.createElement('object');
+          object.data = `/file?id=${file.id}&preview=1`;
+          li.appendChild(object);
+        }
+
+        li.appendChild(media_preview);
+      }
+
+
+
+      if (user_id !== file.owner) sharedFiles.appendChild(li);
+      else userFiles.appendChild(li);
+    }
+
+    onload = () => {
+      fetch('/user/files').then(e => e.json()).then(files => {
+        for (let file of files) {
+          appendNewLi(file);
+        }
+      })
+    }
+  </script>
+
+
+  <%- include('foot')
+      %>

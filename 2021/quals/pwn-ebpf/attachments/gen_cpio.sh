@@ -1,0 +1,1 @@
+../challenge/gen_cpio.sh

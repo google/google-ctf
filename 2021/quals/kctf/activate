@@ -1,0 +1,285 @@
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+KCTF_YQ_URL="https://github.com/mikefarah/yq/releases/download/v4.2.0/yq_linux_amd64"
+KCTF_YQ_HASH="5d44bd64e264e9029c5f06bcd960ba162d7ed7ddd1781f02a28d62f50577b632"
+
+KCTF_KIND_URL="https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64"
+KCTF_KIND_HASH="949f81b3c30ca03a3d4effdecda04f100fa3edc07a28b19400f72ede7c5f0491"
+
+KCTF_KUBECTL_URL="https://dl.k8s.io/release/v1.20.4/bin/linux/amd64/kubectl"
+KCTF_KUBECTL_HASH="98e8aea149b00f653beeb53d4bd27edda9e73b48fed156c4a0aa1dabe4b1794c"
+
+export KCTF_CTF_DIR="$(realpath --no-symlinks "$(dirname "${BASH_SOURCE-$0}")/..")"
+export KCTF_BIN="${KCTF_CTF_DIR}/kctf/bin"
+source "${KCTF_BIN}/kctf-log"
+
+function _kctf_check_umask {
+  if [[ $((8#$(umask) & 8#755)) -ne 0 ]]; then
+    _kctf_log_err "umask is too prohibitive. Please set it to 022 when using kctf"
+    return 1
+  fi
+  if [[ "$(stat "${KCTF_BIN}/kctf-cluster" --format '%a')" -ne "755" ]]; then
+    _kctf_log_err "${KCTF_BIN}/kctf-cluster has unexpected permissions. Maybe a umask problem during checkout?"
+    return 1
+  fi
+}
+
+function _kctf_setup_environment {
+  KCTF_CONFIG_DIR="$(mktemp -d --tmpdir kctf.XXXXXXXXXX)"
+  if [[ $? -ne 0 ]]; then
+    return 1
+  fi
+  export KCTF_CTF_NAME=$(basename "${KCTF_CTF_DIR}")
+  export KCTF_SESSION="$(dd if=/dev/urandom bs=1 count=10 2>/dev/null | xxd -ps -c 10)"
+
+  export KUBECONFIG="${KCTF_CONFIG_DIR}/kube.conf"
+}
+
+function _kctf_download_dependencies {
+  if [[ ! -x "${KCTF_BIN}/yq" ]]; then
+    if [[ -e "${KCTF_BIN}/yq" ]]; then
+      rm "${KCTF_BIN}/yq" >/dev/null
+    fi
+    wget "${KCTF_YQ_URL}" -O "${KCTF_BIN}/yq" --quiet || return 1
+    sha256sum --status -c <(echo "${KCTF_YQ_HASH}  ${KCTF_BIN}/yq") || return 1
+    chmod u+x "${KCTF_BIN}/yq"
+  fi
+
+  if [[ ! -x "${KCTF_BIN}/kind" ]] || ! sha256sum --status -c <(echo "${KCTF_KIND_HASH}  ${KCTF_BIN}/kind"); then
+    rm "${KCTF_BIN}/kind" >/dev/null 2>/dev/null || true
+    curl -Lo "${KCTF_BIN}/kind" "${KCTF_KIND_URL}" || return 1
+    sha256sum --status -c <(echo "${KCTF_KIND_HASH}  ${KCTF_BIN}/kind") || return 1
+    chmod u+x "${KCTF_BIN}/kind"
+  fi
+  alias "kind=${KCTF_BIN}/kind"
+
+  if [[ ! -x "${KCTF_BIN}/kubectl" ]]; then
+    curl -Lo "${KCTF_BIN}/kubectl" "${KCTF_KUBECTL_URL}" || return 1
+    sha256sum --status -c <(echo "${KCTF_KUBECTL_HASH}  ${KCTF_BIN}/kubectl") || return 1
+    chmod u+x "${KCTF_BIN}/kubectl"
+  fi
+  alias "kubectl=${KCTF_BIN}/kubectl"
+}
+
+function _kctf_cleanup {
+  if command -v gcloud >/dev/null 2>&1; then
+    unset CLOUDSDK_ACTIVE_CONFIG_NAME
+    # regenerate this name in case the user changed the variable
+    GCLOUD_CONFIG_NAME="kctf-${KCTF_SESSION}"
+    if gcloud config configurations describe "${GCLOUD_CONFIG_NAME}" >/dev/null 2>&1; then
+      echo "Deleting gcloud config ${GCLOUD_CONFIG_NAME}"
+      CLOUDSDK_CORE_DISABLE_PROMPTS=1 gcloud config configurations delete "${GCLOUD_CONFIG_NAME}"
+    fi
+  fi
+  # regenerate this name in case the user changed the variable
+  KUBE_CONFIG_NAME="${KCTF_CONFIG_DIR}/kube-${KCTF_SESSION}.conf"
+  if [[ -e "${KUBE_CONFIG_NAME}" ]]; then
+    rm "${KUBE_CONFIG_NAME}" >/dev/null
+  fi
+}
+
+function _kctf_usage {
+  echo -e "usage: kctf command subcommand [args]" >&2
+  echo -e "available commands:" >&2
+  echo -e "  chal:    commands for challenges (creating, deploying, etc.)" >&2
+  echo -e "  cluster: commands for clusters (creating, managing, etc.) " >&2
+}
+
+# Implemented as a function so that we can set environment variables where needed
+function kctf {
+  if [[ $# -lt 1 ]]; then
+    _kctf_log_err "missing required argument"
+    _kctf_usage
+    return 1
+  fi
+  case "$1" in
+    -h|--help)
+      _kctf_usage
+      return 0
+      ;;
+    chal)
+      _kctf_set_active_challenge
+      shift
+      "${KCTF_CTF_DIR}/kctf/bin/kctf-challenge" $@
+      ret=$?
+      if [[ $ret -ne 0 ]]; then
+        _kctf_log_err "command returned $ret"
+      fi
+      return $ret
+      ;;
+    cluster)
+      shift
+      if [[ "$1" == "create" ]] || [[ "$1" == "load" ]]; then
+        CONFIG_NAME=$("${KCTF_CTF_DIR}/kctf/bin/kctf-cluster" $@)
+        if [[ $? -ne 0 ]]; then
+          return 1
+        fi
+        if [[ -z "${CONFIG_NAME}" ]]; then
+          return 0
+        fi
+        source "${KCTF_CTF_DIR}/kctf/config/${CONFIG_NAME}"
+        export CLUSTER_TYPE
+        export PROJECT
+        export ZONE
+        export REGISTRY
+        export CLUSTER_NAME
+        export DOMAIN_NAME
+        export EMAIL_ADDRESS
+        if [[ "${CLUSTER_TYPE}" == "gce" ]]; then
+          export CLOUDSDK_ACTIVE_CONFIG_NAME="kctf-${KCTF_SESSION}"
+        fi
+        KCTF_CONFIG="${CONFIG_NAME}"
+      else
+        "${KCTF_CTF_DIR}/kctf/bin/kctf-cluster" $@
+      fi
+      ret=$?
+      if [[ $ret -ne 0 ]]; then
+        _kctf_log_err "command returned $ret"
+      fi
+      return $ret
+      ;;
+    *)
+      _kctf_usage
+      return 1
+      ;;
+  esac
+}
+
+function _kctf_enable_completion {
+  source "${KCTF_BIN}/kctf-completion"
+}
+
+function _kctf_error_cleanup {
+  unset -f _kctf_download_dependencies
+  # don't unset _kctf_cleanup since it's used in a trap below
+  #unset -f _kctf_cleanup
+  unset -f _kctf_usage
+  unset -f _kctf_error_cleanup
+  unset -f _kctf_enable_completion
+  unset -f _kctf_set_active_challenge
+  unset -f _kctf_setup_environment
+  unset -f _kctf_check_umask
+  unset -f _kctf_activate
+  unset -f _kctf_chal_string
+  unset -f _kctf_log
+  unset -f _kctf_log_err
+  unset -f kctf
+  unset -f deactivate
+
+  unset KCTF_CONFIG
+  unset KCTF_CONFIG_DIR
+  unset KCTF_CTF_DIR
+  unset KCTF_CTF_NAME
+  unset KCTF_BIN
+  unset KCTF_SESSION
+  unset KCTF_YQ_URL
+  unset KCTF_YQ_HASH
+  unset KUBECONFIG
+  unset CHALLENGE_NAMESPACE
+  unset CHALLENGE_NAME
+  unset CHALLENGE_DIR
+
+  unset _KCTF_PROMPT_COLOR1
+  unset _KCTF_PROMPT_COLOR2
+  unset _KCTF_PROMPT_COLOR_END
+
+  unset CLUSTER_TYPE
+  unset PROJECT
+  unset ZONE
+  unset REGISTRY
+  unset CLUSTER_NAME
+  unset DOMAIN_NAME
+  unset EMAIL_ADDRESS
+}
+
+function _kctf_set_active_challenge {
+  current_dir="${PWD}"
+  while [[ "${current_dir}" == "${KCTF_CTF_DIR}"/* ]]; do
+    if [[ -e "${current_dir}/challenge.yaml" ]]; then
+      CHALLENGE_NAME=$("${KCTF_BIN}/yq" eval --exit-status 'select(.kind == "Challenge") | .metadata.name' "${current_dir}/challenge.yaml" 2>/dev/null)
+      if [[ $? -ne 0 ]]; then
+        unset CHALLENGE_NAME
+      fi
+      CHALLENGE_NAMESPACE="default"
+      if "${KCTF_BIN}/yq" eval --exit-status 'select(.kind == "Challenge") | .metadata.namespace' "${current_dir}/challenge.yaml" >/dev/null 2>/dev/null; then
+        CHALLENGE_NAMESPACE=$("${KCTF_BIN}/yq" eval 'select(.kind == "Challenge") | .metadata.namespace' "${current_dir}/challenge.yaml" 2>/dev/null)
+      fi
+      export CHALLENGE_DIR="${current_dir}"
+      export CHALLENGE_NAME
+      export CHALLENGE_NAMESPACE
+      return 0
+    fi
+    current_dir="$(dirname ${current_dir})"
+  done
+  unset CHALLENGE_NAME
+}
+
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+  _KCTF_PROMPT_COLOR1=$'%F{green}'
+  _KCTF_PROMPT_COLOR2=$'%F{cyan}'
+  _KCTF_PROMPT_COLOR_END=$'%f'
+else
+  _KCTF_PROMPT_COLOR1=$'\001\e[0;32m\002'
+  _KCTF_PROMPT_COLOR2=$'\001\e[0;36m\002'
+  _KCTF_PROMPT_COLOR_END=$'\001\e[0m\002'
+fi
+
+function _kctf_config_string {
+  if [ ! -z "${KCTF_CONFIG}" ]; then
+    echo "${_KCTF_PROMPT_COLOR1},config=${_KCTF_PROMPT_COLOR2}${KCTF_CONFIG}"
+  fi
+}
+
+function _kctf_chal_string {
+  _kctf_set_active_challenge
+  if [ ! -z "${CHALLENGE_NAME}" ]; then
+    echo "${_KCTF_PROMPT_COLOR1},chal=${_KCTF_PROMPT_COLOR2}${CHALLENGE_NAME}"
+  fi
+}
+
+function _kctf_activate {
+  _kctf_check_umask || return 1
+
+  if ! _kctf_setup_environment; then
+    _kctf_log_err 'error setting up the environment'
+    return 1
+  fi
+  if ! _kctf_download_dependencies; then
+    _kctf_log_err 'error downloading dependencies'
+    return 1
+  fi
+  _kctf_enable_completion || echo "loading shell completion failed" >&2
+  SAVED_PS1="${PS1}"
+  _kctf_log "kCTF environment activated. Run \"deactivate\" to exit."
+  if kctf cluster load .lastconfig >/dev/null 2>/dev/null; then
+    _kctf_log "automatically loaded last config"
+  else
+    _kctf_log "To create a cluster config, run \"kctf cluster create\""
+  fi
+  PS1="${PS1}${_KCTF_PROMPT_COLOR1}kCTF[ctf=${_KCTF_PROMPT_COLOR2}${KCTF_CTF_NAME}\$(_kctf_config_string)\$(_kctf_chal_string)${_KCTF_PROMPT_COLOR1}] >${_KCTF_PROMPT_COLOR_END} "
+}
+
+function deactivate {
+  _kctf_cleanup
+  _kctf_error_cleanup
+  PS1="${SAVED_PS1}"
+  unset SAVED_PS1
+}
+
+if _kctf_activate; then
+  trap _kctf_cleanup EXIT
+else
+  _kctf_error_cleanup
+fi

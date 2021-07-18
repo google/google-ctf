@@ -1,0 +1,210 @@
+#! /usr/bin/python3
+# vim: et ts=4 sw=4
+
+# Copyright © 2010-2012 Piotr Ożarowski <piotr@debian.org>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+import logging
+import optparse
+import sys
+# glob1() is not in the public documentation, UTSL.
+from glob import glob1
+from os import environ, remove, rmdir
+from os.path import dirname, basename, exists, join, splitext
+sys.path.insert(1, '/usr/share/python3/')
+from debpython import files as dpf
+from debpython.interpreter import Interpreter
+from debpython.version import SUPPORTED, getver, vrepr
+
+
+# initialize script
+logging.basicConfig(format='%(levelname).1s: %(module)s:%(lineno)d: '
+                           '%(message)s')
+log = logging.getLogger(__name__)
+
+"""TODO: move it to manpage
+Examples:
+    py3clean -p python3-mako # all .py[co] files and __pycache__ directories from the package
+    py3clean /usr/lib/python3.1/dist-packages # python3.1
+    py3clean -V 3.3 /usr/lib/python3/ # python 3.3 only
+    py3clean -V 3.3 /usr/lib/foo/bar.py # bar/__pycache__/bar.cpython-33.py[co]
+    py3clean /usr/lib/python3/ # all Python 3.X
+"""
+
+
+def get_magic_tag_to_remove(version):
+    """Returns magic tag or True if all of them should be removed."""
+    i = Interpreter('python')
+    map_ = {}
+    for v in SUPPORTED:
+        try:
+            map_[v] = i.magic_tag(v)
+        except Exception:
+            log.debug('magic tag for %s not recognized', vrepr(v), exc_info=True)
+    if version not in map_:
+        try:
+            map_[version] = i.magic_tag(version)
+        except Exception as e:
+            log.error('cannot find magic tag for Python %s: %s', vrepr(version), e)
+            exit(4)
+
+    tag = map_[version]
+    # skip shared tags
+    for v, t in map_.items():
+        if v == version:
+            continue
+        if t == tag:
+            log.info('magic tag(s) used by python%s. Nothing to remove.',
+                     vrepr(v))
+            exit(0)
+
+    log.debug('magic tags to remove: %s', tag)
+    return tag
+
+
+def destroyer(magic_tag=None):  # ;-)
+    """Remove every .py[co] file associated to received .py file.
+
+    :param magic_tag:
+        * If None, removes all associated .py[co] files from __pycache__
+          directory.  If the resulting directory is empty, and is not a system
+          site package, then the directory is also removed.
+        * If False, removes python3.1's .pyc files only
+        * Otherwise removes given magic tag from __pycache__ directory.  If
+          the resulting directory is empty, and is not a system site package,
+          then the directory is also removed.
+    :type magic_tag: None or False or str
+    """
+    if magic_tag is None:
+
+        # remove compiled files in __pycache__ directory
+        def find_files_to_remove(pyfile):
+            directory = join(dirname(pyfile), '__pycache__')
+            fname = splitext(basename(pyfile))[0]
+            for fn in glob1(directory, "%s.*" % fname):
+                yield join(directory, fn)
+            # remove "classic" .pyc files as well
+            for filename in ("%sc" % pyfile, "%so" % pyfile):
+                if exists(filename):
+                    yield filename
+            # workaround for http://bugs.python.org/issue22966
+            if '.' in fname:
+                sane_fname = join(dirname(pyfile), fname.split('.', 1)[0])
+                for fn in find_files_to_remove(sane_fname):
+                    yield join(directory, fn)
+    elif magic_tag is False:
+
+        # remove 3.1's .pyc files only
+        def find_files_to_remove(pyfile):  # NOQA
+            for filename in ("%sc" % pyfile, "%so" % pyfile):
+                if exists(filename):
+                    yield filename
+    else:
+
+        # remove .pyc files for no longer needed magic tags
+        def find_files_to_remove(pyfile):  # NOQA
+            directory = join(dirname(pyfile), '__pycache__')
+            fname = splitext(basename(pyfile))[0]
+            for fn in glob1(directory, "%s.%s.py[co]" % (fname, magic_tag)):
+                yield join(directory, fn)
+            # workaround for http://bugs.python.org/issue22966
+            if '.' in fname:
+                sane_fname = join(dirname(pyfile), fname.split('.', 1)[0])
+                for fn in find_files_to_remove(sane_fname):
+                    yield join(directory, fn)
+
+    def myremove(fname):
+        remove(fname)
+        directory = dirname(fname)
+        # remove __pycache__ directory if it's empty
+        if directory.endswith('__pycache__'):
+            try:
+                rmdir(directory)
+            except Exception:
+                pass
+
+    counter = 0
+    try:
+        while True:
+            pyfile = (yield)
+            for filename in find_files_to_remove(pyfile):
+                try:
+                    myremove(filename)
+                    counter += 1
+                except (IOError, OSError) as e:
+                    log.error('cannot remove %s', filename)
+                    log.debug(e)
+    except GeneratorExit:
+        log.info("removed files: %s", counter)
+
+
+def main():
+    usage = '%prog [-V VERSION] [-p PACKAGE] [DIR_OR_FILE]'
+    parser = optparse.OptionParser(usage, version='%prog 3.8.2-0ubuntu2')
+    parser.add_option('-v', '--verbose', action='store_true', dest='verbose',
+                      help='turn verbose mode on')
+    parser.add_option('-q', '--quiet', action='store_false', dest='verbose',
+                      default=False, help='be quiet')
+    parser.add_option('-p', '--package',
+                      help='specify Debian package name to clean')
+    parser.add_option('-V', dest='version',
+                      help='specify Python version to clean')
+
+    (options, args) = parser.parse_args()
+
+    if options.verbose or environ.get('PYCLEAN_DEBUG') == '1':
+        log.setLevel(logging.DEBUG)
+        log.debug('argv: %s', sys.argv)
+        log.debug('options: %s', options)
+        log.debug('args: %s', args)
+    else:
+        log.setLevel(logging.WARNING)
+
+    if options.version:
+        if options.version.endswith('3.1'):  # 3.1, -3.1
+            magic_tag = False
+        else:
+            magic_tag = get_magic_tag_to_remove(getver(options.version))
+        d = destroyer(magic_tag)
+    else:
+        d = destroyer()  # remove everything
+    next(d)  # initialize coroutine
+
+    if not options.package and not args:
+        parser.print_usage()
+        exit(1)
+
+    if options.package:
+        log.info('cleaning package %s', options.package)
+        pfiles = set(dpf.from_package(options.package))
+
+    if args:
+        log.info('cleaning directories: %s', args)
+        files = set(dpf.from_directory(args))
+        if options.package:
+            files = files & pfiles
+    else:
+        files = pfiles
+
+    for filename in files:
+        d.send(filename)
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,22 @@
+# Human readable task name
+name: TriDroid
+# Long form description.
+description: |+
+  Are you proficient enough to penetrate through the triangle of Android? 
+# The flag
+flag: CTF{the_triangle_of_android_04b026dc9116e197e285}
+# Task category. (one of hw, crypto, pwn, rev, web, net, misc)
+category: pwn
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# host/port for non-web challenges
+host: 'tridroid.2021.ctfcompetition.com 1337'
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: false

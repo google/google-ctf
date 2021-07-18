@@ -1,0 +1,89 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: secdriven
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+    ports:
+      - protocol: "TCP"
+        targetPort: 443
+  healthcheck:
+    enabled: true
+  allowConnectTo:
+    - secdriven-bot
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            env:
+              - name: DB_PORT
+                value: "3306"
+              - name: DB_HOST
+                value: "10.59.0.2"
+              - name: DB_DATABASE
+                value: secdriven
+              - name: DB_USER
+                value: secdriven
+              - name: DB_PASSWORD
+                value: ""
+              - name: ADMIN_USERNAME
+                value: "4dm1n_1731"
+              - name: ADMIN_PASSWORD
+                value: ""
+              - name: DB_CONNECTION_LIMIT
+                value: "100"
+              - name: APP_SECRET
+                value: ""
+              - name: APP_DOMAIN
+                value: chall.secdriven.dev
+              - name: APP_2DOMAIN
+                value: secdrivencontent.dev
+              - name: APP_MAX_FILE_SIZE
+                value: "500"
+              - name: UPLOAD_PATH
+                value: "/mnt/disks/uploads"
+              - name: LISTEN_PORT
+                value: "443"
+            volumeMounts:
+              - name: uploads
+                mountPath: /mnt/disks/uploads
+        volumes:
+          - name: uploads
+            persistentVolumeClaim:
+              claimName: secdriven-uploads
+  persistentVolumeClaims:
+    - secdriven-uploads
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: secdriven-sql-access
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: secdriven
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 10.59.0.2/32

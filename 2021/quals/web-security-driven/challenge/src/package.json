@@ -1,0 +1,23 @@
+{
+  "name": "secdriven",
+  "version": "0.13.7",
+  "private": true,
+  "dependencies": {
+    "connect": "^3.7.0",
+    "cookie-parser": "^1.4.5",
+    "csurf": "^1.11.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-mysql-session": "^2.1.6",
+    "express-session": "^1.17.2",
+    "highwayhash": "^3.1.1",
+    "install": "^0.13.0",
+    "mariadb": "^2.5.4",
+    "md5-file": "^5.0.0",
+    "mime": "^2.5.2",
+    "multer": "^1.4.2",
+    "mysql": "^2.18.1",
+    "npm": "^7.19.0",
+    "vhost": "^3.0.2"
+  }
+}

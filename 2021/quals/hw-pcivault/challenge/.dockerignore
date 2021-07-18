@@ -1,0 +1,3 @@
+build.tar.gz
+guest-image/out/*
+build/*

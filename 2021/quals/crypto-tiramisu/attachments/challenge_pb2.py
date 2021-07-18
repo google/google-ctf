@@ -1,0 +1,1 @@
+../healthcheck/challenge_pb2.py

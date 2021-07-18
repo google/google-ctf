@@ -1,0 +1,149 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: sensible-utils
+Source: https://salsa.debian.org/debian/sensible-utils
+
+Files: *
+Copyright: 2002-2009, Clint Adams <schizo@debian.org>
+	   2010- Anibal Monsalve Salazar <anibal@debian.org>
+	   2012, David Prévot <taffit@debian.org>
+	   2013, Thorsten Glaser
+	   2017, Jérémy Bobbio
+	   2017, Ximin Luo
+	   2017- Bastien Roucariès <rouca@debian.org>
+License: GPL-2+
+
+Files: sensible-editor*
+Copyright: 1997,  Guy Maor
+ 2002, 2004, 2006,  Clint Adams
+ 2010- Anibal Monsalve Salazar <anibal@debian.org>
+License: GPL-2+
+
+Files: sensible-pager*
+Copyright: 1997, 1998,  Guy Maor
+ 2004,  Clint Adams
+ 2010- Anibal Monsalve Salazar <anibal@debian.org>
+License: GPL-2+
+
+Files: sensible-browser*
+Copyright: 2002,  Joey Hess
+ 2003, 2007, 2008,  Clint Adams
+ 2010- Anibal Monsalve Salazar <anibal@debian.org>
+License: GPL-2+
+
+Files: select-editor*
+Copyright: 2009, Dustin Kirkland <kirkland@canonical.com>.
+ 2010- Anibal Monsalve Salazar <anibal@debian.org>
+License: GPL-2+
+
+Files: man/Makefile.am
+ man/utf8toman.sed
+Copyright: 2012-2017, Guillaume Jover
+License: GPL-2+
+Comment: Part of this are copied from dpkg
+
+Files: man/po4a/cs*
+Copyright: 2012,  Michal Simunek
+License: GPL-2+
+
+Files: man/po4a/de*
+Copyright: 2011, Helge Kreutzmann <debian@helgefjell.de>
+License: GPL-2+
+
+Files: man/po4a/fr*
+Copyright: Nicolas François <nicolas.francois@centraliens.net>
+License: GPL-2+
+
+Files: man/po4a/es*
+Copyright: 2010-2012, Omar Campagne
+License: GPL-2+
+
+Files: man/po4a/it*
+Copyright: 2012, Beatrice Torracca
+License: GPL-2+
+
+Files: man/po4a/ja*
+Copyright: 2010, Kurasawa Nozomu
+License: GPL-2+
+
+Files: man/po4a/pl*
+Copyright: 2004, 2010, Robert Luberda <robert@debian.org>.
+License: GPL-2+
+
+Files: man/po4a/pt*
+Copyright: 2014, Américo Monteiro <a_monteiro@gmx.com>
+License: GPL-2+
+
+Files: aclocal.m4
+Copyright: 1996-2017, Free Software Foundation, Inc.
+License: All-permissive
+
+Files: *Makefile.in
+Copyright: 1994-2017, Free Software Foundation, Inc.
+License: All-permissive
+
+Files: configure
+Copyright: 1992-1996, 1998-2012, Free Software Foundation, Inc.
+License: configure
+ This configure script is free software; the Free Software Foundation
+ gives unlimited permission to copy, distribute and modify it.
+
+Files: build-aux/missing
+Copyright: 1996-2014, Free Software Foundation, Inc.
+License: GPL-2+
+
+Files: build-aux/install-sh
+Copyright: 1994 X Consortium
+License: installsh
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to
+ deal in the Software without restriction, including without limitation the
+ rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ sell copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNEC-
+ TION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ .
+ Except as contained in this notice, the name of the X Consortium shall not
+ be used in advertising or otherwise to promote the sale, use or other deal-
+ ings in this Software without prior written authorization from the X Consor-
+ tium.
+ .
+ FSF changes to this file are in the public domain.
+
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License along
+ with this program; if not, write to the Free Software Foundation, Inc.,
+ 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ `/usr/share/common-licenses/GPL-2'.
+
+License: All-permissive
+ This file is free software; the Free Software Foundation
+ gives unlimited permission to copy and/or distribute it,
+ with or without modifications, as long as this notice is preserved.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+ even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ PARTICULAR PURPOSE.
+

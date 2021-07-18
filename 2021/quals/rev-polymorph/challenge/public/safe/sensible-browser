@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# Prevent recursive loops, where these values are set to this script
+p="$(which sensible-browser)"
+[ -n "$BROWSER" ] && [ "$(which $BROWSER || true)" = "$p" ] && BROWSER=
+
+if test -n "$BROWSER"; then
+    ${BROWSER} "$@"
+    ret="$?"
+    if [ "$ret" -ne 126 ] && [ "$ret" -ne 127 ]; then
+	exit "$ret"
+    fi
+fi
+
+if test -n "$DISPLAY"; then
+    if test -n "$GNOME_DESKTOP_SESSION_ID"; then
+        if test -x /usr/bin/gnome-www-browser; then
+            exec /usr/bin/gnome-www-browser "$@"
+        elif test -x /usr/bin/x-www-browser; then
+            exec /usr/bin/x-www-browser "$@"
+        elif test -x /usr/bin/gnome-terminal && test -x /usr/bin/www-browser; then
+            exec /usr/bin/gnome-terminal -x /usr/bin/www-browser "$@"
+        fi
+    fi
+    if test -x /usr/bin/x-www-browser; then
+        exec /usr/bin/x-www-browser "$@"
+    elif test -x /usr/bin/x-terminal-emulator && test -x /usr/bin/www-browser; then
+        exec /usr/bin/x-terminal-emulator -x /usr/bin/www-browser "$@"
+    fi
+elif test -x /usr/bin/www-browser; then
+    exec /usr/bin/www-browser "$@"
+fi
+
+printf "Couldn't find a suitable web browser!\n" >&2
+printf "Set the BROWSER environment variable to your desired browser.\n" >&2
+exit 1;

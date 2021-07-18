@@ -1,0 +1,18 @@
+
+
+CTF{atheris-hispida-is-the-closest-thing-that-exists-to-a-fuzzy-python}
+
+
+This challenge isn't just a contrived situation, where 'turbozipfile' is buggy. In fact, a previous version of this challenge used the 'unzip' binary that comes with Linux instead of turbozipfile. The exploit for this challenge would work for that too.
+
+Python's zipfile implementation is rather unique, at least among zip implementations on Linux. If a filename in an archive is marked as being encoded via IBM Code Page 437, Python will convert it to the Unicode encoding that represents the same logical characters. Most other implementations on Linux don't care what encoding is set in a zip archive, and will simply extract the file to a path with the exact same bytes.
+
+It's hard to say that either implementation is more "correct" than the other.
+ - In support of the zip/unzip tools: Linux file paths are just bytes; whether those bytes should be interpreted according to IBM Code Page 437 or UTF-8 is in the eye of the program that's using them. The zip/unzip tools on Linux can round-trip: you can pack any filename with them (including arbitrary bytes), and get the same filename back out.
+ -In support of Python: Python's zipfile is more compatible with other systems - those arbitrary-byte files simply aren't permitted on Mac. And it's very clearly still following the ZIP specification: it's interpreting the filenames according to the encoding specified. It's a bit odd that the zip/unzip tools completely ignore a piece of information in the zip files.
+
+Long story short: neither implementation is "buggy", they're just different. Avoid mixing zip file implementations within the same system, or vulnerabilities like this one can occur.
+
+CTF{atheris-hispida-is-the-closest-thing-that-exists-to-a-fuzzy-python}
+
+

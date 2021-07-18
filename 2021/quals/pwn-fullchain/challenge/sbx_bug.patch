@@ -1,0 +1,244 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+diff --git a/content/browser/BUILD.gn b/content/browser/BUILD.gn
+index 58ba3f08f566..c6e2e3f0303a 100644
+--- a/content/browser/BUILD.gn
++++ b/content/browser/BUILD.gn
+@@ -2021,6 +2021,8 @@ source_set("browser") {
+     "worker_host/worker_script_loader.h",
+     "worker_host/worker_script_loader_factory.cc",
+     "worker_host/worker_script_loader_factory.h",
++    "CTF/ctf_interface_impl.h",
++    "CTF/ctf_interface_impl.cc",
+   ]
+ 
+   if (is_mac) {
+diff --git a/content/browser/CTF/ctf_interface_impl.cc b/content/browser/CTF/ctf_interface_impl.cc
+new file mode 100644
+index 000000000000..66e138b7aab9
+--- /dev/null
++++ b/content/browser/CTF/ctf_interface_impl.cc
+@@ -0,0 +1,49 @@
++// Copyright 2021 Google LLC
++//
++// Licensed under the Apache License, Version 2.0 (the "License");
++// you may not use this file except in compliance with the License.
++// You may obtain a copy of the License at
++//
++//      http://www.apache.org/licenses/LICENSE-2.0
++//
++// Unless required by applicable law or agreed to in writing, software
++// distributed under the License is distributed on an "AS IS" BASIS,
++// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++// See the License for the specific language governing permissions and
++// limitations under the License.
++#include <iostream>
++
++#include "content/browser/CTF/ctf_interface_impl.h"
++#include "mojo/public/cpp/bindings/self_owned_receiver.h"
++
++namespace content {
++
++CtfInterfaceImpl::CtfInterfaceImpl() {}
++
++CtfInterfaceImpl::~CtfInterfaceImpl() {}
++
++// static
++void CtfInterfaceImpl::Create(
++    mojo::PendingReceiver<blink::mojom::CtfInterface> receiver) {
++  auto self = std::make_unique<CtfInterfaceImpl>();
++  mojo::MakeSelfOwnedReceiver(std::move(self), std::move(receiver));
++}
++
++void CtfInterfaceImpl::ResizeVector(uint32_t size,
++                                    ResizeVectorCallback callback) {
++  numbers_.resize(size);
++  std::move(callback).Run();
++}
++
++void CtfInterfaceImpl::Read(uint32_t offset, ReadCallback callback) {
++  std::move(callback).Run(numbers_[offset]);
++}
++
++void CtfInterfaceImpl::Write(double value,
++                             uint32_t offset,
++                             WriteCallback callback) {
++  numbers_[offset] = value;
++  std::move(callback).Run();
++}
++
++}  // namespace content
+diff --git a/content/browser/CTF/ctf_interface_impl.h b/content/browser/CTF/ctf_interface_impl.h
+new file mode 100644
+index 000000000000..eb26d460f9a9
+--- /dev/null
++++ b/content/browser/CTF/ctf_interface_impl.h
+@@ -0,0 +1,43 @@
++// Copyright 2021 Google LLC
++//
++// Licensed under the Apache License, Version 2.0 (the "License");
++// you may not use this file except in compliance with the License.
++// You may obtain a copy of the License at
++//
++//      http://www.apache.org/licenses/LICENSE-2.0
++//
++// Unless required by applicable law or agreed to in writing, software
++// distributed under the License is distributed on an "AS IS" BASIS,
++// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++// See the License for the specific language governing permissions and
++// limitations under the License.
++#ifndef CONTENT_BROWSER_CTF_CTF_INTERFACE_IMPL_H_
++#define CONTENT_BROWSER_CTF_CTF_INTERFACE_IMPL_H_
++
++#include <cstdint>
++#include <vector>
++
++#include "content/common/content_export.h"
++#include "third_party/blink/public/mojom/CTF/ctf_interface.mojom.h"
++
++namespace content {
++
++class CONTENT_EXPORT CtfInterfaceImpl : public blink::mojom::CtfInterface {
++ public:
++  CtfInterfaceImpl();
++  ~CtfInterfaceImpl() override;
++  static void Create(
++      mojo::PendingReceiver<blink::mojom::CtfInterface> receiver);
++
++  void ResizeVector(uint32_t size, ResizeVectorCallback callback) override;
++  void Write(double value, uint32_t offset, WriteCallback callback) override;
++  void Read(uint32_t offset, ReadCallback callback) override;
++
++ private:
++  std::vector<double> numbers_;
++  DISALLOW_COPY_AND_ASSIGN(CtfInterfaceImpl);
++};
++
++}  // namespace content
++
++#endif  // CONTENT_BROWSER_CTF_CTF_INTERFACE_IMPL_H_
+diff --git a/content/browser/browser_interface_binders.cc b/content/browser/browser_interface_binders.cc
+index 089ef342eff4..aecab2b92a32 100644
+--- a/content/browser/browser_interface_binders.cc
++++ b/content/browser/browser_interface_binders.cc
+@@ -13,6 +13,7 @@
+ #include "build/build_config.h"
+ #include "build/chromeos_buildflags.h"
+ #include "cc/base/switches.h"
++#include "content/browser/CTF/ctf_interface_impl.h"
+ #include "content/browser/background_fetch/background_fetch_service_impl.h"
+ #include "content/browser/bad_message.h"
+ #include "content/browser/browser_main_loop.h"
+@@ -95,6 +96,7 @@
+ #include "services/shape_detection/public/mojom/shape_detection_service.mojom.h"
+ #include "services/shape_detection/public/mojom/textdetection.mojom.h"
+ #include "third_party/blink/public/common/features.h"
++#include "third_party/blink/public/mojom/CTF/ctf_interface.mojom.h"
+ #include "third_party/blink/public/mojom/appcache/appcache.mojom.h"
+ #include "third_party/blink/public/mojom/background_fetch/background_fetch.mojom.h"
+ #include "third_party/blink/public/mojom/background_sync/background_sync.mojom.h"
+@@ -861,6 +863,9 @@ void PopulateFrameBinders(RenderFrameHostImpl* host, mojo::BinderMap* map) {
+   map->Add<blink::mojom::TextInputHost>(
+       base::BindRepeating(&BindTextInputHost));
+ #endif
++
++  map->Add<blink::mojom::CtfInterface>(base::BindRepeating(
++      &RenderFrameHostImpl::GetCtfInterface, base::Unretained(host)));
+ }
+ 
+ void PopulateBinderMapWithContext(
+diff --git a/content/browser/renderer_host/render_frame_host_impl.cc b/content/browser/renderer_host/render_frame_host_impl.cc
+index 78b9210167b5..92689c2140bd 100644
+--- a/content/browser/renderer_host/render_frame_host_impl.cc
++++ b/content/browser/renderer_host/render_frame_host_impl.cc
+@@ -1625,6 +1625,11 @@ RenderFrameHostImpl::~RenderFrameHostImpl() {
+     prefetched_signed_exchange_cache_->RecordHistograms();
+ }
+ 
++void RenderFrameHostImpl::GetCtfInterface(
++    mojo::PendingReceiver<blink::mojom::CtfInterface> receiver) {
++  CtfInterfaceImpl::Create(std::move(receiver));
++}
++
+ int RenderFrameHostImpl::GetRoutingID() {
+   return routing_id_;
+ }
+diff --git a/content/browser/renderer_host/render_frame_host_impl.h b/content/browser/renderer_host/render_frame_host_impl.h
+index 23a0310d9450..2c10cfd3c9dc 100644
+--- a/content/browser/renderer_host/render_frame_host_impl.h
++++ b/content/browser/renderer_host/render_frame_host_impl.h
+@@ -34,6 +34,7 @@
+ #include "base/timer/timer.h"
+ #include "base/unguessable_token.h"
+ #include "build/build_config.h"
++#include "content/browser/CTF/ctf_interface_impl.h"
+ #include "content/browser/accessibility/browser_accessibility_manager.h"
+ #include "content/browser/bad_message.h"
+ #include "content/browser/browser_interface_broker_impl.h"
+@@ -92,6 +93,7 @@
+ #include "third_party/blink/public/mojom/bluetooth/web_bluetooth.mojom-forward.h"
+ #include "third_party/blink/public/mojom/compute_pressure/compute_pressure.mojom-forward.h"
+ #include "third_party/blink/public/mojom/contacts/contacts_manager.mojom-forward.h"
++#include "third_party/blink/public/mojom/CTF/ctf_interface.mojom.h"
+ #include "third_party/blink/public/mojom/feature_observer/feature_observer.mojom-forward.h"
+ #include "third_party/blink/public/mojom/file_system_access/file_system_access_manager.mojom-forward.h"
+ #include "third_party/blink/public/mojom/font_access/font_access.mojom-forward.h"
+@@ -1438,6 +1440,9 @@ class CONTENT_EXPORT RenderFrameHostImpl
+   // Returns true if the frame is frozen.
+   bool IsFrozen();
+ 
++  void GetCtfInterface(
++      mojo::PendingReceiver<blink::mojom::CtfInterface> receiver);
++
+   // Set the `frame_` for sending messages to the renderer process.
+   void SetMojomFrameRemote(mojo::PendingAssociatedRemote<mojom::Frame>);
+ 
+diff --git a/third_party/blink/public/mojom/BUILD.gn b/third_party/blink/public/mojom/BUILD.gn
+index c52c926b5105..c9f1f12d9456 100644
+--- a/third_party/blink/public/mojom/BUILD.gn
++++ b/third_party/blink/public/mojom/BUILD.gn
+@@ -216,6 +216,7 @@ mojom("mojom_platform") {
+     "worker/worker_content_settings_proxy.mojom",
+     "worker/worker_main_script_load_params.mojom",
+     "worker/worker_options.mojom",
++    "CTF/ctf_interface.mojom",
+   ]
+ 
+   if (is_android) {
+diff --git a/third_party/blink/public/mojom/CTF/ctf_interface.mojom b/third_party/blink/public/mojom/CTF/ctf_interface.mojom
+new file mode 100644
+index 000000000000..1cd377818f75
+--- /dev/null
++++ b/third_party/blink/public/mojom/CTF/ctf_interface.mojom
+@@ -0,0 +1,20 @@
++// Copyright 2021 Google LLC
++//
++// Licensed under the Apache License, Version 2.0 (the "License");
++// you may not use this file except in compliance with the License.
++// You may obtain a copy of the License at
++//
++//      http://www.apache.org/licenses/LICENSE-2.0
++//
++// Unless required by applicable law or agreed to in writing, software
++// distributed under the License is distributed on an "AS IS" BASIS,
++// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++// See the License for the specific language governing permissions and
++// limitations under the License.
++module blink.mojom;
++
++interface CtfInterface {
++  ResizeVector(uint32 size) => ();
++  Read(uint32 offset) => (double value);
++  Write(double value, uint32 offset) => ();
++};

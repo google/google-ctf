@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+  <meta name="charset" content="utf-8">
+  <title>Security Driven</title>
+<% if(locals._csrf){ %>
+  <meta name="_csrf" content="<%= _csrf %>">
+<% } %>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Security Driven</a>
+    <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+      <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+      <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+      <li class="nav-item"><a class="nav-link" href="/report">Report</a></li>
+    </ul>
+    </div>
+
+
+  </nav>

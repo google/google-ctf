@@ -1,0 +1,22 @@
+# Human readable task name
+name: story
+# Long form description.
+description: |+
+  Please, tell me a beautiful story. 
+# The flag
+flag: CTF{eb64749d08bd99b681f2bc75aa65eab35a80310f7426f6872ba869d244e37135}
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: crypto
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# host/port for non-web challenges
+host: 'story.2021.ctfcompetition.com 1337'
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: false

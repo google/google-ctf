@@ -1,0 +1,22 @@
+# Human readable task name
+name: Comlink
+# Long form description.
+description: |+
+  We have captured a spy. They were carrying this device with them. See the README for more details.
+# The flag
+flag: CTF{HAVE_YOU_EVER_SEEN_A_Z80_CPU_WITH_AN_AES_PERIPHERAL}
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: hardware
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# host/port for non-web challenges
+host: 'comlink.2021.ctfcompetition.com 1337'
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true

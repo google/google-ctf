@@ -1,0 +1,37 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+diff --git a/src/builtins/typed-array-set.tq b/src/builtins/typed-array-set.tq
+index b5c9dcb261..ac5ebe9913 100644
+--- a/src/builtins/typed-array-set.tq
++++ b/src/builtins/typed-array-set.tq
+@@ -198,7 +198,7 @@ TypedArrayPrototypeSetTypedArray(implicit context: Context, receiver: JSAny)(
+   if (targetOffsetOverflowed) goto IfOffsetOutOfBounds;
+ 
+   // 9. Let targetLength be target.[[ArrayLength]].
+-  const targetLength = target.length;
++  // const targetLength = target.length;
+ 
+   // 19. Let srcLength be typedArray.[[ArrayLength]].
+   const srcLength: uintptr = typedArray.length;
+@@ -207,8 +207,8 @@ TypedArrayPrototypeSetTypedArray(implicit context: Context, receiver: JSAny)(
+ 
+   // 21. If srcLength + targetOffset > targetLength, throw a RangeError
+   //   exception.
+-  CheckIntegerIndexAdditionOverflow(srcLength, targetOffset, targetLength)
+-      otherwise IfOffsetOutOfBounds;
++  // CheckIntegerIndexAdditionOverflow(srcLength, targetOffset, targetLength)
++  //     otherwise IfOffsetOutOfBounds;
+ 
+   // 12. Let targetName be the String value of target.[[TypedArrayName]].
+   // 13. Let targetType be the Element Type value in Table 62 for

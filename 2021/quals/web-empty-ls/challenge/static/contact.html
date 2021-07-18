@@ -1,0 +1,35 @@
+<html>
+  <!--
+    Copyright 2021 Google LLC
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    Author: Kegan Thorrez
+  -->
+  <head>
+    <title>Contact</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
+  </head>
+  <body>
+    Have something you want to tell the admin?<br><br>
+    Note: Please don't send any links to pages outside Zone443. We want to
+    promote our little community, so any links outside it will be met with
+    suspicion and indifference.<br>
+    <form method="post" action="contact">
+      <textarea name="text" rows="4" cols="80"></textarea>
+      <div class="g-recaptcha" data-sitekey="your_site_key"></div>
+      <input type="submit" value="Submit">
+    </form>
+  </body>
+</html>

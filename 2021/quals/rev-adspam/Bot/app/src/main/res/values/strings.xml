@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Bot</string>
+    <string name="ip">rev-adspam.2021.ctfcompetition.com</string>
+    <string name="port">1337</string>
+    <string name="channel_name">ntfcnchnl</string>
+    <string name="channel_description">Better notifications for you!</string>
+</resources>

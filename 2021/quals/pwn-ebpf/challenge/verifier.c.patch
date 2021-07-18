@@ -1,0 +1,50 @@
+--- linux-5.12.2/kernel/bpf/verifier.c	2021-05-07 03:53:26.000000000 -0700
++++ linux-5.12.2-modified/kernel/bpf/verifier.c	2021-06-15 20:06:54.495796355 -0700
+@@ -2923,6 +2924,7 @@
+ 				   int off, int size, u32 mem_size,
+ 				   bool zero_size_allowed)
+ {
++  
+ 	struct bpf_verifier_state *vstate = env->cur_state;
+ 	struct bpf_func_state *state = vstate->frame[vstate->curframe];
+ 	struct bpf_reg_state *reg = &state->regs[regno];
+@@ -6326,13 +6330,19 @@
+ 				memset(&dst_reg->raw, 0, sizeof(dst_reg->raw));
+ 		}
+ 		break;
+-	case BPF_AND:
+-	case BPF_OR:
+ 	case BPF_XOR:
+-		/* bitwise ops on pointers are troublesome, prohibit. */
+-		verbose(env, "R%d bitwise operator %s on pointer prohibited\n",
+-			dst, bpf_alu_string[opcode >> 4]);
+-		return -EACCES;
++                // As long as we downgrade the result to scalar it is safe.
++                if (dst_reg->type == PTR_TO_MAP_VALUE) {
++                        dst_reg->type = SCALAR_VALUE;
++                        dst_reg->auth_map = true;
++                        break;
++                }
++        case BPF_AND:
++	case BPF_OR:
++	  	/* bitwise ops on pointers are troublesome, prohibit. */
++	  	verbose(env, "R%d bitwise operator %s on pointer prohibited\n",
++	  		dst, bpf_alu_string[opcode >> 4]);
++	  	return -EACCES;
+ 	default:
+ 		/* other operators (e.g. MUL,LSH) produce non-pointer results */
+ 		verbose(env, "R%d pointer arithmetic with %s operator prohibited\n",
+@@ -7037,6 +7047,13 @@
+ 		scalar_min_max_or(dst_reg, &src_reg);
+ 		break;
+ 	case BPF_XOR:
++                /* Restore the pointer type.*/
++                if (dst_reg->auth_map) {
++                         dst_reg->auth_map = false;
++                         dst_reg->type = PTR_TO_MAP_VALUE;
++                         break;
++                }
++
+ 		dst_reg->var_off = tnum_xor(dst_reg->var_off, src_reg.var_off);
+ 		scalar32_min_max_xor(dst_reg, &src_reg);
+ 		scalar_min_max_xor(dst_reg, &src_reg);

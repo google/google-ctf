@@ -1,0 +1,6 @@
+gather_bit_*
+output_reader
+solution
+build_public_hashes
+hash_pieces.h
+public_hashes.h

@@ -1,0 +1,1 @@
+../../third_party/bannedwordlist/bad_words.b64.txt

@@ -1,0 +1,305 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+From 5e1d9f092f0b4ea5dcda6e2f4fa19b48482c7248 Mon Sep 17 00:00:00 2001
+From: Kevin Hamacher <hamacher@google.com>
+Date: Tue, 15 Jun 2021 14:13:28 +0200
+Subject: [PATCH] CTF modifications
+
+---
+ Makefile           | 46 ++++++++++++++++++++--------------
+ kernel/defs.h      |  4 +++
+ kernel/file.h      |  1 +
+ kernel/kalloc.c    |  3 ++-
+ kernel/main.c      |  1 +
+ kernel/memlayout.h |  5 +++-
+ kernel/param.h     |  2 +-
+ kernel/pci.c       | 62 ++++++++++++++++++++++++++++++++++++++++++++++
+ kernel/vm.c        |  3 +++
+ mkfs/mkfs.c        |  2 +-
+ user/init.c        |  2 +-
+ 11 files changed, 108 insertions(+), 23 deletions(-)
+ create mode 100644 kernel/pci.c
+
+diff --git a/Makefile b/Makefile
+index 328f9c6..9d9ad4c 100644
+--- a/Makefile
++++ b/Makefile
+@@ -28,7 +28,8 @@ OBJS = \
+   $K/sysfile.o \
+   $K/kernelvec.o \
+   $K/plic.o \
+-  $K/virtio_disk.o
++  $K/virtio_disk.o \
++  $K/pci.o
+ 
+ # riscv64-unknown-elf- or riscv64-linux-gnu-
+ # perhaps in /opt/riscv/bin
+@@ -56,11 +57,11 @@ LD = $(TOOLPREFIX)ld
+ OBJCOPY = $(TOOLPREFIX)objcopy
+ OBJDUMP = $(TOOLPREFIX)objdump
+ 
+-CFLAGS = -Wall -Werror -O -fno-omit-frame-pointer -ggdb
++CFLAGS = -Wall -Werror -O2 -fno-omit-frame-pointer -ggdb
+ CFLAGS += -MD
+ CFLAGS += -mcmodel=medany
+ CFLAGS += -ffreestanding -fno-common -nostdlib -mno-relax
+-CFLAGS += -I.
++CFLAGS += -I. -I../common/
+ CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
+ 
+ # Disable PIE when possible (for Ubuntu 16.10 toolchain)
+@@ -115,23 +116,32 @@ mkfs/mkfs: mkfs/mkfs.c $K/fs.h $K/param.h
+ # http://www.gnu.org/software/make/manual/html_node/Chained-Rules.html
+ .PRECIOUS: %.o
+ 
++_firmware: ../firmware/_firmware
++	cp ../firmware/_firmware _firmware
++	$(TOOLPREFIX)strip --strip-all _firmware
++
++#UPROGS=\
++#	$U/_cat\
++#	$U/_echo\
++#	$U/_forktest\
++#	$U/_grep\
++#	$U/_init\
++#	$U/_kill\
++#	$U/_ln\
++#	$U/_ls\
++#	$U/_mkdir\
++#	$U/_rm\
++#	$U/_sh\
++#	$U/_stressfs\
++#	$U/_usertests\
++#	$U/_grind\
++#	$U/_wc\
++#	$U/_zombie\
++#	_firmware\
++
+ UPROGS=\
+-	$U/_cat\
+-	$U/_echo\
+-	$U/_forktest\
+-	$U/_grep\
+ 	$U/_init\
+-	$U/_kill\
+-	$U/_ln\
+-	$U/_ls\
+-	$U/_mkdir\
+-	$U/_rm\
+-	$U/_sh\
+-	$U/_stressfs\
+-	$U/_usertests\
+-	$U/_grind\
+-	$U/_wc\
+-	$U/_zombie\
++	_firmware
+ 
+ fs.img: mkfs/mkfs README $(UPROGS)
+ 	mkfs/mkfs fs.img README $(UPROGS)
+diff --git a/kernel/defs.h b/kernel/defs.h
+index 41098f4..7fa7ce0 100644
+--- a/kernel/defs.h
++++ b/kernel/defs.h
+@@ -183,5 +183,9 @@ void            virtio_disk_init(void);
+ void            virtio_disk_rw(struct buf *, int);
+ void            virtio_disk_intr(void);
+ 
++
++// pci.c
++void            pciinit(void);
++
+ // number of elements in fixed-size array
+ #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
+diff --git a/kernel/file.h b/kernel/file.h
+index b076d1d..50b5950 100644
+--- a/kernel/file.h
++++ b/kernel/file.h
+@@ -38,3 +38,4 @@ struct devsw {
+ extern struct devsw devsw[];
+ 
+ #define CONSOLE 1
++#define PCI 2
+\ No newline at end of file
+diff --git a/kernel/kalloc.c b/kernel/kalloc.c
+index fa6a0ac..29bad80 100644
+--- a/kernel/kalloc.c
++++ b/kernel/kalloc.c
+@@ -52,7 +52,8 @@ kfree(void *pa)
+     panic("kfree");
+ 
+   // Fill with junk to catch dangling refs.
+-  memset(pa, 1, PGSIZE);
++  // Removed for faster startup times
++  // memset(pa, 1, PGSIZE);
+ 
+   r = (struct run*)pa;
+ 
+diff --git a/kernel/main.c b/kernel/main.c
+index 5d7ad49..9f2dfd2 100644
+--- a/kernel/main.c
++++ b/kernel/main.c
+@@ -12,6 +12,7 @@ main()
+ {
+   if(cpuid() == 0){
+     consoleinit();
++    pciinit();
+     printfinit();
+     printf("\n");
+     printf("xv6 kernel is booting\n");
+diff --git a/kernel/memlayout.h b/kernel/memlayout.h
+index 776f98c..5ad5fe5 100644
+--- a/kernel/memlayout.h
++++ b/kernel/memlayout.h
+@@ -25,6 +25,9 @@
+ #define VIRTIO0 0x10001000
+ #define VIRTIO0_IRQ 1
+ 
++// PCI magic
++#define PCI0 0x13370000L
++
+ // core local interruptor (CLINT), which contains the timer.
+ #define CLINT 0x2000000L
+ #define CLINT_MTIMECMP(hartid) (CLINT + 0x4000 + 8*(hartid))
+@@ -45,7 +48,7 @@
+ // for use by the kernel and user pages
+ // from physical address 0x80000000 to PHYSTOP.
+ #define KERNBASE 0x80000000L
+-#define PHYSTOP (KERNBASE + 128*1024*1024)
++#define PHYSTOP (KERNBASE + 32*1024*1024)
+ 
+ // map the trampoline page to the highest address,
+ // in both user and kernel space.
+diff --git a/kernel/param.h b/kernel/param.h
+index b5fdcb2..7852ddb 100644
+--- a/kernel/param.h
++++ b/kernel/param.h
+@@ -1,5 +1,5 @@
+ #define NPROC        64  // maximum number of processes
+-#define NCPU          8  // maximum number of CPUs
++#define NCPU          1  // maximum number of CPUs
+ #define NOFILE       16  // open files per process
+ #define NFILE       100  // open files per system
+ #define NINODE       50  // maximum number of active i-nodes
+diff --git a/kernel/pci.c b/kernel/pci.c
+new file mode 100644
+index 0000000..74bf3fe
+--- /dev/null
++++ b/kernel/pci.c
+@@ -0,0 +1,62 @@
++/*
++Exposes raw PCI bar to a userspace application.
++*/
++
++#include <stdarg.h>
++
++#include "types.h"
++#include "param.h"
++#include "spinlock.h"
++#include "sleeplock.h"
++#include "fs.h"
++#include "file.h"
++#include "memlayout.h"
++#include "riscv.h"
++#include "defs.h"
++#include "proc.h"
++
++
++struct {
++  struct spinlock lock;
++
++  int n_devices;
++  int mapped;
++} pci;
++
++static int pciwrite(int user_dst, uint64 dst, int n) {
++    return -1;
++}
++
++static int pciread(int user_dst, uint64 dst, int n) {
++    struct proc *p = myproc();
++    if (n == sizeof(pci.n_devices)) {
++        acquire(&pci.lock);
++        either_copyout(user_dst, dst, &pci.n_devices, sizeof(pci.n_devices));
++
++        if (pci.mapped == 0) {
++            // This messes up the VA of the process, further mallocs will panic.
++            if (mappages(p->pagetable, /* va= */PCI0, 0x10 * PGSIZE, /* pa= */PCI0, PTE_W|PTE_R|PTE_U) != 0) {
++                panic("Mapping failed!");
++            }
++            pci.mapped = 1;
++        }
++
++        release(&pci.lock);
++        return sizeof(pci.n_devices);
++    }
++    return -1;
++}
++
++void pciintr(int c){}
++
++void pciinit(void) {
++    initlock(&pci.lock, "pci");
++
++    acquire(&pci.lock);
++    pci.n_devices = 2;
++    pci.mapped = 0;
++    release(&pci.lock);
++
++    devsw[PCI].read = pciread;
++    devsw[PCI].write = pciwrite;
++}
+diff --git a/kernel/vm.c b/kernel/vm.c
+index b47f111..4c3900f 100644
+--- a/kernel/vm.c
++++ b/kernel/vm.c
+@@ -27,6 +27,9 @@ kvmmake(void)
+   // uart registers
+   kvmmap(kpgtbl, UART0, UART0, PGSIZE, PTE_R | PTE_W);
+ 
++  // PCI registers
++  kvmmap(kpgtbl, PCI0, PCI0, 0x10000, PTE_R | PTE_W);
++
+   // virtio mmio disk interface
+   kvmmap(kpgtbl, VIRTIO0, VIRTIO0, PGSIZE, PTE_R | PTE_W);
+ 
+diff --git a/mkfs/mkfs.c b/mkfs/mkfs.c
+index 246a4e2..e5ae19a 100644
+--- a/mkfs/mkfs.c
++++ b/mkfs/mkfs.c
+@@ -154,7 +154,7 @@ main(int argc, char *argv[])
+ 
+     bzero(&de, sizeof(de));
+     de.inum = xshort(inum);
+-    strncpy(de.name, shortname, DIRSIZ);
++    strncpy(de.name, shortname, DIRSIZ - 1);
+     iappend(rootino, &de, sizeof(de));
+ 
+     while((cc = read(fd, buf, sizeof(buf))) > 0)
+diff --git a/user/init.c b/user/init.c
+index e0a5689..c321fd4 100644
+--- a/user/init.c
++++ b/user/init.c
+@@ -31,7 +31,7 @@ main(void)
+       exit(1);
+     }
+     if(pid == 0){
+-      exec("sh", argv);
++      exec("firmware", argv);
+       printf("init: exec sh failed\n");
+       exit(1);
+     }
+-- 
+2.31.1
+

@@ -1,0 +1,23 @@
+# Human readable task name
+name: web 2000
+# Long form description.
+description: |+
+  In this challenge, you have to find an XSS.
+  Good luck!
+# The flag
+flag: CTF{foobar}
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: web
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# host/port for non-web challenges
+host: ''
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: false

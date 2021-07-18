@@ -1,0 +1,1 @@
+CTF{But_in_real_life_devs_would_never_use_such_a_buggy_RNG_right?}

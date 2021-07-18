@@ -1,0 +1,93 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+--- tiny-AES-c/aes.c	2021-07-17 21:16:03.793109688 +0000
++++ aes.c	2021-07-17 21:18:16.013630308 +0000
+@@ -246,6 +246,10 @@
+   }
+ }
+ 
++void AES_AddRoundKey(uint8_t round, state_t* state, const uint8_t* RoundKey) {
++  AddRoundKey(round, state, RoundKey);
++}
++
+ // The SubBytes Function Substitutes the values in the
+ // state matrix with values in an S-box.
+ static void SubBytes(state_t* state)
+@@ -260,6 +264,10 @@
+   }
+ }
+ 
++void AES_SubBytes(state_t* state) {
++  SubBytes(state);
++}
++
+ // The ShiftRows() function shifts the rows in the state to the left.
+ // Each row is shifted with different offset.
+ // Offset = Row number. So the first row is not shifted.
+@@ -291,6 +299,10 @@
+   (*state)[1][3] = temp;
+ }
+ 
++void AES_ShiftRows(state_t* state) {
++  ShiftRows(state);
++}
++
+ static uint8_t xtime(uint8_t x)
+ {
+   return ((x<<1) ^ (((x>>7) & 1) * 0x1b));
+@@ -312,6 +324,10 @@
+   }
+ }
+ 
++void AES_MixColumns(state_t* state) {
++  MixColumns(state);
++}
++
+ // Multiply is used to multiply numbers in the field GF(2^8)
+ // Note: The last call to xtime() is unneeded, but often ends up generating a smaller binary
+ //       The compiler seems to be able to vectorize the operation better this way.
+@@ -365,6 +381,9 @@
+   }
+ }
+ 
++void AES_InvMixColumns(state_t* state) {
++  InvMixColumns(state);
++}
+ 
+ // The SubBytes Function Substitutes the values in the
+ // state matrix with values in an S-box.
+@@ -380,6 +399,10 @@
+   }
+ }
+ 
++void AES_InvSubBytes(state_t* state) {
++  InvSubBytes(state);
++}
++
+ static void InvShiftRows(state_t* state)
+ {
+   uint8_t temp;
+@@ -407,6 +430,11 @@
+   (*state)[2][3] = (*state)[3][3];
+   (*state)[3][3] = temp;
+ }
++
++void AES_InvShiftRows(state_t* state) {
++  InvShiftRows(state);
++}
++
+ #endif // #if (defined(CBC) && CBC == 1) || (defined(ECB) && ECB == 1)
+ 
+ // Cipher is the main function that encrypts the PlainText.
