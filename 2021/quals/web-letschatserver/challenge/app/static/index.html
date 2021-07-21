@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!--
+/**
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ -->
+<meta charset="utf-8">
+<title>Lack</title>
+<head>
+  <script src="https://www.google.com/recaptcha/api.js?render=6LcAi1gbAAAAAB2KjsfvJXNHfNF0YAt7HFAYH1ge"></script>
+  <script>
+    function captchaSubmit(token) {
+      register(token);
+    }
+  </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="invite" class="overlay">
+    <div id="inviteFrm" class="center">
+        <form action="javascript:inviteCode();undefined;" class="frm">
+          <h2 class="logo">
+            <img src="/icon.png">
+            Lack
+          </h2>
+        <p class="logo">What is <img src="/icon.png"> Lack? Over 97% of our development team is asking the same question!</p>
+        <hr>
+        <p class="logo">According to our management team, our users use <img src="icon.png"> Lack.</p>
+        <hr>
+        <p>Market research tells us exclusive things are exclusive so you will need an exclusive invite code to access this exclusive product. <img src="/icon.png"> Lack.</p>
+        <hr>
+        <p><img src="/icon.png"> Lack, snail mail re-imagined.</p>
+        <hr>
+        <h1>Submit Your Invite Code!</h1>
+          <div class="frmElement">
+          <input type="text" placeholder="Enter Invite Code" name="inviteCode" id="inviteCode" >
+          </div>
+         <div class="frmElement">
+          <button type="submit">Submit</button>
+          </div>
+         </form>
+    </div>
+  </div>
+  <div id="login" class="overlay">
+      <div id="loginFrm">
+        <form action="javascript:login();undefined;" class="frm">
+        <h2 class="logo">
+          <img src="/icon.png">
+          Lack
+        </h2>
+        <h1> Sign In</h1>
+          <div class="frmElement">
+          <input type="text" placeholder="Enter Username" name="username" id="username" >
+          </div>
+          <div class="frmElement">
+          <input type="password" placeholder="Enter Password" name="password" id="password" >
+          </div>
+         <div class="frmElement">
+          <button type="submit">Login</button>
+          </div>
+        </form>
+        <div id="loginError">
+        </div>
+       <p> New to Lack? </p>
+        <p> <a href="javascript:toggleRegister();undefined">Create an account</a> </p>
+      </div>
+      <div id="registerFrm" class="hidden">
+        <form action="javascript:register();undefined;" class="frm">
+        <h2 class="logo">
+          <img src="/icon.png">
+          Lack
+        </h2>
+        <h1> Register </h1>
+          <div class="frmElement">
+          <input type="text" placeholder="Enter Username" name="username" id="regUsername" >
+          </div>
+          <div class="frmElement">
+          <input type="password" placeholder="Enter Password" name="password" id="regPassword" >
+          </div>
+          <div class="frmElement">
+            <button class="g-recaptcha" 
+            data-sitekey="6LcAi1gbAAAAAB2KjsfvJXNHfNF0YAt7HFAYH1ge" 
+            data-callback='captchaSubmit' 
+            data-action='submit'>Register</button>
+          </div>
+        </form>
+        <div id="registerError">
+        </div>
+       <p> Already have an account? </p>
+        <p>  <a href="javascript:toggleRegister();undefined">Sign In</a> </p>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div id="mainContainer">
+    <div id="rooms" class="left column">
+      <div id="logoutSection">
+        <h3 id="userDetails"></h3>
+        <button onclick="javascript:logout();undefined;">
+          Logout
+        </button>
+      </div>
+      <div id="roomsList">
+        <h2> Rooms </h2>
+      </div>
+      <br>
+      <div id="roomsButtons">
+        <button id="newRoomBtn" type="button">Create</button>
+        <button id="joinRoomBtn" type="button">Join</button>
+      </div>
+    </div>
+    <div class="right column">
+      <div id="rightContainer">
+        <h2 class="logo">
+          <img src="/icon.png">
+          <span id="chatTitle">
+          </span>
+        </h2>
+        <div id="chat">
+        </div>
+        <div id="input">
+          <textarea rows=5 id="chatInput"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="/app.js"></script>
+</body>
