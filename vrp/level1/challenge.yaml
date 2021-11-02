@@ -18,7 +18,7 @@ spec:
               - mountPath: /flag
                 name: flag
                 readOnly: true
-              - name: etc-os-release
+              - name: kvm-volume
                 mountPath: /dev/kvm
               - name: etc-os-release
                 mountPath: /etc/os-release
