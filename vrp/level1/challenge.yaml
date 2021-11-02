@@ -18,16 +18,9 @@ spec:
               - mountPath: /flag
                 name: flag
                 readOnly: true
-              - name: kvm-volume
-                mountPath: /dev/kvm
               - name: etc-os-release
-                mountPath: /etc/os-release
-            securityContext:
-              privileged: true
+                mountPath: /etc/node-os-release
         volumes:
-          - name: kvm-volume
-            hostPath:
-              path: /dev/kvm
           - name: etc-os-release
             hostPath:
               path: /etc/os-release
