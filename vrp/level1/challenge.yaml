@@ -9,6 +9,7 @@ spec:
     public: true
   healthcheck:
     enabled: true
+    image: eu.gcr.io/gctf-vrp/kctf-healthcheck:c0af62a229b7857b12ed810105554ca37bb04a62130c83d0c2baab1d2ffb1eeb
   podTemplate:
     template:
       spec:
@@ -20,13 +21,14 @@ spec:
                 readOnly: true
               - name: etc-os-release
                 mountPath: /etc/node-os-release
+                readOnly: true
         volumes:
           - name: etc-os-release
             hostPath:
               path: /etc/os-release
-        volumes:
           - name: flag
             secret:
               defaultMode: 0555
               secretName: kctf-flag
               optional: true
+  image: eu.gcr.io/gctf-vrp/kctf-challenge:f25a1507160d5fd9c984e1eddb5d748ded46bd19ca4b1489331a6c2c333db8c3
