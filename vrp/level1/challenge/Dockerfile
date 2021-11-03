@@ -16,6 +16,8 @@ FROM ubuntu:20.04 as chroot
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y build-essential curl wget git python3 netcat socat gdb
 RUN /usr/sbin/useradd --no-create-home -u 1000 user
 
+RUN touch /etc/node-os-release
+
 COPY chal /home/user/
 
 FROM gcr.io/kctf-docker/challenge@sha256:6dd60da626bc43bf3175d9d7436006db5acc7710d5d1b7006ab53e718fe51e40
