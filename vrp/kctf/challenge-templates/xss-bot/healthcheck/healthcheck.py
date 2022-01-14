@@ -12,5 +12,6 @@ r.send(bytes('http://localhost:{}/ok'.format(l.lport), 'ascii'))
 
 _ = l.wait_for_connection()
 l.readuntil(b'GET /ok HTTP/1.1')
+l.send(b'HTTP/1.1 200 OK\nContent-Length: 0\n\n')
 
 exit (0)

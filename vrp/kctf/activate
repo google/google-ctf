@@ -12,14 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-KCTF_YQ_URL="https://github.com/mikefarah/yq/releases/download/v4.2.0/yq_linux_amd64"
-KCTF_YQ_HASH="5d44bd64e264e9029c5f06bcd960ba162d7ed7ddd1781f02a28d62f50577b632"
+if [[ "$OSTYPE" =~ ^darwin.* ]]; then
+  KCTF_YQ_URL="https://github.com/mikefarah/yq/releases/download/v4.2.0/yq_darwin_amd64"
+  KCTF_YQ_HASH="83b9dc96e75799e162035b2ee2dffc0c51de869c27a2e294eb0aee8653a19804"
 
-KCTF_KIND_URL="https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64"
-KCTF_KIND_HASH="74767776488508d847b0bb941212c1cb76ace90d9439f4dee256d8a04f1309c6"
+  KCTF_KIND_URL="https://kind.sigs.k8s.io/dl/v0.11.1/kind-darwin-amd64"
+  KCTF_KIND_HASH="432bef555a70e9360b44661c759658265b9eaaf7f75f1beec4c4d1e6bbf97ce3"
 
-KCTF_KUBECTL_URL="https://dl.k8s.io/release/v1.20.4/bin/linux/amd64/kubectl"
-KCTF_KUBECTL_HASH="98e8aea149b00f653beeb53d4bd27edda9e73b48fed156c4a0aa1dabe4b1794c"
+  KCTF_KUBECTL_URL="https://dl.k8s.io/release/v1.20.4/bin/darwin/amd64/kubectl"
+  KCTF_KUBECTL_HASH="37f593731b8c9913bf2a3bfa36dacb3058dc176c7aeae2930c783822ea03a573"
+
+  STAT="gstat"
+  MKTEMP="gmktemp"
+else
+  KCTF_YQ_URL="https://github.com/mikefarah/yq/releases/download/v4.2.0/yq_linux_amd64"
+  KCTF_YQ_HASH="5d44bd64e264e9029c5f06bcd960ba162d7ed7ddd1781f02a28d62f50577b632"
+
+  KCTF_KIND_URL="https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64"
+  KCTF_KIND_HASH="949f81b3c30ca03a3d4effdecda04f100fa3edc07a28b19400f72ede7c5f0491"
+
+  KCTF_KUBECTL_URL="https://dl.k8s.io/release/v1.20.4/bin/linux/amd64/kubectl"
+  KCTF_KUBECTL_HASH="98e8aea149b00f653beeb53d4bd27edda9e73b48fed156c4a0aa1dabe4b1794c"
+  
+  STAT="stat"
+  MKTEMP="mktemp"
+fi
 
 export KCTF_CTF_DIR="$(realpath --no-symlinks "$(dirname "${BASH_SOURCE-$0}")/..")"
 export KCTF_BIN="${KCTF_CTF_DIR}/kctf/bin"
@@ -30,14 +47,14 @@ function _kctf_check_umask {
     _kctf_log_err "umask is too prohibitive. Please set it to 022 when using kctf"
     return 1
   fi
-  if [[ "$(stat "${KCTF_BIN}/kctf-cluster" --format '%a')" -ne "755" ]]; then
+  if [[ "$(${STAT} "${KCTF_BIN}/kctf-cluster" --format '%a')" -ne "755" ]]; then
     _kctf_log_err "${KCTF_BIN}/kctf-cluster has unexpected permissions. Maybe a umask problem during checkout?"
     return 1
   fi
 }
 
 function _kctf_setup_environment {
-  KCTF_CONFIG_DIR="$(mktemp -d --tmpdir kctf.XXXXXXXXXX)"
+  KCTF_CONFIG_DIR="$(${MKTEMP} -d --tmpdir kctf.XXXXXXXXXX)"
   if [[ $? -ne 0 ]]; then
     return 1
   fi
@@ -57,7 +74,8 @@ function _kctf_download_dependencies {
     chmod u+x "${KCTF_BIN}/yq"
   fi
 
-  if [[ ! -x "${KCTF_BIN}/kind" ]]; then
+  if [[ ! -x "${KCTF_BIN}/kind" ]] || ! sha256sum --status -c <(echo "${KCTF_KIND_HASH}  ${KCTF_BIN}/kind"); then
+    rm "${KCTF_BIN}/kind" >/dev/null 2>/dev/null || true
     curl -Lo "${KCTF_BIN}/kind" "${KCTF_KIND_URL}" || return 1
     sha256sum --status -c <(echo "${KCTF_KIND_HASH}  ${KCTF_BIN}/kind") || return 1
     chmod u+x "${KCTF_BIN}/kind"
@@ -112,7 +130,11 @@ function kctf {
       _kctf_set_active_challenge
       shift
       "${KCTF_CTF_DIR}/kctf/bin/kctf-challenge" $@
-      return
+      ret=$?
+      if [[ $ret -ne 0 ]]; then
+        _kctf_log_err "command returned $ret"
+      fi
+      return $ret
       ;;
     cluster)
       shift
@@ -139,7 +161,11 @@ function kctf {
       else
         "${KCTF_CTF_DIR}/kctf/bin/kctf-cluster" $@
       fi
-      return
+      ret=$?
+      if [[ $ret -ne 0 ]]; then
+        _kctf_log_err "command returned $ret"
+      fi
+      return $ret
       ;;
     *)
       _kctf_usage
@@ -199,13 +225,13 @@ function _kctf_set_active_challenge {
   current_dir="${PWD}"
   while [[ "${current_dir}" == "${KCTF_CTF_DIR}"/* ]]; do
     if [[ -e "${current_dir}/challenge.yaml" ]]; then
-      CHALLENGE_NAME=$("${KCTF_BIN}/yq" eval --exit-status '.metadata.name' "${current_dir}/challenge.yaml" 2>/dev/null)
+      CHALLENGE_NAME=$("${KCTF_BIN}/yq" eval --exit-status 'select(.kind == "Challenge") | .metadata.name' "${current_dir}/challenge.yaml" 2>/dev/null)
       if [[ $? -ne 0 ]]; then
         unset CHALLENGE_NAME
       fi
       CHALLENGE_NAMESPACE="default"
-      if "${KCTF_BIN}/yq" eval --exit-status '.metadata.namespace' "${current_dir}/challenge.yaml" >/dev/null 2>/dev/null; then
-        CHALLENGE_NAMESPACE=$("${KCTF_BIN}/yq" eval '.metadata.namespace' "${current_dir}/challenge.yaml" 2>/dev/null)
+      if "${KCTF_BIN}/yq" eval --exit-status 'select(.kind == "Challenge") | .metadata.namespace' "${current_dir}/challenge.yaml" >/dev/null 2>/dev/null; then
+        CHALLENGE_NAMESPACE=$("${KCTF_BIN}/yq" eval 'select(.kind == "Challenge") | .metadata.namespace' "${current_dir}/challenge.yaml" 2>/dev/null)
       fi
       export CHALLENGE_DIR="${current_dir}"
       export CHALLENGE_NAME

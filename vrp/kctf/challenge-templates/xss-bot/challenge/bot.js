@@ -2,8 +2,35 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const net = require('net');
 
+const DOMAIN = process.env.DOMAIN;
+if (DOMAIN == undefined) throw 'domain undefined'
+const REGISTERED_DOMAIN = process.env.REGISTERED_DOMAIN;
+const BLOCK_SUBORIGINS = process.env.BLOCK_SUBORIGINS == "1";
+
+// will only be used if BLOCK_SUBORIGINS is enabled
+const PAC_B64 = Buffer.from(`
+function FindProxyForURL (url, host) {
+  if (host == "${DOMAIN}") {
+    return 'DIRECT';
+  }
+  if (host == "${REGISTERED_DOMAIN}" || dnsDomainIs(host, ".${REGISTERED_DOMAIN}")) {
+    return 'PROXY 127.0.0.1:1';
+  }
+  return 'DIRECT';
+}
+`).toString('base64');
+const puppeter_args = {};
+if (BLOCK_SUBORIGINS) {
+  puppeter_args.headless = false;
+  puppeter_args.args = [
+    '--user-data-dir=/tmp/chrome-userdata',
+    '--breakpad-dump-location=/tmp/chrome-crashes',
+    '--proxy-pac-url=data:application/x-ns-proxy-autoconfig;base64,'+PAC_B64,
+  ];
+}
+
 (async function(){
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch(puppeter_args);
 
   function ask_for_url(socket) {
       socket.state = 'URL';

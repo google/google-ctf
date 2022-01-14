@@ -20,6 +20,12 @@ KCTF_CLOUD_BASE_URL="https://kctf-cloud.appspot.com/v1"
 # owned by kctf-cloud
 KCTF_CLOUD_API_KEY="AIzaSyC7Jgu4e0IygmImZNPmJHrcfZ3lJA9ZrZs"
 
+if [[ "$OSTYPE" =~ ^darwin.* ]]; then
+  GETOPT="$(brew --prefix gnu-getopt)/bin/getopt"
+else
+  GETOPT="getopt"
+fi
+
 function update_gcloud_config {
   _kctf_log "Updating gcloud config."
   ACTIVE_ACCOUNT="$(CLOUDSDK_ACTIVE_CONFIG_NAME= gcloud config get-value core/account 2>/dev/null)"
@@ -27,10 +33,10 @@ function update_gcloud_config {
   if ! gcloud config configurations describe "${CLOUDSDK_ACTIVE_CONFIG_NAME}" >/dev/null 2>/dev/null; then
         gcloud config configurations create --no-activate "${CLOUDSDK_ACTIVE_CONFIG_NAME}" >/dev/null 2>/dev/null || return
   fi
-  gcloud config set core/account "${ACTIVE_ACCOUNT}" >/dev/null 2>/dev/null || return
-  gcloud config set core/project "${PROJECT}" >/dev/null 2>/dev/null || return
-  gcloud config set compute/zone "${ZONE}" >/dev/null 2>/dev/null || return
-  gcloud config set container/cluster "${CLUSTER_NAME}" >/dev/null 2>/dev/null || return
+  gcloud config set core/account "${ACTIVE_ACCOUNT}" >/dev/null || return
+  gcloud config set core/project "${PROJECT}" >/dev/null || return
+  gcloud config set compute/zone "${ZONE}" >/dev/null || return
+  gcloud config set container/cluster "${CLUSTER_NAME}" >/dev/null || return
 }
 
 function set_lastconfig_link {
@@ -146,7 +152,7 @@ function kctf_cluster_create {
 
   OPTS="h"
   LONGOPTS="help,type:,project:,zone:,registry:,cluster-name:,domain-name:,email-address:,start"
-  PARSED=$(getopt --options=$OPTS --longoptions=$LONGOPTS --name "kctf cluster create" -- "$@")
+  PARSED=$(${GETOPT} --options=$OPTS --longoptions=$LONGOPTS --name "kctf cluster create" -- "$@")
   if [[ $? -ne 0 ]]; then
     kctf_cluster_create_usage
     return 1
@@ -320,13 +326,121 @@ EOF
   echo "${CONFIG_NAME}"
 }
 
+function kctf_cluster_get_ip_ranges {
+  if [[ "${CLUSTER_TYPE}" != "gce" ]]; then
+    _kctf_log_err "this command is only supported for GCE clusters"
+    return
+  fi
+
+  get_cloud_armor_policy || return
+  _kctf_log "Current IP range: \"$ret\""
+}
+
+function kctf_cluster_ip_ranges_usage {
+  echo "usage: kctf cluster set-src-ip-ranges ranges" >&2
+  echo "  -h|--help       print this help" >&2
+  echo "  ranges          ip ranges to allow of the form 1.1.1.1/32,2.2.2.0/24" >&2
+}
+
+function kctf_cluster_ip_ranges {
+  if [[ "${CLUSTER_TYPE}" != "gce" ]]; then
+    _kctf_log_err "this command is only supported for GCE clusters"
+    return
+  fi
+
+  OPTS="h"
+  LONGOPTS="help"
+  PARSED=$(${GETOPT} --options=$OPTS --longoptions=$LONGOPTS --name "kctf cluster set-src-ip-ranges" -- "$@")
+  if [[ $? -ne 0 ]]; then
+    kctf_cluster_ip_ranges_usage
+    return 1
+  fi
+  eval set -- "$PARSED"
+
+  while true; do
+    case "$1" in
+      -h|--help)
+        kctf_cluster_ip_ranges_usage
+        return 1
+        ;;
+      --)
+        shift
+        break
+        ;;
+      *)
+        _kctf_log_err "Unrecognized argument \"$1\"."
+        kctf_cluster_ip_ranges_usage
+        return 1
+        ;;
+    esac
+  done
+
+  if [[ $# -ne 1 ]]; then
+    _kctf_log_err "kctf cluster set-src-ip-ranges: expecting a single range argument"
+    kctf_cluster_ip_ranges_usage
+    return 1
+  fi
+
+  RANGES="$1"
+
+  # update the cloud armor policy
+  set_cloud_armor_policy "${RANGES}" || return
+
+  # stop the operator
+  "${KCTF_BIN}/kubectl" delete -f "${KCTF_CTF_DIR}/kctf/resources/operator.yaml" || return
+
+  start_operator_gce || return
+}
+
+function start_operator_gce {
+  get_cloud_armor_policy || return
+  RANGES=$ret
+  SUFFIX=$(echo "${PROJECT}-${CLUSTER_NAME}-${ZONE}" | sha1sum)
+  POLICY_NAME="kctf-policy-${SUFFIX:0:16}"
+  # restart the operator with the new range
+  "${KCTF_BIN}/yq" eval "(((.|select(has(\"spec\"))).spec|select(has(\"template\"))).template.spec.containers[0].env[] | select(.name == \"ALLOWED_IPS\")).value = \"${RANGES}\"" "${KCTF_CTF_DIR}/kctf/resources/operator.yaml" \
+    | "${KCTF_BIN}/yq" eval "(((.|select(has(\"spec\"))).spec|select(has(\"template\"))).template.spec.containers[0].env[] | select(.name == \"SECURITY_POLICY\")).value = \"${POLICY_NAME}\"" - \
+    | "${KCTF_BIN}/kubectl" apply -f - || return
+}
+
+function set_cloud_armor_policy {
+  SUFFIX=$(echo "${PROJECT}-${CLUSTER_NAME}-${ZONE}" | sha1sum)
+  POLICY_NAME="kctf-policy-${SUFFIX:0:16}"
+  gcloud compute security-policies rules update --action allow --security-policy "${POLICY_NAME}" --src-ip-ranges "$1" 0 || return
+}
+
+function get_cloud_armor_policy {
+  SUFFIX=$(echo "${PROJECT}-${CLUSTER_NAME}-${ZONE}" | sha1sum)
+  POLICY_NAME="kctf-policy-${SUFFIX:0:16}"
+  ret=$(gcloud compute security-policies rules describe --security-policy "${POLICY_NAME}" 0 --format 'value[delimiter=","](match.config.srcIpRanges)')
+}
+
+function create_cloud_armor_policy {
+  SUFFIX=$(echo "${PROJECT}-${CLUSTER_NAME}-${ZONE}" | sha1sum)
+  POLICY_NAME="kctf-policy-${SUFFIX:0:16}"
+  if [[ -z $(gcloud compute security-policies list --filter "name="${POLICY_NAME}"" --format 'get(name)') ]]; then
+    gcloud compute security-policies create "${POLICY_NAME}" || return
+    gcloud compute security-policies rules create --action allow --security-policy "${POLICY_NAME}" --src-ip-ranges "0.0.0.0/0" 0 || return
+
+    # make sure the default policy (2147483647) is deny
+    gcloud compute security-policies rules update --action deny-404 --security-policy "${POLICY_NAME}" 2147483647 || return
+
+    set_cloud_armor_policy "0.0.0.0/0" || return
+  fi
+}
+
 function create_operator {
   # Creating CRD, rbac and operator
-  "${KCTF_BIN}/kubectl" apply -f "${KCTF_CTF_DIR}/kctf/resources/kctf.dev_challenges_crd.yaml" || return
-  "${KCTF_BIN}/kubectl" apply -f "${KCTF_CTF_DIR}/kctf/resources/rbac.yaml" || return
-  "${KCTF_BIN}/kubectl" apply -f "${KCTF_CTF_DIR}/kctf/resources/operator.yaml" || return
-
-  OPERATOR_IMAGE=$("${KCTF_BIN}/yq" eval '.spec.template.spec.containers[0].image' "${KCTF_CTF_DIR}/kctf/resources/operator.yaml")
+  "${KCTF_BIN}/kubectl" apply -f "${KCTF_CTF_DIR}/kctf/resources/kctf.dev_challenges.yaml" || return
+  "${KCTF_BIN}/kubectl" apply -f "${KCTF_CTF_DIR}/kctf/resources/kctf-operator-metrics-reader_rbac.authorization.k8s.io_v1_clusterrole.yaml" || return
+  "${KCTF_BIN}/kubectl" apply -f "${KCTF_CTF_DIR}/kctf/resources/kctf-operator-manager-config_v1_configmap.yaml" || return
+  "${KCTF_BIN}/kubectl" apply -f "${KCTF_CTF_DIR}/kctf/resources/kctf-operator-controller-manager-metrics-service_v1_service.yaml" || return
+  if [[ "$CLUSTER_TYPE" == "gce" ]]; then
+    start_operator_gce
+  else
+    "${KCTF_BIN}/kubectl" apply -f "${KCTF_CTF_DIR}/kctf/resources/operator.yaml" || return
+  fi
+  OPERATOR_IMAGE=$("${KCTF_BIN}/yq" eval '.spec.template.spec.containers[].image | select(.=="*kctf-operator*")' "${KCTF_CTF_DIR}/kctf/resources/operator.yaml")
   if [[ $? -ne 0 ]]; then
     echo "Failed to find the operator image." >&2
     return 1
@@ -334,12 +448,13 @@ function create_operator {
 
   # The operator needs to create some subresources, e.g. the gcsfuse service account
   for i in {1..100}; do
-    "${KCTF_BIN}/kubectl" get pods --namespace kctf-system -o=jsonpath="{.items[?(@.spec.containers[0].image==\"${OPERATOR_IMAGE}\")].status.containerStatuses[0].ready}" | grep "true" && break
+    "${KCTF_BIN}/kubectl" get pods --namespace kctf-operator-system -o=jsonpath='{.items[].status.containerStatuses[?(@.ready==true)].imageID}' | grep "${OPERATOR_IMAGE}" && break
     if [ "$i" == "100" ]; then
-      _kctf_log_err "Couldn't find a kctf-operator pod with status ready=true and image=\"${OPERATOR_IMAGE}\" after 5 minutes"
-      "${KCTF_BIN}/kubectl" get pods --namespace kctf-system -o=yaml >&2
+      _kctf_log_err "Couldn't find a kctf-operator pod with status ready=true and image \"${OPERATOR_IMAGE}\" after 5 minutes"
+      "${KCTF_BIN}/kubectl" get pods --namespace kctf-operator-system -o=yaml >&2
       exit 1
     fi
+    echo -n '.'
     sleep 3
   done
 }
@@ -400,12 +515,12 @@ function kctf_cluster_start_gce {
 
   EXISTING_ROUTER=$(gcloud compute routers list --filter "name=kctf-${CLUSTER_NAME}-nat-router" --format 'get(name)')
   if [ -z "${EXISTING_ROUTER}" ]; then
-    gcloud compute routers create "kctf-${CLUSTER_NAME}-nat-router" --network="${NETWORK}" --region "${ZONE::-2}" || return
+    gcloud compute routers create "kctf-${CLUSTER_NAME}-nat-router" --network="${NETWORK}" --region "${ZONE::${#ZONE}-2}" || return
   fi
 
-  EXISTING_NAT=$(gcloud compute routers nats list --router "kctf-${CLUSTER_NAME}-nat-router" --router-region "${ZONE::-2}" --format 'get(name)')
+  EXISTING_NAT=$(gcloud compute routers nats list --router "kctf-${CLUSTER_NAME}-nat-router" --router-region "${ZONE::${#ZONE}-2}" --format 'get(name)')
   if [ -z "${EXISTING_NAT}" ]; then
-    gcloud compute routers nats create "kctf-${CLUSTER_NAME}-nat-config" --router-region "${ZONE::-2}" --router kctf-${CLUSTER_NAME}-nat-router --nat-all-subnet-ip-ranges --auto-allocate-nat-external-ips || return
+    gcloud compute routers nats create "kctf-${CLUSTER_NAME}-nat-config" --router-region "${ZONE::${#ZONE}-2}" --router kctf-${CLUSTER_NAME}-nat-router --nat-all-subnet-ip-ranges --auto-allocate-nat-external-ips || return
   fi
 
   "${KCTF_BIN}/kubectl" create namespace "kctf-system" --dry-run=client -oyaml | "${KCTF_BIN}/kubectl" apply -f - >&2 || return
@@ -448,15 +563,15 @@ function kctf_cluster_start_gce {
   # Cloud DNS
 
   if [ ! -z "${DOMAIN_NAME}" ]; then
-    ZONE_NAME="$(echo ${DOMAIN_NAME} | sed 's/[.]/--/g')-dns-zone"
-    
-    DNS_ZONE=$(gcloud dns managed-zones list --filter "name:${ZONE_NAME}" --format 'get(name)')
-    if [ -z "${DNS_ZONE}" ]; then
+    ZONE_NAME=$(gcloud dns managed-zones list --filter "dns_name:${DOMAIN_NAME}." --format 'get(name)')
+
+    if [ -z "${ZONE_NAME}" ]; then
+      ZONE_NAME="kctf-$(echo ${DOMAIN_NAME} | sed 's/[.]/--/g')"
       _kctf_log "creating new managed-zone \"${ZONE_NAME}\""
       gcloud dns managed-zones create "${ZONE_NAME}" --description "DNS Zone for ${DOMAIN_NAME}" --dns-name="${DOMAIN_NAME}." || return
       soa_ttl="$(gcloud dns record-sets list --zone=${ZONE_NAME} --type=SOA --name="${DOMAIN_NAME}." --format='get(ttl)')"
       if [[ $? -ne 0 ]]; then return 1; fi
-      soa_data="$(gcloud dns record-sets list --zone=${ZONE_NAME} --type=SOA --name="${DOMAIN_NAME}." --format='get(DATA)')"
+      soa_data="$(gcloud dns record-sets list --zone=${ZONE_NAME} --type=SOA --name="${DOMAIN_NAME}." --format='get(rrdatas)')"
       if [[ $? -ne 0 ]]; then return 1; fi
       new_soa=($soa_data)
       # update the serial no
@@ -528,6 +643,8 @@ function kctf_cluster_start_gce {
     "${KCTF_BIN}/kubectl" create configmap --namespace kctf-system external-dns --from-literal=DOMAIN_NAME=${DOMAIN_NAME} --from-literal=EMAIL_ADDRESS=${EMAIL_ADDRESS:-} --dry-run=client -o yaml | "${KCTF_BIN}/kubectl" apply -f - || return
   fi
 
+  create_cloud_armor_policy || return
+
   create_operator || return
 }
 
@@ -565,7 +682,7 @@ function kctf_cluster_stop_gce {
   sleep 20
 
   CLOUDSDK_CORE_DISABLE_PROMPTS=1 gcloud container clusters delete ${CLUSTER_NAME}
-  gcloud compute routers delete "kctf-${CLUSTER_NAME}-nat-router" --region "${ZONE::-2}" --quiet
+  gcloud compute routers delete "kctf-${CLUSTER_NAME}-nat-router" --region "${ZONE::${#ZONE}-2}" --quiet
 
   SUFFIX=$(echo "${PROJECT}-${CLUSTER_NAME}-${ZONE}" | sha1sum)
 
@@ -633,7 +750,7 @@ function kctf_cluster_resize {
 
   OPTS="h"
   LONGOPTS="help,machine-type:,min-nodes:,max-nodes:,num-nodes:,pool-name:,old-pool"
-  PARSED=$(getopt --options=$OPTS --longoptions=$LONGOPTS --name "kctf chal create" -- "$@")
+  PARSED=$(${GETOPT} --options=$OPTS --longoptions=$LONGOPTS --name "kctf chal create" -- "$@")
   if [[ $? -ne 0 ]]; then
     kctf_cluster_resize_usage
     exit 1
@@ -747,12 +864,14 @@ function kctf_cluster_resize {
 function kctf_cluster_usage {
   echo -e "usage: kctf cluster command" >&2
   echo -e "available commands:" >&2
-  echo -e "  create: create a new cluster config" >&2
-  echo -e "  list:   list available cluster configs" >&2
-  echo -e "  load:   load an existing cluster config" >&2
-  echo -e "  start:  start the cluster" >&2
-  echo -e "  stop:   stop the cluster" >&2
-  echo -e "  resize: resize the cluster" >&2
+  echo -e "  create:            create a new cluster config" >&2
+  echo -e "  list:              list available cluster configs" >&2
+  echo -e "  load:              load an existing cluster config" >&2
+  echo -e "  start:             start the cluster" >&2
+  echo -e "  stop:              stop the cluster" >&2
+  echo -e "  resize:            resize the cluster" >&2
+  echo -e "  set-src-ip-ranges: allow ranges of IPs to access the services" >&2
+  echo -e "  get-src-ip-ranges: print the current allowed IP ranges" >&2
 }
 
 function check_cluster_name {
@@ -801,6 +920,14 @@ case "$1" in
   load)
     shift
     kctf_cluster_load $@
+    ;;
+  set-src-ip-ranges)
+    shift
+    kctf_cluster_ip_ranges $@
+    ;;
+  get-src-ip-ranges)
+    shift
+    kctf_cluster_get_ip_ranges $@
     ;;
   *)
     _kctf_log_err "unknown command"

@@ -24,3 +24,4 @@ spec:
               defaultMode: 0555
               secretName: full-chain-flag
               optional: true
+  image: eu.gcr.io/gctf-vrp/full-chain-challenge:cccdac6eed8cf69db501c02e3595c64221391647a98feda02273c504d408cea6

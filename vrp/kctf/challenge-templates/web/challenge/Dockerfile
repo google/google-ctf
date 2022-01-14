@@ -29,6 +29,9 @@ RUN curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add
     && apt-get install -yq --no-install-recommends nodejs socat \
     && rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p /mnt/disks/sessions
+RUN mkdir -p /mnt/disks/uploads
+
 VOLUME /mnt/disks/sessions
 VOLUME /mnt/disks/uploads
 
@@ -37,7 +40,7 @@ COPY web-servers /web-servers
 
 COPY flag /
 
-FROM gcr.io/kctf-docker/challenge@sha256:6dd60da626bc43bf3175d9d7436006db5acc7710d5d1b7006ab53e718fe51e40
+FROM gcr.io/kctf-docker/challenge@sha256:d884e54146b71baf91603d5b73e563eaffc5a42d494b1e32341a5f76363060fb
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends tzdata apache2 \

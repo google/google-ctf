@@ -12,13 +12,15 @@ The basic steps when preparing a challenge are:
 
 ## Sandboxing
 
-In order to make it possible to have RCE-style web challenges, kCTF provides two ways to sandbox a web server:
+Sandboxing is only necessary for challenges that give players RCE-type of access. If a challenge does not provide such access, then it is reasonable to just use a normal HTTP server out of the box listening on port 1337, without any additonal sandboxing.
+
+For challenges that give users RCE-level access, it is then necessary to sandbox every player. In order to make that possible, kCTF provides two ways to sandbox a web server:
  1. **CGI-sandbox**: You can configure PHP (or any other CGI) to be sandboxed.
  2. **Proxy sandbox**: You can configure an HTTP server that sandboxes every HTTP request.
 
 A Proxy sandbox is a bit expensive, it starts an HTTP server on every TCP connection, hence it is a bit slow. A CGI sandbox is cheaper, and it just calls the normal CGI endpoint but with nsjail.
 
-The template challenge has an example of both (NodeJS running as a proxy, and PHP running as CGI). It is recommended that static resources are served with only Apache, as to save CPU and RAM.
+The template challenge has an example of both (NodeJS running as a proxy, and PHP running as CGI). It is recommended that static resources are served with only Apache, as to save CPU and RAM. This can be accomplished by configuring apache to redirect certain sub-paths to the sandboxed web server, but to serve directly all other paths.
 
 ## Directory layout
 
@@ -38,22 +40,23 @@ If you would like to have a shared directory (for sessions, or uploads), you can
 ```yaml
 spec:
   persistentVolumeClaims:
-  - name: $PUT_THE_NAME_OF_THE_CHALLENGE_HERE
-    size: 21Gi
+  - $PUT_THE_NAME_OF_THE_CHALLENGE_HERE
   podTemplate:
-    containers:
-    - name: challenge
-      volumeMounts:
-      - name: gcsfuse
-        subPath: sessions # this this a folder inside volume
-        mountPath: /mnt/disks/sessions
-      - name: gcsfuse
-        subPath: uploads
-        mountPath: /mnt/disks/uploads
-    volumes:
-    - name: gcsfuse
-      persistentVolumeClaim:
-        claimName: $PUT_THE_NAME_OF_THE_CHALLENGE_HERE
+    template:
+      spec:
+        containers:
+        - name: challenge
+          volumeMounts:
+          - name: gcsfuse
+            subPath: sessions # this this a folder inside volume
+            mountPath: /mnt/disks/sessions
+          - name: gcsfuse
+            subPath: uploads
+            mountPath: /mnt/disks/uploads
+        volumes:
+        - name: gcsfuse
+          persistentVolumeClaim:
+            claimName: $PUT_THE_NAME_OF_THE_CHALLENGE_HERE
 ```
 
 This will mount a file across all challenges in that directory. You can test this setup on a remote cluster using the PHP/CGI sandbox.

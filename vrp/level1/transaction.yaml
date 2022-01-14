@@ -1,0 +1,17 @@
+---
+additions:
+- kind: dns#resourceRecordSet
+  name: vrp2.ctfcompetition.com.
+  rrdatas:
+  - ns-cloud-c1.googledomains.com. cloud-dns-hostmaster.google.com. 2 21600 3600 259200
+    300
+  ttl: 21600
+  type: SOA
+deletions:
+- kind: dns#resourceRecordSet
+  name: vrp2.ctfcompetition.com.
+  rrdatas:
+  - ns-cloud-c1.googledomains.com. cloud-dns-hostmaster.google.com. 1 21600 3600 259200
+    300
+  ttl: 21600
+  type: SOA

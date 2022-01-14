@@ -1,8 +1,8 @@
 {
   "name": "session",
   "value": "aiy3Uushcha4Zuzu",
-  "domain": "zero-entropy.de",
-  "url": "https://zero-entropy.de/",
+  "domain": "DOMAIN_SET_IN_DOCKERFILE",
+  "url": "https://DOMAIN_SET_IN_DOCKERFILE/",
   "path": "/",
   "httpOnly": true,
   "secure": true

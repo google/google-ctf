@@ -99,7 +99,7 @@ GCP_REGISTRIES="gcr.io asia.gcr.io eu.gcr.io us.gcr.io"
 
 function _kctf_complete_cluster() {
   if [ "$COMP_CWORD" == "2" ]; then
-    COMPREPLY=($(compgen -W "--help start stop resize create load list" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+    COMPREPLY=($(compgen -W "--help start stop resize create load list set-src-ip-ranges get-src-ip-ranges" -- "${COMP_WORDS[${COMP_CWORD}]}"))
     return
   fi
 
@@ -157,6 +157,9 @@ function _kctf_complete_cluster() {
       return 0
       ;;
     list)
+      return 0
+      ;;
+    set-src-ip-ranges)
       return 0
       ;;
     *)

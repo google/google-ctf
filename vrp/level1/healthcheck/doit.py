@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pwnlib
+import pwnlib.tubes
 
 def handle_pow(r):
     print(r.recvuntil(b'python3 '))

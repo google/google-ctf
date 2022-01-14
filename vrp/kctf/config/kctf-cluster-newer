@@ -1,0 +1,7 @@
+CLUSTER_TYPE=gce
+PROJECT=gctf-vrp
+ZONE=europe-west4-b
+REGISTRY=eu.gcr.io
+CLUSTER_NAME=kctf-cluster-newer
+DOMAIN_NAME=vrp2.ctfcompetition.com
+EMAIL_ADDRESS=

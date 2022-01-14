@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM gcr.io/kctf-docker/challenge@sha256:6dd60da626bc43bf3175d9d7436006db5acc7710d5d1b7006ab53e718fe51e40
+FROM gcr.io/kctf-docker/challenge@sha256:d884e54146b71baf91603d5b73e563eaffc5a42d494b1e32341a5f76363060fb
 
 RUN apt-get update && apt-get install -y gnupg2
 
@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y gnupg2
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
     && apt-get update \
-    && apt-get install -yq --no-install-recommends \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
         ca-certificates \
         fonts-liberation \
         libappindicator3-1 \
@@ -61,16 +61,41 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
         lsb-release \
         wget \
         xdg-utils \
-       nodejs npm \
+        nodejs npm \
     && rm -rf /var/lib/apt/lists/*
 
 COPY bot.js /home/user/
 COPY cookie /home/user/
 RUN cd /home/user && npm install puppeteer
 
+ENV DOMAIN="www.example.com"
+# Hosting multiple web challenges same-site to each other can lead to
+# unintended solutions. E.g. an xss on a.foo.com will be able to overwrite
+# cookies on b.foo.com.
+# To prevent this, we can block chrome from accessing any subdomains under
+# foo.com except for the real challenge domain using a PAC script.
+# Unfortunately, PAC will not work in chrome headless mode, so this will use
+# more resources.
+ENV BLOCK_SUBORIGINS="1"
+ENV REGISTERED_DOMAIN="example.com"
+
+RUN if [ "${BLOCK_SUBORIGINS}" = "1" ]; then \
+      apt-get update \
+      && apt-get install -yq --no-install-recommends xvfb \
+      && rm -rf /var/lib/apt/lists/*; \
+    fi
+RUN sed -i -e "s/DOMAIN_SET_IN_DOCKERFILE/${DOMAIN}/" /home/user/cookie
+
 CMD kctf_setup && \
     mount -t tmpfs none /tmp && \
-    while true; do kctf_drop_privs /usr/bin/node /home/user/bot.js; done & \
+    mkdir /tmp/chrome-userdata && chmod o+rwx /tmp/chrome-userdata && \
+    while true; do \
+      if [ "${BLOCK_SUBORIGINS}" = "1" ]; then \
+        kctf_drop_privs env BLOCK_SUBORIGINS="${BLOCK_SUBORIGINS}" DOMAIN="${DOMAIN}" REGISTERED_DOMAIN="${REGISTERED_DOMAIN}" xvfb-run /usr/bin/node /home/user/bot.js; \
+      else \
+        kctf_drop_privs env BLOCK_SUBORIGINS="${BLOCK_SUBORIGINS}" DOMAIN="${DOMAIN}" REGISTERED_DOMAIN="${REGISTERED_DOMAIN}" /usr/bin/node /home/user/bot.js; \
+      fi; \
+    done & \
     kctf_drop_privs \
     socat \
       TCP-LISTEN:1337,reuseaddr,fork \

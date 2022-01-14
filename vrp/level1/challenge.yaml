@@ -9,7 +9,7 @@ spec:
     public: true
   healthcheck:
     enabled: true
-    image: eu.gcr.io/gctf-vrp/kctf-healthcheck:c0af62a229b7857b12ed810105554ca37bb04a62130c83d0c2baab1d2ffb1eeb
+    image: eu.gcr.io/gctf-vrp/kctf-healthcheck:ba3b7b5b6e67d1cf29e43748113a4ad7f9b5c81f5c2e22e28cd0d093cf2d4cde
   podTemplate:
     template:
       spec:
@@ -31,4 +31,4 @@ spec:
               defaultMode: 0555
               secretName: kctf-flag
               optional: true
-  image: eu.gcr.io/gctf-vrp/kctf-challenge:f25a1507160d5fd9c984e1eddb5d748ded46bd19ca4b1489331a6c2c333db8c3
+  image: eu.gcr.io/gctf-vrp/kctf-challenge:425670f084e0344fddd192efc0ce8b16c5d72286c27705cc591b9ff2b000b3c3
