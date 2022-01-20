@@ -1,0 +1,56 @@
+{
+  "000-important": "Important: Players/challenges are auto-generated! Don't change then here (changes will be overwritten).",
+  "challenges": [
+    {
+      "flag": "5fa9dacc066a8d6208a27a49ee1af24e143f4d059dfa587c9e96b0b9a3a99015",
+      "id": "challenge-0",
+      "text": "The flag is: HCL8{ATurboControllerWouldHaveBeenNice}\n"
+    },
+    {
+      "flag": "3510080d810c5369ba06f40c1492b7b284b57061ea8829169b977cd378c3de67",
+      "id": "challenge-1",
+      "text": "The flag is: HCL8{Don'tLook&UWon'tFall}\n"
+    },
+    {
+      "flag": "8d632e6789cdc0e4c9013ca07068782c8d61b89b4ab4178515cc0efb71ff4101",
+      "id": "challenge-2",
+      "text": "The flag is: HCL8{WontFix(Infeasible)}\n"
+    },
+    {
+      "flag": "aa727069207ae0d56798d8667842b7eabd58e1e4fa1457f672f41e167d6589ad",
+      "id": "challenge-3",
+      "text": "The flag is: HCL8{BeatTheClockByStoppingIt!}\n"
+    },
+    {
+      "flag": "73ac16d73ab7c17f6f50e3670f87b90b1a7644653bc59cd19ab282c684a8ab64",
+      "id": "challenge-4",
+      "text": "The flag is: HCL8{PlatformsRAlsoGround}\n"
+    },
+    {
+      "flag": "128e55918a00d9f508808be80863ab5b3d2d37ac00501ba0913cd84d21f4c368",
+      "id": "challenge-5",
+      "text": "The flag is: HCL8{ItWasFramePerfect!}\n"
+    },
+    {
+      "flag": "9942656a43ccd9cfd3c18a21dffede60fc0651a6411877c5a320eb75e029a5e7",
+      "id": "challenge-6",
+      "text": "The flag is: HCL8{There&BackAgain}\n"
+    }
+  ],
+  "fw": {
+    "filter_by_ip": false,
+    "filter_list": "allowed_ips.txt"
+  },
+  "map": {
+    "file": "map.json",
+    "path": "map"
+  },
+  "players": {
+    "test": {
+      "frameSet": "player",
+      "hash": "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
+      "name": "test",
+      "testOnly": true
+    }
+  }
+}

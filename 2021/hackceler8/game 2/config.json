@@ -1,0 +1,56 @@
+{
+  "000-important": "Important: Players/challenges are auto-generated! Don't change then here (changes will be overwritten).",
+  "challenges": [
+    {
+      "flag": "6630a3d53538007dd1756088f24ea58be4594f6e3b08a12ba47c7608ab9a4191",
+      "id": "challenge-0",
+      "text": "The flag is: HCL8{IWasAbsolutelyNeverHereTrustMe}\n"
+    },
+    {
+      "flag": "957e872298813a90e3e5fcc9fc644884c57c13844b5c626d03def3f1b81878cd",
+      "id": "challenge-1",
+      "text": "The flag is: HCL8{WhatHappenedToTheLion'sHead?}\n"
+    },
+    {
+      "flag": "1cf2b9b3162ab05f4a63909ae2f8351d66c0de282eca16339713bf1cbe6cf014",
+      "id": "challenge-2",
+      "text": "The flag is: HCL8{BindJump2WhatNow?}\n"
+    },
+    {
+      "flag": "c8065659e8de78de453d68951cd1e8783facc8ffc07092d664ac6aa34464b9dc",
+      "id": "challenge-3",
+      "text": "The flag is: HCL8{TODO(me):SaveEventState}\n"
+    },
+    {
+      "flag": "d610a8570896b09a4f70e4bfe23027cf7511d18974bed1e23a6659b20c627939",
+      "id": "challenge-4",
+      "text": "The flag is: HCL8{WaitWhereDidItGo?}\n"
+    },
+    {
+      "flag": "ff3d8b86f86483ba31468af5691ac00941d64edea5c677dd0e96438b7f2ee6f5",
+      "id": "challenge-5",
+      "text": "The flag is: HCL8{NoRunning|Jumping!}\n"
+    },
+    {
+      "flag": "6cab59b602bd6a70ad1bedfc909ed6286be189bf803f18152d4462b8853a88b3",
+      "id": "challenge-6",
+      "text": "The flag is: HCL8{Continue?ResetMenuLoad!}\n"
+    }
+  ],
+  "fw": {
+    "filter_by_ip": false,
+    "filter_list": "allowed_ips.txt"
+  },
+  "map": {
+    "file": "map.json",
+    "path": "map"
+  },
+  "players": {
+    "test": {
+      "frameSet": "player",
+      "hash": "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
+      "name": "test",
+      "testOnly": true
+    }
+  }
+}

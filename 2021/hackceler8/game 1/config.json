@@ -1,0 +1,56 @@
+{
+  "000-important": "Important: Players/challenges are auto-generated! Don't change then here (changes will be overwritten).",
+  "challenges": [
+    {
+      "flag": "a8fdc1498ab6e91721756de260c1de53f1377ccbb85715cc86cd5586c5e578bb",
+      "id": "challenge-0",
+      "text": "The flag is: HCL8{HeyGameCodingIsHardOK?}\n"
+    },
+    {
+      "flag": "039b32ce6ddb5e4c5040689f2eb16a9059c6c2f7174d6d0d2d513a1ec7786511",
+      "id": "challenge-1",
+      "text": "The flag is: HCL8{PrematureOptimizationGivesFlags}\n"
+    },
+    {
+      "flag": "97dc3b0a1f695ae2c9a5ce14310327636420aaa974040364d3efe63aa409fe03",
+      "id": "challenge-2",
+      "text": "The flag is: HCL8{JustLikeInDoom!OrWasItQuake}\n"
+    },
+    {
+      "flag": "3966439bdbc176f9810b915e06145d401bdb00c84158715faaa71f234e5959fe",
+      "id": "challenge-3",
+      "text": "The flag is: HCL8{ThatZ3Wasn'tSoUsefulHuh?}\n"
+    },
+    {
+      "flag": "7cdd8c16f5de416446391dd60548b63ce2c0fb085f7602a68535f36ce1f34234",
+      "id": "challenge-4",
+      "text": "The flag is: HCL8{ClickedyClickClick}\n"
+    },
+    {
+      "flag": "aecdd29d2e3fa5d6bdfa3cc0a4f6f6e99684e9e51443929c649d6902cbe9c24b",
+      "id": "challenge-5",
+      "text": "The flag is: HCL8{PureSkillNoHack}\n"
+    },
+    {
+      "flag": "8638d8cfdcec774eac30184d5e34024e1be40ea0f3c52f4ebc3162fa6e55b6d1",
+      "id": "challenge-6",
+      "text": "The flag is: HCL8{MoreOfAMemoryGameThanATask}\n"
+    }
+  ],
+  "fw": {
+    "filter_by_ip": false,
+    "filter_list": "allowed_ips.txt"
+  },
+  "map": {
+    "file": "map.json",
+    "path": "map"
+  },
+  "players": {
+    "test": {
+      "frameSet": "player",
+      "hash": "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
+      "name": "test",
+      "testOnly": true
+    }
+  }
+}

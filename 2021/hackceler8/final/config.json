@@ -1,0 +1,57 @@
+{
+  "000-important": "Important: Players/challenges are auto-generated! Don't change then here (changes will be overwritten).",
+  "challenges": [
+    {
+      "flag": "b0be44ea16787cf154fe52c91cfd923ef0c252289191433019e565ffe7457e5a",
+      "id": "challenge-0",
+      "text": "The flag is: HCL8{TheGroundWasLike,RightThere.}\n"
+    },
+    {
+      "flag": "dc2d53bab1c3124ec45d487955d1bf996b671962bd67cf1f6b770de1f3679a98",
+      "id": "challenge-1",
+      "text": "The flag is: HCL8{OutOfQuota:PartialSaveOnly}\n"
+    },
+    {
+      "flag": "d94d814cd58673b6ce3142953122e6af9e226723378cce890506318e670cd00f",
+      "id": "challenge-2",
+      "text": "The flag is: HCL8{GlitchOrRNGPickAndChoose-WhateverGetsYouTheFlag!}\n"
+    },
+    {
+      "flag": "035d42fbb66e682ba1bb7effa36172a1270cc4d4a1989933cf7c97eac9dbc27d",
+      "id": "challenge-3",
+      "text": "The flag is: HCL8{ClippyWouldBeSoProud!}\n"
+    },
+    {
+      "flag": "c7670c2faa6d4bffaf50eeb8cbad38f8a4d4fa710c093edd3652e9e45f7a5a55",
+      "id": "challenge-4",
+      "text": "The flag is: HCL8{DidYouKnowItsSolvableWith4Keys?}\n"
+    },
+    {
+      "flag": "412def84d5a8b2b766326792ac40f8f44b874569b42052ef27406a2da7807a36",
+      "id": "challenge-5",
+      "text": "The flag is: HCL8{PressKToSkipCutscene-We'reNotHere4TheStory}\n"
+    },
+    {
+      "flag": "a731b561cd6263f663d1eab5a486edc94e6e9a8764c30ebe1af980275bb87944",
+      "id": "challenge-6",
+      "text": "The flag is: HCL8{Don'tTryThisClipAtHome}\n"
+    }
+  ],
+  "fw": {
+    "filter_by_ip": false,
+    "filter_list": "allowed_ips.txt"
+  },
+  "map": {
+    "file": "map.json",
+    "path": "map"
+  },
+  "players": {
+    "test": {
+      "frameSet": "player",
+      "hash": "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
+      "name": "test",
+      "testOnly": true
+    }
+  },
+  "rng_seed": "GixmW"
+}

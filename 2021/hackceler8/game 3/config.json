@@ -1,0 +1,56 @@
+{
+  "000-important": "Important: Players/challenges are auto-generated! Don't change then here (changes will be overwritten).",
+  "challenges": [
+    {
+      "flag": "5561be121a6fb61a2c35bfe8f2540fb865821ec26afaffde96c57ea79a18b9b2",
+      "id": "challenge-0",
+      "text": "The flag is: HCL8{AndAsAlways,HaveANiceDay.}\n"
+    },
+    {
+      "flag": "7b6f72bb416a4c9356f0e34d73260ca70967a040922cc5810a0bf12dc9cb162f",
+      "id": "challenge-1",
+      "text": "The flag is: HCL8{WhatIfThePlatformsCouldn'tSeeYouEither?}\n"
+    },
+    {
+      "flag": "a4eb9cd816d397e3acd04a7bd02d3b86845cf108abf0d4db3bc4d1ff9402d3f6",
+      "id": "challenge-2",
+      "text": "The flag is: HCL8{CloseIsAsGoodAsOnRight?}\n"
+    },
+    {
+      "flag": "529fba9112b42fd4888cbf4ff01b8bc2e570d3b030e89e6fd1bf2fe8706b3d37",
+      "id": "challenge-3",
+      "text": "The flag is: HCL8{RollTheDiceJustOneMoreTime}\n"
+    },
+    {
+      "flag": "8488cea8dd8a8c89ece8f7265a7dbc4830a79c8790ff67425f132c43560133af",
+      "id": "challenge-4",
+      "text": "The flag is: HCL8{It'sLikeBungeeJumping}\n"
+    },
+    {
+      "flag": "ca0837b52f961bbd27ff2a44873d57e2fa2be3de8c13155a39fa37c1ed4a17a4",
+      "id": "challenge-5",
+      "text": "The flag is: HCL8{No,Nothing2Declare!}\n"
+    },
+    {
+      "flag": "7f75fa3fe540d79acce53d5348de80aa3a03b3266a56f8b815669784969def66",
+      "id": "challenge-6",
+      "text": "The flag is: HCL8{1StepBackTwoForward}\n"
+    }
+  ],
+  "fw": {
+    "filter_by_ip": false,
+    "filter_list": "allowed_ips.txt"
+  },
+  "map": {
+    "file": "map.json",
+    "path": "map"
+  },
+  "players": {
+    "test": {
+      "frameSet": "player",
+      "hash": "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
+      "name": "test",
+      "testOnly": true
+    }
+  }
+}
