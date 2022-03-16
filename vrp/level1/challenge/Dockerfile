@@ -16,8 +16,8 @@ FROM ubuntu:20.04 as chroot
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y build-essential curl wget git python3 netcat socat gdb
 RUN /usr/sbin/useradd --no-create-home -u 1000 user
 
-RUN touch /etc/node-os-release /etc/node-image
-RUN mkdir /node-boot
+RUN touch /etc/node-os-release
+RUN mkdir /node-boot /etc/node-image
 
 COPY chal /home/user/
 
