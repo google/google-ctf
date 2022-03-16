@@ -4195,6 +4195,18 @@ rules:
   - update
   - watch
 - apiGroups:
+  - cloud.google.com
+  resources:
+  - backendconfigs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
   - ""
   resources:
   - configmaps
@@ -4328,6 +4340,18 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - networking.gke.io
+  resources:
+  - managedcertificates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
   - networking.k8s.io
   resources:
@@ -4519,8 +4543,8 @@ spec:
         - name: ALLOWED_IPS
           value: 0.0.0.0/0
         - name: SECURITY_POLICY
-          value: kctf-policy
-        image: gcr.io/kctf-docker/kctf-operator@sha256:a583672d2269cf188b6b6411286e9a33fb3e751b4f37e7b8c8d51fdda5838fb9
+          value: DISABLED
+        image: gcr.io/kctf-docker/kctf-operator@sha256:bd6625c3e2ef29605651dd1c5191df7b1f8644cd78b312a2b9abf3a3377ee557
         livenessProbe:
           httpGet:
             path: /healthz

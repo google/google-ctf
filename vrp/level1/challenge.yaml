@@ -16,8 +16,14 @@ spec:
         containers:
           - name: challenge
             volumeMounts:
-              - mountPath: /flag
-                name: flag
+              - name: flag
+                mountPath: /flag
+                readOnly: true
+              - name: image
+                mountPath: /etc/node-image
+                readOnly: true
+              - name: boot
+                mountPath: /node-boot
                 readOnly: true
               - name: etc-os-release
                 mountPath: /etc/node-os-release
@@ -26,6 +32,14 @@ spec:
           - name: etc-os-release
             hostPath:
               path: /etc/os-release
+          - name: boot
+            hostPath:
+              path: /boot
+          - name: image
+            secret:
+              defaultMode: 0555
+              secretName: node-image
+              optional: true
           - name: flag
             secret:
               defaultMode: 0555

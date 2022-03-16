@@ -14,7 +14,7 @@ metadata:
         }
       ]
     capabilities: Basic Install
-    operators.operatorframework.io/builder: operator-sdk-v1.14.0+git
+    operators.operatorframework.io/builder: operator-sdk-v1.17.0+git
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
   name: kctf-operator.v0.0.1
   namespace: placeholder
@@ -64,6 +64,18 @@ spec:
           - autoscaling
           resources:
           - horizontalpodautoscalers
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - cloud.google.com
+          resources:
+          - backendconfigs
           verbs:
           - create
           - delete
@@ -207,6 +219,18 @@ spec:
           - patch
           - update
         - apiGroups:
+          - networking.gke.io
+          resources:
+          - managedcertificates
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
           - networking.k8s.io
           resources:
           - ingresses
@@ -304,6 +328,7 @@ spec:
                   value: 0.0.0.0/0
                 - name: SECURITY_POLICY
                   value: kctf-policy
+
                 image: eu.gcr.io/kctf-testing/kctf-operator:dev
                 livenessProbe:
                   httpGet:

@@ -116,27 +116,28 @@ function kctf_cluster_list {
 
 function kctf_cluster_create_usage {
   echo "usage: kctf cluster create [args] config_name" >&2
-  echo "  -h|--help       print this help" >&2
-  echo "  --type          what kind of cluster to create (default: gce)" >&2
-  echo "                  supported values: \"gce\" (remote cluster) and \"kind\" (local cluster)" >&2
-  echo "  --project       Required (gce): Google Cloud Platform project name" >&2
-  echo "  --zone          GCP Zone (default: europe-west4-b)" >&2
-  echo "                  For a list of zones run:" >&2
-  echo "                    gcloud compute machine-types list --filter=\"name=( n2-standard-4 )\" --format 'value(zone)'" >&2
-  echo "  --registry      Container Registry (default: eu.gcr.io)" >&2
-  echo "                  Possible values are us.gcr.io, asia.gcr.io, and eu.gcr.io" >&2
-  echo "  --cluster-name  Name of the kubernetes cluster (default: kctf-cluster)" >&2
-  echo "  --domain-name   Required (gce): domain name to host challenges under" >&2
-  echo "                  Please make sure not to put anything secret in the challenge name." >&2
-  echo "                  Supported options:" >&2
-  echo "                    \"none\": disable DNS support (might break some functionality)" >&2
-  echo "                    \"your.domain.com\": use your own domain. You will have to follow some" >&2
-  echo "                                         additional steps to configure your nameserver." >&2
-  echo "                    \"yourname.kctf.cloud\": automatically get a subdomain under kctf.cloud" >&2
-  echo "  --email-address Optional email address for LetsEncrypt registration (for wildcard certificates)" >&2
-  echo "                  To use it, please read and agree to the ACME Subscriber Agreement:" >&2
-  echo "                    https://letsencrypt.org/repository/" >&2
-  echo "  --start         Start the cluster if it's not running yet" >&2
+  echo "  -h|--help            print this help" >&2
+  echo "  --type               what kind of cluster to create (default: gce)" >&2
+  echo "                       supported values: \"gce\" (remote cluster) and \"kind\" (local cluster)" >&2
+  echo "  --project            Required (gce): Google Cloud Platform project name" >&2
+  echo "  --zone               GCP Zone (default: europe-west4-b)" >&2
+  echo "                       For a list of zones run:" >&2
+  echo "                         gcloud compute machine-types list --filter=\"name=( n2-standard-4 )\" --format 'value(zone)'" >&2
+  echo "  --registry           Container Registry (default: eu.gcr.io)" >&2
+  echo "                       Possible values are us.gcr.io, asia.gcr.io, and eu.gcr.io" >&2
+  echo "  --cluster-name       Name of the kubernetes cluster (default: kctf-cluster)" >&2
+  echo "  --domain-name        Required (gce): domain name to host challenges under" >&2
+  echo "                       Please make sure not to put anything secret in the challenge name." >&2
+  echo "                       Supported options:" >&2
+  echo "                         \"none\": disable DNS support (might break some functionality)" >&2
+  echo "                         \"your.domain.com\": use your own domain. You will have to follow some" >&2
+  echo "                                              additional steps to configure your nameserver." >&2
+  echo "                         \"yourname.kctf.cloud\": automatically get a subdomain under kctf.cloud" >&2
+  echo "  --email-address      Optional email address for LetsEncrypt registration (for wildcard certificates)" >&2
+  echo "                       To use it, please read and agree to the ACME Subscriber Agreement:" >&2
+  echo "                         https://letsencrypt.org/repository/" >&2
+  echo "  --start              Start the cluster if it's not running yet" >&2
+  echo "  --disable-src-ranges Disable the ip range feature (requires --start). Use this if you have security policy quota issues" >&2
 }
 
 function kctf_cluster_create {
@@ -149,9 +150,10 @@ function kctf_cluster_create {
   DOMAIN_NAME=""
   EMAIL_ADDRESS=""
   START_CLUSTER="0"
+  DISABLE_SRC_RANGES=""
 
   OPTS="h"
-  LONGOPTS="help,type:,project:,zone:,registry:,cluster-name:,domain-name:,email-address:,start"
+  LONGOPTS="help,type:,project:,zone:,registry:,cluster-name:,domain-name:,email-address:,start,disable-src-ranges"
   PARSED=$(${GETOPT} --options=$OPTS --longoptions=$LONGOPTS --name "kctf cluster create" -- "$@")
   if [[ $? -ne 0 ]]; then
     kctf_cluster_create_usage
@@ -195,6 +197,10 @@ function kctf_cluster_create {
         ;;
       --start)
         START_CLUSTER="1"
+        shift
+        ;;
+      --disable-src-ranges)
+        DISABLE_SRC_RANGES="--disable-src-ranges"
         shift
         ;;
       --)
@@ -318,7 +324,7 @@ EOF
     export CLUSTER_NAME
     export DOMAIN_NAME
     export EMAIL_ADDRESS
-    "${KCTF_BIN}/kctf-cluster" start >&2 || return
+    "${KCTF_BIN}/kctf-cluster" start "${DISABLE_SRC_RANGES}" >&2 || return
   elif [[ ${GET_CLUSTER_CREDS_RESULT} -eq 0 ]]; then
     _kctf_log_warn "Existing cluster found. If it's running an old version of kCTF, remember to upgrade it with cluster start."
   fi
@@ -393,14 +399,18 @@ function kctf_cluster_ip_ranges {
 }
 
 function start_operator_gce {
-  get_cloud_armor_policy || return
-  RANGES=$ret
-  SUFFIX=$(echo "${PROJECT}-${CLUSTER_NAME}-${ZONE}" | sha1sum)
-  POLICY_NAME="kctf-policy-${SUFFIX:0:16}"
-  # restart the operator with the new range
-  "${KCTF_BIN}/yq" eval "(((.|select(has(\"spec\"))).spec|select(has(\"template\"))).template.spec.containers[0].env[] | select(.name == \"ALLOWED_IPS\")).value = \"${RANGES}\"" "${KCTF_CTF_DIR}/kctf/resources/operator.yaml" \
-    | "${KCTF_BIN}/yq" eval "(((.|select(has(\"spec\"))).spec|select(has(\"template\"))).template.spec.containers[0].env[] | select(.name == \"SECURITY_POLICY\")).value = \"${POLICY_NAME}\"" - \
-    | "${KCTF_BIN}/kubectl" apply -f - || return
+  if [[ "${DISABLE_SRC_RANGES}" == "1" ]]; then
+     "${KCTF_BIN}/kubectl" apply -f "${KCTF_CTF_DIR}/kctf/resources/operator.yaml" || return
+  else
+    get_cloud_armor_policy || return
+    RANGES=$ret
+    SUFFIX=$(echo "${PROJECT}-${CLUSTER_NAME}-${ZONE}" | sha1sum)
+    POLICY_NAME="kctf-policy-${SUFFIX:0:16}"
+    # restart the operator with the new range
+    "${KCTF_BIN}/yq" eval "(((.|select(has(\"spec\"))).spec|select(has(\"template\"))).template.spec.containers[0].env[] | select(.name == \"ALLOWED_IPS\")).value = \"${RANGES}\"" "${KCTF_CTF_DIR}/kctf/resources/operator.yaml" \
+      | "${KCTF_BIN}/yq" eval "(((.|select(has(\"spec\"))).spec|select(has(\"template\"))).template.spec.containers[0].env[] | select(.name == \"SECURITY_POLICY\")).value = \"${POLICY_NAME}\"" - \
+      | "${KCTF_BIN}/kubectl" apply -f - || return
+  fi
 }
 
 function set_cloud_armor_policy {
@@ -436,7 +446,7 @@ function create_operator {
   "${KCTF_BIN}/kubectl" apply -f "${KCTF_CTF_DIR}/kctf/resources/kctf-operator-manager-config_v1_configmap.yaml" || return
   "${KCTF_BIN}/kubectl" apply -f "${KCTF_CTF_DIR}/kctf/resources/kctf-operator-controller-manager-metrics-service_v1_service.yaml" || return
   if [[ "$CLUSTER_TYPE" == "gce" ]]; then
-    start_operator_gce
+    start_operator_gce || return
   else
     "${KCTF_BIN}/kubectl" apply -f "${KCTF_CTF_DIR}/kctf/resources/operator.yaml" || return
   fi
@@ -448,7 +458,7 @@ function create_operator {
 
   # The operator needs to create some subresources, e.g. the gcsfuse service account
   for i in {1..100}; do
-    "${KCTF_BIN}/kubectl" get pods --namespace kctf-operator-system -o=jsonpath='{.items[].status.containerStatuses[?(@.ready==true)].imageID}' | grep "${OPERATOR_IMAGE}" && break
+    "${KCTF_BIN}/kubectl" get pods --namespace kctf-operator-system -o=jsonpath='{.items[*].status.containerStatuses[?(@.ready==true)].imageID}' | grep "${OPERATOR_IMAGE}" && break
     if [ "$i" == "100" ]; then
       _kctf_log_err "Couldn't find a kctf-operator pod with status ready=true and image \"${OPERATOR_IMAGE}\" after 5 minutes"
       "${KCTF_BIN}/kubectl" get pods --namespace kctf-operator-system -o=yaml >&2
@@ -643,12 +653,56 @@ function kctf_cluster_start_gce {
     "${KCTF_BIN}/kubectl" create configmap --namespace kctf-system external-dns --from-literal=DOMAIN_NAME=${DOMAIN_NAME} --from-literal=EMAIL_ADDRESS=${EMAIL_ADDRESS:-} --dry-run=client -o yaml | "${KCTF_BIN}/kubectl" apply -f - || return
   fi
 
-  create_cloud_armor_policy || return
+  if [[ "${DISABLE_SRC_RANGES}" == "0" ]]; then
+    if ! create_cloud_armor_policy; then
+      echo "Could not create the cloud armor policy. If you have quota issues, you can disable the feature with --disable-src-ranges." >&2
+      return 1
+    fi
+  fi
 
   create_operator || return
 }
 
+function kctf_cluster_start_usage {
+  echo "usage: kctf cluster start [args]" >&2
+  echo "  -h|--help            print this help" >&2
+  echo "  --disable-src-ranges Disable the ip range feature (gce only). Use this if you have security policy quota issues" >&2
+}
+
 function kctf_cluster_start {
+  DISABLE_SRC_RANGES="0"
+
+  OPTS="h"
+  LONGOPTS="help,disable-src-ranges"
+  PARSED=$(${GETOPT} --options=$OPTS --longoptions=$LONGOPTS --name "kctf cluster start" -- "$@")
+  if [[ $? -ne 0 ]]; then
+    kctf_cluster_start_usage
+    return 1
+  fi
+  eval set -- "$PARSED"
+
+  while true; do
+    case "$1" in
+      -h|--help)
+        kctf_cluster_start_usage
+        return 1
+        ;;
+      --disable-src-ranges)
+        DISABLE_SRC_RANGES="1"
+        shift
+        ;;
+      --)
+        shift
+        break
+        ;;
+      *)
+        _kctf_log_err "Unrecognized argument \"$1\"."
+        kctf_cluster_start_usage
+        return 1
+        ;;
+    esac
+  done
+
   case "${CLUSTER_TYPE}" in
     gce)
       kctf_cluster_start_gce
@@ -749,7 +803,7 @@ function kctf_cluster_resize {
   fi
 
   OPTS="h"
-  LONGOPTS="help,machine-type:,min-nodes:,max-nodes:,num-nodes:,pool-name:,old-pool"
+  LONGOPTS="help,machine-type:,min-nodes:,max-nodes:,num-nodes:,pool-name:,old-pool:"
   PARSED=$(${GETOPT} --options=$OPTS --longoptions=$LONGOPTS --name "kctf chal create" -- "$@")
   if [[ $? -ne 0 ]]; then
     kctf_cluster_resize_usage
@@ -837,15 +891,15 @@ function kctf_cluster_resize {
   fi
 
   _kctf_log 'Creating the new node pool'
-  gcloud container node-pools create "${NEW_POOL_NAME}" \
-    --cluster="${CLUSTER_NAME}" \
-    --machine-type="${MACHINE_TYPE}" \
-    --enable-autorepair \
-    --enable-autoupgrade \
-    --num-nodes="${NUM_NODES}" \
-    --enable-autoscaling \
-    --min-nodes="${MIN_NODES}" \
-    --max-nodes="${MAX_NODES}" || return
+  # gcloud container node-pools create "${NEW_POOL_NAME}" \
+  #   --cluster="${CLUSTER_NAME}" \
+  #   --machine-type="${MACHINE_TYPE}" \
+  #   --enable-autorepair \
+  #   --enable-autoupgrade \
+  #   --num-nodes="${NUM_NODES}" \
+  #   --enable-autoscaling \
+  #   --min-nodes="${MIN_NODES}" \
+  #   --max-nodes="${MAX_NODES}" || return
 
   _kctf_log 'Cordoning old nodes'
   for node in $("${KCTF_BIN}/kubectl" get nodes -l cloud.google.com/gke-nodepool="${OLD_POOL_NAME}" -o=name); do
