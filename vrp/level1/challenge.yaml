@@ -45,4 +45,4 @@ spec:
               defaultMode: 0555
               secretName: kctf-flag
               optional: true
-  image: eu.gcr.io/gctf-vrp/kctf-challenge:d9e48607036aaf10d3c59bb111dc3c62e7b96e72c5773e00d6b6a40f836d6155
+  image: eu.gcr.io/gctf-vrp/kctf-challenge:8d0af05e0b294b10c9afc66a542dbeb728e1742a27fa2ebfc28c0acebfa064bb
