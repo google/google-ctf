@@ -1,0 +1,4 @@
+# Exemption reason: The binaries in this repository are (parts of) it security challenges of the Google CTF (g.co/ctf).
+# Exemption timeframe: permanent
+optConfig:
+  optOut: true
