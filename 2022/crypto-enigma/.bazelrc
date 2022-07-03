@@ -1,0 +1,4 @@
+build --cxxopt=-std=c++17
+build --linkopt=-lpthread
+build --copt=-Wno-sign-compare
+build -c opt

@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: custom-protocol
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: false
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2022/custom-protocol-healthcheck:a8b168ef0f6bfd0900cc903a53cae6c8dcdbd319e3f63768b9f43acfb162af94
+  image: eu.gcr.io/gctf-2022/custom-protocol-challenge:728c84d1ba340c024dbf803e6ed3a3b65039b93dcbf907ff630c4e153be9fe76
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css"
+      integrity="sha256-NmfeKHX4FgSrBzL2BhPhzy41cHgzNYIEZyLyqf2/B30="
+      crossorigin="anonymous"
+    />
+
+    <!-- App CSS -->
+    <link href="viewer.css" rel="stylesheet" />
+    <title>Trace viewer</title>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#"
+        >Electric-Mayhem</a
+      >
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <h6 class="sidebar-heading d-flex px-3 mt-4 mb-1 text-muted">
+            </h6>
+          </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+          <div
+            class="my-4 w-100"
+            id="trace_plot"
+            width="900"
+            height="380"
+          ></div>
+
+          <h2>Traces</h2>
+          <div class="table-responsive">
+            <table
+              id="traces"
+              class="table table-striped table-sm"
+              data-click-to-select="true"
+              data-pagination="true"
+            >
+              <thead>
+                <tr>
+                  <th data-field="Selected" data-checkbox="true"></th>
+                  <th data-field="Id">ID</th>
+                  <th data-field="CT">Ciphertext</th>
+                  <th data-field="FlagXorSS">Flag ^ Shared Secret</th>
+                  <th data-field="NumSamples">Samples</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+
+          <h2>Key Information</h2>
+          <dl class="row">
+            <dt class="col-sm-3">Public Key</dt>
+            <dd class="col-sm-9 text-break" id="pk"></dd>
+          </dl>
+        </main>
+      </div>
+    </div>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.js"
+      integrity="sha256-XT58qJPKCsRBRq+MIcNDQ7dVh0GAa1k2r24w62z0Olk="
+      crossorigin="anonymous"
+    ></script>
+    <!-- App JavaScript -->
+    <script type="text/javascript" src="viewer.js"></script>
+  </body>
+</html>

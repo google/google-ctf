@@ -1,0 +1,35 @@
+#!/bin/bash
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_KCTF_COLOR_RED=$'\e[0;31m'
+_KCTF_COLOR_GREEN=$'\e[0;32m'
+_KCTF_COLOR_YELLOW=$'\e[0;33m'
+_KCTF_COLOR_END=$'\e[0m'
+
+function _kctf_log {
+  echo -n "${_KCTF_COLOR_GREEN}[*]${_KCTF_COLOR_END} " >&2
+  echo "$@" >&2
+}
+
+function _kctf_log_warn {
+  echo -n "${_KCTF_COLOR_YELLOW}[W]${_KCTF_COLOR_END} " >&2
+  echo "$@" >&2
+}
+
+function _kctf_log_err {
+  echo -n "${_KCTF_COLOR_RED}[E]${_KCTF_COLOR_END} " >&2
+  echo "$@" >&2
+}
+

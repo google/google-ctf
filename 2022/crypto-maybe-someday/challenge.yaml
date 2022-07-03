@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: maybe-someday
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2022/maybe-someday-healthcheck:119522ab1292a7683cee3bfbcc86c81db0119ed7382b06086a658151200c2f01
+  image: eu.gcr.io/gctf-2022/maybe-someday-challenge:7166f16e8248822e280964d9328b0ee6bd22af4e6320d888ce48e519d7dafde9
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

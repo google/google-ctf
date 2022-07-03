@@ -1,0 +1,24 @@
+syntax = "proto2";
+
+package chal;
+
+message StartSandbox {
+}
+
+message AddFile {
+  required string name = 1;
+  required bytes content = 2;
+}
+
+message Run {
+  repeated string arg = 1;
+}
+
+message Command {
+  oneof command {
+    StartSandbox start_sandbox = 1;
+    AddFile add_file = 2;
+    //ReadFile?
+    Run run = 3;
+  }
+}

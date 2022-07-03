@@ -1,0 +1,8 @@
+executable("exploit") {
+  sources = [ "exploit.cc" ]
+  deps = [
+    "//src:ipcz",
+    "//src:reference_drivers",
+  ]
+  configs += [ "//src:ipcz_include_src_dir" ]
+}

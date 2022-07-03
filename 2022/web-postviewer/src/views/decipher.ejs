@@ -1,0 +1,87 @@
+<%- include('head')
+    %>
+  <div class="container p-5">
+    <div class="card mx-auto">
+      <div class="card-header">
+        <h1>Decipher</h1>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label for="flagCipher">Cipher</label> <input class="form-control" id="flagcipher">
+          <label for="password1">Password part [1/3]</label><input class="form-control" id="password1">
+          <label for="password2">Password part [2/3]</label><input class="form-control" id="password2">
+          <label for="password3">Password part [3/3]</label><input class="form-control" id="password3">
+
+        </div>
+
+        <button class="btn btn-primary mb-3" id="decipherButton">decipher</button>
+
+        <div class="form-group">
+          <input class="form-control" readonly id="flagInput"></input>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    document.getElementById('decipherButton').onclick = async () => {
+      let flag;
+      try{
+        const p1 = document.getElementById('password1').value.trim();
+        const p2 = document.getElementById('password2').value.trim();
+        const p3 = document.getElementById('password3').value.trim();
+        const flag_cipher = document.getElementById('flagcipher').value.trim();
+      flag = await aesGcmDecrypt(flag_cipher, p1+p2+p3);
+      }catch(e){};
+
+      document.querySelector('#flagInput').value = flag || 'something went wrong';
+    }
+    /* Functions copied from https://gist.github.com/chrisveness/43bcda93af9f646d083fad678071b90a */
+    async function aesGcmEncrypt(plaintext, password) {
+      const textEnc = new TextEncoder();
+      const pwHash = await crypto.subtle.digest('SHA-256', textEnc.encode(password));
+
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const ivStr = Array.from(iv).map(b => String.fromCharCode(b)).join('');
+
+      const alg = { name: 'AES-GCM', iv: iv };
+
+      const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['encrypt']);
+
+      const ptUint8 = textEnc.encode(plaintext);
+      const ctBuffer = await crypto.subtle.encrypt(alg, key, ptUint8);
+
+      const ctArray = Array.from(new Uint8Array(ctBuffer));
+      const ctStr = ctArray.map(byte => String.fromCharCode(byte)).join('');
+
+      return btoa(ivStr + ctStr);
+    }
+
+
+    async function aesGcmDecrypt(ciphertext, password) {
+      const pwUtf8 = new TextEncoder().encode(password);
+      const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8);
+
+      const ivStr = atob(ciphertext).slice(0, 12);
+      const iv = new Uint8Array(Array.from(ivStr).map(ch => ch.charCodeAt(0)));
+
+      const alg = { name: 'AES-GCM', iv: iv };
+
+      const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['decrypt']);
+
+      const ctStr = atob(ciphertext).slice(12);
+      const ctUint8 = new Uint8Array(Array.from(ctStr).map(ch => ch.charCodeAt(0)));
+
+      try {
+        const plainBuffer = await crypto.subtle.decrypt(alg, key, ctUint8);
+        const plaintext = new TextDecoder().decode(plainBuffer);
+        return plaintext;
+      } catch (e) {
+        throw new Error('Decrypt failed');
+      }
+    }
+  </script>
+  <%- include('foot')
+      %>

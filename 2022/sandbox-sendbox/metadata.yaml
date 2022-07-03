@@ -1,0 +1,24 @@
+# Human readable task name
+name: Sendbox
+# Long form description.
+description: |+
+  User namespaces are back!
+
+# The flag
+flag: CTF{bf74733f067f9db4566711d6efd8c43480f29bb728407ff3319210bc3f77911e}
+
+# Task category. (one of hw, crypto, pwn, rev, web, net, misc)
+category: sandbox
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# host/port for non-web challenges
+host: 'sendbox.2022.ctfcompetition.com 1337'
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: false

@@ -1,0 +1,345 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+diff --git a/Lib/opcode.py b/Lib/opcode.py
+index 6c3862707c..40b6fdd2e0 100644
+--- a/Lib/opcode.py
++++ b/Lib/opcode.py
+@@ -57,150 +57,164 @@ def jabs_op(name, op, entries=0):
+ # Instruction opcodes for compiled code
+ # Blank lines correspond to available opcodes
+ 
+-def_op('CACHE', 0)
+-def_op('POP_TOP', 1)
+-def_op('PUSH_NULL', 2)
+-
+-def_op('NOP', 9)
+-def_op('UNARY_POSITIVE', 10)
+-def_op('UNARY_NEGATIVE', 11)
+-def_op('UNARY_NOT', 12)
+-
+-def_op('UNARY_INVERT', 15)
+-
+-def_op('BINARY_SUBSCR', 25, 4)
+-
+-def_op('GET_LEN', 30)
+-def_op('MATCH_MAPPING', 31)
+-def_op('MATCH_SEQUENCE', 32)
+-def_op('MATCH_KEYS', 33)
+-
+-def_op('PUSH_EXC_INFO', 35)
+-def_op('CHECK_EXC_MATCH', 36)
+-def_op('CHECK_EG_MATCH', 37)
+-
+-def_op('WITH_EXCEPT_START', 49)
+-def_op('GET_AITER', 50)
+-def_op('GET_ANEXT', 51)
+-def_op('BEFORE_ASYNC_WITH', 52)
+-def_op('BEFORE_WITH', 53)
+-def_op('END_ASYNC_FOR', 54)
+-
+-def_op('STORE_SUBSCR', 60, 1)
+-def_op('DELETE_SUBSCR', 61)
+-
+-def_op('GET_ITER', 68)
+-def_op('GET_YIELD_FROM_ITER', 69)
+-def_op('PRINT_EXPR', 70)
+-def_op('LOAD_BUILD_CLASS', 71)
+-
+-def_op('LOAD_ASSERTION_ERROR', 74)
+-def_op('RETURN_GENERATOR', 75)
+-
+-def_op('LIST_TO_TUPLE', 82)
+-def_op('RETURN_VALUE', 83)
+-def_op('IMPORT_STAR', 84)
+-def_op('SETUP_ANNOTATIONS', 85)
+-def_op('YIELD_VALUE', 86)
+-def_op('ASYNC_GEN_WRAP', 87)
+-def_op('PREP_RERAISE_STAR', 88)
+-def_op('POP_EXCEPT', 89)
++perm = list(range(90))
++perm2 = list(range(200-90))
++
++import sys
++if "generate_opcode_h" in sys.argv[0]:
++  random = __import__("random")
++  random.shuffle(perm)
++  random.shuffle(perm2)
++
++def_op('CACHE', perm[0])
++def_op('POP_TOP', perm[1])
++def_op('PUSH_NULL', perm[2])
++
++def_op('NOP', perm[9])
++def_op('UNARY_POSITIVE', perm[10])
++def_op('UNARY_NEGATIVE', perm[11])
++def_op('UNARY_NOT', perm[12])
++
++def_op('UNARY_INVERT', perm[15])
++
++def_op('BINARY_SUBSCR', perm[25], 4)
++
++def_op('GET_LEN', perm[30])
++def_op('MATCH_MAPPING', perm[31])
++def_op('MATCH_SEQUENCE', perm[32])
++def_op('MATCH_KEYS', perm[33])
++
++def_op('PUSH_EXC_INFO', perm[35])
++def_op('CHECK_EXC_MATCH', perm[36])
++def_op('CHECK_EG_MATCH', perm[37])
++
++def_op('WITH_EXCEPT_START', perm[49])
++def_op('GET_AITER', perm[50])
++def_op('GET_ANEXT', perm[51])
++def_op('BEFORE_ASYNC_WITH', perm[52])
++def_op('BEFORE_WITH', perm[53])
++def_op('END_ASYNC_FOR', perm[54])
++
++def_op('STORE_SUBSCR', perm[60], 1)
++def_op('DELETE_SUBSCR', perm[61])
++
++def_op('GET_ITER', perm[68])
++def_op('GET_YIELD_FROM_ITER', perm[69])
++def_op('PRINT_EXPR', perm[70])
++def_op('LOAD_BUILD_CLASS', perm[71])
++
++def_op('LOAD_ASSERTION_ERROR', perm[74])
++def_op('RETURN_GENERATOR', perm[75])
++
++def_op('LIST_TO_TUPLE', perm[82])
++def_op('RETURN_VALUE', perm[83])
++def_op('IMPORT_STAR', perm[84])
++def_op('SETUP_ANNOTATIONS', perm[85])
++def_op('YIELD_VALUE', perm[86])
++def_op('ASYNC_GEN_WRAP', perm[87])
++def_op('PREP_RERAISE_STAR', perm[88])
++def_op('POP_EXCEPT', perm[89])
+ 
+ HAVE_ARGUMENT = 90              # Opcodes from here have an argument:
+ 
+-name_op('STORE_NAME', 90)       # Index in name list
+-name_op('DELETE_NAME', 91)      # ""
+-def_op('UNPACK_SEQUENCE', 92, 1)   # Number of tuple items
+-jrel_op('FOR_ITER', 93)
+-def_op('UNPACK_EX', 94)
+-name_op('STORE_ATTR', 95, 4)       # Index in name list
+-name_op('DELETE_ATTR', 96)      # ""
+-name_op('STORE_GLOBAL', 97)     # ""
+-name_op('DELETE_GLOBAL', 98)    # ""
+-def_op('SWAP', 99)
+-def_op('LOAD_CONST', 100)       # Index in const list
+-hasconst.append(100)
+-name_op('LOAD_NAME', 101)       # Index in name list
+-def_op('BUILD_TUPLE', 102)      # Number of tuple items
+-def_op('BUILD_LIST', 103)       # Number of list items
+-def_op('BUILD_SET', 104)        # Number of set items
+-def_op('BUILD_MAP', 105)        # Number of dict entries
+-name_op('LOAD_ATTR', 106, 4)       # Index in name list
+-def_op('COMPARE_OP', 107, 2)       # Comparison operator
+-hascompare.append(107)
+-name_op('IMPORT_NAME', 108)     # Index in name list
+-name_op('IMPORT_FROM', 109)     # Index in name list
+-jrel_op('JUMP_FORWARD', 110)    # Number of words to skip
+-jrel_op('JUMP_IF_FALSE_OR_POP', 111) # Number of words to skip
+-jrel_op('JUMP_IF_TRUE_OR_POP', 112)  # ""
+-jrel_op('POP_JUMP_FORWARD_IF_FALSE', 114)
+-jrel_op('POP_JUMP_FORWARD_IF_TRUE', 115)
+-name_op('LOAD_GLOBAL', 116, 5)     # Index in name list
+-def_op('IS_OP', 117)
+-def_op('CONTAINS_OP', 118)
+-def_op('RERAISE', 119)
+-def_op('COPY', 120)
+-def_op('BINARY_OP', 122, 1)
+-jrel_op('SEND', 123) # Number of bytes to skip
+-def_op('LOAD_FAST', 124)        # Local variable number
+-haslocal.append(124)
+-def_op('STORE_FAST', 125)       # Local variable number
+-haslocal.append(125)
+-def_op('DELETE_FAST', 126)      # Local variable number
+-haslocal.append(126)
+-jrel_op('POP_JUMP_FORWARD_IF_NOT_NONE', 128)
+-jrel_op('POP_JUMP_FORWARD_IF_NONE', 129)
+-def_op('RAISE_VARARGS', 130)    # Number of raise arguments (1, 2, or 3)
+-def_op('GET_AWAITABLE', 131)
+-def_op('MAKE_FUNCTION', 132)    # Flags
+-def_op('BUILD_SLICE', 133)      # Number of items
+-jrel_op('JUMP_BACKWARD_NO_INTERRUPT', 134) # Number of words to skip (backwards)
+-def_op('MAKE_CELL', 135)
+-hasfree.append(135)
+-def_op('LOAD_CLOSURE', 136)
+-hasfree.append(136)
+-def_op('LOAD_DEREF', 137)
+-hasfree.append(137)
+-def_op('STORE_DEREF', 138)
+-hasfree.append(138)
+-def_op('DELETE_DEREF', 139)
+-hasfree.append(139)
+-jrel_op('JUMP_BACKWARD', 140)    # Number of words to skip (backwards)
+-
+-def_op('CALL_FUNCTION_EX', 142)  # Flags
+-
+-def_op('EXTENDED_ARG', 144)
+-EXTENDED_ARG = 144
+-def_op('LIST_APPEND', 145)
+-def_op('SET_ADD', 146)
+-def_op('MAP_ADD', 147)
+-def_op('LOAD_CLASSDEREF', 148)
+-hasfree.append(148)
+-def_op('COPY_FREE_VARS', 149)
+-
+-def_op('RESUME', 151)
+-def_op('MATCH_CLASS', 152)
+-
+-def_op('FORMAT_VALUE', 155)
+-def_op('BUILD_CONST_KEY_MAP', 156)
+-def_op('BUILD_STRING', 157)
+-
+-name_op('LOAD_METHOD', 160, 10)
+-
+-def_op('LIST_EXTEND', 162)
+-def_op('SET_UPDATE', 163)
+-def_op('DICT_MERGE', 164)
+-def_op('DICT_UPDATE', 165)
+-def_op('PRECALL', 166, 1)
+-
+-def_op('CALL', 171, 4)
+-def_op('KW_NAMES', 172)
+-hasconst.append(172)
+-
+-jrel_op('POP_JUMP_BACKWARD_IF_NOT_NONE', 173)
+-jrel_op('POP_JUMP_BACKWARD_IF_NONE', 174)
+-jrel_op('POP_JUMP_BACKWARD_IF_FALSE', 175)
+-jrel_op('POP_JUMP_BACKWARD_IF_TRUE', 176)
++name_op('STORE_NAME', 90 + perm2[90-90])       # Index in name list
++name_op('DELETE_NAME', 90 + perm2[91-90])      # ""
++def_op('UNPACK_SEQUENCE', 90 + perm2[92-90], 1)   # Number of tuple items
++jrel_op('FOR_ITER', 90 + perm2[93-90])
++def_op('UNPACK_EX', 90 + perm2[94-90])
++name_op('STORE_ATTR', 90 + perm2[95-90], 4)       # Index in name list
++name_op('DELETE_ATTR', 90 + perm2[96-90])      # ""
++name_op('STORE_GLOBAL', 90 + perm2[97-90])     # ""
++name_op('DELETE_GLOBAL', 90 + perm2[98-90])    # ""
++def_op('SWAP', 90 + perm2[99-90])
++def_op('LOAD_CONST', 90 + perm2[100-90])       # Index in const list
++hasconst.append(90 + perm2[100-90])
++name_op('LOAD_NAME', 90 + perm2[101-90])       # Index in name list
++def_op('BUILD_TUPLE', 90 + perm2[102-90])      # Number of tuple items
++def_op('BUILD_LIST', 90 + perm2[103-90])       # Number of list items
++def_op('BUILD_SET', 90 + perm2[104-90])        # Number of set items
++def_op('BUILD_MAP', 90 + perm2[105-90])        # Number of dict entries
++name_op('LOAD_ATTR', 90 + perm2[106-90], 4)       # Index in name list
++def_op('COMPARE_OP', 90 + perm2[107-90], 2)       # Comparison operator
++hascompare.append(90 + perm2[107-90])
++name_op('IMPORT_NAME', 90 + perm2[108-90])     # Index in name list
++name_op('IMPORT_FROM', 90 + perm2[109-90])     # Index in name list
++jrel_op('JUMP_FORWARD', 90 + perm2[110-90])    # Number of words to skip
++jrel_op('JUMP_IF_FALSE_OR_POP', 90 + perm2[111-90]) # Number of words to skip
++jrel_op('JUMP_IF_TRUE_OR_POP', 90 + perm2[112-90])  # ""
++jrel_op('POP_JUMP_FORWARD_IF_FALSE', 90 + perm2[114-90])
++jrel_op('POP_JUMP_FORWARD_IF_TRUE', 90 + perm2[115-90])
++name_op('LOAD_GLOBAL', 90 + perm2[116-90], 5)     # Index in name list
++def_op('IS_OP', 90 + perm2[117-90])
++def_op('CONTAINS_OP', 90 + perm2[118-90])
++def_op('RERAISE', 90 + perm2[119-90])
++def_op('COPY', 90 + perm2[120-90])
++def_op('BINARY_OP', 90 + perm2[122-90], 1)
++jrel_op('SEND', 90 + perm2[123-90]) # Number of bytes to skip
++def_op('LOAD_FAST', 90 + perm2[124-90])        # Local variable number
++haslocal.append(90 + perm2[124-90])
++def_op('STORE_FAST', 90 + perm2[125-90])       # Local variable number
++haslocal.append(90 + perm2[125-90])
++def_op('DELETE_FAST', 90 + perm2[126-90])      # Local variable number
++haslocal.append(90 + perm2[126-90])
++jrel_op('POP_JUMP_FORWARD_IF_NOT_NONE', 90 + perm2[128-90])
++jrel_op('POP_JUMP_FORWARD_IF_NONE', 90 + perm2[129-90])
++def_op('RAISE_VARARGS', 90 + perm2[130-90])    # Number of raise arguments (1, 2, or 3)
++def_op('GET_AWAITABLE', 90 + perm2[131-90])
++def_op('MAKE_FUNCTION', 90 + perm2[132-90])    # Flags
++def_op('BUILD_SLICE', 90 + perm2[133-90])      # Number of items
++jrel_op('JUMP_BACKWARD_NO_INTERRUPT', 90 + perm2[134-90]) # Number of words to skip (backwards)
++def_op('MAKE_CELL', 90 + perm2[135-90])
++hasfree.append(90 + perm2[135-90])
++def_op('LOAD_CLOSURE', 90 + perm2[136-90])
++hasfree.append(90 + perm2[136-90])
++def_op('LOAD_DEREF', 90 + perm2[137-90])
++hasfree.append(90 + perm2[137-90])
++def_op('STORE_DEREF', 90 + perm2[138-90])
++hasfree.append(90 + perm2[138-90])
++def_op('DELETE_DEREF', 90 + perm2[139-90])
++hasfree.append(90 + perm2[139-90])
++jrel_op('JUMP_BACKWARD', 90 + perm2[140-90])    # Number of words to skip (backwards)
++
++def_op('CALL_FUNCTION_EX', 90 + perm2[142-90])  # Flags
++
++def_op('EXTENDED_ARG', 90 + perm2[144-90])
++EXTENDED_ARG = 90 + perm2[144-90]
++def_op('LIST_APPEND', 90 + perm2[145-90])
++def_op('SET_ADD', 90 + perm2[146-90])
++def_op('MAP_ADD', 90 + perm2[147-90])
++def_op('LOAD_CLASSDEREF', 90 + perm2[148-90])
++hasfree.append(90 + perm2[148-90])
++def_op('COPY_FREE_VARS', 90 + perm2[149-90])
++
++def_op('RESUME', 90 + perm2[151-90])
++def_op('MATCH_CLASS', 90 + perm2[152-90])
++
++def_op('FORMAT_VALUE', 90 + perm2[155-90])
++def_op('BUILD_CONST_KEY_MAP', 90 + perm2[156-90])
++def_op('BUILD_STRING', 90 + perm2[157-90])
++
++name_op('LOAD_METHOD', 90 + perm2[160-90], 10)
++
++def_op('LIST_EXTEND', 90 + perm2[162-90])
++def_op('SET_UPDATE', 90 + perm2[163-90])
++def_op('DICT_MERGE', 90 + perm2[164-90])
++def_op('DICT_UPDATE', 90 + perm2[165-90])
++def_op('PRECALL', 90 + perm2[166-90], 1)
++
++def_op('CALL', 90 + perm2[171-90], 4)
++def_op('KW_NAMES', 90 + perm2[172-90])
++hasconst.append(90 + perm2[172-90])
++
++jrel_op('POP_JUMP_BACKWARD_IF_NOT_NONE', 90 + perm2[173-90])
++jrel_op('POP_JUMP_BACKWARD_IF_NONE', 90 + perm2[174-90])
++jrel_op('POP_JUMP_BACKWARD_IF_FALSE', 90 + perm2[175-90])
++jrel_op('POP_JUMP_BACKWARD_IF_TRUE', 90 + perm2[176-90])
++
++
++with open("/tmp/opcode_map", "w") as f:
++  for x, y in enumerate(opname):
++    f.write("%s %s\n" % (x, y))
+ 
+ 
+ del def_op, name_op, jrel_op, jabs_op
+diff --git a/Python/ceval.c b/Python/ceval.c
+index 1d2c6432d0..e275158d9d 100644
+--- a/Python/ceval.c
++++ b/Python/ceval.c
+@@ -1344,6 +1344,8 @@ eval_frame_handle_pending(PyThreadState *tstate)
+ #define OR_DTRACE_LINE
+ #endif
+ 
++#define USE_COMPUTED_GOTOS 0
++
+ #ifdef HAVE_COMPUTED_GOTOS
+     #ifndef USE_COMPUTED_GOTOS
+     #define USE_COMPUTED_GOTOS 1
+@@ -1705,6 +1707,7 @@ _PyEval_EvalFrameDefault(PyThreadState *tstate, _PyInterpreterFrame *frame, int
+ #if USE_COMPUTED_GOTOS
+ /* Import the static jump table */
+ #include "opcode_targets.h"
++    asdasdasd, break the compilation...
+ #endif
+ 
+ #ifdef Py_STATS

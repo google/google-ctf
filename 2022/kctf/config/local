@@ -1,0 +1,7 @@
+CLUSTER_TYPE=kind
+PROJECT=
+ZONE=europe-west4-b
+REGISTRY=eu.gcr.io
+CLUSTER_NAME=kctf-cluster
+DOMAIN_NAME=
+EMAIL_ADDRESS=

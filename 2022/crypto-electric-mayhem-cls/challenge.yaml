@@ -1,0 +1,30 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: electric-mayhem-cls
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+    ports:
+      - protocol: "HTTPS"
+        targetPort: 1337
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2022/electric-mayhem-cls-healthcheck:4cea166f060846118a3940d0b6518fa55dd83e1e7c7b36142d604940d53a2c3c
+  image: eu.gcr.io/gctf-2022/electric-mayhem-cls-challenge:ad09462dbd74ffb31e6139b989ef9d5c1fe7bd17729ff2688ab7990f82e7643f
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "4Gi"
+                cpu: "2"

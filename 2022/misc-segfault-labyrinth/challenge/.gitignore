@@ -1,0 +1,9 @@
+prologue
+prologue.o
+prologue2.o
+*.i64
+prologue.bin
+.vscode
+
+#challenge
+#challenge-debug

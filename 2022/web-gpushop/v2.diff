@@ -1,0 +1,41 @@
+--- paymeflare/haproxy/haproxy.cfg	2021-07-19 01:16:48.039181000 +0200
++++ v2/haproxy/haproxy.cfg	2022-06-13 22:12:06.159800236 +0200
+@@ -12,6 +12,7 @@
+     maxconn     4000
+     user        haproxy
+     group       haproxy
++    nbproc      8
+     # daemon
+ 
+     # turn on stats unix socket
+@@ -43,12 +44,12 @@
+     timeout check           10s
+     maxconn                 3000
+ 
+-backend paymeflare.2021.ctfcompetition.com
++backend paymeflare.2022.ctfcompetition.com
+    balance roundrobin
+    mode http
+    server web1 unix@nginx.socket check
+ 
+-backend paymeflare-web.2021.ctfcompetition.com
++backend paymeflare-web.2022.ctfcompetition.com
+    balance roundrobin
+    mode http
+    server web1 unix@nginx.socket check
+@@ -66,6 +67,7 @@
+ 
+ 
+   http-request lua.gen_addr if is_checkout
++  http-request set-header X-Wallet EMPTY
+   http-request set-header X-Wallet %[var(txn.wallet)] if is_checkout
+ 
+   http-request lua.jwtverify if has_auth
+@@ -77,6 +79,6 @@
+ 
+   use_backend %[req.hdr(host),lower,word(1,:)]
+ 
+-  default_backend paymeflare.2021.ctfcompetition.com
++  default_backend paymeflare.2022.ctfcompetition.com
+ 
+   

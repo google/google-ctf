@@ -1,0 +1,12 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: pwn
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: false
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true

@@ -1,0 +1,171 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: paymeflare
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  allowConnectTo:
+    - "paymeflare-mysql"
+    - "gpushop"
+  network:
+    public: false
+    ports:
+      - protocol: "TCP"
+        targetPort: 80
+      - protocol: "HTTPS"
+        targetPort: 80
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: false
+    image: eu.gcr.io/gctf-2021/paymeflare-healthcheck:8ad91fd4174400c82edcd4a56c00c988dcbc1c43af07ad8187901502bc41d869
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "32Gi"
+                cpu: "16"
+            env:
+              - name: GPUSHOP_HOST
+                value: "gpushop.2021.ctfcompetition.com"
+              - name: PAYMEFLARE_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: paymeflare-secret
+                    key: paymeflare_key
+              - name: APP_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: paymeflare-secret
+                    key: app_key
+              - name: DB_CONNECTION
+                value: "mysql"
+              - name: DB_HOST
+                value: "paymeflare-mysql"
+              - name: DB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: paymeflare-secret
+                    key: mysql_password
+              - name: OAUTH_AUDIENCE
+                valueFrom:
+                  secretKeyRef:
+                    name: paymeflare-secret
+                    key: oauth_audience
+              - name: DATAPLANE_SOCKET
+                value: /var/run/socket/dataplane.sock
+              - name: DATAPLANE_PASSWD
+                valueFrom:
+                  secretKeyRef:
+                    name: paymeflare-secret
+                    key: dataplane_password
+            volumeMounts:
+              - mountPath: /var/run/socket
+                name: socket-vol
+          - name: haproxy
+            # docker build -t gpushop/haproxy:1.0 haproxy
+            # local
+            # kind load docker-image --name kctf-cluster gpushop/haproxy:1.0
+            # remote
+            # docker tag gpushop/haproxy:1.0 "${REGISTRY}/${PROJECT}/${CHALLENGE_NAME}-haproxy:1.1"
+            # docker push "${REGISTRY}/${PROJECT}/${CHALLENGE_NAME}-haproxy:1.1"
+            image: eu.gcr.io/gctf-2021/paymeflare-haproxy:1.1
+            env:
+              - name: PAYMEFLARE_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: paymeflare-secret
+                    key: paymeflare_key
+              - name: OAUTH_AUDIENCE
+                valueFrom:
+                  secretKeyRef:
+                    name: paymeflare-secret
+                    key: oauth_audience
+              - name: DATAPLANE_PASSWD
+                valueFrom:
+                  secretKeyRef:
+                    name: paymeflare-secret
+                    key: dataplane_password
+            volumeMounts:
+              - mountPath: /var/lib/haproxy/socket
+                name: socket-vol
+        volumes:
+          - name: socket-vol
+            emptyDir: {}
+  image: eu.gcr.io/gctf-2021/paymeflare-challenge:e8e3c26479d5d03537c3f9e7e82dd7cd855ebc68dc35a81467ffa4858c9300b3
+  horizontalPodAutoscalerSpec:
+    # ONE INSTANCE ONLY, DO NOT CHANGE
+    maxReplicas: 1
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: paymeflare-secret
+stringData:
+  app_key: ""
+  paymeflare_key: ""
+  mysql_password: ""
+  dataplane_password: ""
+  oauth_audience: ""
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: paymeflare-mysql
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: paymeflare-mysql
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paymeflare-mysql
+spec:
+  selector:
+    matchLabels:
+      app: paymeflare-mysql
+  template:
+    metadata:
+      labels:
+        app: paymeflare-mysql
+    spec:
+      containers:
+        - image: mysql:8
+          name: mysql
+          env:
+            - name: MYSQL_USER
+              value: "forge"
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: paymeflare-secret
+                  key: mysql_password
+            - name: MYSQL_DATABASE
+              value: "forge"
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              value: "1"
+          ports:
+            - containerPort: 3306
+              name: mysql

@@ -1,0 +1,22 @@
+# Human readable task name
+name: APPNOTE.TXT
+# Long form description.
+description: |+
+  Every single archive manager unpacks this to a different file...
+# The flag
+flag: CTF{p0s7m0d3rn_z1p}
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: misc
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# host/port for non-web challenges
+host: ''
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true

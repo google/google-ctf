@@ -1,0 +1,9 @@
+{
+  "name": "session",
+  "value": "aiy3Uushcha4Zuzu",
+  "domain": "DOMAIN_SET_IN_DOCKERFILE",
+  "url": "https://DOMAIN_SET_IN_DOCKERFILE/",
+  "path": "/",
+  "httpOnly": true,
+  "secure": true
+}

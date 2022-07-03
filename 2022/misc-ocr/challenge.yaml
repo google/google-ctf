@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: ocr
+spec:
+  deployed: true
+  powDifficultySeconds: 10
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2022/ocr-healthcheck:fcd8dbaf64fca23d49187d162e30398e325a58abf5269786de98e48e54dfa50a
+  image: eu.gcr.io/gctf-2022/ocr-challenge:897e92410eebe5cada88097a96e567a2896f0ba99ea7db10605d87a237eaa8ce
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "4Gi"
+                cpu: "2"

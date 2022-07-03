@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: weather
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2022/weather-healthcheck:6a4b0314d65a6863737b8449dd159fddf8666ea0a115bd45197b1cdb44263be6
+  image: eu.gcr.io/gctf-2022/weather-challenge:b6295ebd459eeb197f9716bf7e5ed436da9a05322a1fb99bbb6833f904a0b343
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

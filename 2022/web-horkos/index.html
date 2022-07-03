@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<!--
+ Copyright 2022 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Horkos</title>
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <!-- Google Fonts Roboto -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+    />
+    <!-- MDB -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script type="module">
+        import * as shop from "/js/shoplib.mjs";
+
+        window.checkout = () => {
+            var q = document.querySelectorAll('input[type=number]');
+            var n = document.querySelectorAll('.product_name');
+            var pr = document.querySelectorAll('.product_price');
+            
+            var sc = new shop.ShoppingCart();
+            var addr = document.getElementById('address').value.split(' ', 3);
+            sc.address = new shop.Address(addr[0], addr[1]|0, addr[2]|0);
+            
+            for (var i = 0; i < n.length; i++) {
+                var it = new shop.Item(parseFloat(pr[i].innerText));
+                it.setQuantity(q[i].value)
+                sc.addItem(n[i].innerText, it);
+            }
+            
+            if (!cart.value) cart.value = JSON.stringify(shop.pickle.dumps([sc]));
+            myform.submit()
+        };
+        
+        window.totalPrice = () => {
+            var q = document.querySelectorAll('input[type=number]');
+            var pr = document.querySelectorAll('.product_price');
+            
+            var t = 0;
+            for (var i = 0; i < q.length; i++) {
+                t += parseFloat(pr[i].innerText) * q[i].value
+            }
+            
+            document.getElementById('total-price').innerText = t;
+            
+        }
+    </script>
+  </head>
+  <body style="background-color: #198754;">
+    <section class="h-100 h-custom">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-12">
+            <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+              <div class="card-body p-0">
+                <div class="row g-0">
+                  <div class="col-lg-8">
+                    <div class="p-5">
+                      <div class="d-flex justify-content-between align-items-center mb-5">
+                        <h1 class="fw-bold mb-0 text-black">Shopping Cart</h1>
+                        <h6 class="mb-0 text-muted">3 items</h6>
+                      </div>
+                      <hr class="my-4">
+    
+                      <div class="row mb-4 d-flex justify-content-between align-items-center">
+                        <div class="col-md-2 col-lg-2 col-xl-2">
+                          <img
+                            src="img/tomato.png"
+                            class="img-fluid rounded-3" alt="tomato">
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-xl-3">
+                          <h6 class="text-muted">Vegetable</h6>
+                          <h6 class="text-black mb-0 product_name">Tomato</h6>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                          <button class="btn btn-link px-2"
+                            onclick="this.parentNode.querySelector('input[type=number]').stepDown();totalPrice()">
+                            <i class="fas fa-minus"></i>
+                          </button>
+    
+                          <input id="form1" min="0" name="quantity" value="0" type="number"
+                            class="cart-item form-control form-control-sm" />
+    
+                          <button class="btn btn-link px-2"
+                            onclick="this.parentNode.querySelector('input[type=number]').stepUp();totalPrice()">
+                            <i class="fas fa-plus"></i>
+                          </button>
+                        </div>
+                        <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                          <h6 class="mb-0 product_price">10.00</h6>
+                        </div>
+                        <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                          <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
+                        </div>
+                      </div>
+    
+                      <hr class="my-4">
+    
+                      <div class="row mb-4 d-flex justify-content-between align-items-center">
+                        <div class="col-md-2 col-lg-2 col-xl-2">
+                          <img
+                            src="img/pickle.png"
+                            class="img-fluid rounded-3" alt="pickle">
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-xl-3">
+                          <h6 class="text-muted">Vegetable</h6>
+                          <h6 class="text-black mb-0 product_name">Pickle</h6>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                          <button class="btn btn-link px-2"
+                            onclick="this.parentNode.querySelector('input[type=number]').stepDown();totalPrice()">
+                            <i class="fas fa-minus"></i>
+                          </button>
+    
+                          <input id="form1" min="0" name="quantity" value="0" type="number"
+                            class="cart-item form-control form-control-sm" />
+    
+                          <button class="btn btn-link px-2"
+                            onclick="this.parentNode.querySelector('input[type=number]').stepUp();totalPrice()">
+                            <i class="fas fa-plus"></i>
+                          </button>
+                        </div>
+                        <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                          <h6 class="mb-0 product_price">8.00</h6>
+                        </div>
+                        <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                          <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
+                        </div>
+                      </div>
+    
+                      <hr class="my-4">
+    
+                      <div class="row mb-4 d-flex justify-content-between align-items-center">
+                        <div class="col-md-2 col-lg-2 col-xl-2">
+                          <img
+                            src="img/pineapple.png"
+                            class="img-fluid rounded-3" alt="Pineapple">
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-xl-3">
+                          <h6 class="text-muted">Fruit</h6>
+                          <h6 class="text-black mb-0 product_name">Pineapple</h6>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                          <button class="btn btn-link px-2"
+                            onclick="this.parentNode.querySelector('input[type=number]').stepDown();totalPrice()">
+                            <i class="fas fa-minus"></i>
+                          </button>
+
+                          <input id="form1" min="0" name="quantity" value="0" type="number"
+                            class="cart-item form-control form-control-sm" />
+    
+                          <button class="btn btn-link px-2"
+                            onclick="this.parentNode.querySelector('input[type=number]').stepUp();totalPrice()">
+                            <i class="fas fa-plus"></i>
+                          </button>
+                        </div>
+                        <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                          <h6 class="mb-0 product_price">44.00</h6>
+                        </div>
+                        <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                          <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
+                        </div>
+                      </div>
+    
+                      <hr class="my-4">
+                    </div>
+                  </div>
+                  <div class="col-lg-4 bg-grey">
+                    <div class="p-5">
+                      <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
+    
+                      <hr class="my-4">
+    
+                      <div class="d-flex justify-content-between mb-5">
+                        <h5 class="text-uppercase">Total price</h5>
+                        <h5 id=total-price>0</h5>
+                      </div>
+                      <form action="/order" method="post" id="myform">
+                          <input type="hidden" id="cart" name="cart">
+
+                        <button class="btn btn-dark btn-block btn-lg g-recaptcha"
+                          data-mdb-ripple-color="dark"
+                          data-sitekey="6LfnGqUgAAAAAOSln3FD4fflIdAJ0cybJBGpEpLX"
+                          data-callback="checkout">Checkout</button>
+                      </form>
+                    </div>
+                    <div class="p-5">
+                        <div class="form-outline">
+                            <textarea class="form-control" id="address" rows="4"></textarea>
+                            <label class="form-label" for="address">Address</label>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MDB -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"
+    ></script>
+  </body>
+</html>

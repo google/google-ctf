@@ -1,0 +1,7 @@
+*.spv
+glad.zip
+whitecube
+shaders/*.cpp
+shaders/*.h
+out/
+.vs

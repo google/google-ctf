@@ -1,0 +1,7 @@
+CLUSTER_TYPE=gce
+PROJECT=gctf-2022
+ZONE=europe-west1-b
+REGISTRY=eu.gcr.io
+CLUSTER_NAME=kctf-cluster
+DOMAIN_NAME=2022.ctfcompetition.com
+EMAIL_ADDRESS=

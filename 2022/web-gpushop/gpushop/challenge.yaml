@@ -1,0 +1,136 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: gpushop
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  allowConnectTo:
+    - "gpushop-mysql"
+  network:
+    public: false
+    ports:
+      - protocol: "HTTPS"
+        targetPort: 1337
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: false
+    image: eu.gcr.io/gctf-2021/gpushop-healthcheck:294e790d653ec820e62e48f6669c2f45dd5799d65874346d25ef859abe7dd59b
+  image: eu.gcr.io/gctf-2021/gpushop-challenge:fdea3a13a3c31dbf989d9efa8bd54b7f932458f349b847a2ed3c9f94b08ab46a
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "8Gi"
+                cpu: "4"
+            env:
+              - name: APP_URL
+                value: "https://gpushop.2021.ctfcompetition.com"
+              - name: APP_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: gpushop-secret
+                    key: app_key
+              - name: DB_CONNECTION
+                value: "mysql"
+              - name: DB_HOST
+                value: "gpushop-mysql"
+              - name: DB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: gpushop-secret
+                    key: mysql_password
+              - name: FLAG
+                valueFrom:
+                  secretKeyRef:
+                    name: gpushop-secret
+                    key: flag
+          - name: varnish
+            # docker build -t gpushop/varnish:1.0 varnish
+            # local
+            # kind load docker-image --name kctf-cluster  gpushop/varnish:1.0
+            # remote
+            # docker tag gpushop/varnish:1.0 "${REGISTRY}/${PROJECT}/${CHALLENGE_NAME}-varnish:1.0"
+            # docker push "${REGISTRY}/${PROJECT}/${CHALLENGE_NAME}-varnish:1.0"
+            image: eu.gcr.io/gctf-2021/gpushop-varnish:1.0
+            args: ["-a", "http=:1337,HTTP"]
+            env:
+              - name: PAY_SECRET
+                valueFrom:
+                  secretKeyRef:
+                    name: gpushop-secret
+                    key: pay_secret
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 4
+    targetCPUUtilizationPercentage: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gpushop-mysql
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: gpushop-mysql
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gpushop-mysql
+spec:
+  selector:
+    matchLabels:
+      app: gpushop-mysql
+  template:
+    metadata:
+      labels:
+        app: gpushop-mysql
+    spec:
+      containers:
+        - image: mysql:8
+          name: mysql
+          env:
+            - name: MYSQL_USER
+              value: "forge"
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gpushop-secret
+                  key: mysql_password
+            - name: MYSQL_DATABASE
+              value: "forge"
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              value: "1"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gpushop-secret
+stringData:
+  app_key: ""
+  mysql_password: ""
+  flag: "CTF{}"
+  pay_secret: ""

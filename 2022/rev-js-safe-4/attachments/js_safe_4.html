@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>JS safe v4 - the leading localStorage based safe solution with amazing JS anti-debug technology</title>
+<!--
+Advertisement:
+Looking for a hand-crafted, browser based virtual safe to store your most
+interesting secrets? Look no further, you have found it. You can order your own
+by sending a mail to js_safe@example.com. When ordering, please specify the
+password you'd like to use to open and close the safe. We'll hand craft a
+unique safe just for you, that only works with your password of choice.
+
+WARNING: Do NOT modify your HTML once downloaded. Otherwise, it'll stop working
+(it'll not accept the correct password) and might compromise your stored data.
+-->
+<style>
+body {
+  flex-direction: column;
+}
+input {
+  font-size: 200%;
+  margin-top: 2em;
+  text-align: center;
+  width: 17em;
+}
+#result {
+  font-size: 300%;
+  font-family: monospace;
+  font-weight: bold;
+}
+body.granted>#result::before {
+  content: "Access Granted";
+  color: green;
+}
+body.denied>#result::before {
+  content: "Access Denied";
+  color: red;
+}
+#content {
+  display: none;
+}
+body.granted #content {
+  display: initial;
+}
+/*
+Source and license of the animated box CSS and HTML code (copied without change):
+Blog post: https://dev.to/johnnyfekete/3d-christmas-gift-box-with-html-css-1kkl
+Copyright (c) 2022 by Johnny Fekete (https://codepen.io/johnnyfekete/pen/NWRxmwG)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+body {
+  background: linear-gradient(-20deg, #a8dadc 20%, #457b9d 20%, #457b9d 30%, #1d3557 30%, #1d3557 70%, #457b9d 70%, #457b9d 80%, #a8dadc 80% );
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.gift-box-container {
+  width: 200px;
+  height: 200px;
+  perspective: 400px;
+}
+
+.gift-box {
+  --gift-box-color: #e63946;
+  --gift-box-edge-color: #590b11;
+  --wrap-color: #f1faee;
+  --wrap-ribbon-color: #c0e4e6;
+  --wrap-top-color: #d8efef;
+
+  width: 200px;
+  height: 200px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+  -webkit-animation: rotation-3d 20s infinite linear;
+          animation: rotation-3d 20s infinite linear;
+}
+
+.gift-box .gift-box__side,
+.gift-box .gift-box__end {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border: 2px solid var(--gift-box-edge-color);
+}
+
+.gift-box .gift-box-lid__side {
+  position: absolute;
+  width: 220px;
+  height: 50px;
+  border: 2px solid var(--gift-box-edge-color);
+}
+
+.gift-box .gift-box-lid__end {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border: 2px solid var(--gift-box-edge-color);
+}
+
+.gift-box .gift-box__side,
+.gift-box .gift-box-lid__side {
+  background: linear-gradient(to right,
+    var(--gift-box-color) 40%,
+    var(--wrap-color) 40%,
+    var(--wrap-color) 60%,
+    var(--gift-box-color) 60%
+  );
+}
+.gift-box .gift-box__end,
+.gift-box .gift-box-lid__end {
+  background: linear-gradient(to right,
+    transparent 40%,
+    var(--wrap-top-color) 40%,
+    var(--wrap-top-color) 60%,
+    transparent 60%
+  ),
+  linear-gradient(to bottom,
+    var(--gift-box-color) 40%,
+    var(--wrap-color) 40%,
+    var(--wrap-color) 60%,
+    var(--gift-box-color) 60%
+  );
+}
+
+.gift-box .gift-box__side--front { transform: rotateY(0deg) translateZ(100px); }
+.gift-box .gift-box__side--back { transform: rotateY(180deg) translateZ(100px); }
+.gift-box .gift-box__side--left { transform: rotateY(-90deg) translateZ(100px); }
+.gift-box .gift-box__side--right { transform: rotateY(90deg) translateZ(100px); }
+.gift-box .gift-box__side--top { transform: rotateX(90deg) translateZ(100px); }
+.gift-box .gift-box__side--bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+.gift-box .gift-box-lid__side--front { transform: rotateY(0deg) translateZ(110px) translateX(-10px) translateY(-10px); }
+.gift-box .gift-box-lid__side--back { transform: rotateY(180deg) translateZ(110px) translateX(10px) translateY(-10px); }
+.gift-box .gift-box-lid__side--left { transform: rotateY(-90deg) translateZ(120px)  translateY(-10px); }
+.gift-box .gift-box-lid__side--right { transform: rotateY(90deg) translateZ(100px)  translateY(-10px); }
+.gift-box .gift-box-lid__side--top { transform: rotateX(90deg) translateZ(120px) translateX(-10px) translateY(0); }
+
+
+.gift-box .ribbon-l {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border: 2px solid var(--wrap-ribbon-color);
+  border-radius: 50% 50% 0 50%;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+  transform: rotateX(75deg)
+             rotateY(90deg)
+             /* use a CSS variable for the translate, defined in CSS */
+             translateZ(calc(80px - var(--gift-box-position)))  
+             translateX(-85px)
+             translateY(-75px)
+             skewY(30deg);
+}
+
+.gift-box .ribbon-r {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border: 2px solid var(--wrap-ribbon-color);
+  border-radius: 50% 50% 0 50%;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+  transform: rotateX(-5deg)
+             rotateY(90deg)
+             /* use a CSS variable for the translate, defined in CSS */
+             translateZ(calc(80px - var(--gift-box-position)))  
+             translateX(-30px)
+             translateY(-110px)
+             skewY(30deg);
+}
+
+.ribbon-l-end {
+  position: absolute;
+  width: 40px;
+  height: 110px;
+  background:
+    linear-gradient(45deg, var(--wrap-top-color) 72%, transparent 72%), 
+    linear-gradient(-45deg, var(--wrap-top-color) 72%, transparent 72%);
+  border: 2px solid var(--gift-box-edge-color);
+  border-top: none;
+  border-bottom: none;
+  transform: rotateX(-70deg) translateX(80px) translateY(-80px) translateZ(-60px);
+}
+
+.ribbon-r-end {
+  position: absolute;
+  width: 40px;
+  height: 110px;
+  background:
+    linear-gradient(45deg, var(--wrap-top-color) 72%, transparent 72%), 
+    linear-gradient(-45deg, var(--wrap-top-color) 72%, transparent 72%);
+  border: 2px solid var(--gift-box-edge-color);
+  border-top: none;
+  border-bottom: none;
+  transform: rotateX(80deg) translateX(80px) translateY(-80px) translateZ(60px);
+}
+
+
+@-webkit-keyframes rotation-3d {
+  from {
+    transform: translateZ(-100px) rotateY(50deg) rotateX(-5deg) rotateZ(-30deg)
+  }
+  to {
+    transform: translateZ(-100px) rotateY(409deg) rotateX(-5deg) rotateZ(-30deg)
+  }
+}
+
+
+@keyframes rotation-3d {
+  from {
+    transform: translateZ(-100px) rotateY(50deg) rotateX(-5deg) rotateZ(-30deg)
+  }
+  to {
+    transform: translateZ(-100px) rotateY(409deg) rotateX(-5deg) rotateZ(-30deg)
+  }
+}
+</style>
+  
+<script>
+// Prevent setting breakpoints from the dev console UI directly by defining the function as string
+var code = `\x60
+  console.log({flag}); 
+  for (i=0; i<100; i++) setTimeout('debugger');
+  if ("\x24\x7B\x22   .?  K 7 hA  [Cdml<U}9P  @dBpM) -$A%!X5[ '% U(!_ (]c 4zp$RpUi(mv!u4!D%i%6!D'Af$Iu8HuCP>qH.*(Nex.)X&{I'$ ~Y0mDPL1 U08<2G{ ~ _:h\ys! K A( f.'0 p!s    fD] (  H  E < 9Gf.' XH,V1 P * -P\x22\x7D" != ("\x24\x7B\x22" + checksum(code) + "\x22\x7D")) while(1);
+  flag = flag.split('');
+  i‍ = 1337;
+  pool = 'c_3L9zKw_l1HusWN_b_U0c3d5_1'.split('');
+  while (pool.length > 0) if(flag.shift() != pool.splice((i = (i || 1) * 16807 % 2147483647)%pool.length, 1)[0]) return false;
+  return true;
+\x60`;
+setTimeout("x = Function('flag', " + code + ")");  
+
+// Check password and decode encrypted data from localstorage
+function open_safe() {
+  keyhole.disabled = true;
+  password = /^CTF{([0-9a-zA-Z_@!?-]+)}$/.exec(keyhole.value);
+  document.body.className = (password && x(password[1])) ? 'granted' : 'denied';
+  if (document.body.className == 'denied') return;
+  password = Array.from(password[1]).map(c => c.charCodeAt());
+  encrypted = JSON.parse(localStorage.content || '');
+  content.value = encrypted.map((c,i) => c ^ password[i % password.length]).map(String.fromCharCode).join('')
+}
+
+// Encrypt and save data
+function save() {
+  plaintext = Array.from(content.value).map(c => c.charCodeAt());
+  localStorage.content = JSON.stringify(plaintext.map((c,i) => c ^ password[i % password.length]));
+}
+</script>
+</head>
+<body onload="console.log({status:'loaded'})">
+  <div class="gift-box-container">
+    <div class="gift-box">
+      <div class="gift-box__side gift-box__side--front"></div>
+      <div class="gift-box__side gift-box__side--back"></div>
+      <div class="gift-box__side gift-box__side--left"></div>
+      <div class="gift-box__side gift-box__side--right"></div>
+      <div class="gift-box__end gift-box__side--top"></div>
+      <div class="gift-box__end gift-box__side--bottom"></div>
+      <div class="gift-box-lid__side gift-box-lid__side--front"></div>
+      <div class="gift-box-lid__side gift-box-lid__side--back"></div>
+      <div class="gift-box-lid__side gift-box-lid__side--left"></div>
+      <div class="gift-box-lid__side gift-box-lid__side--right"></div>
+      <div class="gift-box-lid__end gift-box-lid__side--top"></div>
+      <div class="ribbon-l" style="--gift-box-position: 0px; border-color: var(--gift-box-edge-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 1px; border-color: var(--gift-box-edge-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 2px; border-color: var(--gift-box-edge-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 3px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 4px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 5px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 6px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 7px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 8px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 9px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 10px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 11px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 12px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 13px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 14px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 15px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 16px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 17px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 18px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 19px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 20px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 21px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 22px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 23px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 24px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 25px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 26px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 27px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 28px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 29px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 30px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 31px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 32px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 33px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 34px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 35px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 36px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 37px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 38px; border-color: var(--gift-box-edge-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 39px; border-color: var(--gift-box-edge-color)"></div>
+      <div class="ribbon-l" style="--gift-box-position: 40px; border-color: var(--gift-box-edge-color)"></div>
+      <div class="ribbon-l-end"></div>
+      <div class="ribbon-r" style="--gift-box-position: 0px; border-color: var(--gift-box-edge-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 1px; border-color: var(--gift-box-edge-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 2px; border-color: var(--gift-box-edge-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 3px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 4px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 5px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 6px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 7px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 8px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 9px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 10px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 11px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 12px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 13px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 14px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 15px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 16px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 17px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 18px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 19px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 20px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 21px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 22px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 23px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 24px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 25px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 26px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 27px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 28px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 29px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 30px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 31px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 32px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 33px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 34px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 35px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 36px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 37px; border-color: var(--wrap-ribbon-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 38px; border-color: var(--gift-box-edge-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 39px; border-color: var(--gift-box-edge-color)"></div>
+      <div class="ribbon-r" style="--gift-box-position: 40px; border-color: var(--gift-box-edge-color)"></div>
+      <div class="ribbon-r-end"></div>
+    </div>
+  </div>
+  <div>
+    <input id="keyhole" autofocus onchange="open_safe()" placeholder="🔑">
+  </div>
+  <div id="result">
+  </div>
+  <div>
+    <input id="content" onchange="save()">
+  </div>
+
+<script>
+// Utilities
+// Proprietary military grade checksum function (to use on objects, stringify argument first, e.g. object + ' ')
+checksum  =  s => {                                                                                                       
+  let result = '';                                                                                                        
+  let x = 0;                                                                                                              
+  try {                                                                                                                   
+    for (let x = 0; x+3 <= s.length; x+=3) {                                                                              
+      let next =                                                                                                          
+        (s.charCodeAt(x)%2)*64 +                                                                                          
+        (s.charCodeAt(x+1)%8)*8 +                                                                                         
+        s.charCodeAt(x+2)%8;                                                                                              
+      next = Math.min(Math.max(0x20, next), 0x7E);                                                                        
+      result += String.fromCharCode(next);                                                                                
+    }                                                                                                                     
+    return result;                                                                                                        
+  } catch(_) {                                                                                                            
+    throw ChecksumError(s, result, x);                                                                                    
+  }                                                                                                                       
+}
+console.log("checksum test", checksum(checksum + ' '));
+
+// TODO: Whole document integrity check:  if (document.documentElement.outerHTML.length == 23082) //... 
+// TODO: Utility function for detecting the opening of DevTools, https://stackoverflow.com/q/7798748
+// TODO: Create wrapper function to support async/await for  setTimeout 
+//       E.g. something like https://stackoverflow.com/q/33289726
+// TODO: Checksum check for the utility funcitons themselves, e.g.  (checksum(' ' + checksum)) == '...' 
+
+// splice for Object (generalization of Array.prototype.splice)
+function splice(start, deleteCount, insert) {
+  ret = {};
+  // Need to iterate backwards to avoid indexing problems around deleted properties
+  for (i = deleteCount; i != 0; i--) key = Object.keys(this)[start+i-1], ret[key] = this[key], delete this[key];
+  for (key in insert) this[key] = insert[key];
+  return ret;
+}
+var a = {a:1, b:2, c:3}; console.log('splice test', JSON.stringify({returnValue: splice.call(a, 0, 2, {a:5, b:6}), updatedObject: a}));
+Object.defineProperty(Object.prototype, 'splice', {get:splice});
+
+// More intuitive trace printer for Chrome
+Error.prepareStackTrace = (error, stack) => {
+  var i = stack.length - 1, t = [];
+  do t.push('Frame ' + i + ': ' + stack[i]); while(i--);
+  return t.join('\n');
+};
+console.log('stack trace test', new Error());
+
+// Print the intermediate input and output state of an interrupted checksum process
+function ChecksumError(input, result, x) {
+  return Object.defineProperties(Object.assign(new Error, {input, result, x, toString: undefined}), {
+    message: {get: () => {
+      let message = [];
+      for (var i = 0; !(i > this.x); i+=3) message.push([i, input[i], input[i+1], input[i+2], result[i/3]]);
+      return JSON.stringify(message);
+    }}
+  }); 
+}
+console.log('ChecksumError test', ChecksumError('input', 'ou', 4));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: s2
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: false
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2022/s2-healthcheck:ff8097c48c10a488bcc2bc96b64806bb0a608f6a343fafedb48ddbe6311fd3cd
+  image: eu.gcr.io/gctf-2022/s2-challenge:ba6b8d16b2320ebf21b5fa07ead5ecf7afd4978c15ddd9248029b8d01d19a363
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

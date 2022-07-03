@@ -1,0 +1,31 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# Human readable task name
+name: Mixed
+# Long form description.
+description: |+
+  A company I interview for gave me a test to solve. I'd decompile it and get the answer that way, but they seem to use some custom Python version... At least I know it's based on commit 64113a4ba801126028505c50a7383f3e9df29573.
+# The flag
+flag: CTF{4t_l3ast_1t_w4s_n0t_4n_x86_opc0d3_p3rmut4tion}
+# Task category. (one of hw, crypto, pwn, rev, web, net, misc)
+category: reversing
+# === the fields below will be filled by SRE or automation ===
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true

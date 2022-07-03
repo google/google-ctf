@@ -1,0 +1,113 @@
+<!--
+ Copyright 2022 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     https://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>rever</title>
+    <meta charset="utf-8" />
+    <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: rgb(180, 190, 210);
+      margin: 0;
+      font-family: monospace;
+    }
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    #content {
+    }
+    #content input {
+      width: 400pt;
+    }
+    #content progress {
+      width: 440pt;
+      height: 30pt;
+      margin: 8pt;
+    }
+
+    #title {
+      font-size: 150pt;
+      font-weight: 900;
+      width: 100%;
+      color:  white;
+      margin-bottom: 0;
+    }
+    #motto {
+      font-size: 13pt;
+      font-weight: 900;
+      color:  white;
+    }
+    #result {
+      font-size: 13pt;
+      font-weight: 900;
+      color:  white;
+    }
+    #container {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      display: inline-block;
+      text-align: center;
+    }
+    .rev {
+      display: inline-block;
+      -moz-transform:    scaleX(-1); /* Gecko */
+      -o-transform:      scaleX(-1); /* Opera */
+      -webkit-transform: scaleX(-1); /* Webkit */
+      transform:         scaleX(-1); /* Standard */
+
+      filter: FlipH;                 /* IE 6/7/8 */
+    }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <p id="title">
+        REV<span class="rev">RE</span>
+      </p>
+      <p id="motto">
+        We live in a twilight world. There are no flags at dusk.
+      </p>
+      <p id="content">
+        <input id="flag" value="CTF{FlagGoesHere}">
+        <button id="go">Go.</button><br>
+        <progress id="progress" value="0" max="6000"></progress><br>
+        <span id="result"></span>
+        <div style="visibility: hidden;">
+          <canvas id="canvas" width="1024" height="1024"></canvas>
+        </div>
+      </p>
+    </div>
+
+    </div>
+    <div id="background">
+      <canvas id="background-canvas" width="1024" height="1024"></canvas>
+    </div>
+    <script src="art.js"></script>
+    <script src="ca.js"></script>
+  </body>
+</html>

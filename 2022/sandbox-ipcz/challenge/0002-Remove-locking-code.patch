@@ -1,0 +1,284 @@
+From 2992ac73ea51a5b81839c04879e2c709431f06af Mon Sep 17 00:00:00 2001
+From: Stephen Roettger <sroettger@google.com>
+Date: Tue, 28 Jun 2022 14:27:46 +0200
+Subject: [PATCH 2/3] Remove locking code
+
+Note: this patch is not strictly necessary for the intended solution but it
+greatly simplifies the challenge setup and solution.
+---
+ src/ipcz/local_router_link.cc  | 15 +---------
+ src/ipcz/local_router_link.h   |  2 --
+ src/ipcz/remote_router_link.cc | 18 +-----------
+ src/ipcz/remote_router_link.h  |  2 --
+ src/ipcz/router.cc             |  4 +--
+ src/ipcz/router_link.h         |  8 ------
+ src/ipcz/router_link_state.cc  | 51 +---------------------------------
+ src/ipcz/router_link_state.h   | 26 -----------------
+ 8 files changed, 4 insertions(+), 122 deletions(-)
+
+diff --git a/src/ipcz/local_router_link.cc b/src/ipcz/local_router_link.cc
+index e35032a..cd09a32 100644
+--- a/src/ipcz/local_router_link.cc
++++ b/src/ipcz/local_router_link.cc
+@@ -95,23 +95,11 @@ void LocalRouterLink::MarkSideStable() {
+ }
+ 
+ bool LocalRouterLink::TryLockForBypass(const NodeName& bypass_request_source) {
+-  if (!state_->state().TryLock(side_)) {
+-    return false;
+-  }
+-
+   state_->state().allowed_bypass_request_source = bypass_request_source;
+   std::atomic_thread_fence(std::memory_order_release);
+   return true;
+ }
+ 
+-bool LocalRouterLink::TryLockForClosure() {
+-  return state_->state().TryLock(side_);
+-}
+-
+-void LocalRouterLink::Unlock() {
+-  state_->state().Unlock(side_);
+-}
+-
+ void LocalRouterLink::FlushOtherSideIfWaiting() {
+   const LinkSide other_side = side_.opposite();
+   if (state_->state().ResetWaitingBit(other_side)) {
+@@ -121,8 +109,7 @@ void LocalRouterLink::FlushOtherSideIfWaiting() {
+ 
+ bool LocalRouterLink::CanNodeRequestBypass(
+     const NodeName& bypass_request_source) {
+-  return state_->state().is_locked_by(side_.opposite()) &&
+-         state_->state().allowed_bypass_request_source == bypass_request_source;
++  return state_->state().allowed_bypass_request_source == bypass_request_source;
+ }
+ 
+ bool LocalRouterLink::WouldParcelExceedLimits(size_t data_size,
+diff --git a/src/ipcz/local_router_link.h b/src/ipcz/local_router_link.h
+index 359162d..dfcbfa3 100644
+--- a/src/ipcz/local_router_link.h
++++ b/src/ipcz/local_router_link.h
+@@ -41,8 +41,6 @@ class LocalRouterLink : public RouterLink {
+   bool UpdateInboundQueueState(size_t num_bytes, size_t num_parcels) override;
+   void MarkSideStable() override;
+   bool TryLockForBypass(const NodeName& bypass_request_source) override;
+-  bool TryLockForClosure() override;
+-  void Unlock() override;
+   void FlushOtherSideIfWaiting() override;
+   bool CanNodeRequestBypass(const NodeName& bypass_request_source) override;
+   bool WouldParcelExceedLimits(size_t data_size,
+diff --git a/src/ipcz/remote_router_link.cc b/src/ipcz/remote_router_link.cc
+index ce58221..e737e02 100644
+--- a/src/ipcz/remote_router_link.cc
++++ b/src/ipcz/remote_router_link.cc
+@@ -152,26 +152,11 @@ void RemoteRouterLink::MarkSideStable() {
+ 
+ bool RemoteRouterLink::TryLockForBypass(const NodeName& bypass_request_source) {
+   RouterLinkState* state = GetLinkState();
+-  if (!state || !state->TryLock(side_)) {
+-    return false;
+-  }
+-
+   state->allowed_bypass_request_source = bypass_request_source;
+   std::atomic_thread_fence(std::memory_order_release);
+   return true;
+ }
+ 
+-bool RemoteRouterLink::TryLockForClosure() {
+-  RouterLinkState* state = GetLinkState();
+-  return state && state->TryLock(side_);
+-}
+-
+-void RemoteRouterLink::Unlock() {
+-  if (RouterLinkState* state = GetLinkState()) {
+-    state->Unlock(side_);
+-  }
+-}
+-
+ void RemoteRouterLink::FlushOtherSideIfWaiting() {
+   RouterLinkState* state = GetLinkState();
+   if (!state || !state->ResetWaitingBit(side_.opposite())) {
+@@ -186,8 +171,7 @@ void RemoteRouterLink::FlushOtherSideIfWaiting() {
+ bool RemoteRouterLink::CanNodeRequestBypass(
+     const NodeName& bypass_request_source) {
+   RouterLinkState* state = GetLinkState();
+-  return state && state->is_locked_by(side_.opposite()) &&
+-         state->allowed_bypass_request_source == bypass_request_source;
++  return state && state->allowed_bypass_request_source == bypass_request_source;
+ }
+ 
+ bool RemoteRouterLink::WouldParcelExceedLimits(size_t data_size,
+diff --git a/src/ipcz/remote_router_link.h b/src/ipcz/remote_router_link.h
+index a8573a0..702976f 100644
+--- a/src/ipcz/remote_router_link.h
++++ b/src/ipcz/remote_router_link.h
+@@ -58,8 +58,6 @@ class RemoteRouterLink : public RouterLink {
+   bool UpdateInboundQueueState(size_t num_bytes, size_t num_parcels) override;
+   void MarkSideStable() override;
+   bool TryLockForBypass(const NodeName& bypass_request_source) override;
+-  bool TryLockForClosure() override;
+-  void Unlock() override;
+   void FlushOtherSideIfWaiting() override;
+   bool CanNodeRequestBypass(const NodeName& bypass_request_source) override;
+   bool WouldParcelExceedLimits(size_t data_size,
+diff --git a/src/ipcz/router.cc b/src/ipcz/router.cc
+index d1aac23..20f00e1 100644
+--- a/src/ipcz/router.cc
++++ b/src/ipcz/router.cc
+@@ -1265,8 +1265,7 @@ void Router::Flush(bool force_bypass_attempt) {
+       dropped_last_decaying_link = true;
+     }
+ 
+-    if (on_central_link && outbound_parcels_.IsSequenceFullyConsumed() &&
+-        outward_link->TryLockForClosure()) {
++    if (on_central_link && outbound_parcels_.IsSequenceFullyConsumed()) {
+       // If the outbound sequence is done, our side of the route is gone and we
+       // have no more parcels to transmit. Attempt to propagate our closure,
+       // which we can only do if we're also the only router left on our side of
+@@ -1567,7 +1566,6 @@ void Router::MaybeInitiateBridgeBypass() {
+     if (!link_to_second_peer->TryLockForBypass()) {
+       // Cancel the decay on this bridge's side, because we couldn't decay the
+       // other side of the bridge yet.
+-      link_to_first_peer->Unlock();
+       return;
+     }
+   }
+diff --git a/src/ipcz/router_link.h b/src/ipcz/router_link.h
+index 72aa8d7..a0dd7dd 100644
+--- a/src/ipcz/router_link.h
++++ b/src/ipcz/router_link.h
+@@ -73,14 +73,6 @@ class RouterLink : public RefCounted {
+   // peer.
+   virtual bool TryLockForBypass(const NodeName& bypass_request_source = {}) = 0;
+ 
+-  // Attempts to lock the link for the router on this side to propagate route
+-  // closure toward the other side. Returns true if and only if successful,
+-  // meaning no further bypass operations will proceed on the link.
+-  virtual bool TryLockForClosure() = 0;
+-
+-  // Unlocks a link previously locked by one of the TryLock* methods above.
+-  virtual void Unlock() = 0;
+-
+   // Asks the other side to flush its router if and only if the side marked
+   // itself as waiting for both sides of the link to become stable, and both
+   // sides of the link are stable.
+diff --git a/src/ipcz/router_link_state.cc b/src/ipcz/router_link_state.cc
+index 0e0e561..59d3ee3 100644
+--- a/src/ipcz/router_link_state.cc
++++ b/src/ipcz/router_link_state.cc
+@@ -61,54 +61,6 @@ void RouterLinkState::SetSideStable(LinkSide side) {
+   }
+ }
+ 
+-bool RouterLinkState::TryLock(LinkSide side) {
+-  const Status kThisSideStable =
+-      side == LinkSide::kA ? kSideAStable : kSideBStable;
+-  const Status kOtherSideStable =
+-      side == LinkSide::kA ? kSideBStable : kSideAStable;
+-  const Status kLockedByThisSide =
+-      side == LinkSide::kA ? kLockedBySideA : kLockedBySideB;
+-  const Status kLockedByEitherSide = kLockedBySideA | kLockedBySideB;
+-  const Status kThisSideWaiting =
+-      side == LinkSide::kA ? kSideAWaiting : kSideBWaiting;
+-
+-  Status expected = kStable;
+-  Status desired_bit = kLockedByThisSide;
+-  while (!status.compare_exchange_weak(expected, expected | desired_bit,
+-                                       std::memory_order_relaxed)) {
+-    if ((expected & kLockedByEitherSide) != 0 ||
+-        (expected & kThisSideStable) == 0) {
+-      return false;
+-    }
+-
+-    if (desired_bit == kLockedByThisSide &&
+-        (expected & kOtherSideStable) == 0) {
+-      // If we were trying to lock but the other side isn't stable, try to set
+-      // our waiting bit instead.
+-      desired_bit = kThisSideWaiting;
+-    } else if (desired_bit == kThisSideWaiting &&
+-               (expected & kStable) == kStable) {
+-      // Otherwise if we were trying to set our waiting bit and the other side
+-      // is now stable, go back to trying to lock the link.
+-      desired_bit = kLockedByThisSide;
+-    }
+-  }
+-
+-  return desired_bit == kLockedByThisSide;
+-}
+-
+-void RouterLinkState::Unlock(LinkSide side) {
+-  const Status kLockedByThisSide =
+-      side == LinkSide::kA ? kLockedBySideA : kLockedBySideB;
+-  Status expected = kStable | kLockedByThisSide;
+-  Status desired = kStable;
+-  while (!status.compare_exchange_weak(expected, desired,
+-                                       std::memory_order_relaxed) &&
+-         (expected & kLockedByThisSide) != 0) {
+-    desired = expected & ~kLockedByThisSide;
+-  }
+-}
+-
+ bool RouterLinkState::ResetWaitingBit(LinkSide side) {
+   const Status kThisSideWaiting =
+       side == LinkSide::kA ? kSideAWaiting : kSideBWaiting;
+@@ -116,8 +68,7 @@ bool RouterLinkState::ResetWaitingBit(LinkSide side) {
+   Status desired = kStable;
+   while (!status.compare_exchange_weak(expected, desired,
+                                        std::memory_order_relaxed)) {
+-    if ((expected & kStable) != kStable || (expected & kThisSideWaiting) == 0 ||
+-        (expected & (kLockedBySideA | kLockedBySideB)) != 0) {
++    if ((expected & kStable) != kStable || (expected & kThisSideWaiting) == 0) {
+       // If the link isn't stable yet, or `side` wasn't waiting on it, or the
+       // link is already locked, there's no point changing the status here.
+       return false;
+diff --git a/src/ipcz/router_link_state.h b/src/ipcz/router_link_state.h
+index f49a5b6..49c9144 100644
+--- a/src/ipcz/router_link_state.h
++++ b/src/ipcz/router_link_state.h
+@@ -61,13 +61,6 @@ struct IPCZ_ALIGN(8) RouterLinkState : public RefCountedFragment {
+   static constexpr Status kSideAWaiting = 1 << 2;
+   static constexpr Status kSideBWaiting = 1 << 3;
+ 
+-  // Set if this link has been locked by side A or B, respectively. These bits
+-  // are always mutually exclusive and may only be set once kStable are set. A
+-  // A link may be locked to initiate bypass of one side, or to propagate route
+-  // closure from one side.
+-  static constexpr Status kLockedBySideA = 1 << 4;
+-  static constexpr Status kLockedBySideB = 1 << 5;
+-
+   std::atomic<Status> status{kUnstable};
+ 
+   // This is populated by a proxying router once it has successfully
+@@ -97,29 +90,10 @@ struct IPCZ_ALIGN(8) RouterLinkState : public RefCountedFragment {
+   uint8_t reserved0[2];
+   uint32_t reserved1[5];
+ 
+-  bool is_locked_by(LinkSide side) const {
+-    Status s = status.load(std::memory_order_relaxed);
+-    if (side == LinkSide::kA) {
+-      return (s & kLockedBySideA) != 0;
+-    }
+-    return (s & kLockedBySideB) != 0;
+-  }
+-
+   // Updates the status to reflect that the given `side` is stable, meaning it's
+   // no longer holding on to any decaying links.
+   void SetSideStable(LinkSide side);
+ 
+-  // Attempts to lock the state of this link from one side so that the router on
+-  // that side can coordinate its own bypass or propagate its own closure. In
+-  // order for this to succeed, both kStable bits must be set and the link must
+-  // not already be locked by the other side. Returns true if the link was
+-  // locked succesfully, or false otherwise.
+-  bool TryLock(LinkSide side);
+-
+-  // Unlocks a link previously locked by a successful call to TryLock() for the
+-  // same `side`.
+-  void Unlock(LinkSide side);
+-
+   // If both sides of the link are stable AND `side` was marked as waiting for
+   // that to happen, this resets that wating bit and returns true. Otherwise
+   // this returns false and the link's status is unchanged.
+-- 
+2.37.0.rc0.161.g10f37bed90-goog
+

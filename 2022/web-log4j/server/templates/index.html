@@ -1,0 +1,68 @@
+<!doctype html>
+<!--
+ Copyright 2022 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<html lang="en">
+
+  <head>
+      <title>Chat</title>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-light bg-light">
+        <span class="navbar-brand mb-0 h1">Chatbot</span>
+    </nav>
+    <form id="submit_command" method="post">
+      <div class="form-inline">
+        <div class="col-md-3">
+          <input type="text" class="form-control" id="text" name="text" style="width: 100%" placeholder="Input Command">
+        </div>
+        <input type="submit" class="form-control" value="Submit">
+    </div>
+    </form>
+    <br>
+    <div class="row">
+      <div id="result" class="col-md-offset-1"></div>
+    </div>
+  </body>
+  <script>
+    $(document).ready(function() {
+      $('#submit_command').submit(function(event) { //Trigger on form submit
+        event.preventDefault();
+        $('#text').empty(); //Clear the messages first
+        $('#result').empty();
+
+        $.ajax({
+            type    : 'POST', 
+            url     : '/', 
+            data    : $(this).serialize(), 
+            success : function(data) {
+                          $('#result').fadeIn(1000).append('<p class="font-weight-bolder">' + data + '</p>');
+                      },
+            error   : function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert('Status: ' + textStatus + '\nError: ' + errorThrown);
+                      }
+        });
+      });
+    });
+  </script>
+
+</html>

@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: fixedaslr
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2022/fixedaslr-healthcheck:32da550ee8c7ef1823c4710d67f86053835cb3b7e09f9f18eb1c2e376bd10d2e
+  image: eu.gcr.io/gctf-2022/fixedaslr-challenge:c6bea63da6452893a3db6d7901919790b548a64e940dbc0524f5ac5961511512
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

@@ -1,0 +1,22 @@
+# Human readable task name
+name: Electric Mayhem PQC
+# Long form description.
+description: |+
+  The server presents power traces of a secret firmware crypto operation. The goal is to recover the secret key.
+
+# The flag
+flag: CTF{ThereWas42DecibelRockinBand}
+
+# Task category. (one of hw, crypto, pwn, rev, web, net, misc)
+category: crypto
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: 'https://electric-mayhem-pqc-web.2022.ctfcompetition.com'
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true

@@ -1,0 +1,27 @@
+From 3d5efecc5906b6bfbf9d7e37b32e1218ed3db52e Mon Sep 17 00:00:00 2001
+From: Stephen Roettger <sroettger@google.com>
+Date: Tue, 28 Jun 2022 14:28:30 +0200
+Subject: [PATCH 3/3] Add build targets for challenge binaries
+
+---
+ src/BUILD.gn | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/BUILD.gn b/src/BUILD.gn
+index 7ebdea7..b82d588 100644
+--- a/src/BUILD.gn
++++ b/src/BUILD.gn
+@@ -371,3 +371,10 @@ group("all") {
+     ":ipcz_tests",
+   ]
+ }
++
++group("challenge") {
++  deps = [
++    "challenge:broker",
++    "challenge:flag_bearer",
++  ]
++}
+-- 
+2.37.0.rc0.161.g10f37bed90-goog
+
