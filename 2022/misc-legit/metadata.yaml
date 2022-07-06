@@ -1,0 +1,26 @@
+# Human readable task name
+name: LeGit
+# Long form description.
+description: |+
+  I built this CLI for exploring git repositories. It's still WIP but I find it pretty cool! What do you think about it?
+
+  NOTE - the challenge can reach the internet but has a tight limit on repository size.
+
+# The flag
+flag: CTF{y3sMYR3p01SleGIT!}
+
+# Task category. (one of hw, crypto, pwn, rev, web, net, misc)
+category: misc
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# host/port for non-web challenges
+host: 'legit.2022.ctfcompetition.com 1337'
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true

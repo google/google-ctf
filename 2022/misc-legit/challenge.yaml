@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: legit
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2022/legit-healthcheck:5d61ef1134f4eb4d89f828cd354cdb04ea717c7ae15664141695215e6feadf59
+  image: eu.gcr.io/gctf-2022/legit-challenge:5c74cba3b9da5f4361b87d8c29b1d89e2e0d7c34f8e16b3a4f9a40a676848c2a
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"
