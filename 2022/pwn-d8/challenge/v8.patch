@@ -1,0 +1,136 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index 4e575eb024..0c68281f67 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -6354,6 +6354,23 @@ v8_executable("d8") {
+   }
+ }
+ 
++v8_executable("challenge") {
++  visibility = [ ":*" ]  # Only targets in this file can depend on this.
++
++  sources = [
++    "src/challenge/runner.cc",
++  ]
++
++  configs = [ ":internal_config_base" ]
++
++  deps = [
++    ":v8",
++    ":v8_libbase",
++    ":v8_libplatform",
++    ":v8_tracing",
++  ]
++}
++
+ v8_executable("v8_hello_world") {
+   sources = [ "samples/hello-world.cc" ]
+ 
+diff --git a/src/challenge/runner.cc b/src/challenge/runner.cc
+new file mode 100644
+index 0000000000..9e30b2ef03
+--- /dev/null
++++ b/src/challenge/runner.cc
+@@ -0,0 +1,89 @@
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
++
++#include "include/libplatform/libplatform.h"
++#include "include/v8-context.h"
++#include "include/v8-initialization.h"
++#include "include/v8-isolate.h"
++#include "include/v8-local-handle.h"
++#include "include/v8-primitive.h"
++#include "include/v8-script.h"
++#include "src/api/api-inl.h"
++#include "src/base/platform/platform.h"
++#include "src/execution/isolate-inl.h"
++#include "src/objects/instance-type.h"
++#include "src/roots/roots.h"
++#include "src/snapshot/code-serializer.h"
++
++uint8_t input_data[65536];
++
++void run(char* argv[], uint8_t* blob_buffer, int length) {
++  v8::V8::InitializeICUDefaultLocation(argv[0]);
++  v8::V8::InitializeExternalStartupData(argv[0]);
++  std::unique_ptr<v8::Platform> platform = v8::platform::NewDefaultPlatform();
++  v8::V8::InitializePlatform(platform.get());
++  v8::V8::Initialize();
++
++  v8::Isolate::CreateParams create_params;
++  create_params.array_buffer_allocator =
++      v8::ArrayBuffer::Allocator::NewDefaultAllocator();
++  v8::Isolate* isolate = v8::Isolate::New(create_params);
++
++  v8::ScriptCompiler::CachedData* code_cache =
++      new v8::ScriptCompiler::CachedData(blob_buffer, length);
++
++  {
++    v8::Isolate::Scope isolate_scope(isolate);
++    v8::HandleScope handle_scope(isolate);
++    v8::Local<v8::Context> context = v8::Context::New(isolate);
++    v8::Context::Scope context_scope(context);
++
++    v8::Local<v8::String> source_string =
++        v8::String::NewFromUtf8Literal(isolate, "");
++    v8::ScriptCompiler::Source source(source_string, code_cache);
++
++    printf("Loading\n");
++    v8::Local<v8::Script> script =
++        v8::ScriptCompiler::Compile(context, &source,
++                                    v8::ScriptCompiler::kConsumeCodeCache)
++            .ToLocalChecked();
++    printf("Running\n");
++    script->Run(context).ToLocalChecked();
++    if (source.GetCachedData()->rejected) {
++      printf("Code is rejected.\n");
++    }
++  }
++
++  isolate->Dispose();
++  v8::V8::Dispose();
++  v8::V8::DisposePlatform();
++  delete create_params.array_buffer_allocator;
++}
++
++int main(int argc, char* argv[]) {
++  setvbuf(stdout, NULL, _IONBF, 0);
++  setvbuf(stderr, NULL, _IONBF, 0);
++  if (argc < 2) {
++    printf("No input file.\n");
++    return -1;
++  }
++
++  FILE *input_file = fopen(argv[1], "rb");
++  fseek(input_file, 0, SEEK_END);
++  size_t input_size = ftell(input_file);
++  fseek(input_file, 0, SEEK_SET);
++  if (input_size > 65536) {
++    printf("Input too big.\n");
++    return -1;
++  }
++  if (fread(input_data, 1, input_size, input_file) != input_size) {
++    printf("I/O error.\n");
++    return -1;
++  }
++  fclose(input_file);
++
++  run(argv, input_data, (int)input_size);
++  return 0;
++}
+diff --git a/src/flags/flag-definitions.h b/src/flags/flag-definitions.h
+index 2c02c5acb8..4f223f7535 100644
+--- a/src/flags/flag-definitions.h
++++ b/src/flags/flag-definitions.h
+@@ -990,7 +990,7 @@ DEFINE_INT(wasm_num_compilation_tasks, 128,
+ DEFINE_VALUE_IMPLICATION(single_threaded, wasm_num_compilation_tasks, 0)
+ DEFINE_DEBUG_BOOL(trace_wasm_native_heap, false,
+                   "trace wasm native heap events")
+-DEFINE_BOOL(wasm_write_protect_code_memory, true,
++DEFINE_BOOL(wasm_write_protect_code_memory, false,
+             "write protect code memory on the wasm native heap with mprotect")
+ DEFINE_BOOL(wasm_memory_protection_keys, true,
+             "protect wasm code memory with PKU if available (takes precedence "
