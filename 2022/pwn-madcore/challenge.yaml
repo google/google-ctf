@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: madcore
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2022/madcore-healthcheck:6ebb9c6717ceb7a9a634ee54c0ae35b583707af82e24dcdb1ae6d23ee2394e28
+  image: eu.gcr.io/gctf-2022/madcore-challenge:7d9c72b04768f35833a60947f8739461e8759a7444b29423cdfdf640f9c19633
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 2
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "128Mi"
+                cpu: "100m"
