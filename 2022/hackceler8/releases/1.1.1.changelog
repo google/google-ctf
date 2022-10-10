@@ -1,0 +1,2 @@
+Changelog:
+ - let clock import to the top - at its previous location the clock was used on Linux before the set_default call was made. This caused on_update() to never be called.

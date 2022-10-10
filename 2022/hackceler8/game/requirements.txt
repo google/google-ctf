@@ -1,0 +1,13 @@
+arcade==2.6.14
+attrs==21.4.0
+cffi==1.15.0
+numpy==1.22.4
+Pillow==9.1.1
+protobuf==3.20.1
+pycparser==2.21
+pyglet==2.0.dev16
+pymunk==6.2.1
+Shapely==1.8.2
+typing_extensions==4.2.0
+types-protobuf
+-e ./third_party/pytiled_parser/

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="8" height="6" tilewidth="32" tileheight="32" infinite="1" nextlayerid="6" nextobjectid="3">
+ <editorsettings>
+  <chunksize width="4" height="8"/>
+  <export target="../tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/tests/test_data/layer_tests/all_layer_types"/>
+ </editorsettings>
+ <tileset firstgid="1" source="../all_layer_types/tileset.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="16" height="16" offsetx="163.089" offsety="116.463">
+  <properties>
+   <property name="test" value="test property"/>
+  </properties>
+  <data encoding="csv">
+   <chunk x="0" y="0" width="4" height="8">
+1,2,3,4,
+9,10,11,12,
+17,18,19,20,
+25,26,27,28,
+33,34,35,36,
+41,42,43,44,
+0,0,0,0,
+0,0,0,0
+</chunk>
+   <chunk x="4" y="0" width="4" height="8">
+5,6,7,8,
+13,14,15,16,
+21,22,23,24,
+29,30,31,32,
+37,38,39,40,
+45,46,47,48,
+0,0,0,0,
+0,0,0,0
+</chunk>
+  </data>
+ </layer>
+</map>

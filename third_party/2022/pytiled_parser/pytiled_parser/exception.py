@@ -1,0 +1,2 @@
+class UnknownFormat(Exception):
+    pass

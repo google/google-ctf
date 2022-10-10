@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="8" height="6" tilewidth="32" tileheight="32" infinite="0" backgroundcolor="#ff0004" nextlayerid="3" nextobjectid="8">
+ <properties>
+  <property name="bool property - true" type="bool" value="true"/>
+  <property name="color property" type="color" value="#ff49fcff"/>
+  <property name="file property" type="file" value="../../../../../../var/log/syslog"/>
+  <property name="float property" type="float" value="1.23456789"/>
+  <property name="int property" type="int" value="13"/>
+  <property name="string property" value="Hello, World!!"/>
+ </properties>
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <tileset firstgid="49" source="tile_set_image_for_template.tsx"/>
+ <objectgroup id="2" name="Object Layer 1">
+  <object id="2" template="template-rectangle.json" x="98.4988" y="46.2385"/>
+ </objectgroup>
+</map>

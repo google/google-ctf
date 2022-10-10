@@ -1,0 +1,16 @@
+Changelog:
+ - Added NPCs with chat support.
+ - Fix bug where the camera breaks whenever the window is resized.
+ - Fix tile references for objects without collision.
+ - Improve the experience of map transitions:
+ - - don't walk off in a random direction
+ - - spawn at a particular point, not wherever the player was on the last frame
+ - Fix issue with non-multi-frameset collectibles being loaded on the wrong map. Entities now remember their tile by (tileset_name, relative_gid) tuple rather than maintaining a reference to their Game object. (The "save with an apple" bug.)
+ - Fix issue with mismatched map paths on server vs. client
+ - Add player death
+ - Improve client smoothness, don't have weird speed swings
+ - Improve map loading speed
+ - Improve perf measurement:
+ - - add "uncap FPS" setting, add setting to show improved FPS counters
+ - - hide FPS counters by default
+ - Miscellaneous optimizations

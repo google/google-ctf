@@ -1,0 +1,14 @@
+{ "columns":8,
+ "image":"..\/..\/images\/tmw_desert_spacing.png",
+ "imageheight":199,
+ "imagewidth":265,
+ "margin":1,
+ "name":"tileset",
+ "spacing":1,
+ "tilecount":48,
+ "tiledversion":"1.6.0",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.6"
+}

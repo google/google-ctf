@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "@mapeditor/tiled-api": "^1.8.1"
+  },
+  "name": "tiled_training",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

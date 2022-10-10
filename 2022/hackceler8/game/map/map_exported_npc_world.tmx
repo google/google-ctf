@@ -1,0 +1,3060 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.8" tiledversion="1.8.5" orientation="orthogonal" renderorder="right-down" width="40" height="60" tilewidth="32" tileheight="32" infinite="0" parallaxoriginx="240" parallaxoriginy="160" nextlayerid="13" nextobjectid="172">
+ <properties>
+  <property name="default_for_new_objects" type="bool" value="true"/>
+ </properties>
+ <tileset firstgid="1" name="Apple" tilewidth="32" tileheight="32" tilecount="17" columns="17">
+  <image source="Apple.png" width="544" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="fruit" type="bool" value="true"/>
+    <property name="unspecified" type="bool" value="false"/>
+   </properties>
+   <objectgroup draworder="index" id="3">
+    <object id="2" x="8.25" y="7.5" width="14.3034" height="13.6833">
+     <ellipse/>
+    </object>
+   </objectgroup>
+   <animation>
+    <frame tileid="0" duration="50"/>
+    <frame tileid="1" duration="50"/>
+    <frame tileid="2" duration="50"/>
+    <frame tileid="3" duration="50"/>
+    <frame tileid="4" duration="50"/>
+    <frame tileid="5" duration="50"/>
+    <frame tileid="6" duration="50"/>
+    <frame tileid="7" duration="50"/>
+    <frame tileid="8" duration="50"/>
+    <frame tileid="9" duration="50"/>
+    <frame tileid="10" duration="50"/>
+    <frame tileid="11" duration="50"/>
+    <frame tileid="12" duration="50"/>
+    <frame tileid="13" duration="50"/>
+    <frame tileid="14" duration="50"/>
+    <frame tileid="15" duration="50"/>
+    <frame tileid="16" duration="50"/>
+   </animation>
+  </tile>
+  <tile id="1">
+   <objectgroup draworder="index" id="2">
+    <object id="2" x="2.22814" y="2.09707" width="13.4999" height="7.66742"/>
+    <object id="3" x="6.81548" y="18.9392">
+     <polygon points="0,0 13.1067,-7.01208 15.3348,2.94901 7.01208,-1.50727"/>
+    </object>
+    <object id="4" x="24.6406" y="26.2789" width="6.09461" height="3.27667">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="2">
+   <objectgroup>
+    <object id="1" x="8.25" y="7.5" width="14.5" height="15.125">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="3">
+   <objectgroup>
+    <object id="1" x="8.25" y="7.5" width="14.5" height="15.125">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="4">
+   <objectgroup>
+    <object id="1" x="8.25" y="7.5" width="14.5" height="15.125">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="5">
+   <objectgroup>
+    <object id="1" x="8.25" y="7.5" width="14.5" height="15.125">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="6">
+   <objectgroup>
+    <object id="1" x="8.25" y="7.5" width="14.5" height="15.125">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="7">
+   <objectgroup>
+    <object id="1" x="8.25" y="7.5" width="14.5" height="15.125">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="8">
+   <objectgroup>
+    <object id="1" x="8.25" y="7.5" width="14.5" height="15.125">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="9">
+   <objectgroup>
+    <object id="1" x="8.25" y="7.5" width="14.5" height="15.125">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="10">
+   <objectgroup>
+    <object id="1" x="8.25" y="7.5" width="14.5" height="15.125">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="11">
+   <objectgroup>
+    <object id="1" x="8.25" y="7.5" width="14.5" height="15.125">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="12">
+   <objectgroup>
+    <object id="1" x="8.25" y="7.5" width="14.5" height="15.125">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="13">
+   <objectgroup>
+    <object id="1" x="8.25" y="7.5" width="14.5" height="15.125">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="14">
+   <objectgroup>
+    <object id="1" x="8.25" y="7.5" width="14.5" height="15.125">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="15">
+   <objectgroup>
+    <object id="1" x="8.25" y="7.5" width="14.5" height="15.125">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="16">
+   <objectgroup>
+    <object id="1" x="8.25" y="7.5" width="14.5" height="15.125">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+ </tileset>
+ <tileset firstgid="18" name="Boxes" tilewidth="32" tileheight="32" tilecount="0" columns="0"/>
+ <tileset firstgid="18" name="base_out_atlas" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
+  <image source="base_out_atlas.png" width="1024" height="1024"/>
+  <tile id="0">
+   <objectgroup draworder="index" id="2">
+    <object id="4" x="20" y="19" width="12" height="13">
+     <polygon points="12,0 12,13 0,13"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="1">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="19" width="32" height="13"/>
+   </objectgroup>
+  </tile>
+  <tile id="2">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="19" width="12" height="13">
+     <polygon points="0,0 12,13 0,13"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="3">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="32" y="0">
+     <polygon points="0,0 -12,0 -32,20 -32,32 0,32"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="4">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 12,0 32,20 32,32 0,32"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="5">
+   <objectgroup draworder="index" id="2">
+    <object id="8" x="21" y="32">
+     <polygon points="0,0 11,-14 11,-13 1,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="6">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="18" width="32" height="1"/>
+   </objectgroup>
+  </tile>
+  <tile id="7">
+   <objectgroup draworder="index" id="2">
+    <object id="10" x="0" y="18">
+     <polygon points="0,0 12,14 11,14 0,1"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="8">
+   <objectgroup draworder="index" id="2">
+    <object id="5" x="0" y="18">
+     <polygon points="0,0 13,-5 13,-4 0,1"/>
+    </object>
+    <object id="6" x="13" y="13">
+     <polygon points="0,0 8,-13 9,-13 1,0"/>
+    </object>
+    <object id="8" x="13" y="14">
+     <polygon points="0,0 1,-1 0,-1"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="9">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="10" y="0">
+     <polygon points="0,0 22,19 22,18 1,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="11">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="20" y="0" width="1" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="32">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="20" y="0" width="12" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="33">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="32" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="34">
+   <objectgroup draworder="index" id="2">
+    <object id="2" x="0" y="0" width="12" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="35">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="32" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="36">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="32" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="37">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="20" y="0" width="1" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="39">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="11" y="0" width="1" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="40">
+   <objectgroup draworder="index" id="2">
+    <object id="5" x="0" y="32">
+     <polygon points="0,0 0,-22 13,-15 21,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="42">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="10" width="11" height="2"/>
+    <object id="2" x="11" y="0" width="1" height="11"/>
+   </objectgroup>
+  </tile>
+  <tile id="43">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="20" y="10" width="12" height="22"/>
+    <object id="2" x="20" y="0" width="1" height="10"/>
+   </objectgroup>
+  </tile>
+  <tile id="64">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="20" y="-0.0625" width="12" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="65">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="32" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="66">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="12" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="67">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="32" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="68">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="32" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="69">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="20" y="10" width="12" height="22"/>
+    <object id="2" x="20" y="0" width="1" height="10"/>
+   </objectgroup>
+  </tile>
+  <tile id="70">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="10" width="32" height="22"/>
+   </objectgroup>
+  </tile>
+  <tile id="71">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="10" width="12" height="22"/>
+    <object id="2" x="11" y="0" width="1" height="10"/>
+   </objectgroup>
+  </tile>
+  <tile id="72">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="21" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="75">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="20" y="0" width="12" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="96">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="20" y="0" width="12" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="97">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="32" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="98">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="12" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="99">
+   <objectgroup draworder="index" id="2">
+    <object id="4" x="20" y="0" width="12" height="32"/>
+    <object id="5" x="0" y="0" width="20" height="10"/>
+    <object id="6" x="15" y="10">
+     <polygon points="0,0 5,22 5,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="100">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="14" height="32"/>
+    <object id="2" x="14" y="0" width="18" height="10"/>
+   </objectgroup>
+  </tile>
+  <tile id="101">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="20" y="0" width="12" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="102">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="32" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="103">
+   <objectgroup draworder="index" id="2">
+    <object id="2" x="0" y="0" width="12" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="104">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="20" y="0" width="1" height="32"/>
+    <object id="2" x="0" y="0" width="20" height="10"/>
+    <object id="3" x="15" y="10">
+     <polygon points="0,0 5,22 5,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="105">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="14" height="32"/>
+    <object id="2" x="14" y="0" width="18" height="10"/>
+   </objectgroup>
+  </tile>
+  <tile id="106">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="12" height="10"/>
+   </objectgroup>
+  </tile>
+  <tile id="107">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="20" y="0" width="12" height="10"/>
+   </objectgroup>
+  </tile>
+  <tile id="128">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="20" y="0" width="12" height="10"/>
+   </objectgroup>
+  </tile>
+  <tile id="129">
+   <objectgroup draworder="index" id="3">
+    <object id="2" x="0" y="0" width="32" height="10"/>
+   </objectgroup>
+  </tile>
+  <tile id="130">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="12" height="10"/>
+   </objectgroup>
+  </tile>
+  <tile id="133">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="20" y="0" width="12" height="10"/>
+   </objectgroup>
+  </tile>
+  <tile id="134">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="32" height="10"/>
+   </objectgroup>
+  </tile>
+  <tile id="135">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="12" height="10"/>
+   </objectgroup>
+  </tile>
+  <tile id="168">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="8" width="12" height="2"/>
+    <object id="2" x="10" y="0" width="2" height="8"/>
+   </objectgroup>
+  </tile>
+  <tile id="175" probability="0.05"/>
+  <tile id="176" probability="0.1"/>
+  <tile id="177" probability="0.1"/>
+  <tile id="178" probability="0.05"/>
+  <tile id="179" probability="0.1"/>
+  <tile id="180" probability="0.1"/>
+  <tile id="181" probability="0.05"/>
+  <tile id="182" probability="0.1"/>
+  <tile id="183" probability="0.1"/>
+  <tile id="349">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="8" y="4" width="24" height="24"/>
+   </objectgroup>
+  </tile>
+  <tile id="350">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="8" y="4" width="24" height="24"/>
+   </objectgroup>
+  </tile>
+  <tile id="351">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="8" y="4" width="24" height="24"/>
+   </objectgroup>
+  </tile>
+  <tile id="373">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="8" y="8" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="374">
+   <objectgroup draworder="index" id="2">
+    <object id="3" x="32" y="14">
+     <polygon points="0,0 -12,5 -19,18 -16,18 -10,7 0,3"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="375">
+   <objectgroup draworder="index" id="2">
+    <object id="3" x="0" y="14">
+     <polygon points="0,0 12,5 19,18 16,18 10,7 0,3"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="381">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="4" width="24" height="24"/>
+   </objectgroup>
+  </tile>
+  <tile id="382">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="4" width="24" height="24"/>
+   </objectgroup>
+  </tile>
+  <tile id="383">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="4" width="24" height="24"/>
+   </objectgroup>
+  </tile>
+  <tile id="405">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="8" y="8" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="406">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="32" y="18">
+     <polygon points="0,0 -12,-5 -19,-18 -16,-18 -10,-7 0,-3"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="407">
+   <objectgroup draworder="index" id="2">
+    <object id="3" x="0" y="18">
+     <polygon points="0,0 12,-5 19,-18 16,-18 10,-7 0,-3"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="435">
+   <properties>
+    <property name="frameset" value="fireplace_on"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="32" height="27"/>
+   </objectgroup>
+  </tile>
+  <tile id="437">
+   <objectgroup draworder="index" id="2">
+    <object id="2" x="32" y="14">
+     <polygon points="0,0 -12,5 -19,18 -16,18 -10,7 0,3"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="438">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="16" width="32" height="3.2"/>
+   </objectgroup>
+  </tile>
+  <tile id="439">
+   <objectgroup draworder="index" id="2">
+    <object id="2" x="0" y="14">
+     <polygon points="0,0 12,5 19,18 16,18 10,7 0,3"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="463">
+   <objectgroup draworder="index" id="3">
+    <object id="2" x="7" y="23">
+     <polygon points="0,0 6,5 12,5 17,0 10,-4 8,-4"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="468">
+   <objectgroup draworder="index" id="2">
+    <object id="2" x="0" y="13.0427" width="32" height="18.9573"/>
+   </objectgroup>
+  </tile>
+  <tile id="469">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="19.2" y="0" width="3.2" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="471">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="12.8" y="0" width="3.2" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="495">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="23">
+     <polygon points="0,0 6,5 12,5 17,0 10,-4 8,-4"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="496">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="7">
+     <polygon points="0,0 6,5 12,5 17,0 10,-4 8,-4"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="497">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="7">
+     <polygon points="0,0 6,5 12,5 17,0 10,-4 8,-4"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="500">
+   <properties>
+    <property name="frameset" value="fireplace_off"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="32" height="27"/>
+   </objectgroup>
+  </tile>
+  <tile id="501">
+   <objectgroup draworder="index" id="2">
+    <object id="2" x="32" y="18">
+     <polygon points="0,0 -12,-5 -19,-18 -16,-18 -10,-7 0,-3"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="502">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="9.6" width="32" height="3.2"/>
+   </objectgroup>
+  </tile>
+  <tile id="503">
+   <objectgroup draworder="index" id="2">
+    <object id="2" x="0" y="18">
+     <polygon points="0,0 12,-5 19,-18 16,-18 10,-7 0,-3"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="533" probability="0.1"/>
+  <tile id="534" probability="0.1"/>
+  <tile id="535" probability="0.1"/>
+  <tile id="565">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="32" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="566">
+   <properties>
+    <property name="frameset" value="closed"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="3" x="0" y="0" width="32" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="598">
+   <properties>
+    <property name="frameset" value="open"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="2" x="0" y="0" width="32" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="606">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="31" y="0" width="1" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="607">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="1" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="638">
+   <objectgroup draworder="index" id="2">
+    <object id="2" x="0" y="31" width="32" height="1"/>
+   </objectgroup>
+  </tile>
+  <tile id="639">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="32" height="1"/>
+   </objectgroup>
+  </tile>
+  <tile id="656">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="2" height="32"/>
+    <object id="2" x="30" y="0" width="2" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="657">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="2" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="658">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="30" y="0" width="2" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="666">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="8.09091" y="0" width="16" height="30.6364"/>
+   </objectgroup>
+  </tile>
+  <tile id="669">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="8.09091" y="0" width="16" height="30.6364"/>
+   </objectgroup>
+  </tile>
+  <tile id="672">
+   <properties>
+    <property name="frameset" value="grate_door_upper_closed"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="32" height="32"/>
+   </objectgroup>
+  </tile>
+  <tile id="704">
+   <properties>
+    <property name="frameset" value="grate_door_lower_closed"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="32" height="24"/>
+   </objectgroup>
+  </tile>
+  <wangsets>
+   <wangset name="DungeonSet" type="mixed" tile="-1">
+    <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>
+    <wangtile tileid="208" wangid="1,1,0,0,0,1,1,1"/>
+    <wangtile tileid="209" wangid="1,1,1,1,0,0,0,1"/>
+    <wangtile tileid="240" wangid="0,0,0,1,1,1,1,1"/>
+    <wangtile tileid="241" wangid="0,1,1,1,1,1,0,0"/>
+    <wangtile tileid="271" wangid="0,0,0,1,0,0,0,0"/>
+    <wangtile tileid="272" wangid="0,0,0,1,1,1,0,0"/>
+    <wangtile tileid="273" wangid="0,0,0,0,0,1,0,0"/>
+    <wangtile tileid="303" wangid="0,1,1,1,0,0,0,0"/>
+    <wangtile tileid="304" wangid="1,1,1,0,1,1,1,1"/>
+    <wangtile tileid="305" wangid="0,0,0,0,0,1,1,1"/>
+    <wangtile tileid="335" wangid="0,1,0,0,0,0,0,0"/>
+    <wangtile tileid="336" wangid="1,1,0,0,0,0,0,1"/>
+    <wangtile tileid="337" wangid="0,0,0,0,0,0,0,1"/>
+    <wangtile tileid="367" wangid="1,1,1,1,1,1,1,1"/>
+    <wangtile tileid="368" wangid="1,1,1,1,1,1,1,1"/>
+    <wangtile tileid="369" wangid="1,1,1,1,1,1,1,1"/>
+   </wangset>
+  </wangsets>
+ </tileset>
+ <tileset firstgid="1042" name="emilie" tilewidth="32" tileheight="32" tilecount="0" columns="0"/>
+ <tileset firstgid="1042" name="doors" tilewidth="32" tileheight="64" tilecount="6" columns="3">
+  <image source="doors.png" width="96" height="128"/>
+  <tile id="0">
+   <properties>
+    <property name="frameset" value="grate_door_open"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="62" width="32" height="2"/>
+   </objectgroup>
+  </tile>
+  <tile id="1">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="62" width="32" height="2"/>
+   </objectgroup>
+  </tile>
+  <tile id="2">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="62" width="32" height="2"/>
+   </objectgroup>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="frameset" value="grate_door_closed"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="2" height="64"/>
+   </objectgroup>
+  </tile>
+  <tile id="4">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="2" height="64"/>
+   </objectgroup>
+  </tile>
+  <tile id="5">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="2" height="64"/>
+   </objectgroup>
+  </tile>
+ </tileset>
+ <tileset firstgid="1048" name="white_square" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="gui/white_square.png" width="32" height="32"/>
+  <tile id="0">
+   <animation>
+    <frame tileid="0" duration="60"/>
+   </animation>
+  </tile>
+ </tileset>
+ <tileset firstgid="1049" name="window-border" tilewidth="32" tileheight="32" tilecount="54" columns="3">
+  <image source="gui/window-border.png" width="96" height="576"/>
+  <tile id="0">
+   <animation>
+    <frame tileid="0" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="1">
+   <animation>
+    <frame tileid="1" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="2">
+   <animation>
+    <frame tileid="2" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="3">
+   <animation>
+    <frame tileid="3" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="4">
+   <animation>
+    <frame tileid="4" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="5">
+   <animation>
+    <frame tileid="5" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="6">
+   <animation>
+    <frame tileid="6" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="7">
+   <animation>
+    <frame tileid="7" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="8">
+   <animation>
+    <frame tileid="8" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="9">
+   <animation>
+    <frame tileid="9" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="10">
+   <animation>
+    <frame tileid="10" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="11">
+   <animation>
+    <frame tileid="11" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="12">
+   <animation>
+    <frame tileid="12" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="13">
+   <animation>
+    <frame tileid="13" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="14">
+   <animation>
+    <frame tileid="14" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="15">
+   <animation>
+    <frame tileid="15" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="16">
+   <animation>
+    <frame tileid="16" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="17">
+   <animation>
+    <frame tileid="17" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="18">
+   <animation>
+    <frame tileid="18" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="19">
+   <animation>
+    <frame tileid="19" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="20">
+   <animation>
+    <frame tileid="20" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="21">
+   <animation>
+    <frame tileid="21" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="22">
+   <animation>
+    <frame tileid="22" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="23">
+   <animation>
+    <frame tileid="23" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="24">
+   <animation>
+    <frame tileid="24" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="25">
+   <animation>
+    <frame tileid="25" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="26">
+   <animation>
+    <frame tileid="26" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="27">
+   <animation>
+    <frame tileid="27" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="28">
+   <animation>
+    <frame tileid="28" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="29">
+   <animation>
+    <frame tileid="29" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="30">
+   <animation>
+    <frame tileid="30" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="31">
+   <animation>
+    <frame tileid="31" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="32">
+   <animation>
+    <frame tileid="32" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="33">
+   <animation>
+    <frame tileid="33" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="34">
+   <animation>
+    <frame tileid="34" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="35">
+   <animation>
+    <frame tileid="35" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="36">
+   <animation>
+    <frame tileid="36" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="37">
+   <animation>
+    <frame tileid="37" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="38">
+   <animation>
+    <frame tileid="38" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="39">
+   <animation>
+    <frame tileid="39" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="40">
+   <animation>
+    <frame tileid="40" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="41">
+   <animation>
+    <frame tileid="41" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="42">
+   <animation>
+    <frame tileid="42" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="43">
+   <animation>
+    <frame tileid="43" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="44">
+   <animation>
+    <frame tileid="44" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="45">
+   <animation>
+    <frame tileid="45" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="46">
+   <animation>
+    <frame tileid="46" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="47">
+   <animation>
+    <frame tileid="47" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="48">
+   <animation>
+    <frame tileid="48" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="49">
+   <animation>
+    <frame tileid="49" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="50">
+   <animation>
+    <frame tileid="50" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="51">
+   <animation>
+    <frame tileid="51" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="52">
+   <animation>
+    <frame tileid="52" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="53">
+   <animation>
+    <frame tileid="53" duration="60"/>
+   </animation>
+  </tile>
+ </tileset>
+ <tileset firstgid="1103" name="animated_spinner" tilewidth="200" tileheight="200" tilecount="44" columns="22">
+  <image source="gui/animated_spinner.png" width="4400" height="400"/>
+  <tile id="0">
+   <properties>
+    <property name="frameset" value="spinner"/>
+   </properties>
+   <animation>
+    <frame tileid="21" duration="30"/>
+    <frame tileid="20" duration="30"/>
+    <frame tileid="19" duration="30"/>
+    <frame tileid="17" duration="30"/>
+    <frame tileid="18" duration="30"/>
+    <frame tileid="16" duration="30"/>
+    <frame tileid="15" duration="30"/>
+    <frame tileid="14" duration="30"/>
+    <frame tileid="13" duration="30"/>
+    <frame tileid="12" duration="30"/>
+    <frame tileid="11" duration="30"/>
+    <frame tileid="10" duration="30"/>
+    <frame tileid="9" duration="30"/>
+    <frame tileid="8" duration="30"/>
+    <frame tileid="7" duration="30"/>
+    <frame tileid="6" duration="30"/>
+    <frame tileid="5" duration="30"/>
+    <frame tileid="4" duration="30"/>
+    <frame tileid="3" duration="30"/>
+    <frame tileid="2" duration="30"/>
+    <frame tileid="1" duration="30"/>
+    <frame tileid="0" duration="30"/>
+   </animation>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="frameset" value="spinner_bg"/>
+   </properties>
+   <animation>
+    <frame tileid="43" duration="30"/>
+    <frame tileid="42" duration="30"/>
+    <frame tileid="41" duration="30"/>
+    <frame tileid="39" duration="30"/>
+    <frame tileid="40" duration="30"/>
+    <frame tileid="38" duration="30"/>
+    <frame tileid="37" duration="30"/>
+    <frame tileid="36" duration="30"/>
+    <frame tileid="35" duration="30"/>
+    <frame tileid="34" duration="30"/>
+    <frame tileid="33" duration="30"/>
+    <frame tileid="32" duration="30"/>
+    <frame tileid="31" duration="30"/>
+    <frame tileid="30" duration="30"/>
+    <frame tileid="29" duration="30"/>
+    <frame tileid="28" duration="30"/>
+    <frame tileid="27" duration="30"/>
+    <frame tileid="26" duration="30"/>
+    <frame tileid="25" duration="30"/>
+    <frame tileid="24" duration="30"/>
+    <frame tileid="23" duration="30"/>
+    <frame tileid="22" duration="30"/>
+   </animation>
+  </tile>
+ </tileset>
+ <tileset firstgid="1147" name="frog" tilewidth="32" tileheight="32" tilecount="0" columns="11">
+  <image source="Free/Main Characters/Ninja Frog/Idle (32x32).png" width="352" height="32"/>
+ </tileset>
+ <tileset firstgid="1147" name="flag" tilewidth="64" tileheight="64" tilecount="98" columns="14">
+  <image source="flag.png" width="896" height="448"/>
+  <tile id="0">
+   <properties>
+    <property name="frameset" value="red_unobtained"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="0" duration="60"/>
+    <frame tileid="14" duration="60"/>
+    <frame tileid="28" duration="60"/>
+    <frame tileid="42" duration="60"/>
+    <frame tileid="56" duration="60"/>
+    <frame tileid="70" duration="60"/>
+    <frame tileid="84" duration="60"/>
+    <frame tileid="70" duration="60"/>
+    <frame tileid="56" duration="60"/>
+    <frame tileid="42" duration="60"/>
+    <frame tileid="28" duration="60"/>
+    <frame tileid="14" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="frameset" value="red_obtained"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="1" duration="60"/>
+    <frame tileid="15" duration="60"/>
+    <frame tileid="29" duration="60"/>
+    <frame tileid="43" duration="60"/>
+    <frame tileid="57" duration="60"/>
+    <frame tileid="71" duration="60"/>
+    <frame tileid="85" duration="60"/>
+    <frame tileid="71" duration="60"/>
+    <frame tileid="57" duration="60"/>
+    <frame tileid="43" duration="60"/>
+    <frame tileid="29" duration="60"/>
+    <frame tileid="15" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="frameset" value="orange_unobtained"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="2" duration="60"/>
+    <frame tileid="16" duration="60"/>
+    <frame tileid="30" duration="60"/>
+    <frame tileid="44" duration="60"/>
+    <frame tileid="58" duration="60"/>
+    <frame tileid="72" duration="60"/>
+    <frame tileid="86" duration="60"/>
+    <frame tileid="72" duration="60"/>
+    <frame tileid="58" duration="60"/>
+    <frame tileid="44" duration="60"/>
+    <frame tileid="30" duration="60"/>
+    <frame tileid="16" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="frameset" value="orange_obtained"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="3" duration="60"/>
+    <frame tileid="17" duration="60"/>
+    <frame tileid="31" duration="60"/>
+    <frame tileid="45" duration="60"/>
+    <frame tileid="59" duration="60"/>
+    <frame tileid="73" duration="60"/>
+    <frame tileid="87" duration="60"/>
+    <frame tileid="73" duration="60"/>
+    <frame tileid="59" duration="60"/>
+    <frame tileid="45" duration="60"/>
+    <frame tileid="31" duration="60"/>
+    <frame tileid="17" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="frameset" value="green_unobtained"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="4" duration="60"/>
+    <frame tileid="18" duration="60"/>
+    <frame tileid="32" duration="60"/>
+    <frame tileid="46" duration="60"/>
+    <frame tileid="60" duration="60"/>
+    <frame tileid="74" duration="60"/>
+    <frame tileid="88" duration="60"/>
+    <frame tileid="74" duration="60"/>
+    <frame tileid="60" duration="60"/>
+    <frame tileid="46" duration="60"/>
+    <frame tileid="32" duration="60"/>
+    <frame tileid="18" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="frameset" value="green_obtained"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="5" duration="60"/>
+    <frame tileid="19" duration="60"/>
+    <frame tileid="33" duration="60"/>
+    <frame tileid="47" duration="60"/>
+    <frame tileid="61" duration="60"/>
+    <frame tileid="75" duration="60"/>
+    <frame tileid="89" duration="60"/>
+    <frame tileid="75" duration="60"/>
+    <frame tileid="61" duration="60"/>
+    <frame tileid="47" duration="60"/>
+    <frame tileid="33" duration="60"/>
+    <frame tileid="19" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="6">
+   <properties>
+    <property name="frameset" value="teal_unobtained"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="6" duration="60"/>
+    <frame tileid="20" duration="60"/>
+    <frame tileid="34" duration="60"/>
+    <frame tileid="48" duration="60"/>
+    <frame tileid="62" duration="60"/>
+    <frame tileid="76" duration="60"/>
+    <frame tileid="90" duration="60"/>
+    <frame tileid="76" duration="60"/>
+    <frame tileid="62" duration="60"/>
+    <frame tileid="48" duration="60"/>
+    <frame tileid="34" duration="60"/>
+    <frame tileid="20" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="7">
+   <properties>
+    <property name="frameset" value="teal_obtained"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="7" duration="60"/>
+    <frame tileid="21" duration="60"/>
+    <frame tileid="35" duration="60"/>
+    <frame tileid="49" duration="60"/>
+    <frame tileid="63" duration="60"/>
+    <frame tileid="77" duration="60"/>
+    <frame tileid="91" duration="60"/>
+    <frame tileid="77" duration="60"/>
+    <frame tileid="63" duration="60"/>
+    <frame tileid="49" duration="60"/>
+    <frame tileid="35" duration="60"/>
+    <frame tileid="21" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="frameset" value="blue_unobtained"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="8" duration="60"/>
+    <frame tileid="22" duration="60"/>
+    <frame tileid="36" duration="60"/>
+    <frame tileid="50" duration="60"/>
+    <frame tileid="64" duration="60"/>
+    <frame tileid="78" duration="60"/>
+    <frame tileid="92" duration="60"/>
+    <frame tileid="78" duration="60"/>
+    <frame tileid="64" duration="60"/>
+    <frame tileid="50" duration="60"/>
+    <frame tileid="36" duration="60"/>
+    <frame tileid="22" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="frameset" value="blue_obtained"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="9" duration="60"/>
+    <frame tileid="23" duration="60"/>
+    <frame tileid="37" duration="60"/>
+    <frame tileid="51" duration="60"/>
+    <frame tileid="65" duration="60"/>
+    <frame tileid="79" duration="60"/>
+    <frame tileid="93" duration="60"/>
+    <frame tileid="79" duration="60"/>
+    <frame tileid="65" duration="60"/>
+    <frame tileid="51" duration="60"/>
+    <frame tileid="37" duration="60"/>
+    <frame tileid="23" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="10">
+   <properties>
+    <property name="frameset" value="purple_unobtained"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="10" duration="60"/>
+    <frame tileid="24" duration="60"/>
+    <frame tileid="38" duration="60"/>
+    <frame tileid="52" duration="60"/>
+    <frame tileid="66" duration="60"/>
+    <frame tileid="80" duration="60"/>
+    <frame tileid="94" duration="60"/>
+    <frame tileid="80" duration="60"/>
+    <frame tileid="66" duration="60"/>
+    <frame tileid="52" duration="60"/>
+    <frame tileid="38" duration="60"/>
+    <frame tileid="24" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="11">
+   <properties>
+    <property name="frameset" value="purple_obtained"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="11" duration="60"/>
+    <frame tileid="25" duration="60"/>
+    <frame tileid="39" duration="60"/>
+    <frame tileid="53" duration="60"/>
+    <frame tileid="67" duration="60"/>
+    <frame tileid="81" duration="60"/>
+    <frame tileid="95" duration="60"/>
+    <frame tileid="81" duration="60"/>
+    <frame tileid="67" duration="60"/>
+    <frame tileid="53" duration="60"/>
+    <frame tileid="39" duration="60"/>
+    <frame tileid="25" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="12">
+   <properties>
+    <property name="frameset" value="white_unobtained"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="12" duration="60"/>
+    <frame tileid="26" duration="60"/>
+    <frame tileid="40" duration="60"/>
+    <frame tileid="54" duration="60"/>
+    <frame tileid="68" duration="60"/>
+    <frame tileid="82" duration="60"/>
+    <frame tileid="96" duration="60"/>
+    <frame tileid="82" duration="60"/>
+    <frame tileid="68" duration="60"/>
+    <frame tileid="54" duration="60"/>
+    <frame tileid="40" duration="60"/>
+    <frame tileid="26" duration="60"/>
+   </animation>
+  </tile>
+  <tile id="13">
+   <properties>
+    <property name="frameset" value="white_obtained"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="13" duration="60"/>
+    <frame tileid="27" duration="60"/>
+    <frame tileid="41" duration="60"/>
+    <frame tileid="55" duration="60"/>
+    <frame tileid="69" duration="60"/>
+    <frame tileid="83" duration="60"/>
+    <frame tileid="97" duration="60"/>
+    <frame tileid="83" duration="60"/>
+    <frame tileid="69" duration="60"/>
+    <frame tileid="55" duration="60"/>
+    <frame tileid="41" duration="60"/>
+    <frame tileid="27" duration="60"/>
+   </animation>
+  </tile>
+ </tileset>
+ <tileset firstgid="1245" name="character" tilewidth="32" tileheight="64" tilecount="304" columns="38">
+  <image source="character.png" width="1232" height="538"/>
+  <tile id="0">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="1">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="2">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="3">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="6">
+   <properties>
+    <property name="frameset" value="downright_stand"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="6" duration="360"/>
+    <frame tileid="7" duration="360"/>
+    <frame tileid="8" duration="360"/>
+    <frame tileid="9" duration="360"/>
+   </animation>
+  </tile>
+  <tile id="7">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="8">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="9">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="12">
+   <properties>
+    <property name="frameset" value="downright_run"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="12" duration="90"/>
+    <frame tileid="13" duration="90"/>
+    <frame tileid="14" duration="90"/>
+    <frame tileid="15" duration="90"/>
+    <frame tileid="16" duration="90"/>
+    <frame tileid="17" duration="90"/>
+    <frame tileid="18" duration="90"/>
+    <frame tileid="19" duration="90"/>
+   </animation>
+  </tile>
+  <tile id="13">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="14">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="15">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="16">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="17">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="18">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="19">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="22">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="23">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="24">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="25">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="26">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="27">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="28">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="29">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="38">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="39">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="40">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="41">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="44">
+   <properties>
+    <property name="frameset" value="upright_stand"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="44" duration="360"/>
+    <frame tileid="45" duration="360"/>
+    <frame tileid="46" duration="360"/>
+    <frame tileid="47" duration="360"/>
+   </animation>
+  </tile>
+  <tile id="45">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="46">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="47">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="50">
+   <properties>
+    <property name="frameset" value="upright_run"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="50" duration="90"/>
+    <frame tileid="51" duration="90"/>
+    <frame tileid="52" duration="90"/>
+    <frame tileid="53" duration="90"/>
+    <frame tileid="54" duration="90"/>
+    <frame tileid="55" duration="90"/>
+    <frame tileid="56" duration="90"/>
+    <frame tileid="57" duration="90"/>
+   </animation>
+  </tile>
+  <tile id="51">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="52">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="53">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="54">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="55">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="56">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="57">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="60">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="61">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="62">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="63">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="64">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="65">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="66">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="67">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="76">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="77">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="78">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="79">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="82">
+   <properties>
+    <property name="frameset" value="right_stand"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="82" duration="360"/>
+    <frame tileid="83" duration="360"/>
+    <frame tileid="84" duration="360"/>
+    <frame tileid="85" duration="360"/>
+   </animation>
+  </tile>
+  <tile id="83">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="84">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="85">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="88">
+   <properties>
+    <property name="frameset" value="right_run"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="88" duration="90"/>
+    <frame tileid="89" duration="90"/>
+    <frame tileid="90" duration="90"/>
+    <frame tileid="91" duration="90"/>
+    <frame tileid="92" duration="90"/>
+    <frame tileid="93" duration="90"/>
+    <frame tileid="94" duration="90"/>
+    <frame tileid="95" duration="90"/>
+   </animation>
+  </tile>
+  <tile id="89">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="90">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="91">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="92">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="93">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="94">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="95">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="98">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="99">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="100">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="101">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="102">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="103">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="104">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="105">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="108">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="109">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="110">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="111">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="112">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="113">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="114">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="115">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="116">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="117">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="120">
+   <properties>
+    <property name="frameset" value="down_stand"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="120" duration="360"/>
+    <frame tileid="121" duration="360"/>
+    <frame tileid="122" duration="360"/>
+    <frame tileid="123" duration="360"/>
+   </animation>
+  </tile>
+  <tile id="121">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="122">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="123">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="126">
+   <properties>
+    <property name="frameset" value="down_run"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="126" duration="90"/>
+    <frame tileid="127" duration="90"/>
+    <frame tileid="128" duration="90"/>
+    <frame tileid="129" duration="90"/>
+    <frame tileid="130" duration="90"/>
+    <frame tileid="131" duration="90"/>
+    <frame tileid="132" duration="90"/>
+    <frame tileid="133" duration="90"/>
+   </animation>
+  </tile>
+  <tile id="127">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="128">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="129">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="130">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="131">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="132">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="133">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="136">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="137">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="138">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="139">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="140">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="141">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="142">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="143">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="146">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="147">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="148">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="149">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="150">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="151">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="152">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="153">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="154">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="155">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="158">
+   <properties>
+    <property name="frameset" value="up_stand"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="158" duration="360"/>
+    <frame tileid="159" duration="360"/>
+    <frame tileid="160" duration="360"/>
+    <frame tileid="161" duration="360"/>
+   </animation>
+  </tile>
+  <tile id="159">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="160">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="161">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="164">
+   <properties>
+    <property name="frameset" value="up_run"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="164" duration="90"/>
+    <frame tileid="165" duration="90"/>
+    <frame tileid="166" duration="90"/>
+    <frame tileid="167" duration="90"/>
+    <frame tileid="168" duration="90"/>
+    <frame tileid="169" duration="90"/>
+    <frame tileid="170" duration="90"/>
+    <frame tileid="171" duration="90"/>
+   </animation>
+  </tile>
+  <tile id="165">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="166">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="167">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="168">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="169">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="170">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="171">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="174">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="175">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="176">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="177">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="178">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="179">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="180">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="181">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="184">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="185">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="186">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="187">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="188">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="189">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="190">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="191">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="192">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="193">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="196">
+   <properties>
+    <property name="frameset" value="left_stand"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="196" duration="360"/>
+    <frame tileid="197" duration="360"/>
+    <frame tileid="198" duration="360"/>
+    <frame tileid="199" duration="360"/>
+   </animation>
+  </tile>
+  <tile id="197">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="198">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="199">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="202">
+   <properties>
+    <property name="frameset" value="left_run"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="202" duration="90"/>
+    <frame tileid="203" duration="90"/>
+    <frame tileid="204" duration="90"/>
+    <frame tileid="205" duration="90"/>
+    <frame tileid="206" duration="90"/>
+    <frame tileid="207" duration="90"/>
+    <frame tileid="208" duration="90"/>
+    <frame tileid="209" duration="90"/>
+   </animation>
+  </tile>
+  <tile id="203">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="204">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="205">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="206">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="207">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="208">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="209">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="212">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="213">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="214">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="215">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="216">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="217">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="218">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="219">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="222">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="223">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="224">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="225">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="226">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="227">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="228">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="229">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="230">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="231">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="234">
+   <properties>
+    <property name="frameset" value="downleft_stand"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="234" duration="360"/>
+    <frame tileid="235" duration="360"/>
+    <frame tileid="236" duration="360"/>
+    <frame tileid="237" duration="360"/>
+   </animation>
+  </tile>
+  <tile id="235">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="236">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="237">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="240">
+   <properties>
+    <property name="frameset" value="downleft_run"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="240" duration="90"/>
+    <frame tileid="241" duration="90"/>
+    <frame tileid="242" duration="90"/>
+    <frame tileid="243" duration="90"/>
+    <frame tileid="244" duration="90"/>
+    <frame tileid="245" duration="90"/>
+    <frame tileid="246" duration="90"/>
+    <frame tileid="247" duration="90"/>
+   </animation>
+  </tile>
+  <tile id="241">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="242">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="243">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="244">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="245">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="246">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="247">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="250">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="251">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="252">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="253">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="254">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="255">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="256">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="257">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="266">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="267">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="268">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="269">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="272">
+   <properties>
+    <property name="frameset" value="upleft_stand"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="272" duration="360"/>
+    <frame tileid="273" duration="360"/>
+    <frame tileid="274" duration="360"/>
+    <frame tileid="275" duration="360"/>
+   </animation>
+  </tile>
+  <tile id="273">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="274">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="275">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="278">
+   <properties>
+    <property name="frameset" value="upleft_run"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="278" duration="90"/>
+    <frame tileid="279" duration="90"/>
+    <frame tileid="280" duration="90"/>
+    <frame tileid="281" duration="90"/>
+    <frame tileid="282" duration="90"/>
+    <frame tileid="283" duration="90"/>
+    <frame tileid="284" duration="90"/>
+    <frame tileid="285" duration="90"/>
+   </animation>
+  </tile>
+  <tile id="279">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="280">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="281">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="282">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="283">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="284">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="285">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="288">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="289">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="290">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="291">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="292">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="293">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="294">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="295">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="57" width="18" height="7"/>
+   </objectgroup>
+  </tile>
+ </tileset>
+ <layer id="3" name="ground" width="40" height="60">
+  <data encoding="csv">
+130,130,130,193,194,130,130,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+130,130,194,130,130,130,130,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+194,130,130,130,130,130,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+195,130,130,130,194,56,56,56,56,130,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+194,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="9" name="ground2" width="40" height="60">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,289,290,259,387,385,387,387,385,385,387,322,322,322,322,322,322,322,322,322,322,322,322,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,289,259,226,227,386,386,386,386,386,385,385,387,322,322,322,322,322,322,322,322,322,322,322,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,321,387,323,321,385,387,387,386,387,386,385,386,322,322,387,387,386,385,322,322,322,322,322,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,321,387,323,321,387,385,387,386,386,385,387,385,322,322,385,385,387,322,322,322,322,322,322,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,321,226,355,321,385,385,385,386,386,387,386,322,322,322,387,385,387,387,386,322,322,322,322,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,321,323,0,321,387,387,386,385,387,386,386,385,322,322,322,322,386,385,386,322,322,322,322,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,289,259,323,0,321,387,385,386,322,386,386,386,387,322,322,322,322,385,387,386,387,387,322,322,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,321,385,323,0,321,385,386,385,387,385,386,385,387,385,322,322,322,322,385,387,387,385,322,322,
+0,0,0,0,0,0,0,0,0,0,289,291,0,0,0,0,321,386,323,0,321,385,386,385,387,387,386,387,385,322,322,322,322,322,387,385,387,387,385,322,
+0,0,0,0,0,0,0,0,0,0,321,258,290,291,0,0,353,227,258,291,321,387,387,386,385,386,386,387,386,322,322,322,322,322,385,386,387,387,322,322,
+0,0,0,0,0,0,0,0,0,0,353,227,226,355,0,0,0,353,227,258,259,386,386,386,385,386,386,387,322,322,322,322,322,322,322,386,385,386,387,322,
+0,0,0,0,0,0,0,0,0,0,0,321,323,0,0,0,0,0,353,354,227,385,387,385,387,385,386,386,322,322,322,322,322,322,322,385,386,385,322,322,
+0,0,0,0,0,0,0,0,0,0,0,321,323,0,0,0,0,0,0,0,321,386,386,386,385,385,387,387,322,322,322,322,385,386,385,385,386,386,322,322,
+0,0,0,0,0,0,0,0,0,0,0,353,355,0,0,0,0,0,0,0,321,386,387,385,385,387,386,386,386,322,322,322,385,322,386,387,385,386,385,322,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,321,387,387,386,387,386,387,387,322,322,322,322,386,386,385,385,385,385,387,387,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,321,385,385,387,385,387,386,386,385,322,322,322,386,387,385,385,386,385,385,387,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,321,386,386,386,385,387,386,385,386,387,322,322,385,386,387,387,385,385,387,322,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,289,259,386,387,387,386,385,386,385,385,386,322,386,385,386,387,386,386,385,386,385,
+289,290,291,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,353,227,385,387,386,385,387,385,386,385,386,322,385,387,387,322,387,387,387,385,322,
+353,227,323,0,0,0,0,0,0,289,291,289,291,0,0,0,0,0,0,0,321,385,387,386,385,386,385,385,387,385,387,386,386,386,387,387,386,386,322,322,
+0,321,323,0,0,0,0,289,290,259,323,321,258,290,291,0,0,0,0,0,321,387,385,386,385,385,387,387,385,387,322,322,385,387,322,387,385,387,322,322,
+290,259,258,290,290,290,290,259,386,387,258,259,386,386,258,290,290,290,290,290,259,386,385,386,385,387,385,386,386,322,322,322,386,322,385,385,385,322,322,322,
+386,387,387,385,387,387,386,387,385,386,386,387,387,386,385,386,387,386,386,387,387,385,386,387,386,386,385,385,387,386,385,322,386,387,386,386,385,322,322,322,
+387,386,386,385,386,387,385,387,386,386,385,387,386,386,386,386,385,387,387,387,387,386,385,385,386,387,386,385,386,385,322,322,387,386,387,385,322,386,387,322,
+385,386,387,385,385,385,386,386,387,385,386,386,385,385,386,386,387,387,387,386,387,385,387,386,385,385,385,386,387,322,322,387,385,385,387,322,322,385,387,322,
+385,386,386,322,386,387,387,385,385,387,386,387,386,385,386,385,386,386,387,385,386,386,387,387,385,387,386,322,322,322,386,385,385,322,386,387,385,385,322,322,
+385,387,385,385,385,385,385,386,387,385,385,387,386,386,385,385,387,386,386,322,387,385,387,386,385,386,386,387,386,387,387,385,387,387,387,385,385,322,322,322,
+385,385,385,385,385,385,387,386,322,386,387,387,387,387,386,387,387,386,387,385,386,386,387,386,386,387,387,385,386,386,386,385,387,386,385,322,322,385,386,387,
+386,322,386,387,387,385,386,386,385,385,385,386,322,385,385,322,386,386,387,387,387,387,387,387,385,386,385,385,385,387,385,385,322,387,322,322,322,385,385,386,
+322,322,322,385,387,385,386,387,387,386,387,387,322,385,385,386,387,386,385,385,387,387,386,387,387,387,387,385,387,387,387,322,322,322,386,386,386,387,387,322,
+322,322,322,387,385,386,387,387,387,386,387,387,322,385,385,386,386,386,385,386,386,387,385,322,386,385,387,385,386,387,322,386,386,385,385,385,386,385,385,386,
+322,387,385,386,387,386,385,387,322,385,386,385,322,322,322,385,387,385,385,322,385,387,322,322,387,385,385,386,386,386,387,387,387,385,387,387,386,385,385,385,
+322,387,387,386,386,385,386,386,386,385,386,385,386,385,387,387,387,386,386,385,322,322,322,322,385,385,387,387,322,385,386,387,322,322,322,387,386,385,385,322,
+322,385,387,385,386,386,387,386,322,322,386,387,385,387,387,387,386,387,385,387,387,387,386,387,385,385,387,387,386,386,387,387,385,385,387,386,385,322,322,322,
+387,385,386,386,322,387,322,322,322,322,387,387,385,386,387,387,386,322,386,386,386,385,387,386,385,386,385,322,386,386,322,387,387,386,387,386,322,322,322,322,
+386,387,322,322,322,322,322,385,387,322,387,387,322,386,386,385,386,385,387,385,386,385,385,386,386,386,387,385,385,387,322,386,385,387,385,387,387,385,387,386,
+386,322,322,322,387,386,322,386,322,322,387,385,386,386,322,386,385,387,386,385,386,386,385,387,387,385,386,385,385,322,322,387,386,385,385,385,387,387,385,322,
+322,322,322,322,387,322,385,386,322,387,386,385,387,387,386,387,387,386,385,385,387,386,322,385,387,387,385,386,386,386,386,386,385,385,387,386,387,386,385,387,
+385,386,385,385,322,387,386,322,387,386,385,387,385,386,385,322,387,385,385,386,386,322,322,322,322,385,322,385,385,387,386,385,385,387,385,385,385,385,387,386,
+385,385,387,387,322,385,322,322,385,322,386,387,385,386,322,322,385,387,386,386,386,386,322,322,387,387,387,385,387,385,385,385,386,387,385,386,385,385,387,385,
+386,387,386,322,386,385,387,385,385,386,385,385,387,322,322,322,322,386,387,385,387,385,387,322,385,385,387,385,386,385,385,385,387,385,386,387,387,386,387,322,
+385,387,322,322,387,386,385,386,322,386,386,385,322,322,322,322,322,385,386,387,386,386,322,322,387,385,387,386,385,385,386,386,387,385,385,386,322,387,386,322,
+386,322,322,385,387,385,386,322,385,386,386,322,385,386,322,386,386,387,322,386,387,322,322,322,387,385,386,386,385,385,385,386,386,387,322,387,386,387,322,322,
+386,386,385,387,386,385,322,322,385,385,322,322,387,385,387,387,322,322,322,385,322,322,322,322,386,322,386,322,385,387,385,386,387,322,322,386,387,322,322,322,
+386,385,322,385,385,322,385,386,385,322,322,386,387,386,322,387,387,387,322,322,387,387,387,387,386,322,322,385,386,387,386,385,386,385,387,386,387,386,322,322,
+385,387,387,322,322,322,385,387,322,322,322,385,385,387,385,386,385,386,387,385,387,386,387,385,322,322,386,385,386,387,386,387,385,387,322,387,386,385,385,322,
+322,386,322,322,322,386,385,385,322,322,322,322,322,387,386,386,386,322,386,386,385,387,386,385,385,322,386,385,387,386,385,387,386,386,387,387,387,386,387,322,
+322,322,322,322,322,385,386,387,386,322,322,322,322,386,322,322,322,322,385,387,386,385,386,387,385,385,387,386,322,387,322,322,387,387,387,387,385,386,322,322,
+322,322,322,322,387,387,386,387,386,385,387,386,386,386,385,387,386,322,322,322,387,385,322,385,385,322,385,322,322,322,386,385,385,386,386,386,385,385,385,322,
+322,322,386,385,387,387,385,386,387,387,386,386,386,322,387,387,387,387,385,322,385,386,387,387,387,387,386,322,322,322,386,322,385,386,387,386,386,386,385,322,
+385,386,386,385,386,386,386,386,387,386,386,386,385,386,386,386,385,387,322,385,385,387,387,385,387,387,322,322,322,322,385,387,385,386,385,387,385,386,322,322,
+387,387,385,387,385,387,386,387,387,387,386,386,385,385,386,386,385,322,322,386,387,385,385,385,387,386,387,386,386,322,387,322,322,322,322,386,385,386,322,322,
+387,387,322,322,386,386,385,385,385,387,386,385,386,387,387,385,387,322,386,386,386,386,387,387,387,385,385,385,385,322,385,386,322,387,387,385,386,387,385,322,
+385,322,322,322,322,385,387,386,385,387,386,386,386,386,385,385,387,385,387,386,322,387,385,385,386,385,386,385,322,322,387,386,385,386,385,385,386,387,322,322,
+322,322,322,386,386,385,386,387,387,385,386,386,385,385,387,386,387,387,385,387,385,385,387,386,386,385,385,386,387,387,387,385,387,385,386,387,386,322,322,322,
+387,385,387,385,385,386,387,385,385,386,387,387,385,386,386,385,387,385,386,387,385,385,387,386,386,386,386,387,385,386,385,385,322,387,387,386,386,386,322,322,
+387,385,385,386,385,387,387,385,387,387,385,387,385,387,385,385,387,387,387,385,387,387,385,386,386,385,385,386,385,386,387,386,387,385,387,386,386,386,387,322,
+387,385,322,386,387,387,386,387,385,386,385,385,385,387,387,386,385,387,387,385,387,386,386,386,386,385,386,385,387,387,386,385,385,385,386,386,387,385,322,322,
+322,322,322,322,386,387,387,386,386,386,385,387,386,387,386,385,385,386,387,385,386,385,387,387,386,386,385,386,387,387,387,387,385,386,386,387,385,387,386,322,
+322,322,322,322,322,387,322,385,386,386,322,385,385,387,385,322,387,386,386,386,387,387,386,386,322,386,387,385,322,386,386,385,386,385,387,386,386,385,322,322
+</data>
+ </layer>
+ <objectgroup id="2" name="Object Layer 1">
+  <properties>
+   <property name="default_for_new_objects" type="bool" value="true"/>
+   <property name="static" type="bool" value="true"/>
+  </properties>
+  <object id="80" name="Exit" x="0" y="0" width="64" height="39">
+   <properties>
+    <property name="DungeonExit" value=""/>
+    <property name="solid" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="83" gid="1049" x="1377" y="1776" width="32" height="32">
+   <properties>
+    <property name="skip_in_game" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="84" gid="1050" x="1417" y="1776" width="32" height="32">
+   <properties>
+    <property name="skip_in_game" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="85" gid="1051" x="1458" y="1776" width="32" height="32">
+   <properties>
+    <property name="skip_in_game" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="86" gid="1052" x="1378" y="1818" width="32" height="32">
+   <properties>
+    <property name="skip_in_game" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="87" gid="1053" x="1418" y="1819" width="32" height="32">
+   <properties>
+    <property name="skip_in_game" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="88" gid="1054" x="1457" y="1819" width="32" height="32">
+   <properties>
+    <property name="skip_in_game" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="89" gid="1055" x="1376" y="1863" width="32" height="32">
+   <properties>
+    <property name="skip_in_game" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="90" gid="1056" x="1418" y="1863" width="32" height="32">
+   <properties>
+    <property name="skip_in_game" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="91" gid="1057" x="1459" y="1867" width="32" height="32">
+   <properties>
+    <property name="skip_in_game" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="92" gid="1048" x="1381" y="1719" width="32" height="32">
+   <properties>
+    <property name="skip_in_game" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="93" gid="1125" x="1358" y="1694" width="200" height="200">
+   <properties>
+    <property name="frameset" value="spinner_bg"/>
+    <property name="skip_in_game" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="96" name="npcZone" x="78.6315" y="236.06" width="71" height="75">
+   <properties>
+    <property name="solid" type="bool" value="false"/>
+    <property name="z" type="class" propertytype="Zone">
+     <properties>
+      <property name="ref" type="object" value="105"/>
+     </properties>
+    </property>
+   </properties>
+  </object>
+  <object id="101" name="GrateDoor" gid="1042" x="248.5" y="330" width="32" height="64">
+   <properties>
+    <property name="door" type="class" propertytype="GrateDoor">
+     <properties>
+      <property name="locked" type="bool" value="true"/>
+     </properties>
+    </property>
+    <property name="frameset" value="grate_door_open"/>
+   </properties>
+  </object>
+  <object id="102" name="GrateDoorZone" x="240.5" y="310" width="49" height="42">
+   <properties>
+    <property name="solid" type="bool" value="false"/>
+    <property name="z" type="class" propertytype="Zone">
+     <properties>
+      <property name="ref" type="object" value="101"/>
+     </properties>
+    </property>
+   </properties>
+  </object>
+  <object id="105" name="npc" gid="1404" x="100" y="325" width="32" height="64">
+   <properties>
+    <property name="npc" type="class" propertytype="NPC">
+     <properties>
+      <property name="flag_door" type="object" value="101"/>
+      <property name="name" value="npc1"/>
+     </properties>
+    </property>
+   </properties>
+  </object>
+  <object id="166" gid="339" x="192" y="320" width="32" height="32"/>
+  <object id="167" gid="339" x="192" y="288" width="32" height="32"/>
+  <object id="170" name="Player" gid="1365" x="95" y="143" width="32" height="64">
+   <properties>
+    <property name="frameset" value="down_stand"/>
+    <property name="player" type="class" propertytype="Player">
+     <properties>
+      <property name="speed" type="float" value="128"/>
+     </properties>
+    </property>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer id="1" name="foreground" width="40" height="60">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,525,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="10" name="foreground2" width="40" height="60">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>

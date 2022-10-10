@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="8" height="6" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="3">
+ <tileset firstgid="1" source="../all_layer_types/tileset.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="8" height="6">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAACg3DBRKCQAAAwDMRA7BQLMTE9v+vY3dmWyGEth279uwbOTB26MixExNTM6fOnLtwae7KtYUbt+7ce7D0aOXJsxev3rxb+/Dpy7cfv/782wAcvDirwAAAAA==
+  </data>
+ </layer>
+ <group id="4" name="Group 1">
+  <objectgroup id="2" name="Object Layer 1">
+   <object id="1" x="46.3333" y="39" width="69.3333" height="52.6667"/>
+  </objectgroup>
+ </group>
+ <imagelayer id="3" name="Image Layer 1">
+  <image source="../../images/tile_04.png" trans="000000" width="32" height="32"/>
+ </imagelayer>
+</map>

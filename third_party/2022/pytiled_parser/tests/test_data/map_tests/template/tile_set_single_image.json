@@ -1,0 +1,24 @@
+{ "columns":0,
+ "grid":
+    {
+     "height":1,
+     "orientation":"orthogonal",
+     "width":1
+    },
+ "margin":0,
+ "name":"tile_set_single_image",
+ "spacing":0,
+ "tilecount":1,
+ "tiledversion":"1.7.1",
+ "tileheight":32,
+ "tiles":[
+        {
+         "id":0,
+         "image":"..\/..\/images\/tile_02.png",
+         "imageheight":32,
+         "imagewidth":32
+        }],
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.6"
+}

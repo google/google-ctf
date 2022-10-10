@@ -1,0 +1,48 @@
+{ "columns":8,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"..\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/tests\/test_data\/tilesets\/image"
+        }
+    },
+ "image":"..\/..\/images\/tmw_desert_spacing.png",
+ "imageheight":199,
+ "imagewidth":265,
+ "margin":1,
+ "name":"tile_set_image",
+ "properties":[
+        {
+         "name":"bool property",
+         "type":"bool",
+         "value":true
+        }, 
+        {
+         "name":"color property",
+         "type":"color",
+         "value":"#ff0000ff"
+        }, 
+        {
+         "name":"float property",
+         "type":"float",
+         "value":5.6
+        }, 
+        {
+         "name":"int property",
+         "type":"int",
+         "value":5
+        }, 
+        {
+         "name":"string property",
+         "type":"string",
+         "value":"testing"
+        }],
+ "spacing":1,
+ "tilecount":48,
+ "tiledversion":"1.6.0",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.6"
+}

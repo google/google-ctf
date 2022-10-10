@@ -1,0 +1,73 @@
+{ "backgroundcolor":"#ff0004",
+ "compressionlevel":0,
+ "height":6,
+ "infinite":false,
+ "layers":[
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"Object Layer 1",
+         "objects":[
+                {
+                 "id":2,
+                 "template":"template-rectangle.tx",
+                 "x":98.4987608686521,
+                 "y":46.2385012811358
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":3,
+ "nextobjectid":8,
+ "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"bool property - true",
+         "type":"bool",
+         "value":true
+        }, 
+        {
+         "name":"color property",
+         "type":"color",
+         "value":"#ff49fcff"
+        }, 
+        {
+         "name":"file property",
+         "type":"file",
+         "value":"..\/..\/..\/..\/..\/..\/var\/log\/syslog"
+        }, 
+        {
+         "name":"float property",
+         "type":"float",
+         "value":1.23456789
+        }, 
+        {
+         "name":"int property",
+         "type":"int",
+         "value":13
+        }, 
+        {
+         "name":"string property",
+         "type":"string",
+         "value":"Hello, World!!"
+        }],
+ "renderorder":"right-down",
+ "tiledversion":"1.7.1",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"tileset.json"
+        }, 
+        {
+         "firstgid":49,
+         "source":"tile_set_image_for_template.json"
+        }],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.6",
+ "width":8
+}

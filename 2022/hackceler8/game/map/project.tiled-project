@@ -1,0 +1,401 @@
+{
+    "automappingRulesFile": "",
+    "commands": [
+    ],
+    "extensionsPath": "extensions",
+    "folders": [
+        "."
+    ],
+    "propertyTypes": [
+        {
+            "color": "#ffa0a0a4",
+            "id": 25,
+            "members": [
+                {
+                    "name": "expected_inputs",
+                    "type": "int",
+                    "value": 2
+                },
+                {
+                    "name": "ref",
+                    "type": "object",
+                    "value": 0
+                }
+            ],
+            "name": "AndGate",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 4,
+            "members": [
+            ],
+            "name": "Chest",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 15,
+            "members": [
+                {
+                    "name": "drop_on_use",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "inventory_text",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "Collectable",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 19,
+            "members": [
+                {
+                    "name": "ref",
+                    "type": "object",
+                    "value": 0
+                }
+            ],
+            "name": "Connector",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 8,
+            "members": [
+            ],
+            "name": "DeathZone",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 9,
+            "members": [
+            ],
+            "name": "Fireplace",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 13,
+            "members": [
+            ],
+            "name": "Flag",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 10,
+            "members": [
+            ],
+            "name": "GrateDoor",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 24,
+            "members": [
+            ],
+            "name": "HomewardBucket",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 21,
+            "members": [
+                {
+                    "name": "enabled",
+                    "type": "bool",
+                    "value": true
+                },
+                {
+                    "name": "expire_time",
+                    "type": "float",
+                    "value": -1
+                },
+                {
+                    "name": "speed",
+                    "type": "float",
+                    "value": 0
+                }
+            ],
+            "name": "HomingBullet",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 22,
+            "members": [
+                {
+                    "name": "homing_bullet_reference",
+                    "type": "object",
+                    "value": 0
+                }
+            ],
+            "name": "HomingSpawner",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 23,
+            "members": [
+                {
+                    "name": "forbid_item",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "item",
+                    "type": "object",
+                    "value": 0
+                },
+                {
+                    "name": "require_item",
+                    "type": "bool",
+                    "value": false
+                }
+            ],
+            "name": "InventoryControlledDoor",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 16,
+            "members": [
+            ],
+            "name": "Key",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 17,
+            "members": [
+                {
+                    "name": "attached_key",
+                    "type": "object",
+                    "value": 0
+                },
+                {
+                    "name": "ref",
+                    "type": "object",
+                    "value": 0
+                }
+            ],
+            "name": "KeyPodium",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 11,
+            "members": [
+                {
+                    "name": "destination",
+                    "type": "string",
+                    "value": ""
+                },
+                {
+                    "name": "map_name",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "MapChangeZone",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 18,
+            "members": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "value": "Phil"
+                }
+            ],
+            "name": "NPC",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 3,
+            "members": [
+                {
+                    "name": "speed",
+                    "type": "float",
+                    "value": 1
+                }
+            ],
+            "name": "Player",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 14,
+            "members": [
+                {
+                    "name": "zone",
+                    "type": "object",
+                    "value": 0
+                }
+            ],
+            "name": "SaveMirror",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 24,
+            "members": [
+                {
+                    "name": "destination",
+                    "type": "object",
+                    "value": 0
+                },
+                {
+                    "name": "forbid_item",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "item",
+                    "type": "object",
+                    "value": 0
+                }
+            ],
+            "name": "Teleporter",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 20,
+            "members": [
+                {
+                    "name": "blue_enabled",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "green_enabled",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "orange_enabled",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "purple_enabled",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "red_enabled",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "teal_enabled",
+                    "type": "bool",
+                    "value": false
+                }
+            ],
+            "name": "WinPodium",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 5,
+            "members": [
+                {
+                    "name": "ref",
+                    "type": "object",
+                    "value": 0
+                }
+            ],
+            "name": "Zone",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        }
+    ]
+}

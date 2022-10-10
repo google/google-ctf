@@ -1,0 +1,20 @@
+{
+    "maps": [
+        {
+            "fileName": "map_01.json",
+            "height": 160,
+            "width": 160,
+            "x": 0,
+            "y": 0
+        },
+        {
+            "fileName": "map_02.json",
+            "height": 160,
+            "width": 160,
+            "x": 160,
+            "y": 0
+        }
+    ],
+    "onlyShowAdjacentMaps": false,
+    "type": "world"
+}

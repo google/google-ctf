@@ -1,0 +1,18 @@
+{ "object":
+    {
+     "gid":1,
+     "height":32,
+     "id":6,
+     "name":"",
+     "rotation":0,
+     "type":"",
+     "visible":true,
+     "width":32
+    },
+ "tileset":
+    {
+     "firstgid":1,
+     "source":"tile_set_image_for_template.json"
+    },
+ "type":"template"
+}

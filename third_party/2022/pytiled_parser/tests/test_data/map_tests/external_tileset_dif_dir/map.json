@@ -1,0 +1,66 @@
+{ "backgroundcolor":"#ff0004",
+ "compressionlevel":0,
+ "height":6,
+ "infinite":false,
+ "layers":[
+        {
+         "compression":"zlib",
+         "data":"eAFjYWBgYAZiJiBmBOKhBgAIGAAL",
+         "encoding":"base64",
+         "height":6,
+         "id":2,
+         "name":"Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":8,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":3,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"bool property - true",
+         "type":"bool",
+         "value":true
+        }, 
+        {
+         "name":"color property",
+         "type":"color",
+         "value":"#ff49fcff"
+        }, 
+        {
+         "name":"file property",
+         "type":"file",
+         "value":"..\/..\/..\/..\/..\/..\/var\/log\/syslog"
+        }, 
+        {
+         "name":"float property",
+         "type":"float",
+         "value":1.23456789
+        }, 
+        {
+         "name":"int property",
+         "type":"int",
+         "value":13
+        }, 
+        {
+         "name":"string property",
+         "type":"string",
+         "value":"Hello, World!!"
+        }],
+ "renderorder":"right-down",
+ "tiledversion":"1.6.0",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"tileset\/tileset.json"
+        }],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.6",
+ "width":8
+}

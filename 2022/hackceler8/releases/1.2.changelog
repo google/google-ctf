@@ -1,0 +1,11 @@
+Changelog:
+ - Add letters
+ - Handle counterclockwise collision boxes
+ - MapChangeZones can be used to teleport the player within the same map
+ - Switch to new character sprite
+ - Reject packets to the game server when closing the game
+ - 4B5A57454536535150495957535432494B593255323232474E425156515A44494C464B555535324B4E524754323D3D3D
+ - Switch to mutual TLS, create certs for each team and test cert
+ - implement game collision podium
+ - make persistent_state very persistent
+ - store timestamps in persistent state for flag acquisition, rather than just bools

@@ -1,0 +1,77 @@
+// Copyright 2022 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
+// This format is designed to support cross-rerences and cycles, as well as
+// custom serialization.
+// The serialized objects don't directly contain other objects; rather, they
+// contain fixed64 IDs that refer to other objects. The actual objects are
+// stored in the root SerializedPackage message.
+
+syntax = "proto2";
+
+package hackceler8;
+
+message List {
+  repeated fixed64 fields = 1;
+}
+
+message DictEntry {
+  optional fixed64 key = 1;
+  optional fixed64 val = 2;
+}
+message Dict {
+  repeated DictEntry entries = 1;
+}
+
+message Tuple {
+  repeated fixed64 fields = 1;
+}
+
+message Array {
+  optional uint32 typecode = 1;
+  optional bytes data = 2;
+}
+
+message Object {
+  optional string type = 1;
+  optional Dict fields = 2;
+
+  optional bytes custom = 3;
+}
+
+message Value {
+  // Only one field in this object may be specified.
+
+  optional int64 int_val = 1;
+  optional bytes bigint_val = 2;
+  optional double float_val = 3;
+  optional string str_val = 4;  
+  optional bytes bytes_val = 5;
+  optional bool bool_val = 6;
+  optional bool nonetype_flag = 7;
+
+  optional List list_val = 8;
+  optional Dict dict_val = 9;
+  optional Tuple tuple_val = 10;
+  optional Object object_val = 11;
+  optional List deque_val = 12;
+  optional List set_val = 13;
+  optional Array array_val = 14;
+}
+
+message SerializedPackage {
+  map<fixed64, Value> values = 1;
+  optional fixed64 root_value = 2;
+}

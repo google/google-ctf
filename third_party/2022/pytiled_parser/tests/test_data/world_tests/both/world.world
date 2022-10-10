@@ -1,0 +1,22 @@
+{
+    "maps": [
+        {
+            "fileName": "map_manual_one.json",
+            "height": 160,
+            "width": 160,
+            "x": -160,
+            "y": 0
+        }
+    ],
+    "patterns": [
+        {
+            "regexp": "map_p(\\d+)-n(\\d+)\\.json",
+            "multiplierX": 160,
+            "multiplierY": 160,
+            "offsetX": 0,
+            "offsetY": 0
+        }
+    ],
+    "onlyShowAdjacentMaps": false,
+    "type": "world"
+}
