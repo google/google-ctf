@@ -1,0 +1,7 @@
+This version of uBASIC was modified (by Gynvael Coldwind / Google) for the
+purpose of the H4CK1NG G00GL3 challenge. Modifications include mostly places
+where the I/O functions were called, as well as how POKE and PEEK were handled.
+In general the idea was to get this running on an 8051 emulator.
+
+Original sources:
+https://github.com/adamdunkels/ubasic
