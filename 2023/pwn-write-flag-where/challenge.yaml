@@ -1,0 +1,34 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: wfw1
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2023/wfw1-healthcheck:bb1f655f7331d5ba67ca37fd8595dafe0d4e6916844de999cf3a8904849152e9
+  image: eu.gcr.io/gctf-2023/wfw1-challenge:891e5918c8d19445548a38810752466a0730c183636eb53179ddb90ea090a0e0
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"
+        nodeSelector:
+          dedicated: nested-virt
+        tolerations:
+          - key: "dedicated"
+            operator: "Equal"
+            value: "nested-virt"
+            effect: "NoExecute"

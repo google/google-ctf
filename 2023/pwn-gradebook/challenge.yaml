@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: gradebook
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2023/gradebook-healthcheck:8b1c00ff5a185437bb6905373d7decaef972719e0597813c425d6432c2d3a8cb
+  image: eu.gcr.io/gctf-2023/gradebook-challenge:5c02d709b38f4534e6a7d73b76f3694d6c9ac738cd48256a60be8f1cf84fde08
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

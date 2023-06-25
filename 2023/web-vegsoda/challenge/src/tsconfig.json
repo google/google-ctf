@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "esModuleInterop": true,
+      "inlineSourceMap": true,
+      "isolatedModules": true,
+      "module": "esnext",
+      "moduleDetection": "force",
+      "moduleResolution": "nodenext",
+      "target": "esnext",
+      "useDefineForClassFields": false,
+      "noEmit": true,
+      "allowImportingTsExtensions": true,
+    }
+  }

@@ -1,0 +1,25 @@
+# Human readable task name
+name: kconcat
+# Long form description.
+description: |+
+  As we are running our mitigated kernel (https://github.com/thejh/linux/blob/b97cbfe06757d908412e6afa217b1fe77dc48282/MITIGATION_README),
+  we could safely implement a super fast text concatenation functionality directly in the kernel.
+
+  Get root code exec and run `cat /flag`. (Note: the flag file is 3780 bytes long.)
+# The flag
+flag: 'CTF{C0ngr4ts_0n_pwn1ng_th3_k3rn3l!_Pwn_k3rn3lCTF_t00_4nd_g3t_$133k_f0r_1t_https://google.github.io/security-research/kernelctf/rules}'
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: pwn
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# host/port for non-web challenges
+host: 'kconcat.2023.ctfcompetition.com 1337'
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true

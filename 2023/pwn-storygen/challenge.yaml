@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: storygen
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2023/storygen-healthcheck:8499d9f12883f93031b37c7646c345dda9cfe04ad5ef5705d036ea6b4d8fe2df
+  image: eu.gcr.io/gctf-2023/storygen-challenge:cdd755580aebaa14119e034a9179dc67e1fed492606507448baaefef09181701
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

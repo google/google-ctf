@@ -1,0 +1,31 @@
+# Human readable task name
+name: write-flag-where3
+
+# Long form description.
+description: |+
+  Your skills are considerable, I'm sure you'll agree
+  But this final level's toughness fills me with glee
+  No writes to my binary, this I require
+  For otherwise I will surely expire
+# The flag
+flag: CTF{y0ur_3xpl0itati0n_p0w3r_1s_0v3r_9000!!}
+
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: pwn
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+
+# URL for web challenges
+link: ''
+
+# host/port for non-web challenges
+host: 'wfw3.2023.ctfcompetition.com 1337'
+
+# the URL for attachments, to be filled in by automation
+attachment: ''
+
+# is this challenge released? Will be set by SREs
+visible: true

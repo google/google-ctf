@@ -1,0 +1,38 @@
+# Human readable task name
+name: Mine The Gap
+
+# Long form description.
+description: |+
+  Take a break from the other challenges and play a relxing game of Minesweeper
+  I have even solved most of the board for you and marked many of the mines.
+  I am completely sure they are correct so you just need to find the remaining ones.
+
+  Instructions:
+  The game client requires pygame. Navigate the board with the arrow keys.
+  Click an unexplored cell to toggle a flag marking a cell as containing a mine.
+  Already placed flags can not be removed. Every cell with a number should have
+  that many flags adjacent to it. Press "m" to validate the board.
+  The flag will appear in the console.
+
+# The flag
+flag: CTF{d8675fca837faa20bc0f3a7ad10e9d2682fa0c35c40872938f1d45e5ed97ab27}
+
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: misc
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+
+# URL for web challenges
+link: ''
+
+# host/port for non-web challenges
+host: ''
+
+# the URL for attachments, to be filled in by automation
+attachment: ''
+
+# is this challenge released? Will be set by SREs
+visible: true

@@ -1,0 +1,133 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: noteninja
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  allowConnectTo:
+    - "noteninja-mongodb"
+    - "noteninja-xssbot"
+  network:
+    public: true
+    ports:
+      - protocol: "HTTPS"
+        targetPort: 1337
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2023/noteninja-healthcheck:10e52c4dad9e27603f62628067e45791af1d851ff5a98638cdd7edac897276c3
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 10
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"
+            env:
+              - name: FLAG
+                value: "CTF{always_be_looking_for_loopholes_and_break_the_rules_win_the_flag}"
+              - name: CHALL_DOMAIN
+                value: "https://noteninja-web.2023.ctfcompetition.com"
+              - name: XSSBOT_DOMAIN
+                value: "noteninja-xssbot"
+              - name: XSSBOT_PORT
+                value: "1337"
+              - name: MONGO_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: noteninja-secret
+                    key: MONGO_URL
+              - name: SECRET_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: noteninja-secret
+                    key: SECRET_KEY
+              - name: JWT_SECRET
+                valueFrom:
+                  secretKeyRef:
+                    name: noteninja-secret
+                    key: JWT_SECRET
+              - name: NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: noteninja-secret
+                    key: NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+              - name: RECAPTCHA_SECRET_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: noteninja-secret
+                    key: RECAPTCHA_SECRET_KEY
+              - name: ADMIN_EMAIL
+                valueFrom:
+                  secretKeyRef:
+                    name: noteninja-secret
+                    key: ADMIN_EMAIL
+              - name: ADMIN_NAME
+                valueFrom:
+                  secretKeyRef:
+                    name: noteninja-secret
+                    key: ADMIN_NAME
+              - name: ADMIN_PASS
+                valueFrom:
+                  secretKeyRef:
+                    name: noteninja-secret
+                    key: ADMIN_PASS
+            volumeMounts:
+              - name: temp
+                mountPath: /tmp
+        volumes:
+          - name: temp
+            emptyDir: {}
+  image: eu.gcr.io/gctf-2023/noteninja-challenge:c3cbe98a974f9052578b47e62f8a4e214b74c0956cedab4b73d13549a64d7f43
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: noteninja-mongodb
+spec:
+  ports:
+    - port: 27017
+  selector:
+    app: noteninja-mongodb
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: noteninja-mongodb
+spec:
+  selector:
+    matchLabels:
+      app: noteninja-mongodb
+  template:
+    metadata:
+      labels:
+        app: noteninja-mongodb
+    spec:
+      containers:
+        - image: mongo:6-jammy
+          name: mongo
+          ports:
+            - containerPort: 27017
+              name: mongodb
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: noteninja-secret
+stringData:
+  SECRET_KEY: "QOcNRalrqhisXj5Q1UmnDVcUJQaXDJVmRxFuBYVGADg"
+  JWT_SECRET: "s1056PAJnOfqihyROPC5cJMpjpPzD3tOw987JX0iovTVOA7Tfk0qI"
+  NEXT_PUBLIC_RECAPTCHA_SITE_KEY: "6Lc6O-QlAAAAAGi0dxLe6LkxRfSBCsX4RDhmEpv9"
+  RECAPTCHA_SECRET_KEY: "6Lc6O-QlAAAAACqxax-ZUxwRETXJdOptC2FElf0b"
+  ADMIN_EMAIL: "admin@admin.com"
+  ADMIN_NAME: "admin"
+  ADMIN_PASS: "6LkxRfSBCsX4RDhmE"
+  MONGO_URL: "mongodb://noteninja-mongodb:27017/notesapp?readPreference=primary&directConnection=true&tls=false"

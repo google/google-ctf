@@ -1,0 +1,65 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: under-construction
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  allowConnectTo:
+    - "under-construction-php"
+    - "under-construction-mysql"
+  network:
+    public: true
+    ports:
+      - protocol: "HTTPS"
+        targetPort: 1337
+  healthcheck:
+    enabled: true
+    image: eu.gcr.io/gctf-2023/under-construction-healthcheck:c90b12d4c44d34867b5872ea7625c1b9e4cde7c93bbbe29fd312a6327cb10111
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 8
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"
+            env:
+              - name: FLASK_SECRET_KEY
+                value: 49e316f2a16535decacb9e6997f34b97
+              - name: MYSQL_DATABASE
+                value: forge
+              - name: MYSQL_USER
+                value: forge
+              - name: DB_HOST
+                value: "under-construction-mysql"
+              - name: MIGRATOR_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: under-construction-secret
+                    key: migrator_token
+              - name: MYSQL_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: under-construction-secret
+                    key: mysql_password
+  image: eu.gcr.io/gctf-2023/under-construction-challenge:e7345d99b8db0d648b5130cd764eb23f06db3afd7f9ae3d39c8a27c7a909c2a2

@@ -1,0 +1,21 @@
+{
+  "name": "biohazard",
+  "version": "1.0.0",
+  "description": "A CTF Challenge",
+  "main": "app.js",
+  "scripts": {
+    "start": "NODE_ENV=production node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "express"
+  ],
+  "author": "jkokatsu",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "mysql": "^2.18.1"
+  }
+}

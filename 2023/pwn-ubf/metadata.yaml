@@ -1,0 +1,20 @@
+# Human readable task name
+name: ubf
+# Long form description.
+description: |+
+  Please review and test this Unnecessary Binary Format (UBF)!
+# The flag
+flag: CTF{Respl3nd4nt-C0nd1tion@l-El3ments}
+# Task category. (one of hw, crypto, pwn, rev, web, net, misc)
+category: pwn
+# === the fields below will be filled by SRE or automation ===
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# host/port for non-web challenges
+host: 'ubf.2023.ctfcompetition.com 1337'
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true

@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: watthewasm
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2023/watthewasm-healthcheck:23699c85c74a42378c52e5fd9bc32a246eb8570407fa5e731f6db7d457bbea17
+  image: eu.gcr.io/gctf-2023/watthewasm-challenge:2adced900457e43012425c5f2a3ffb6d7929b94f3ce5de37e55258fe7316e598
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

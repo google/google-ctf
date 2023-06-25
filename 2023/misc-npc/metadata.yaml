@@ -1,0 +1,44 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Human readable task name
+name: NPC
+
+# Long form description.
+description: |+
+  A friend handed me this map and told me that it will lead me to the flag. 
+  It is confusing me and I don't know how to read it, can you help me out?
+
+# The flag
+flag: CTF{S3vEn_bR1dg35_0f_K0eN1g5BeRg}
+
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: misc
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+
+# URL for web challenges
+link: ''
+
+# host/port for non-web challenges
+host: ''
+
+# the URL for attachments, to be filled in by automation
+attachment: ''
+
+# is this challenge released? Will be set by SREs
+visible: true

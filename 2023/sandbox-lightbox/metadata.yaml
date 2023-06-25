@@ -1,0 +1,24 @@
+# Human readable task name
+name: Lightbox
+# Long form description.
+description: |+
+  Lighbox is our lightweight sandboxing solution for resource constrained systems.
+
+# The flag
+flag: CTF{27b5f109575d496b980d4c2c1e3fcaa89}
+
+# Task category. (one of hw, crypto, pwn, rev, web, net, misc)
+category: sandbox
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# host/port for non-web challenges
+host: 'lightbox.2023.ctfcompetition.com 1337'
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true

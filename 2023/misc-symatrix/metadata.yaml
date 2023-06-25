@@ -1,0 +1,31 @@
+# Human readable task name
+name: symatrix
+
+# Long form description.
+description: |+
+  The CIA has been tracking a group of hackers who communicate using PNG files embedded with a custom steganography algorithm. 
+  An insider spy was able to obtain the encoder, but it is not the original code. 
+  You have been tasked with reversing the encoder file and creating a decoder as soon as possible in order to read the most recent PNG file they have sent.
+
+# The flag
+flag: CTF{W4ke_Up_Ne0+Th1s_I5_Th3_Fl4g!}
+
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: misc
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+
+# URL for web challenges
+link: ''
+
+# host/port for non-web challenges
+host: ''
+
+# the URL for attachments, to be filled in by automation
+attachment: ''
+
+# is this challenge released? Will be set by SREs
+visible: true

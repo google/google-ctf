@@ -1,0 +1,34 @@
+{
+  "name": "static",
+  "version": "1.0.0",
+  "description": "Output JS files",
+  "scripts": {
+    "build": "NODE_ENV=production parcel build --no-cache",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jkokatsu",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "safevalues": "^0.4.3"
+  },
+  "devDependencies": {
+    "parcel": "^2.8.3",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
+    "vm-browserify": "^1.1.2"
+  },
+  "source": [
+    "src/main.js",
+    "src/editor.js",
+    "src/sanitizer.js"
+  ],
+  "targets": {
+    "default": {
+      "includeNodeModules": true,
+      "distDir": "./static",
+      "context": "browser",
+      "outputFormat": "global",
+      "publicUrl": "/static"
+    }
+  }
+}

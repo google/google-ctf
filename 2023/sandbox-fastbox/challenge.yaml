@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: fastbox
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2023/fastbox-healthcheck:5acd3f9092faf7d1cdce3ebdb9fb4165767abe0c445818ce9c3e497dac71db49
+  image: eu.gcr.io/gctf-2023/fastbox-challenge:acf092f73e667911a9719d2c87c03f88716efc5a12eb61d0884960ab930dfd9f
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

@@ -1,0 +1,56 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: tnbf
+spec:
+  deployed: true
+  powDifficultySeconds: 10
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2023/tnbf-healthcheck:64d2cd3815d3e83efbbdb5ca06e490d125a7cba208cafdf2823751d1138d25e3
+  image: eu.gcr.io/gctf-2023/tnbf-challenge:8707fcacdff3bdf80ed40b16b18c2f6342d66e4bc57821bc3fee17cb5ea189d0
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                cpu: "2"
+                memory: "2Gi"
+            volumeMounts:
+              - name: kvm-volume
+                mountPath: /dev/kvm
+            securityContext:
+              privileged: true
+            env:
+              - name: FLAG
+                valueFrom:
+                  secretKeyRef:
+                    name: misc-totallynotbruteforce-flagserver-secret
+                    key: flag
+        volumes:
+          - name: kvm-volume
+            hostPath:
+              path: /dev/kvm
+        nodeSelector:
+          dedicated: nested-virt
+        tolerations:
+          - key: "dedicated"
+            operator: "Equal"
+            value: "nested-virt"
+            effect: "NoExecute"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: misc-totallynotbruteforce-flagserver-secret
+stringData:
+  flag: CTF{W4s_1T_Ev3NtFu1}

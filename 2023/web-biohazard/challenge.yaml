@@ -1,0 +1,95 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: biohazard
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+    ports:
+      - protocol: "HTTPS"
+        targetPort: 1337
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2023/biohazard-healthcheck:571af627a21c7bc5cdd09fd87f1cd67247dcc9c8e186ef6f8ab2cd22d9357580
+  allowConnectTo:
+    - biohazard-xssbot
+    - biohazard-mariadb
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"
+            env:
+              - name: XSSBOT_HOST
+                value: biohazard-xssbot
+              - name: XSSBOT_PORT
+                value: "1337"
+              - name: DB_HOST
+                value: "biohazard-mariadb"
+              - name: DB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: biohazard-secret
+                    key: db_password
+  image: eu.gcr.io/gctf-2023/biohazard-challenge:9e8ce6a2960002dfd348de8e3ec1efb1b5e861f8d9e1896c870f95d46ef5729d
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: biohazard-mariadb
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: biohazard-mariadb
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: biohazard-mariadb
+spec:
+  selector:
+    matchLabels:
+      app: biohazard-mariadb
+  template:
+    metadata:
+      labels:
+        app: biohazard-mariadb
+    spec:
+      containers:
+        - image: mariadb:lts
+          name: mariadb
+          env:
+            - name: MARIADB_USER
+              value: "forge"
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: biohazard-secret
+                  key: db_password
+            - name: MARIADB_DATABASE
+              value: "forge"
+            - name: MARIADB_RANDOM_ROOT_PASSWORD
+              value: "1"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: biohazard-secret
+stringData:
+  db_password: "a0d00326d3602651ca5705eca9e232bc"

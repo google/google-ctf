@@ -1,0 +1,21 @@
+{
+    "name": "previewer",
+    "version": "1.0.0",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "terjanq",
+    "license": "ISC",
+    "description": "GCTF challenge",
+    "dependencies": {
+        "connect": "^3.7.0",
+        "ejs": "^3.1.9",
+        "express": "^4.18.2",
+        "express-recaptcha": "^5.1.0",
+        "express-vhost": "^0.2.0",
+        "vhost": "^3.0.2"
+    }
+}

@@ -1,0 +1,114 @@
+<%- include('head') %>
+
+<div class="container p-5">
+    <div class="card mx-auto">
+      <div class="card-header">
+        <h1>Files</h1>
+      </div>
+      <div class="card-body">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="btn-toolbar">
+                        <div class="btn-group mr-2">
+                            <input type="file" class="custom-file-input" id="addFileInput" lang="en">
+                            <label class="custom-file-label" for="addFileInput">Add files</label>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-danger" onclick="removeDB()">Delete all files</button>
+                        </div>
+                    </div>
+        
+                </div>
+            </div>
+            <br>
+            <div class="row">
+        
+                <div class="col file-list">
+                    <div id="filesList" class="list-group"></div>
+                </div>
+        
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+<div id="previewModal" role="modal" class="modal fade modal-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div>
+                    <button onclick=scale(0.2) class="btn">+</button>
+                    <button onclick=scale(-.2) class="btn">-</button>
+                    <span>Scale:</span><span id="scaleSpan">100%</span>
+                </div>
+                <div id="previewIframeDiv"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const addFileInput = document.querySelector('#addFileInput');
+    const db = new DB();
+
+    async function removeDB() {
+        db.clear().then(() => {
+            location = location.href.split('#')[0];
+        });
+    }
+
+    addFileInput.addEventListener("change", async function () {
+        if (this.files.length > 0) {
+            const fileInfo = await db.addFile(this.files[0]);
+            appendFileInfo(fileInfo);
+        }
+    }, false);
+
+    window.addEventListener('message', (e) => {
+        if (e.data == 'blob loaded') {
+            $("#previewModal").modal();
+        }
+    });
+
+    const processHash = async () => {
+        $("#previewModal").modal('hide');
+        if (location.hash.length <= 1) return;
+        const fileDiv = document.getElementById(location.hash.slice(1));
+        if (fileDiv === null || !fileDiv.dataset.name) return;
+        const file = await db.getFile(fileDiv.dataset.name);
+        previewFile(file);
+        /* If modal is not shown remove hash */
+        setTimeout(() => {
+            if (!$('#previewModal').hasClass('show')) {
+                location.hash = '';
+            }
+        }, 2000);
+    }
+
+    window.addEventListener('hashchange', processHash, true);
+
+    window.addEventListener('load', async () => {
+        const files = await db.getFiles();
+        files.sort((a, b) => a.date - b.date);
+        for (let fileInfo of files) {
+            await appendFileInfo(fileInfo);
+        }
+        processHash();
+    })
+
+    $('#previewModal').on('hide.bs.modal', () => {
+        scaleSpan.innerText = '100%';
+        location.hash = '';
+        document.querySelector('#previewIframeDiv').innerText = '';
+    });
+
+   
+
+</script>
+<%- include('foot') %>

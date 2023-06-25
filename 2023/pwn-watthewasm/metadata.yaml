@@ -1,0 +1,29 @@
+# Human readable task name
+name: watthewasm
+
+# Long form description.
+description: |+
+  Can you exploit v8 without JavaScript?
+
+# The flag
+flag: CTF{5d9c06396135038a95766cb5d1fbc2e696312812e7b9b91913f1b559c25d7b4d}
+
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: pwn
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+
+# URL for web challenges
+link: ''
+
+# host/port for non-web challenges
+host: 'watthewasm.2023.ctfcompetition.com 1337'
+
+# the URL for attachments, to be filled in by automation
+attachment: ''
+
+# is this challenge released? Will be set by SREs
+visible: true

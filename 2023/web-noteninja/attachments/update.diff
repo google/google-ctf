@@ -1,0 +1,58 @@
+diff --git a/web-noteninja/challenge/cleanup.sh b/web-noteninja/challenge/cleanup.sh
+index b754ccf..f812113 100755
+--- a/web-noteninja/challenge/cleanup.sh
++++ b/web-noteninja/challenge/cleanup.sh
+@@ -1,5 +1,7 @@
+ #!/usr/bin/bash
+ while true; do
+-  sleep 60m
+-  echo 'db.dropDatabase()' | mongo --shell $MONGO_URL
+-done
+\ No newline at end of file
++  #sleep 60m
++  #echo 'db.dropDatabase()' | mongo --shell $MONGO_URL
++  sleep 10m
++  pkill node
++done
+diff --git a/web-noteninja/challenge/nsjail.cfg b/web-noteninja/challenge/nsjail.cfg
+index 5da45ed..7d1513d 100644
+--- a/web-noteninja/challenge/nsjail.cfg
++++ b/web-noteninja/challenge/nsjail.cfg
+@@ -38,7 +38,8 @@ envar: [
+     "ADMIN_PASS",
+     "XSSBOT_DOMAIN",
+     "XSSBOT_PORT",
+-    "CHALL_DOMAIN"
++    "CHALL_DOMAIN",
++    "FLAG"
+ ]
+ mount: [
+   {
+diff --git a/web-noteninja/challenge/src/server/middleware/mongoose.js b/web-noteninja/challenge/src/server/middleware/mongoose.js
+index d99efbc..a4d4e89 100644
+--- a/web-noteninja/challenge/src/server/middleware/mongoose.js
++++ b/web-noteninja/challenge/src/server/middleware/mongoose.js
+@@ -1,6 +1,7 @@
+ import mongoose from "mongoose";
+ import CryptoJS from "crypto-js";
+ import User from "../models/User";
++import Note from "../models/Note";
+ 
+ const connectDb = (handler) => async (req, res) => {
+   if (mongoose.connections[0].readyState) {
+@@ -22,6 +23,15 @@ const connectDb = (handler) => async (req, res) => {
+         ).toString(),
+       });
+       await u.save();
++
++      const newNote = await Note({
++        _userId: u._id,
++        title: 'flag',
++        description: process.env.FLAG,
++        htmlDescription: process.env.FLAG
++      });
++      await newNote.save();
++
+     }
+   } catch (error) {
+     console.log("admin creation failed: " + error);

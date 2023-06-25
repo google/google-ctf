@@ -1,0 +1,309 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+diff --git a/pkg/sentry/loader/loader.go b/pkg/sentry/loader/loader.go
+index 18ec6c960..9c4024968 100644
+--- a/pkg/sentry/loader/loader.go
++++ b/pkg/sentry/loader/loader.go
+@@ -107,7 +107,7 @@ func openPath(ctx context.Context, args LoadArgs) (*vfs.FileDescription, error)
+ 	// ptrace and procfs.
+ 	opts := vfs.OpenOptions{
+ 		Flags:    linux.O_RDONLY,
+-		FileExec: true,
++		// FileExec: true,
+ 	}
+ 	vfsObj := args.Root.Mount().Filesystem().VirtualFilesystem()
+ 	creds := auth.CredentialsFromContext(ctx)
+diff --git a/pkg/sentry/platform/systrap/subprocess.go b/pkg/sentry/platform/systrap/subprocess.go
+index 82022c61a..e617a0e77 100644
+--- a/pkg/sentry/platform/systrap/subprocess.go
++++ b/pkg/sentry/platform/systrap/subprocess.go
+@@ -573,7 +573,7 @@ func (s *subprocess) switchToApp(c *context, ac *arch.Context64) (isSyscall bool
+ 	t := sysThread.thread
+ 	t.resetSysemuRegs(regs)
+
+-	s.restoreFPState(msg, sysThread.fpuStateToMsgOffset, c, ac)
++	s.restoreFPState(msg, c, ac)
+
+ 	// Check for interrupts, and ensure that future interrupts will signal t.
+ 	if !c.interrupt.Enable(sysThread) {
+@@ -588,16 +588,6 @@ func (s *subprocess) switchToApp(c *context, ac *arch.Context64) (isSyscall bool
+ 	msg.EnableSentryFastPath()
+ 	sysThread.waitEvent(sysmsg.StateDone)
+
+-	if msg.Type != sysmsg.EventTypeSyscallTrap {
+-		var err error
+-		sysThread.fpuStateToMsgOffset, err = msg.FPUStateOffset()
+-		if err != nil {
+-			return false, false, err
+-		}
+-	} else {
+-		sysThread.fpuStateToMsgOffset = 0
+-	}
+-
+ 	if msg.Err != 0 {
+ 		panic(fmt.Sprintf("stub thread %d failed: err %d line %d: %s", t.tid, msg.Err, msg.Line, msg))
+ 	}
+@@ -773,6 +763,7 @@ func (s *subprocess) getSysmsgThread(tregs *arch.Registers, c *context, ac *arch
+ 	sysThread.setMsg(sysmsg.StackAddrToMsg(sentryStackAddr))
+ 	sysThread.msg.Init()
+ 	sysThread.msg.Self = uint64(sysmsgStackAddr + sysmsg.MsgOffsetFromSharedStack)
++	sysThread.msg.SentryAddr = uint64(sysmsg.StackAddrToMsg(sentryStackAddr))
+ 	sysThread.msg.Syshandler = uint64(stubSysmsgStart + uintptr(sysmsg.Sighandler_blob_offset____export_syshandler))
+ 	sysThread.msg.SyshandlerStack = uint64(sysmsg.StackAddrToSyshandlerStack(sysThread.sysmsgPerThreadMemAddr()))
+
+@@ -819,12 +810,6 @@ func (s *subprocess) getSysmsgThread(tregs *arch.Registers, c *context, ac *arch
+ 		panic(fmt.Sprintf("stub thread failed: %v (line %v)", msg.Err, msg.Line))
+ 	}
+
+-	sysThread.fpuStateToMsgOffset, err = sysThread.msg.FPUStateOffset()
+-	if err != nil {
+-		sysThread.destroy()
+-		return nil, err
+-	}
+-
+ 	c.sysmsgThread = sysThread
+
+ 	return sysThread, nil
+diff --git a/pkg/sentry/platform/systrap/subprocess_amd64.go b/pkg/sentry/platform/systrap/subprocess_amd64.go
+index e8a8bab82..d551aa4d8 100644
+--- a/pkg/sentry/platform/systrap/subprocess_amd64.go
++++ b/pkg/sentry/platform/systrap/subprocess_amd64.go
+@@ -228,7 +228,7 @@ func (s *subprocess) PullFullState(c *context, ac *arch.Context64) error {
+ 	// In other cases, we have the full set of registers and need only copy
+ 	// the FPU state from a signal frame.
+ 	if msg.Type != sysmsg.EventTypeSyscallTrap {
+-		s.saveFPState(msg, sysThread.fpuStateToMsgOffset, c, ac)
++		s.saveFPState(msg, c, ac)
+ 		return nil
+ 	}
+
+@@ -248,11 +248,6 @@ func (s *subprocess) PullFullState(c *context, ac *arch.Context64) error {
+ 		panic(fmt.Sprintf("unknown message type: type %v: %s", msg.Type, msg))
+ 	}
+
+-	sysThread.fpuStateToMsgOffset, err = msg.FPUStateOffset()
+-	if err != nil {
+-		return err
+-	}
+-
+ 	// When we are triggering the real syscall instruction, we don't
+ 	// restore all syscall arguments and even the syscall number.
+ 	msg.Regs.Rax = regs.Rax
+@@ -271,7 +266,7 @@ func (s *subprocess) PullFullState(c *context, ac *arch.Context64) error {
+ 	// the stub code will be changed after save/restore.
+ 	regs.Rip = msg.RetAddr
+
+-	s.saveFPState(msg, sysThread.fpuStateToMsgOffset, c, ac)
++	s.saveFPState(msg, c, ac)
+
+ 	c.signalInfo = msg.SignalInfo
+
+diff --git a/pkg/sentry/platform/systrap/subprocess_amd64_unsafe.go b/pkg/sentry/platform/systrap/subprocess_amd64_unsafe.go
+index 3e81a406e..7bed83321 100644
+--- a/pkg/sentry/platform/systrap/subprocess_amd64_unsafe.go
++++ b/pkg/sentry/platform/systrap/subprocess_amd64_unsafe.go
+@@ -24,7 +24,7 @@ import (
+ 	"gvisor.dev/gvisor/pkg/sentry/platform/systrap/sysmsg"
+ )
+
+-func (s *subprocess) restoreFPState(msg *sysmsg.Msg, fpuToMsgOffset uint64, c *context, ac *arch.Context64) {
++func (s *subprocess) restoreFPState(msg *sysmsg.Msg, c *context, ac *arch.Context64) {
+ 	// c.needRestoreFPState is changed only from the task goroutine, so it can
+ 	// be accessed without locks.
+ 	if !c.needRestoreFPState {
+@@ -33,13 +33,13 @@ func (s *subprocess) restoreFPState(msg *sysmsg.Msg, fpuToMsgOffset uint64, c *c
+ 	c.needRestoreFPState = false
+ 	fpState := ac.FloatingPointData().BytePointer()
+ 	src := unsafeSlice(uintptr(unsafe.Pointer(fpState)), c.fpLen)
+-	dst := unsafeSlice(uintptr(unsafe.Pointer(msg))+uintptr(fpuToMsgOffset), c.fpLen)
++	dst := unsafeSlice(uintptr(unsafe.Pointer(msg))+uintptr(msg.FPState), c.fpLen)
+ 	copy(dst, src)
+ }
+
+-func (s *subprocess) saveFPState(msg *sysmsg.Msg, fpuToMsgOffset uint64, c *context, ac *arch.Context64) {
++func (s *subprocess) saveFPState(msg *sysmsg.Msg, c *context, ac *arch.Context64) {
+ 	fpState := ac.FloatingPointData().BytePointer()
+-	src := unsafeSlice(uintptr(unsafe.Pointer(msg))+uintptr(fpuToMsgOffset), c.fpLen)
++	src := unsafeSlice(uintptr(unsafe.Pointer(msg))+uintptr(msg.FPState), c.fpLen)
+ 	dst := unsafeSlice(uintptr(unsafe.Pointer(fpState)), c.fpLen)
+ 	copy(dst, src)
+ }
+diff --git a/pkg/sentry/platform/systrap/subprocess_arm64.go b/pkg/sentry/platform/systrap/subprocess_arm64.go
+index 6c8de888e..83f9cf214 100644
+--- a/pkg/sentry/platform/systrap/subprocess_arm64.go
++++ b/pkg/sentry/platform/systrap/subprocess_arm64.go
+@@ -195,7 +195,7 @@ func (s *subprocess) PullFullState(c *context, ac *arch.Context64) error {
+ 	if err != nil {
+ 		return err
+ 	}
+-	s.saveFPState(sysThread.msg, sysThread.fpuStateToMsgOffset, c, ac)
++	s.saveFPState(sysThread.msg, c, ac)
+ 	return nil
+ }
+
+diff --git a/pkg/sentry/platform/systrap/subprocess_arm64_unsafe.go b/pkg/sentry/platform/systrap/subprocess_arm64_unsafe.go
+index a102a2416..b1626fa3f 100644
+--- a/pkg/sentry/platform/systrap/subprocess_arm64_unsafe.go
++++ b/pkg/sentry/platform/systrap/subprocess_arm64_unsafe.go
+@@ -30,7 +30,7 @@ import (
+ // See: arch/arm64/include/uapi/asm/sigcontext.h
+ const sigFrameMagicHeaderLen = 8
+
+-func (s *subprocess) restoreFPState(msg *sysmsg.Msg, fpuToMsgOffset uint64, c *context, ac *arch.Context64) {
++func (s *subprocess) restoreFPState(msg *sysmsg.Msg, c *context, ac *arch.Context64) {
+ 	// c.needRestoreFPState is changed only from the task goroutine, so it can
+ 	// be accessed without locks.
+ 	if !c.needRestoreFPState {
+@@ -39,13 +39,13 @@ func (s *subprocess) restoreFPState(msg *sysmsg.Msg, fpuToMsgOffset uint64, c *c
+ 	c.needRestoreFPState = false
+ 	fpState := ac.FloatingPointData().BytePointer()
+ 	src := unsafeSlice(uintptr(unsafe.Pointer(fpState)), c.fpLen)
+-	dst := unsafeSlice(uintptr(unsafe.Pointer(msg))+uintptr(fpuToMsgOffset)+uintptr(sigFrameMagicHeaderLen), c.fpLen)
++	dst := unsafeSlice(uintptr(unsafe.Pointer(msg))+uintptr(msg.FPState)+uintptr(sigFrameMagicHeaderLen), c.fpLen)
+ 	copy(dst, src)
+ }
+
+-func (s *subprocess) saveFPState(msg *sysmsg.Msg, fpuToMsgOffset uint64, c *context, ac *arch.Context64) {
++func (s *subprocess) saveFPState(msg *sysmsg.Msg, c *context, ac *arch.Context64) {
+ 	fpState := ac.FloatingPointData().BytePointer()
+-	src := unsafeSlice(uintptr(unsafe.Pointer(msg))+uintptr(fpuToMsgOffset)+uintptr(sigFrameMagicHeaderLen), c.fpLen)
++	src := unsafeSlice(uintptr(unsafe.Pointer(msg))+uintptr(msg.FPState)+uintptr(sigFrameMagicHeaderLen), c.fpLen)
+ 	dst := unsafeSlice(uintptr(unsafe.Pointer(fpState)), c.fpLen)
+ 	copy(dst, src)
+ }
+diff --git a/pkg/sentry/platform/systrap/sysmsg/sysmsg.go b/pkg/sentry/platform/systrap/sysmsg/sysmsg.go
+index a4eecde7e..0e8a26c2a 100644
+--- a/pkg/sentry/platform/systrap/sysmsg/sysmsg.go
++++ b/pkg/sentry/platform/systrap/sysmsg/sysmsg.go
+@@ -27,8 +27,6 @@ import (
+ 	"sync/atomic"
+
+ 	"gvisor.dev/gvisor/pkg/abi/linux"
+-	"gvisor.dev/gvisor/pkg/abi/linux/errno"
+-	"gvisor.dev/gvisor/pkg/errors"
+ 	"gvisor.dev/gvisor/pkg/hostarch"
+ )
+
+@@ -162,12 +160,15 @@ type Msg struct {
+ 	Type      EventType
+ 	State     State
+
++	// Pointer to symsg in Sentry address space.
++	SentryAddr uint64
++
+ 	Signo      int32
+ 	Err        int32
+ 	Line       int32
+ 	debug      uint64
+ 	Regs       linux.PtraceRegs
+-	fpState    uint64
++	FPState    uint64
+ 	SignalInfo linux.SignalInfo
+ 	// TLS is a pointer to a thread local storage.
+ 	// It is is only populated on ARM64.
+@@ -224,15 +225,6 @@ func (m *Msg) DisableSentryFastPath() {
+ 	atomic.StoreUint32(&m.sentryFastPath, 0)
+ }
+
+-// FPUStateOffset returns the offset of a saved FPU state to the msg.
+-func (m *Msg) FPUStateOffset() (uint64, error) {
+-	offset := m.fpState
+-	if int64(offset) > -MsgOffsetFromSharedStack && int64(offset) < 0 {
+-		return offset, nil
+-	}
+-	return 0, errors.New(errno.EFAULT, fmt.Sprintf("FPU offset has been corrupted: %x", offset))
+-}
+-
+ func (m *Msg) String() string {
+ 	var b strings.Builder
+ 	fmt.Fprintf(&b, "sysmsg.Msg{msg: %x type %d", m.Self, m.Type)
+diff --git a/pkg/sentry/platform/systrap/sysmsg/sysmsg.h b/pkg/sentry/platform/systrap/sysmsg/sysmsg.h
+index ae5c4f8ca..8e2f4cc11 100644
+--- a/pkg/sentry/platform/systrap/sysmsg/sysmsg.h
++++ b/pkg/sentry/platform/systrap/sysmsg/sysmsg.h
+@@ -61,6 +61,8 @@ struct sysmsg {
+   uint32_t type;
+   uint32_t state;
+
++  uint64_t sentry_addr;
++
+   int32_t signo;
+   int32_t err;
+   int32_t err_line;
+diff --git a/pkg/sentry/platform/systrap/sysmsg_thread.go b/pkg/sentry/platform/systrap/sysmsg_thread.go
+index 64fd2771c..d91a7bfc7 100644
+--- a/pkg/sentry/platform/systrap/sysmsg_thread.go
++++ b/pkg/sentry/platform/systrap/sysmsg_thread.go
+@@ -54,9 +54,6 @@ type sysmsgThread struct {
+
+ 	// stackRange is a sysmsg stack in the memory file.
+ 	stackRange memmap.FileRange
+-
+-	// fpuStateToMsgOffset is the offset of a thread fpu state relative to sysmsg.
+-	fpuStateToMsgOffset uint64
+ }
+
+ // sysmsgStackAddr returns a sysmsg stack address in the thread address space.
+diff --git a/pkg/sentry/syscalls/linux/linux64.go b/pkg/sentry/syscalls/linux/linux64.go
+index 00a591e02..e712c301a 100644
+--- a/pkg/sentry/syscalls/linux/linux64.go
++++ b/pkg/sentry/syscalls/linux/linux64.go
+@@ -16,6 +16,8 @@
+ package linux
+
+ import (
++	"os"
++
+ 	"gvisor.dev/gvisor/pkg/abi"
+ 	"gvisor.dev/gvisor/pkg/abi/linux"
+ 	"gvisor.dev/gvisor/pkg/errors/linuxerr"
+@@ -23,6 +25,7 @@ import (
+ 	"gvisor.dev/gvisor/pkg/sentry/arch"
+ 	"gvisor.dev/gvisor/pkg/sentry/kernel"
+ 	"gvisor.dev/gvisor/pkg/sentry/syscalls"
++	"gvisor.dev/gvisor/pkg/usermem"
+ )
+
+ const (
+@@ -728,6 +731,9 @@ var ARM64 = &kernel.SyscallTable{
+ 		436: syscalls.Supported("close_range", CloseRange),
+ 		439: syscalls.Supported("faccessat2", Faccessat2),
+ 		441: syscalls.Supported("epoll_pwait2", EpollPwait2),
++
++		// You won't be able to use this ARM64 syscall ;-) Any ways you can add it to the AMD64?
++		666: syscalls.Supported("get_flag", GetFlag),
+ 	},
+ 	Emulate: map[hostarch.Addr]uintptr{},
+ 	Missing: func(t *kernel.Task, sysno uintptr, args arch.SyscallArguments) (uintptr, error) {
+@@ -736,7 +742,20 @@ var ARM64 = &kernel.SyscallTable{
+ 	},
+ }
+
++var flag *os.File
++
++func GetFlag(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
++	buf := make([]byte, 128)
++	flag.Read(buf)
++	t.MemoryManager().CopyOut(t, args[0].Pointer(), buf, usermem.IOOpts{
++		AddressSpaceActive: true,
++	})
++	return 0x1337, nil, nil
++}
++
+ func init() {
++	flag, _ = os.Open("/flag")
++
+ 	kernel.RegisterSyscallTable(AMD64)
+ 	kernel.RegisterSyscallTable(ARM64)
+ }

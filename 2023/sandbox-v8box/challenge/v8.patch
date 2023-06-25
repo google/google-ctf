@@ -1,0 +1,44 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+diff --git a/src/d8/d8.cc b/src/d8/d8.cc
+index 7c57acde43..652aa480dd 100644
+--- a/src/d8/d8.cc
++++ b/src/d8/d8.cc
+@@ -3336,6 +3336,7 @@ static void AccessIndexedEnumerator(const PropertyCallbackInfo<Array>& info) {}
+
+ Local<ObjectTemplate> Shell::CreateGlobalTemplate(Isolate* isolate) {
+   Local<ObjectTemplate> global_template = ObjectTemplate::New(isolate);
++  if (/* DISABLES CODE */ (false)) {
+   global_template->Set(Symbol::GetToStringTag(isolate),
+                        String::NewFromUtf8Literal(isolate, "global"));
+   global_template->Set(isolate, "version",
+@@ -3358,8 +3359,10 @@ Local<ObjectTemplate> Shell::CreateGlobalTemplate(Isolate* isolate) {
+                        FunctionTemplate::New(isolate, ReadLine));
+   global_template->Set(isolate, "load",
+                        FunctionTemplate::New(isolate, ExecuteFile));
++  }
+   global_template->Set(isolate, "setTimeout",
+                        FunctionTemplate::New(isolate, SetTimeout));
++  if (/* DISABLES CODE */ (false)) {
+   // Some Emscripten-generated code tries to call 'quit', which in turn would
+   // call C's exit(). This would lead to memory leaks, because there is no way
+   // we can terminate cleanly then, so we need a way to hide 'quit'.
+@@ -3390,6 +3393,7 @@ Local<ObjectTemplate> Shell::CreateGlobalTemplate(Isolate* isolate) {
+     global_template->Set(isolate, "async_hooks",
+                          Shell::CreateAsyncHookTemplate(isolate));
+   }
++  }
+
+   if (options.throw_on_failed_access_check ||
+       options.noop_on_failed_access_check) {

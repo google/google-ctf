@@ -1,0 +1,103 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: under-construction-php
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  allowConnectTo:
+    - "under-construction-mysql"
+  network:
+    public: true
+    ports:
+      - protocol: "HTTPS"
+        targetPort: 1337
+  healthcheck:
+    enabled: true
+    image: eu.gcr.io/gctf-2023/under-construction-php-healthcheck:7e15a8ef45bb2a6c329e1f4f6eb150192c9a4d584a0fd5f036cb3deee66bdc65
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"
+            env:
+              - name: MYSQL_DATABASE
+                value: "forge"
+              - name: DB_HOST
+                value: "under-construction-mysql"
+              - name: MIGRATOR_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: under-construction-secret
+                    key: migrator_token
+              - name: MYSQL_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: under-construction-secret
+                    key: mysql_password
+              - name: FLAG
+                valueFrom:
+                  secretKeyRef:
+                    name: under-construction-secret
+                    key: flag
+  image: eu.gcr.io/gctf-2023/under-construction-php-challenge:f383d54957b33aaac059d7aeb5d600dab4c5fcd8a941367f48e87b8cf68b4536
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: under-construction-mysql
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: under-construction-mysql
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: under-construction-mysql
+spec:
+  selector:
+    matchLabels:
+      app: under-construction-mysql
+  template:
+    metadata:
+      labels:
+        app: under-construction-mysql
+    spec:
+      containers:
+        - image: mysql:8
+          name: mysql
+          env:
+            - name: MYSQL_USER
+              value: "forge"
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: under-construction-secret
+                  key: mysql_password
+            - name: MYSQL_DATABASE
+              value: "forge"
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              value: "1"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: under-construction-secret
+stringData:
+  migrator_token: "Yw4Ynl59Deu37r1zyCWbHYlRU14QXl2bcobHyHGY"
+  mysql_password: "Ah9LUPhPEknU7jceKW4ya9Hwek4GrpLmzYFCgnL1lYg"
+  flag: "CTF{ff79e2741f21abd77dc48f17bab64c3d}"

@@ -1,0 +1,111 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: vegsoda
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  allowConnectTo:
+    - "vegsoda-mysql"
+    - "vegsoda-xssbot"
+  network:
+    public: true
+    ports:
+      - protocol: "HTTPS"
+        targetPort: 1337
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2023/vegsoda-healthcheck:1bd2c80975fd67ee02d112be5fbc078a0c3071fc0d4ce75bff24ad47e9840bbc
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"
+            env:
+              - name: PORT
+                value: "1337"
+              - name: CSRF_KEY
+                value: "00142727948080738817066806077613"
+              - name: COOKIE_KEY
+                value: "d43985c67b8d777b68d2b3e7089o926g"
+              - name: COOKIE_ENCRYPTION
+                value: "5f8246944e08be9720b8a96e7e8bs83m"
+              - name: RECAPTCHA_KEY
+                value: "6LfRtrQmAAAAAFbxKiwlHx5Rw02G6dDtWGpkPg0q"
+              - name: BOT_ADDR
+                value: "vegsoda-xssbot"
+              - name: BOT_PORT
+                value: "1337"
+              - name: ADMIN_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: vegsoda-secret
+                    key: admin_password
+              - name: DB_HOST
+                value: "vegsoda-mysql"
+              - name: DB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: vegsoda-secret
+                    key: mysql_password
+  image: eu.gcr.io/gctf-2023/vegsoda-challenge:5afe5b984d252b51f7a1218de9e4a04644c1843328a8c716881bb3bc60d002f8
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vegsoda-mysql
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: vegsoda-mysql
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vegsoda-mysql
+spec:
+  selector:
+    matchLabels:
+      app: vegsoda-mysql
+  template:
+    metadata:
+      labels:
+        app: vegsoda-mysql
+    spec:
+      containers:
+        - image: mariadb:lts
+          name: mysql
+          env:
+            - name: MARIADB_USER
+              value: "forge"
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vegsoda-secret
+                  key: mysql_password
+            - name: MARIADB_DATABASE
+              value: "forge"
+            - name: MARIADB_RANDOM_ROOT_PASSWORD
+              value: "1"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vegsoda-secret
+stringData:
+  admin_password: "264eb2126926ab1bb26e780790f97a69"
+  mysql_password: "956d8a154497d7ddd5ac1723ef3fbf85"

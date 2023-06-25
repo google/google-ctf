@@ -1,0 +1,28 @@
+# Human readable task name
+name: papapapa
+
+# Long form description.
+description: |+
+  Is this image really just white?
+
+# The flag
+flag: 'CTF{rearview-monorail-mullets-backroom-stopped}'
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: misc
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+
+# URL for web challenges
+link: ''
+
+# host/port for non-web challenges
+host: ''
+
+# the URL for attachments, to be filled in by automation
+attachment: ''
+
+# is this challenge released? Will be set by SREs
+visible: true

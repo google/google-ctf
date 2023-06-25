@@ -1,0 +1,34 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: lightbox
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2023/lightbox-healthcheck:1ff715f403af3a8e006fc8413778a2e763860e8082e230096d27f8f2458f72de
+  image: eu.gcr.io/gctf-2023/lightbox-challenge:51506cc416bcf1bc6cb428d7937c6d1ca7a2cec6fafaa5503efe0f79ddca617f
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"
+        nodeSelector:
+          dedicated: nested-virt
+        tolerations:
+          - key: "dedicated"
+            operator: "Equal"
+            value: "nested-virt"
+            effect: "NoExecute"

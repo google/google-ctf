@@ -1,0 +1,5 @@
+#!/bin/bash
+
+head -n 1 | base64 -d > /tmp/pwn.wasm
+sha256sum /tmp/pwn.wasm
+/home/user/d8 /home/user/load.js

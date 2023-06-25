@@ -1,0 +1,29 @@
+# Human readable task name
+name: write-flag-where2
+
+# Long form description.
+description: |+
+  Was that too easy? Let's make it tough
+  It's the challenge from before, but I've removed all the fluff
+# The flag
+flag: CTF{impr355iv3_6ut_can_y0u_s01v3_cha113ng3_3?}
+
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: pwn
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+
+# URL for web challenges
+link: ''
+
+# host/port for non-web challenges
+host: 'wfw2.2023.ctfcompetition.com 1337'
+
+# the URL for attachments, to be filled in by automation
+attachment: ''
+
+# is this challenge released? Will be set by SREs
+visible: true

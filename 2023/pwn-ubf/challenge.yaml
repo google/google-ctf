@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: ubf
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2023/ubf-healthcheck:5da478b26382073fc2a9dce257426951c5a17e3f6e10fa8244a018a5440f6500
+  image: eu.gcr.io/gctf-2023/ubf-challenge:5ea0603116d40f13eafb6659891188106005775ecde49500cf65b0236573c011
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

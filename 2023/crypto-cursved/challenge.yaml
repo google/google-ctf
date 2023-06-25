@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: cursved
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2023/cursved-healthcheck:e9b5cc26376a6a349976160003130c0e4e12b87ef42eb8c7d3708eaa8d5e3642
+  image: eu.gcr.io/gctf-2023/cursved-challenge:f2f32fb3e9c2cfff8fe79661199c10726bc2c21796fc71be3065e7d7f03b9b8c
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

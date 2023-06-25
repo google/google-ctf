@@ -1,0 +1,11 @@
+#!/bin/bash
+# https://github.com/google/kctf/blob/v1/docker-images/challenge/kctf_drop_privs
+
+# There are two copies of this file in the nsjail and healthcheck base images.
+
+all_caps="-cap_0"
+for i in $(seq 1 $(cat /proc/sys/kernel/cap_last_cap)); do
+  all_caps+=",-cap_${i}"
+done
+
+exec setpriv --init-groups --reuid user --regid user --inh-caps=${all_caps} -- "$@"

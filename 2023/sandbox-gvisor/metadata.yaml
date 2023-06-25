@@ -1,0 +1,41 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Human readable task name
+name: gvisor
+# Long form description.
+description: |+
+  gVisor is a container sandbox with a kernel written in the memory safe language Go.
+
+  However, using unsafe pointers erroneously could still make it unsafe.
+
+  The gVisor `runsc` in this challenge is patched on the commit version `192bfb03fb2f8f869d834885716a1b904f5c930d`.
+  Read `Makefile` to learn how the `challenge` is built.
+
+  The challenge is executed as `runsc --rootless --network=none --platform=systrap do --root=/tmp /exploit`,
+  where `/lib` and `/lib64` is mounted at `/tmp/lib` and `/tmp/lib64`, and the binary is located at `/tmp/exploit`.
+# The flag
+flag: CTF{gvisor_is_an_amazing_sandbox}
+# Task category. (one of hw, crypto, pwn, rev, web, net, misc)
+category: sandbox
+# === the fields below will be filled by SRE or automation ===
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true
+host: 'gvisor.2023.ctfcompetition.com 1337'

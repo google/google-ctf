@@ -1,0 +1,43 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: kconcat
+spec:
+  deployed: true
+  powDifficultySeconds: 10
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: eu.gcr.io/gctf-2023/kconcat-healthcheck:8d937832dd799e548df376990e98da20ad6562f1fc6a3fa5bd4740ff69ddfa3d
+  image: eu.gcr.io/gctf-2023/kconcat-challenge:1716e4decdcfb7a69ace7dc7090e24e06c0967080852bdbeff84f3fab7903126
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                cpu: "2"
+                memory: "2Gi"
+            volumeMounts:
+              - name: kvm-volume
+                mountPath: /dev/kvm
+            securityContext:
+              privileged: true
+        volumes:
+          - name: kvm-volume
+            hostPath:
+              path: /dev/kvm
+        nodeSelector:
+          dedicated: nested-virt
+        tolerations:
+          - key: "dedicated"
+            operator: "Equal"
+            value: "nested-virt"
+            effect: "NoExecute"

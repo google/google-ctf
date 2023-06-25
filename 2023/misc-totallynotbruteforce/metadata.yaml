@@ -1,0 +1,31 @@
+# Human readable task name
+name: Totally Not Brute Force
+# Long form description.
+description: |+
+  I found a service that can tell me whether the flag is correct or not, but it is hard to guess... 
+  Can you help me out here?
+
+  Note: please solve this challenge locally first, everything needed to run it should be included
+  in the attachment.
+
+  Due to technical limitations of kCTF the challenge has to be solved using a single TCP connection. 
+  A HTTP proxy was added to make accessing the challenge more convenient.
+  See the powproxy folder in the attached archive for the source code and the binary.
+
+# The flag
+flag: CTF{W4s_1T_Ev3NtFu1}
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: misc
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# host/port for non-web challenges
+host: 'tnbf.2023.ctfcompetition.com 1337'
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true

@@ -1,0 +1,32 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# Human readable task name
+name: Cursved
+# Long form description.
+description: |+
+  This new signature scheme I built should be super secure. I know that you do not have a quantum computer, so what could possibly go wrong.
+# The flag
+flag: CTF{pe11_conics_are_not_quite_e11iptic_curves}
+# Task category. (one of hw, crypto, pwn, rev, web, net, misc)
+category: crypto
+# === the fields below will be filled by SRE or automation ===
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true
+host: 'cursved.2023.ctfcompetition.com 1337'

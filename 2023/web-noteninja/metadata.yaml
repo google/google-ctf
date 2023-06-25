@@ -1,0 +1,30 @@
+# Human readable task name
+name: noteninja
+# Long form description.
+description: |+
+    Note Ninja will keep you top secrets under the shadow!
+    Update:
+      Attachment updated.
+      There is an unintended solution that might allow attacker to read notes.
+      Intended solution is XSS.
+      Contact admins if you break the challenge.
+
+# The flag
+flag: CTF{always_be_looking_for_loopholes_and_break_the_rules_win_the_flag}
+# Task category. (one of hw, crypto, pwn, reversing, web, net, misc)
+category: web
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: 'https://noteninja-web.2023.ctfcompetition.com'
+# host/port for non-web challenges
+host: ''
+
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true
+

@@ -1,0 +1,30 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+is_component_build = false
+is_debug = false
+target_cpu = "x64"
+v8_enable_sandbox = true
+v8_enable_backtrace = true
+v8_enable_disassembler = true
+v8_enable_object_print = true
+v8_enable_verify_heap = true
+dcheck_always_on = false
+v8_jitless = true
+v8_enable_maglev = false
+v8_enable_turbofan = false
+v8_enable_webassembly = false
+v8_expose_memory_corruption_api = true
+use_goma = false
+v8_code_pointer_sandboxing = true

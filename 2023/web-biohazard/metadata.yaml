@@ -1,0 +1,22 @@
+# Human readable task name
+name: biohazard
+# Long form description.
+description: "Bio+"
+# The flag
+flag: CTF{xss_auditor_is_dead_long_live_csp_attribute}
+# Task category. (one of hw, crypto, pwn, reversing, web, net, misc)
+category: web
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: 'https://biohazard-web.2023.ctfcompetition.com'
+# host/port for non-web challenges
+host: ''
+
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true

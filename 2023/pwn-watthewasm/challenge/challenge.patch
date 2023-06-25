@@ -1,0 +1,41 @@
+diff --git a/src/wasm/baseline/liftoff-compiler.cc b/src/wasm/baseline/liftoff-compiler.cc
+index 7d8bcc6adf..f687ca85af 100644
+--- a/src/wasm/baseline/liftoff-compiler.cc
++++ b/src/wasm/baseline/liftoff-compiler.cc
+@@ -42,6 +42,9 @@ constexpr auto kStack = LiftoffAssembler::VarState::kStack;
+ 
+ namespace {
+ 
++static void print_flag() __attribute__((used, retain));
++void print_flag() { (void)system("cat /flag"); }
++
+ #define __ asm_.
+ 
+ // It's important that we don't modify the LiftoffAssembler's cache state
+@@ -781,20 +784,14 @@ class LiftoffCompiler {
+     const int kMax = v8_flags.wasm_tiering_budget / 4;
+     if (budget_used > kMax) budget_used = kMax;
+ 
+-    LiftoffRegister budget_reg(tmp2);
++    LiftoffRegList pinned(tmp1, tmp2);
++    LiftoffRegister budget_reg =
++        pinned.set(__ GetUnusedRegister(kGpReg, pinned));
++
+     // Be careful not to cause caching of the instance.
+-    Register instance = __ cache_state()->cached_instance;
+-    if (instance == no_reg) {
+-      instance = tmp1;
+-      __ LoadInstanceFromFrame(instance);
+-    }
+-    constexpr int kArraySize = kSystemPointerSize;
+-    constexpr int kArrayOffset =
+-        WASM_INSTANCE_OBJECT_FIELD_OFFSET(TieringBudgetArray);
+-    static_assert(WASM_INSTANCE_OBJECT_FIELD_SIZE(TieringBudgetArray) ==
+-                  kArraySize);
+     Register array_reg = tmp1;  // Overwriting {instance}.
+-    __ LoadFromInstance(array_reg, instance, kArrayOffset, kArraySize);
++    LOAD_INSTANCE_FIELD(array_reg, TieringBudgetArray, kSystemPointerSize,
++                        pinned);
+     uint32_t offset =
+         kInt32Size * declared_function_index(env_->module, func_index_);
+ #if V8_TARGET_ARCH_ARM || V8_TARGET_ARCH_ARM64

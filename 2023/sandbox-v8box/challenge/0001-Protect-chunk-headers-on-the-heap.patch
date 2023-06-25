@@ -1,0 +1,255 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+diff --git a/src/common/code-memory-access-inl.h b/src/common/code-memory-access-inl.h
+index 4b8ac2e5c7..58542dc4e5 100644
+--- a/src/common/code-memory-access-inl.h
++++ b/src/common/code-memory-access-inl.h
+@@ -17,6 +17,18 @@
+ namespace v8 {
+ namespace internal {
+
++RwMemoryWriteScope::RwMemoryWriteScope() {
++  SetWritable();
++}
++
++RwMemoryWriteScope::RwMemoryWriteScope(const char *comment) {
++  SetWritable();
++}
++
++RwMemoryWriteScope::~RwMemoryWriteScope() {
++  SetReadOnly();
++}
++
+ RwxMemoryWriteScope::RwxMemoryWriteScope(const char* comment) {
+   if (!v8_flags.jitless) {
+     SetWritable();
+diff --git a/src/common/code-memory-access.cc b/src/common/code-memory-access.cc
+index be3b9741d2..b8c59c331f 100644
+--- a/src/common/code-memory-access.cc
++++ b/src/common/code-memory-access.cc
+@@ -4,6 +4,10 @@
+
+ #include "src/common/code-memory-access-inl.h"
+ #include "src/utils/allocation.h"
++#include "src/common/globals.h"
++#include "src/execution/isolate-inl.h"
++
++#include <sys/mman.h>
+
+ namespace v8 {
+ namespace internal {
+@@ -11,6 +15,68 @@ namespace internal {
+ ThreadIsolation::TrustedData ThreadIsolation::trusted_data_;
+ ThreadIsolation::UntrustedData ThreadIsolation::untrusted_data_;
+
++thread_local int RwMemoryWriteScope::nesting_level_ = 0;
++
++static void ProtectSpace(Space *space, int prot) {
++  if (space->memory_chunk_list().Empty()) {
++    return;
++  }
++
++  MemoryChunk *c = space->memory_chunk_list().front();
++  while (c) {
++    void *addr = reinterpret_cast<void *>(c->address());
++    // printf("making %p read-only\n", addr);
++    CHECK(mprotect(addr, RoundDown(sizeof(MemoryChunk), 0x1000), prot) == 0);
++    c = c->list_node().next();
++  }
++}
++
++// static
++void RwMemoryWriteScope::SetWritable() {
++  if (nesting_level_ == 0) {
++    int prot = PROT_READ | PROT_WRITE;
++    Isolate *isolate = Isolate::Current();
++    for (int i = FIRST_MUTABLE_SPACE; i < LAST_SPACE; i++) {
++      Space *space = isolate->heap()->space(i);
++      if (space == nullptr) {
++        continue;
++      }
++
++      if (!v8_flags.minor_mc && i == NEW_SPACE) {
++        SemiSpaceNewSpace* semi_space_new_space = SemiSpaceNewSpace::From(static_cast<NewSpace *>(space));
++        ProtectSpace(&semi_space_new_space->from_space(), prot);
++        ProtectSpace(&semi_space_new_space->to_space(), prot);
++      } else {
++        ProtectSpace(space, prot);
++      }
++    }
++  }
++  nesting_level_++;
++}
++
++// static
++void RwMemoryWriteScope::SetReadOnly() {
++  nesting_level_--;
++  if (nesting_level_ == 0) {
++    int prot = PROT_READ;
++    Isolate *isolate = Isolate::Current();
++    for (int i = FIRST_MUTABLE_SPACE; i < LAST_SPACE; i++) {
++      Space *space = isolate->heap()->space(i);
++      if (space == nullptr) {
++        continue;
++      }
++
++      if (!v8_flags.minor_mc && i == NEW_SPACE) {
++        SemiSpaceNewSpace* semi_space_new_space = SemiSpaceNewSpace::From(static_cast<NewSpace *>(space));
++        ProtectSpace(&semi_space_new_space->from_space(), prot);
++        ProtectSpace(&semi_space_new_space->to_space(), prot);
++      } else {
++        ProtectSpace(space, prot);
++      }
++    }
++  }
++}
++
+ #if V8_HAS_PTHREAD_JIT_WRITE_PROTECT || V8_HAS_PKU_JIT_WRITE_PROTECT
+ thread_local int RwxMemoryWriteScope::code_space_write_nesting_level_ = 0;
+ #endif  // V8_HAS_PTHREAD_JIT_WRITE_PROTECT || V8_HAS_PKU_JIT_WRITE_PROTECT
+diff --git a/src/common/code-memory-access.h b/src/common/code-memory-access.h
+index e90dcc9a64..4e835c87c7 100644
+--- a/src/common/code-memory-access.h
++++ b/src/common/code-memory-access.h
+@@ -331,6 +331,22 @@ class V8_NODISCARD RwxMemoryWriteScope {
+ #endif  // V8_HAS_PTHREAD_JIT_WRITE_PROTECT || V8_HAS_PKU_JIT_WRITE_PROTECT
+ };
+
++class V8_NODISCARD RwMemoryWriteScope final {
++ public:
++  V8_INLINE RwMemoryWriteScope();
++  V8_INLINE explicit RwMemoryWriteScope(const char *comment);
++  V8_INLINE ~RwMemoryWriteScope();
++
++  RwMemoryWriteScope(const RwMemoryWriteScope&) = delete;
++  RwMemoryWriteScope& operator=(const RwMemoryWriteScope&) = delete;
++
++ private:
++  static void SetWritable();
++  static void SetReadOnly();
++
++  static thread_local int nesting_level_;
++};
++
+ // This class is a no-op version of the RwxMemoryWriteScope class above.
+ // It's used as a target type for other scope type definitions when a no-op
+ // semantics is required.
+@@ -346,7 +362,7 @@ using CodePageMemoryModificationScopeForPerf = RwxMemoryWriteScope;
+ #else
+ // Without per-thread write permissions, we only use permission switching for
+ // debugging and the perf impact of this doesn't matter.
+-using CodePageMemoryModificationScopeForPerf = NopRwxMemoryWriteScope;
++using CodePageMemoryModificationScopeForPerf = RwMemoryWriteScope;
+ #endif
+
+ // Same as the RwxMemoryWriteScope but without inlining the code.
+diff --git a/src/execution/isolate.cc b/src/execution/isolate.cc
+index c935c8c5ca..2534b7bc2e 100644
+--- a/src/execution/isolate.cc
++++ b/src/execution/isolate.cc
+@@ -61,6 +61,7 @@
+ #include "src/handles/persistent-handles.h"
+ #include "src/heap/heap-inl.h"
+ #include "src/heap/heap-verifier.h"
++#include "src/heap/heap.h"
+ #include "src/heap/local-heap-inl.h"
+ #include "src/heap/parked-scope.h"
+ #include "src/heap/read-only-heap.h"
+@@ -4236,6 +4237,8 @@ void Isolate::VerifyStaticRoots() {
+ bool Isolate::Init(SnapshotData* startup_snapshot_data,
+                    SnapshotData* read_only_snapshot_data,
+                    SnapshotData* shared_heap_snapshot_data, bool can_rehash) {
++  CodePageHeaderModificationScope scope{};
++
+   TRACE_ISOLATE(init);
+
+ #ifdef V8_COMPRESS_POINTERS_IN_SHARED_CAGE
+diff --git a/src/heap/heap.cc b/src/heap/heap.cc
+index 4d7c611dfd..d3027dd3b2 100644
+--- a/src/heap/heap.cc
++++ b/src/heap/heap.cc
+@@ -1748,6 +1748,8 @@ void Heap::CollectGarbage(AllocationSpace space,
+
+   DCHECK(AllowGarbageCollection::IsAllowed());
+
++  CodePageHeaderModificationScope hsm{};
++
+   const char* collector_reason = nullptr;
+   const GarbageCollector collector =
+       SelectGarbageCollector(space, gc_reason, &collector_reason);
+diff --git a/src/heap/heap.h b/src/heap/heap.h
+index 6675b09348..67772961fe 100644
+--- a/src/heap/heap.h
++++ b/src/heap/heap.h
+@@ -2537,7 +2537,10 @@ class V8_NODISCARD AlwaysAllocateScopeForTesting {
+ // scope.
+ #if V8_HEAP_USE_PTHREAD_JIT_WRITE_PROTECT
+ using CodePageHeaderModificationScope = RwxMemoryWriteScope;
++#elif defined(V8_JITLESS)
++using CodePageHeaderModificationScope = RwMemoryWriteScope;
+ #else
++#error "JIT not supported"
+ // When write protection of code page headers is not required the scope is
+ // a no-op.
+ using CodePageHeaderModificationScope = NopRwxMemoryWriteScope;
+@@ -2560,6 +2563,7 @@ class V8_NODISCARD CodePageMemoryModificationScope {
+   bool scope_active_;
+   base::Optional<base::MutexGuard> guard_;
+ #endif
++  RwMemoryWriteScope header_scope_;
+
+   // Disallow any GCs inside this scope, as a relocation of the underlying
+   // object would change the {MemoryChunk} that this scope targets.
+diff --git a/src/heap/memory-chunk.cc b/src/heap/memory-chunk.cc
+index 0fc34c12a1..479993b219 100644
+--- a/src/heap/memory-chunk.cc
++++ b/src/heap/memory-chunk.cc
+@@ -10,6 +10,7 @@
+ #include "src/common/globals.h"
+ #include "src/heap/basic-memory-chunk.h"
+ #include "src/heap/code-object-registry.h"
++#include "src/heap/heap.h"
+ #include "src/heap/marking-state-inl.h"
+ #include "src/heap/memory-allocator.h"
+ #include "src/heap/memory-chunk-inl.h"
+@@ -223,6 +224,7 @@ void MemoryChunk::ReleaseAllAllocatedMemory() {
+ }
+
+ SlotSet* MemoryChunk::AllocateSlotSet(RememberedSetType type) {
++  CodePageHeaderModificationScope scope{};
+   SlotSet* new_slot_set = SlotSet::Allocate(buckets());
+   SlotSet* old_slot_set = base::AsAtomicPointer::AcquireRelease_CompareAndSwap(
+       &slot_set_[type], nullptr, new_slot_set);
+diff --git a/src/heap/paged-spaces.cc b/src/heap/paged-spaces.cc
+index 6083c2a420..5b6d7c965e 100644
+--- a/src/heap/paged-spaces.cc
++++ b/src/heap/paged-spaces.cc
+@@ -311,6 +311,9 @@ void PagedSpaceBase::SetTopAndLimit(Address top, Address limit, Address end) {
+   DCHECK_GE(end, limit);
+   DCHECK(top == limit ||
+          Page::FromAddress(top) == Page::FromAddress(limit - 1));
++
++  CodePageHeaderModificationScope scope{};
++
+   BasicMemoryChunk::UpdateHighWaterMark(allocation_info_.top());
+   allocation_info_.Reset(top, limit);
+
+@@ -814,6 +817,7 @@ void PagedSpaceBase::UpdateInlineAllocationLimit() {
+ // OldSpace implementation
+
+ bool PagedSpaceBase::RefillLabMain(int size_in_bytes, AllocationOrigin origin) {
++  CodePageHeaderModificationScope scope("RefillLabMain");
+   VMState<GC> state(heap()->isolate());
+   RCS_SCOPE(heap()->isolate(),
+             RuntimeCallCounterId::kGC_Custom_SlowAllocateRaw);

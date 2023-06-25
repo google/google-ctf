@@ -1,0 +1,35 @@
+# Human readable task name
+name: write-flag-where
+
+# Long form description.
+description: |+
+  This challenge is not a classical pwn
+  In order to solve it will take skills of your own
+  An excellent primitive you get for free
+  Choose an address and I will write what I see
+  But the author is cursed or perhaps it's just out of spite
+  For the flag that you seek is the thing you will write
+  ASLR isn't the challenge so I'll tell you what
+  I'll give you my mappings so that you'll have a shot.
+# The flag
+flag: CTF{Y0ur_j0urn3y_is_0n1y_ju5t_b39innin9}
+
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: pwn
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+
+# URL for web challenges
+link: ''
+
+# host/port for non-web challenges
+host: 'wfw1.2023.ctfcompetition.com 1337'
+
+# the URL for attachments, to be filled in by automation
+attachment: ''
+
+# is this challenge released? Will be set by SREs
+visible: true

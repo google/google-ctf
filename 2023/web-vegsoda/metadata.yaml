@@ -1,0 +1,22 @@
+# Human readable task name
+name: veggie soda
+# Long form description.
+description: "Hate eating veggies? Just drink them :) "
+# The flag
+flag: CTF{Im_fUlly_aware_that_A_tomAt0_is_frUit_but_you_d0nt_see_m3_putTing_iT_In_frUit_sal4d}
+# Task category. (one of hw, crypto, pwn, reversing, web, net, misc)
+category: web
+
+# === the fields below will be filled by SRE or automation ===
+
+# Task label
+label: ''
+# URL for web challenges
+link: 'https://vegsoda-web.2023.ctfcompetition.com'
+# host/port for non-web challenges
+host: ''
+
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true

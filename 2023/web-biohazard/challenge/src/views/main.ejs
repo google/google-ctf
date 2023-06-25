@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><%= title %></title>
+    <script src="/static/closure-library/closure/goog/base.js" nonce="<%= nonce %>"></script>
+    <script src="/static/bootstrap.js" nonce="<%= nonce %>"></script>
+    <script src="/static/sanitizer.js" nonce="<%= nonce %>"></script>
+    <script src="/static/main.js" nonce="<%= nonce %>"></script>
+    <style>
+	body{
+	  background-color: skyblue;
+	  margin: 0;
+	  font: normal 10pt Arial, sans-serif;
+	}
+	.content{
+	  max-width:960px;
+	  margin:auto;
+	  background-color:#fff;
+	  box-shadow: 0 30px 40px rgba(0,0,0,.1);
+	  padding: 8px;
+	}
+
+	#editMe {
+	  width: 600px;
+	  height: 300px;
+	  background-color: white;
+	  border: 1px solid grey;
+	}
+	.header-title{
+	  display:block;
+	  font-size: 2em;
+	  font-weight: bold;
+	  margin-top: 20px;
+	}
+	.tag-line{
+	  display: block;
+	  font-size: 12px;
+	  margin-top: -10px;
+	  color: darkorchid;
+	  font-style: italic;
+	}
+	.bio-edit{
+	  margin-top:32px;
+	  
+	}
+	.note{
+	  margin: 8px 0;
+	}
+	.version {
+	  color: darkorchid;
+	  margin: 16px 0;
+	}
+	.text-input{
+	  width: 400px;
+	  height: 25px;
+	  float:right;
+	}
+	select{
+	  width: 408px;
+	  height: 31px;
+	  float: right;
+	}
+	label {
+	  font-size: 12pt;
+	}
+	#form{
+	  max-width: 550px;
+  	}
+  	fieldset {
+  	  margin: 8px 0px;
+  	  margin-bottom:24px;
+  	}
+  	.checkbox {
+  	  width: 150px;
+  	  display: inline-block;
+  	  font-size:11pt;
+  	  margin: 5px 2px;
+  	}
+  	div#preview:empty{
+  	  border: none !important;
+  	}
+  	div#preview{
+  	  padding: 10px;
+  	}
+  	#report{
+          float:right;
+  	  background-color: darkorchid;
+          width: 100px;
+          height: 25px;
+          border: none;
+          border-radius: 5px;
+          font-weight: 600;
+          color: white;
+        }
+    </style>
+</head>
+<body>
+<template id="editor-style">
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/button.css" />
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/dialog.css" />
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/linkbutton.css" />
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/menu.css">
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/menuitem.css">
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/menuseparator.css">
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/tab.css" />
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/tabbar.css" />
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/toolbar.css" />
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/colormenubutton.css" />
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/palette.css" />
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/colorpalette.css" />
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/editor/bubble.css" />
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/editor/dialog.css" />
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/editor/linkdialog.css" />
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/editortoolbar.css" />
+    <link rel="stylesheet" href="https://google.github.io/closure-library/source/closure/goog/css/common.css" />
+</template>
+<template id="bio-edit">
+<form id="form" action="/create" method="POST">
+			
+			  <!--- Name -->
+			  <label for="name">Name:</label>
+			  <input type="text" name="name" class="text-input" placeholder="Full name">
+			  
+			  <h3>Interests:</h3>
+			  
+			  <!--- Food -->
+			  <label for="food">Favorite Foods:</label>
+			  <fieldset>
+			    <span class="checkbox"><input type="checkbox" name="food" value="BBQ of any type">BBQ of any type</span>
+			    <span class="checkbox"><input type="checkbox" name="food" value="Bibimbap">Bibimbap</span>
+			    <span class="checkbox"><input type="checkbox" name="food" value="Bruschetta">Bruschetta</span>
+			    <span class="checkbox"><input type="checkbox" name="food" value="Bulgogi">Bulgogi</span>
+			    <span class="checkbox"><input type="checkbox" name="food" value="Burrito">Burrito</span>
+			    <span class="checkbox"><input type="checkbox" name="food" value="Chicken Wings">Chicken Wings</span>
+			    <span class="checkbox"><input type="checkbox" name="food" value="Chicken tenders">Chicken tenders</span>
+			    <span class="checkbox"><input type="checkbox" name="food" value="Chili">Chili</span>
+			    <span class="checkbox"><input type="checkbox" name="food" value="Fish and chips">Fish and chips</span>
+			    <span class="checkbox"><input type="checkbox" name="food" value="French Fries">French Fries</span>
+			    <span class="checkbox"><input type="checkbox" name="food" value="Grilled cheese">Grilled cheese</span>
+			    <span class="checkbox"><input type="checkbox" name="food" value="Guacamole">Guacamole</span>
+			    <span class="checkbox"><input type="checkbox" name="food" value="Hamburger">Hamburger</span>
+			    <span class="checkbox"><input type="checkbox" name="food" value="Mac and cheese">Mac and cheese</span>
+			    <span class="checkbox"><input type="checkbox" name="food" value="Nachos">Nachos</span>
+			    <span class="checkbox"><input type="checkbox" name="food" value="Not listed">Not listed</span>
+			    <span class="checkbox"><input type="checkbox" name="food"  value="Omelet">Omelet</span>
+			    <span class="checkbox"><input type="checkbox" name="food"  value="Pizza">Pizza</span>
+			    <span class="checkbox"><input type="checkbox" name="food"  value="Pad Thai">Pad Thai</span>
+			    <span class="checkbox"><input type="checkbox" name="food"  value="Pulled Pork">Pulled Pork</span>
+			    <span class="checkbox"><input type="checkbox" name="food"  value="Quesadilla">Quesadilla</span>
+			    <span class="checkbox"><input type="checkbox" name="food"  value="Ravioli">Ravioli</span>
+			    <span class="checkbox"><input type="checkbox" name="food"  value="Sesame Chicken">Sesame Chicken</span>
+			    <span class="checkbox"><input type="checkbox" name="food"  value="Shawarma">Shawarma</span>
+			    <span class="checkbox"><input type="checkbox" name="food"  value="Steak">Steak</span>
+			    <span class="checkbox"><input type="checkbox" name="food"  value="Sushi">Sushi</span>
+			    <span class="checkbox"><input type="checkbox" name="food"  value="Tacos">Tacos  </span>
+			  </fieldset>
+			  
+			  <!--- Hobbies -->
+			  <label for="hobbies">Hobbies:</label>
+			  <input type="text" class="text-input" id="hobiies" name="hobbies" >
+			  <br><br><br>
+			  
+			  <!--- Sports -->
+			  <label for="sports">Favorite sports:</label>
+			  <input type="text" class="text-input" id="sports" name="sports">
+			  <br><br><br>
+			  
+			  <!--- YouTube -->
+			  <label>YouTube video:</label>
+			  <input type="text" class="text-input" id="youtube" placeholder="https://www.youtube.com/watch?v={video_id}">
+			  <br><br>
+
+
+		
+			<!--- Intro -->
+			<h3>Introduction:</h3>
+			<div id="toolbar" style="width:602px"></div><br>
+			<div id="editMe"></div><br>
+			<input type="hidden" id="introduction" name="introduction">
+			<br>
+			
+			<!--- Preview -->
+			<h3>Preview:</h3>
+			<div id="preview" style="width:602px;border-style: ridge;"></div>
+			<br><br>
+			
+			<!-- Save -->
+			<button type="submit" id="save">Publish!</button>
+			<p class="note">Publishing will make this publicly accessibly via a unique URL. You will not be able to edit!</p><br>
+	
+
+			</form>
+</template>
+<template id="bio-view">
+  <button id="report" type="submit">Report Bio</button>
+  <h2 id="bio-name" style="text-transform:capitalize;"></h2>
+  <h3>Favorites:</h3>
+  <div>
+  <h4 id="bio-food" style="text-transform:capitalize;"></h4>
+  <h4 id="bio-hobbies" style="text-transform:capitalize;"></h4>
+  <h4 id="bio-sports" style="text-transform:capitalize;"></h4>
+  </div>
+  <h3>Introduction:</h3>
+  <div id="bio-html"></div>
+  <br><br><br>
+</template>
+	<div class="content">
+		<div class="header-container">
+			<div class="header">
+			  <span class="header-title">Bio+</span><br>
+			  <span class="tag-line">Share your secure Bio with anyone! You choose what and how much to share.</span>
+			</div>
+		</div>
+		<div id="edit-div" class="bio-edit">
+		</div>
+		
+		<div id="view-div" class="bio-view">
+		</div>
+	</div> <!-- Content -->
+</body>
+</html>
