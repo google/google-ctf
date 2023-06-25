@@ -1,3 +1,0 @@
-Authors:
-- lorenznickel@
-- telwell@
