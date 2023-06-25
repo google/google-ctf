@@ -3,7 +3,7 @@
 In this task, we have a binary that, as we can deduce from its output, and confirm by reverse engineering, allows us to write the flag at any location in memory.
 
 In the first version of the challenge, we are given the /proc/self/maps contents - so ASLR is not a problem.
-The exploit is fairly simple - the binary will write the "Give me an address" message after every loop, and we can overwrite it flag, so that the server will send us the flag instead. Using gdb, we find the correct offset from the binary base, which we add to the one we get from the server:
+The exploit is fairly simple - the binary will write the "Give me an address" message after every loop, and we can overwrite it with the flag, so that the server will send us the flag instead. Using gdb, we find the correct offset from the binary base, which we add to the one we get from the server:
 
 ```
 $ nc localhost 1337
