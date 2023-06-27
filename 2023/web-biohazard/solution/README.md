@@ -2,11 +2,11 @@
 
 ## Objective
 
-Find XSS in the Bio+ site, and use it to steal the admin cookie (i.e. flag).
+Find XSS in the [Bio+ site](https://biohazard-web.2023.ctfcompetition.com), and use it to steal the admin cookie (i.e. flag).
 
 ## Purpose of the challenge
 
-Given [Strict CSP](https://www.w3.org/TR/CSP3/#strict-csp) and [Trusted Types](https://www.w3.org/TR/trusted-types/) enforcement, I wanted to make a challenge which is still be vulnerable to XSS.
+Given [Strict CSP](https://www.w3.org/TR/CSP3/#strict-csp) and [Trusted Types](https://www.w3.org/TR/trusted-types/) enforcement, I wanted to make a challenge which is still vulnerable to XSS.
 To mimic commonly used setup at Google, I've used [Closure Library](https://github.com/google/closure-library) and [safevalues](https://github.com/google/safevalues) which are both open sourced.
 I've introduced a few vulnerabilities such as [Prototype Pollution](https://portswigger.net/web-security/prototype-pollution) and HTML injection. And I've also exposed several exploitation/bypass primitives such as [DOM clobbering](https://portswigger.net/web-security/dom-based/dom-clobbering) (through HTML injection) and [use of template](https://github.com/shhnjk/shhnjk.github.io/blob/main/thoughts/digesting-the-concept-of-trusted-types.md#template-gadget).
 The hope was to maximize the potential of unintended solutions, so that all of us can learn something out of this challenge.
@@ -85,9 +85,10 @@ if (!location.pathname.startsWith('/view/')) {
 }
 ```
 
-This `editor` variable is used in `main.js` to include additional script.
+This `editor` variable is used in `main.js` to include an additional script.
 
 ```js
+import {trustedResourceUrl} from 'safevalues';
 import {safeScriptEl} from 'safevalues/dom';
 
 ...
@@ -106,7 +107,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 ```
 
-If we can overwrite the `editor` attribute, we can trigger an XSS!
+If we can overwrite the `editor` variable, we can trigger an XSS!
 
 If you take a look at the Closure sanitizer config, you will notice that `<iframe>` is specifically allowed.
 
