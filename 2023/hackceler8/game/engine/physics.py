@@ -147,10 +147,10 @@ class PhysicsEngine:
                     non_blocking.append(o1)
                     continue
                 logging.debug(f"Collision with {o1.unique_id}")
-                if round(mpv[0], 2) == 0.0:
+                if mpv[0] == 0.0:
                     logging.debug("This is a Y collision")
                     collisions_y.append((o1, mpv))
-                elif round(mpv[1], 2) == 0.0:
+                elif mpv[1] == 0.0:
                     logging.debug("This is a X collision")
                     collisions_x.append((o1, mpv))
         return collisions_x, collisions_y, non_blocking
