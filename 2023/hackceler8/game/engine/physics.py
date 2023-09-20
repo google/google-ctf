@@ -18,18 +18,18 @@ from components.player import Player
 from engine import generics
 from engine import quadtree
 
-GRAVITY_CONSTANT = 6
-PLAYER_JUMP_SPEED = 320
-PLAYER_MOVEMENT_SPEED = 160
-PLAYER_RUN_SPEED = 50
+from constants import GRAVITY_CONSTANT
+from constants import PLAYER_JUMP_SPEED
+from constants import PLAYER_MOVEMENT_SPEED
+from constants import PLAYER_RUN_SPEED
 
 
 class PhysicsEngine:
     def __init__(self,
                  gravity: int = GRAVITY_CONSTANT,
-                 platformer_rules: bool  = True,
+                 platformer_rules: bool = True,
                  objects: list[
-                generics.GenericObject] = None, qt=None, obj_map=None,
+                     generics.GenericObject] = None, qt=None, obj_map=None,
                  static_objects: list[
                      generics.GenericObject] = None):
 
@@ -59,22 +59,26 @@ class PhysicsEngine:
         self.obj_map = obj_map
         self.player = self._get_player()
         self.moving_platforms = []
-
-        self._reset_parameters()
+        self.moving_objects = [o for o in self.objects if o.enable_moving_physics]
+        self.moving_objects += [self.player]
 
         self.qt = qt
         self.platformer_rules = self.player.platformer_rules = platformer_rules
         if self.platformer_rules:
             self.player.load_sprite(Player.PLATFORMER_TILESET)
+            self.player.wear_item()
         self.debug_objs = []
         self.env_tiles = []
         self.tmp_loot = []
         self.exit_on_next = False
+        self._reset_parameters()
 
     def _reset_parameters(self):
         self.gravity, self.jump_speed, self.movement_speed, self.run_speed = self.original_params
         self.jump_override = False
         self.player.jump_override = self.jump_override
+        self.player.base_x_speed = self.movement_speed
+        self.player.base_y_speed = self.jump_speed if self.platformer_rules else self.movement_speed
         self.current_env = "generic"
 
     def _get_player(self):
@@ -87,7 +91,8 @@ class PhysicsEngine:
         return tmp[0]
 
     def tick(self):
-        self.player.update_position()
+        for o in self.moving_objects:
+            o.update_position()
         logging.debug(self.player.bounds.x)
         self.player.reset_movements()
         self._detect_collision()
@@ -105,16 +110,14 @@ class PhysicsEngine:
                 if o.y_speed != 0:
                     o.y_speed -= self.gravity
 
-        if self.player.in_the_air:
-            logging.debug("updating gravity speed for player")
-
-            self.player.y_speed -= self.gravity
+        for o in self.moving_objects:
+            if o.in_the_air:
+                o.y_speed -= self.gravity
 
         for i in self.moving_platforms:
             i.move_around()
 
     def _get_collisions_qt(self):
-
         region_of_interest = quadtree.Bounds(
             self.player.bounds.x - 32,
             self.player.bounds.y + 32,
@@ -128,6 +131,12 @@ class PhysicsEngine:
 
         return objs
 
+    def add_moving_object(self, o):
+        self.moving_objects.append(o)
+
+    def add_generic_object(self, o):
+        self.objects.append(o)
+
     def remove_generic_object(self, o):
         if o in self.objects:
             self.objects.remove(o)
@@ -135,14 +144,21 @@ class PhysicsEngine:
             self.static_objects.remove(o)
         if o in self.moving_platforms:
             self.moving_platforms.remove(o)
+        if o in self.moving_objects:
+            self.moving_objects.remove(o)
 
-
-    def _get_collisions_list(self):
+    def _get_collisions_list(self, player):
         collisions_x, collisions_y, non_blocking = [], [], []
         for o1 in self.objects + self.static_objects + self.moving_platforms:
-            c, mpv = o1.collides(self.player)
+            if o1 is player:
+                continue
+            c, mpv = o1.collides(player)
             if c:
-                if o1.nametype in {"Item", "ExitArea", "Ouch", "Fire", "Arena"}:
+                if (o1.nametype in {"Item", "ExitArea", "Ouch", "Fire", "Arena",
+                                    "Buffer", "Max", "Min", "Add", "Multiply",
+                                    "Invert", "Negate", "Constant", "Toggle",
+                                    "Portal", "Spike", "Switch", "Soul", "SpeedTile"}
+                        or o1.nametype == "Enemy" and (o1.dead or not o1.blocking)):
                     logging.debug(f"Collision with non blocking item ({o1.nametype})")
                     non_blocking.append(o1)
                     continue
@@ -155,25 +171,33 @@ class PhysicsEngine:
                     collisions_x.append((o1, mpv))
         return collisions_x, collisions_y, non_blocking
 
-    def _detect_collision(self):
-        collisions_x, collisions_y, non_blocking = self._get_collisions_list()
+
+    def _align_edges(self, player):
+        collisions_x, collisions_y, non_blocking = self._get_collisions_list(player)
         if len(collisions_x) + len(collisions_y) + len(non_blocking) == 0:
-            self.player.in_the_air = True
+            player.in_the_air = True
             return
         for o, mpv in collisions_x:
-            self._align_x_edge(o, mpv[0])
+            self._align_x_edge(player, o, mpv[0])
 
-        _, collisions_y, non_blocking = self._get_collisions_list()
+        _, collisions_y, non_blocking = self._get_collisions_list(player)
         logging.debug(f"There are {len(collisions_y)} collisions on the y axis")
         for o, mpv in collisions_y:
-            self._align_y_edge(o, mpv[1])
+            self._align_y_edge(player, o, mpv[1])
+
+    def _detect_collision(self):
+        for o in self.moving_objects:
+            self._align_edges(o)
+
+        _, _, non_blocking = self._get_collisions_list(self.player)
 
         for n in non_blocking:
             logging.debug(f"Collision with {n.nametype}")
             match n.nametype:
                 case "Item":
-                    self.tmp_loot.append(n)
-                    self.objects.remove(n)
+                    if n.collectable:
+                        self.tmp_loot.append(n)
+                        self.objects.remove(n)
                 case "ExitArea":
                     self.exit_on_next = True
                     logging.debug("Player reached exit")
@@ -207,40 +231,42 @@ class PhysicsEngine:
         logging.debug(f"Current player speed: {self.player.base_x_speed}")
         logging.debug(f"Current player jump: {self.player.base_y_speed}")
 
-    def _align_y_edge(self, o1, mpv):
-        self.player.y_speed = 0
+    @staticmethod
+    def _align_y_edge(player, o1, mpv):
+        player.y_speed = 0
+        if player.x_sticky:
+            player.x_speed = 0
         logging.debug(mpv)
         if mpv < 0:
             logging.debug(
                 "Negative MPV, collision was downwards (player on the ground)")
             max_y_o2 = o1.get_highest_point()
 
-            self.player.place_at(self.player.x, max_y_o2 +
-                                 self.player.get_height() // 2)
-            self.player.in_the_air = False
-            self.player.on_the_ground = True
+            player.place_at(player.x, max_y_o2 + player.get_height() // 2)
+            player.in_the_air = False
+            player.on_the_ground = True
 
         else:
             logging.debug("Positive MPV, collision was upwards")
             min_y_o2 = o1.get_lowest_point()
-            self.player.place_at(self.player.x, min_y_o2 -
-                                 self.player.get_height() // 2)
+            player.place_at(player.x, min_y_o2 - player.get_height() // 2)
 
-    def _align_x_edge(self, o1, mpv):
-        self.player.x_speed = 0
-        self.player.in_the_air = True
-        self.player.on_the_ground = False
+    @staticmethod
+    def _align_x_edge(player, o1, mpv):
+        player.x_speed = 0
+        if player.y_sticky:
+            player.y_speed = 0
+        player.in_the_air = True
+        player.on_the_ground = False
 
         logging.debug(mpv)
         if mpv > 0:
             logging.debug("Negative MPV, collision was right")
             min_x_o2 = o1.get_leftmost_point()
-            self.player.x_speed = 0
-            self.player.place_at(min_x_o2 - self.player.get_width() // 2 - 1,
-                                 self.player.y)
+            player.x_speed = 0
+            player.place_at(min_x_o2 - player.get_width() // 2 - 1, player.y)
         else:
             logging.debug("Positive MPV, collision was left")
             max_x_o2 = o1.get_rightmost_point()
-            self.player.x_speed = 0
-            self.player.place_at(max_x_o2 + self.player.get_width() // 2 + 1,
-                                 self.player.y)
+            player.x_speed = 0
+            player.place_at(max_x_o2 + player.get_width() // 2 + 1, player.y)

@@ -18,14 +18,19 @@ import engine.hitbox as hitbox
 
 
 class Weapon(generics.GenericObject):
-    def __init__(self, coords, name, weapon_type, damage_type, damage_algo,
+    def __init__(self, coords, name, display_name, flipped, weapon_type, damage_type, damage_algo,
                  tileset_path=None, collectable=True, outline=None):
         super().__init__(coords, nametype="Weapon", tileset_path=tileset_path,
-                         outline=outline, can_flash=True)
+                         outline=outline, can_flash=True, can_flip=True)
         self.weapon_type = weapon_type
         self.damage_type = damage_type
         self.damage_algo = damage_algo
-        self.weapon_name = name
+        self.name = name
+        self.display_name = display_name
+        self.cool_down_timer = 0
+        self.charging = False
+        if flipped:
+            self.sprite.set_flipped(True)
 
         # Weapons start as inactive and are activated by default
         self.active = False
@@ -47,8 +52,10 @@ class Weapon(generics.GenericObject):
             return
         super().draw()
 
-    def tick(self, newly_pressed_keys, tics, player, origin="player"):
+    def tick(self, pressed_keys, newly_pressed_keys, tics, player, origin="player"):
         super().tick()
+        if self.cool_down_timer > 0:
+            self.cool_down_timer -= 1
         self.player = player
         if not self.active:
             return None
@@ -56,8 +63,14 @@ class Weapon(generics.GenericObject):
             if not self.equipped:
                 return None
             self.move_to_player()
-            if not self.player.dead and arcade.key.SPACE in newly_pressed_keys:
-                return self.fire(tics, self.player.face_towards, origin)
+            if not self.player.dead:
+                if arcade.key.SPACE in newly_pressed_keys:
+                    return self.fire(tics, self.player.face_towards, origin)
+                if arcade.key.SPACE in pressed_keys:
+                    self.charge()
+                    return None
+                if self.charging and arcade.key.SPACE not in pressed_keys:
+                    return self.release_charged_shot(origin)
 
         # For AI controlled we pass the players to accommodate for aimbots
         else:
@@ -65,3 +78,13 @@ class Weapon(generics.GenericObject):
 
     def move_to_player(self):
         self.place_at(self.player.x, self.player.y)
+        if self.player.direction == self.player.DIR_W:
+            self.sprite.set_flipped(True)
+        elif self.player.direction == self.player.DIR_E:
+            self.sprite.set_flipped(False)
+
+    def charge(self):
+        pass # Overridden by chargeable sub-classes.
+
+    def release_charged_shot(self, origin):
+        return None # Overridden by chargeable sub-classes.

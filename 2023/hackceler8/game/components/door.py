@@ -12,23 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 from components import magic_items
 from engine import generics
 from engine import hitbox
 
 
 class Door(generics.GenericObject):
-    def __init__(self, coords, size, name, unlocker):
+    def __init__(self, coords, name):
         self.perimeter = [
-            hitbox.Point(coords.x, coords.y),
-            hitbox.Point(coords.x + size.width, coords.y),
-            hitbox.Point(coords.x + size.width, coords.y - size.height),
-            hitbox.Point(coords.x, coords.y - size.height),
+            hitbox.Point(coords.x - 32, coords.y - 32),
+            hitbox.Point(coords.x + 32, coords.y - 32),
+            hitbox.Point(coords.x + 32, coords.y + 32),
+            hitbox.Point(coords.x - 32, coords.y + 32),
         ]
-        super().__init__(coords, "Door", None, self.perimeter)
+        self.unlocker = name[len("door_"):]
+        super().__init__(
+            coords, "Door", "resources/objects/door/%s.tmx" % self.unlocker,
+            self.perimeter, name)
         self.blocking = True
-        self.name = name
-        self.unlocker = unlocker
 
     def passthrough(self, item_list):
         for i in item_list:

@@ -17,6 +17,11 @@ import logging
 from components.weapon_systems import cannon
 from components.weapon_systems import gun
 
+weapon_types = {
+    "gun": gun.Gun,
+    "cannon": cannon.Cannon
+}
+
 
 def parse_weapon(props: dict, coords):
     needed_props = [
@@ -27,14 +32,7 @@ def parse_weapon(props: dict, coords):
         if i not in props:
             logging.critical(f"Missing property {i}")
             return None
-    logging.info(f"Adding new weapon type {props['type']}")
-    match props["type"]:
-        case "gun":
-            return gun.Gun(coords, props["collectable"])
-        case "ammo":
-            return None
-        case "cannon":
-            return cannon.Cannon(coords, props["collectable"])
-        case _:
-            logging.error(f"Failed to parse object {props['type']}")
-            return None
+    logging.debug(f"Adding new weapon type {props['type']}")
+    return weapon_types[props["type"]](coords, props["type"], props["collectable"], props.get("flipped", False))
+
+

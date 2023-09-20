@@ -19,13 +19,17 @@ import arcade
 import arcade.gui
 import constants
 
-class HeadlessTextObj():
+
+class HeadlessTextObj:
     # Text box objects that don't have any graphical content. Used for server mode.
     def __init__(self, text: str):
         self.text = text
 
+
 class Textbox:
     bg = arcade.load_texture("resources/textbox/bg.png")
+    more_arrow = arcade.load_texture("resources/textbox/more-arrow.png")
+    choice_arrow = arcade.load_texture("resources/textbox/choice-arrow.png")
 
     CHARS_PER_SECOND = 20
     BG_SCALE = 5
@@ -39,46 +43,64 @@ class Textbox:
     LINE_MAX_CHARS = 42
     MAX_LINES = 5
 
-    def __init__(self, is_server: bool, text: str, done_fun, choices=None, free_text_fun=None):
+    def __init__(self, game, text: str, done_fun, choices=None,
+                 free_text=False, from_llm=False, process_fun=None):
         if choices is None:
             choices = []
 
-        self.is_server = is_server
-        self.lines = self.get_lines(text, choices, free_text_fun)
-        self.remaining_lines = self.lines[self.MAX_LINES:]
-        self.lines = self.lines[:self.MAX_LINES]
-        self.text_objs = self.get_text_objs(self.lines)
+        self.game = game
         self.done_fun = done_fun
-        self.free_text_fun = free_text_fun
+        self.free_text = free_text
+        self.from_llm = from_llm
+        self.process_fun = process_fun
         self.choices = choices
         self.selection = 0
+
         if len(choices) > self.MAX_LINES:
             logging.error(f"Too many choices to display: {choices}")
-        if free_text_fun is not None and len(choices) > 0:
+        if free_text and len(choices) > 0:
             logging.error("Both free text and multiple choice specified")
-        self.choice_objs = self.get_choice_objs(self.choices)
+
+        self.lines = []
+        self.remaining_lines = []
+        self.choice_objs = []
         self.text_input = None
-        if free_text_fun is not None:
-            self.text_input = self.get_free_input_obj()
-            if not self.is_server:
-                self.ui_manager = arcade.gui.UIManager()
-                self.ui_manager.enable()
-                self.ui_manager.add(self.text_input)
-            self.text_input_appeared = False
+        self.ui_manager = None
+
+        self.text_input_appeared = False
         self.t = 0
         self.done_scrolling = False
         self.more_arrow_time = 0
-        if not self.is_server:
-            self.more_arrow = arcade.load_texture("resources/textbox/more-arrow.png")
-            self.choice_arrow = arcade.load_texture("resources/textbox/choice-arrow.png")
-        self.tick([])
+        if from_llm:
+            # Wait for the LLM's text.
+            self.text_objs = None
+            if self.game.is_server or self.game.net is None:
+                self.game.query_llm(text)
+        else:
+            self.init_text(text, choices, free_text)
+        if not from_llm:
+            logging.info(f"Chat: \"{text}\"")
 
-    def get_lines(self, text: str, choices, free_text_fun) -> list[str]:
+    def init_text(self, text: str, choices, free_text):
+        self.lines = self.get_lines(text, choices, free_text)
+        self.remaining_lines = self.lines[self.MAX_LINES:]
+        self.lines = self.lines[:self.MAX_LINES]
+        self.text_objs = self.get_text_objs(self.lines)
+        self.choice_objs = self.get_choice_objs(self.choices)
+        self.text_input = self.get_free_input_obj()
+        if len(self.choices) > 0:
+            self.text_input.text = self.choices[self.selection]
+        if free_text and not self.game.is_server:
+            self.ui_manager = arcade.gui.UIManager()
+            self.ui_manager.enable()
+            self.ui_manager.add(self.text_input)
+
+    def get_lines(self, text: str, choices, free_text) -> list[str]:
         initial_lines = text.strip().split("\n")
         lines = []
         for l in initial_lines:
             lines += self.split_line_if_too_long(l)
-        n = 1 if (free_text_fun is not None) else len(choices)
+        n = 1 if free_text else len(choices)
         return self.make_space_for_input(lines, n)
 
     def make_space_for_input(self, lines, n):
@@ -113,10 +135,10 @@ class Textbox:
     def get_text_objs(self, lines: list[str]):
         text_objs = []
         for (i, line) in enumerate(lines):
-            if self.is_server:
-                o = HeadlessTextObj(line)
+            if self.game.is_server:
+                o = HeadlessTextObj("")
             else:
-                o = arcade.Text(line,
+                o = arcade.Text("",
                                 self.TEXT_X,
                                 self.TEXT_Y - self.LINE_DISTANCE * i,
                                 self.TEXT_COLOR,
@@ -127,16 +149,15 @@ class Textbox:
 
     def get_choice_objs(self, choices):
         choice_objs = []
-        for (i, choice) in enumerate(choices):
-            text = choice[0]
-            if self.is_server:
+        for (i, text) in enumerate(choices):
+            if self.game.is_server:
                 o = HeadlessTextObj(text)
             else:
                 o = arcade.Text(text,
                                 self.TEXT_X + 35,
                                 self.TEXT_Y - self.LINE_DISTANCE * (
-                                    i + self.MAX_LINES - len(
-                                        choices)),
+                                        i + self.MAX_LINES - len(
+                                    choices)),
                                 self.TEXT_COLOR,
                                 self.TEXT_SIZE,
                                 font_name=constants.FONT_NAME)
@@ -145,11 +166,11 @@ class Textbox:
 
     def get_free_input_obj(self):
         l = len(self.lines) + len(self.remaining_lines)
-        if self.is_server:
+        if self.game.is_server:
             return HeadlessTextObj("")
         return arcade.gui.UIInputText(self.TEXT_X,
                                       self.TEXT_Y - 5 - self.LINE_DISTANCE * (
-                                          l % self.MAX_LINES),
+                                              l % self.MAX_LINES),
                                       1200,
                                       self.TEXT_SIZE + 10,
                                       "",
@@ -191,21 +212,23 @@ class Textbox:
                 else:
                     # All done, close the textbox
                     self.done_fun()
-                    if self.choices_active():  # Run selected choice function
-                        self.choices[self.selection][1]()
-                    elif self.free_text_active():
-                        self.free_text_fun(self.text_input.text.replace("\n", ""))
+                    if self.process_fun is not None:
+                        self.process_fun(self.text_input.text.replace("\n", ""))
             elif self.choices_active():
                 if arcade.key.W in newly_pressed_keys:
                     self.selection = max(0, self.selection - 1)
+                    self.text_input.text = self.choices[self.selection]
                 if arcade.key.S in newly_pressed_keys:
                     self.selection = min(len(self.choices) - 1, self.selection + 1)
+                    self.text_input.text = self.choices[self.selection]
             elif self.free_text_active():
                 if not self.text_input_appeared:
                     # Auto-select input box on appearance.
                     self.text_input_appeared = True
-                    if not self.is_server:
+                    if not self.game.is_server:
                         self.text_input._active = True
+        elif self.from_llm and self.text_objs is None:
+            pass # Wait for text from server.
         elif arcade.key.E in newly_pressed_keys:
             # Fast-forward all remaining text
             self.done_scrolling = True
@@ -216,6 +239,9 @@ class Textbox:
 
     def draw(self):
         self.bg.draw_scaled(self.BG_X, self.BG_Y, self.BG_SCALE)
+        if self.from_llm and self.text_objs is None:
+            # Wait for text from server.
+            return
         for t in self.text_objs:
             t.draw()
         if self.choices_active():
@@ -225,13 +251,16 @@ class Textbox:
         else:
             self.draw_more_arrow()
 
+    def set_text_from_server(self, text):
+        logging.info(f"Chat: \"{text}\"")
+        self.init_text(text, self.choices, self.free_text)
+
     def choices_active(self) -> bool:
         return self.done_scrolling and len(self.remaining_lines) == 0 and len(
             self.choice_objs) > 0
 
     def free_text_active(self) -> bool:
-        return self.done_scrolling and len(self.remaining_lines) == 0 and (
-                    self.free_text_fun is not None)
+        return self.done_scrolling and len(self.remaining_lines) == 0 and self.free_text
 
     def get_close_key(self):
         if self.free_text_active():

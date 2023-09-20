@@ -38,7 +38,6 @@ class EnvModifier:
         self.jump_override = jump_override
 
 
-
 WATER_MODIFIER = EnvModifier(
     "water",
     0.25,

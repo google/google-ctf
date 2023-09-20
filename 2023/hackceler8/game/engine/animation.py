@@ -18,8 +18,8 @@ import pytiled_parser
 
 import constants
 
-
 BLINK_SPEED = 100
+
 
 class Animation:
     def __init__(self, name: str, blinking: bool, tiles, textures):
@@ -28,14 +28,14 @@ class Animation:
         self.frames = None
         self.frame_starts = []
         self.loop = False
+        self.from_frame = 0
         self.cur_frame = 0
         self.cur_time = 0
         self.textures = textures
         for t in tiles.values():
             if t.properties["animation"] == name:
                 self.frames = t.animation
-                if "loop" in t.properties:
-                    self.loop = t.properties["loop"]
+                self.loop = t.properties.get("loop", False)
                 sum_duration = 0
                 for f in self.frames:
                     self.frame_starts.append(sum_duration)
@@ -53,26 +53,27 @@ class Animation:
         self.last_time = self.frame_starts[-1] + self.frames[-1].duration
 
     def tick(self):
-        self.cur_time += constants.TICK_S*1000
+        self.cur_time += constants.TICK_S * 1000
         next_frame = self.cur_frame + 1
         try:
             if next_frame >= len(self.frames):
                 if self.loop:
-                    if self.cur_time < self.last_time: # Last frame not done yet
+                    if self.cur_time < self.last_time:  # Last frame not done yet
                         return
                     next_frame = 0
                     self.cur_time -= self.last_time
                 else:
-                    return # Freeze at the last frame
+                    return  # Freeze at the last frame
             if self.frame_starts[next_frame] <= self.cur_time:
                 self.cur_frame = next_frame
         except Exception as e:
             logging.error(f"Error during animation: {e}")
 
-    def draw(self, x, y, scale=1.0):
-        if self.blinking and (self.cur_time//BLINK_SPEED)%2 == 0:
+    def draw(self, x, y, scale=1.0, alpha=255):
+        if self.blinking and (self.cur_time // BLINK_SPEED) % 2 == 0:
             return
-        self.textures[int(self.frames[self.cur_frame].tile_id)].draw_scaled(x, y, scale)
+        self.textures[int(self.frames[self.cur_frame].tile_id)].draw_scaled(
+            x, y, scale, alpha=alpha)
 
     def finished(self) -> bool:
         if self.loop:

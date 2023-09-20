@@ -16,26 +16,35 @@ from collections import defaultdict
 from pathlib import Path
 import logging
 import uuid
+import pickle
+import gzip
 
 import arcade
 import pytiled_parser
 import xxhash
 
 from components import arena
+from components import boss
+from components import boss_gate
 from components import door
 from components import env_element
 from components import exitarea
 from components import fire
+from components import logic
 from components import magic_items
 from components import moving_platform
-from components import npc
 from components import ouch
 from components import player
+from components import portal
+from components import speed_tile
+from components import spike
+from components import switch
 from components import wall
 from components import weapon
+from components.enemy import enemy_types
+from components.npc import npc_types
 from engine import hitbox
 from engine.quadtree import Quadtree, Bounds
-
 
 
 def image_tileset_to_texture(tileset: pytiled_parser.tileset, k: int) -> list[
@@ -71,6 +80,7 @@ class BasicTileMap:
         self.env_tiles = []
         self.player_bounds_id = None
         self.obj_map = {}
+        self.logic_map = {}
 
         self.static_objs = []
         self.moving_platforms = []
@@ -131,8 +141,8 @@ class BasicTileMap:
                 if k.name == "platforms":
                     self.parse_platform_layer(k)
                     continue
-                if k.name == "mps":
-                    self.parse_platform_layer(k, moving=True)
+                if k.name == "spikes":
+                    self.parse_spike_layer(k)
                     continue
                 if k.name == "item":
                     self.parse_item_layer(k)
@@ -148,7 +158,7 @@ class BasicTileMap:
             for o in k.tiled_objects:
                 self.parse_object(o, max_y * 16)
 
-    def parse_platform_layer(self, layer, moving=False):
+    def parse_platform_layer(self, layer):
         # we assume that only walls / static colliding elements are in the platform
         # layer
         logging.debug(layer.size)
@@ -182,22 +192,17 @@ class BasicTileMap:
         res = hc.dump_polys()
         logging.debug(f"Have a total of {len(res)} objects")
         for i in res:
-            if moving:
-                w = moving_platform.MovingPlatform(coords, _Size(16, 16),
-                                               "generic_moving_platform",
-                              perimeter=i.outline)
-
-                self.moving_platforms.append(w)
-            else:
-                w = wall.Wall(coords, _Size(16, 16), "generic_platform",
+            w = wall.Wall(coords, _Size(16, 16), "generic_platform",
                           perimeter=i.outline)
-
-                self.static_objs.append(w)
+            self.static_objs.append(w)
 
     def parse_env_layer(self, layer):
         # we assume that only modifiying element (space, water) are in this layer
         logging.debug(layer.size)
         logging.debug(layer.properties)
+        if layer.properties is None:
+            logging.critical("element layer properties cannot be none")
+            return
 
         class _Size:
             def __init__(self, w, h):
@@ -247,6 +252,18 @@ class BasicTileMap:
                         modifier=pt
                     ))
 
+    def parse_spike_layer(self, layer):
+        max_y = len(layer.data) * 16
+        for row in range(len(layer.data)):
+            for column in range(len(layer.data[row])):
+                if layer.data[row][column] == 0:
+                    continue
+                coords = pytiled_parser.OrderedPair(column * 16 + 32,
+                                                    max_y - row * 16 + 16)
+                rng = layer.properties.get("rng")
+                rng_type = layer.properties.get("rng_type", 'prng')
+                self.objs.append(spike.Spike(coords, rng, rng_type))
+
     def parse_item_layer(self, layer):
         class _Size:
             def __init__(self, w, h):
@@ -259,8 +276,8 @@ class BasicTileMap:
         for row in range(len(layer.data)):
             for column in range(len(layer.data[row])):
                 if layer.data[row][column] != 0:
-                    coords = pytiled_parser.OrderedPair(column * 16,
-                                                        max_y - row * 16)
+                    coords = pytiled_parser.OrderedPair(column * 16 + 8,
+                                                        max_y - row * 16 - 8)
                     self.objs.append(
                         magic_items.Item(coords, layer.properties.get("item_name"),
                                          layer.properties.get("display_name"),
@@ -282,16 +299,36 @@ class BasicTileMap:
             else:
                 logging.warning("No min_distance set")
 
-        elif o.name == "ouch":
+        elif o.name == "ouch" or o.name == "spike_ouch":
             md = props.get("min_distance", 16)
             dmg = props.get("damage", 1)
-            self.dynamic_artifacts.append(ouch.Ouch(coords, o.size, min_distance=md,
-                                                    damage=dmg))
+            cls = ouch.Ouch if o.name == "ouch" else ouch.SpikeOuch
+            self.dynamic_artifacts.append(cls(coords, o.size, min_distance=md,
+                                              damage=dmg))
             logging.debug("added new ouch object")
 
+        elif o.name == "switch":
+            self.objs.append(switch.Switch(coords))
+
         elif "npc" in o.name:
-            walk_data = o.properties["walk_data"] if "walk_data" in o.properties else ""
-            self.objs.append(npc.NPC_TYPES[o.name](coords, o.name, walk_data))
+            walk_data = o.properties.get("walk_data", "")
+            self.objs.append(npc_types.NPC_TYPES[o.name](coords, o.name, walk_data))
+
+        elif "enemy" in o.name:
+            self.objs.append(enemy_types.ENEMY_TYPES[o.name](coords, o.name,
+                                                             props.get("damage", None),
+                                                             props.get("respawn",
+                                                                       False),
+                                                             props.get("respawn_tick",
+                                                                       None),
+                                                             props.get("walk_data", ""),
+                                                             props.get(
+                                                                 "control_inverter",
+                                                                 False)))
+
+        elif o.name == "boss":
+            version = o.properties["version"]
+            self.objs.append(boss.Boss(coords, o.name, version))
 
         elif "zone" in o.name or "perimeter" in o.name or "solid" in o.name:
             logging.debug(o)
@@ -302,20 +339,49 @@ class BasicTileMap:
             logging.debug("parsing new arena object")
             self.static_objs.append(arena.Arena(coords, o.size, o.name))
 
-        elif "key" in o.name:
+        elif o.name.startswith("moving_platform_"):
+            p = moving_platform.MovingPlatform(
+                coords, o.name, props.get("x_speed", 0.0), props.get("y_speed", 0.0),
+                props.get("min_dx", -20), props.get("max_dx", 20),
+                props.get("min_dy", -20),
+                props.get("max_dy", 20))
+            self.moving_platforms.append(p)
+
+        elif o.name.startswith("key_"):
+            logging.debug(o)
+            logging.debug("parsing new key item object")
+            self.objs.append(magic_items.Item(coords, o.name, props.get("display_name"),
+                                              props.get("color")))
+
+        elif o.name.startswith("item_"):
+            o.name = o.name[len("item_"):]
             logging.debug(o)
             logging.debug("parsing new item object")
-            self.objs.append(magic_items.Item(coords, o.name, props.get("display_name"), props.get("color")))
-
+            self.objs.append(magic_items.Item(coords, o.name, props.get("display_name"),
+                                              wearable=props.get("wearable", False)))
         elif "door" in o.name:
             logging.debug(o)
             logging.debug("parsing new door object")
-            self.objs.append(door.Door(coords, o.size, o.name, props["unlocker"]))
+            self.objs.append(door.Door(coords, o.name))
 
         elif "exit" in o.name:
             logging.debug(o)
             logging.debug("parsing new exit area object")
             self.static_objs.append(exitarea.ExitArea(coords, o.size, o.name))
+
+        elif "portal" in o.name:
+            logging.debug(o)
+            logging.debug("parsing new portal object")
+            dest = hitbox.Point(props["dest_x"], max_y - props["dest_y"])
+            # Keep the speed if None
+            x_speed = props.get("x_speed", None)
+            y_speed = props.get("y_speed", None)
+            self.static_objs.append(portal.Portal(coords, o.size, o.name, dest,
+                                                  x_speed=x_speed,
+                                                  y_speed=y_speed))
+
+        elif "boss_gate" in o.name:
+            self.objs.append(boss_gate.BossGate(coords, o.name))
 
         elif o.name == "Player":
             hh = props.get("hitbox_height", 32)
@@ -334,13 +400,24 @@ class BasicTileMap:
             logging.debug(f"Added new player with id: {self.player_bounds_id} at "
                           f"{coords}")
 
+        elif o.name == "speed_tile":
+            self.objs.append(speed_tile.SpeedTile(coords, o.name))
         elif o.name == "Weapon":
-            logging.info("Adding weapon")
-            logging.info(o.properties)
+            logging.debug("Adding weapon")
+            logging.debug(o.properties)
             w = weapon.parse_weapon(o.properties, coords)
             if w is not None:
                 self.weapons.append(w)
-                logging.info(f"Added new object of type {w.nametype}")
+                logging.debug(f"Added new object of type {w.nametype}")
+
+        elif o.name == "Logic":
+            logging.debug("Adding logic")
+            logging.debug(o.properties)
+            l = logic.parse_logic(o.properties, coords, self.logic_map, o.size)
+            if l is not None:
+                self.logic_map[l.logic_id] = l
+                self.objs.append(l)
+                logging.debug(f"Added new logic object of type {l.nametype}")
 
     def get_size(self):
         w = []
@@ -353,20 +430,11 @@ class BasicTileMap:
         if len(set(h)) != 1:
             logging.error(f"Multiple layer heights: {set(h)}")
 
-        return (w[0], h[0])
+        return w[0], h[0]
 
     def get_size_pixel(self):
-        w = []
-        h = []
-        for i in self.layers:
-            w.append(i.size.width)
-            h.append(i.size.height)
-        if len(set(w)) != 1:
-            logging.error(f"Multiple layer widths: {set(w)}")
-        if len(set(h)) != 1:
-            logging.error(f"Multiple layer heights: {set(h)}")
-
-        return (w[0] * self.tile_size.width, h[0] * self.tile_size.height)
+        w, h = self.get_size()
+        return w * self.tile_size.width, h * self.tile_size.height
 
     def parse_and_print(self):
         logging.debug(f"Parsing file {self.map_file}")
@@ -380,8 +448,17 @@ class BasicTileMap:
         self.texts = texts
         logging.debug(self.texts)
 
+    def to_arcade_tilemap(self):
+        return arcade.TileMap(tiled_map=self.parsed_map)
+
     @staticmethod
     def transform_position(pos_tiled: tuple, max_x: int):
         x = pos_tiled[0]
         y = pos_tiled[1]
-        return (max_x - x, y)
+        return max_x - x, y
+
+    @staticmethod
+    def from_mgz(path: str):
+        logging.debug(f"Loading mgz map from {path}")
+        with gzip.GzipFile(path, "rb") as f:
+            return pickle.load(f)

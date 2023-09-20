@@ -1,16 +1,28 @@
-# Hackceler8 23 
+# Hackceler8 2023 Game
 
-## Get started
+## Steps to run the game:
 
-Start by installing the dependencies in requirements.txt
+1. Install prerequisites
+```
+cd hackceler8-2023
+python3 -m venv my_venv
+cd 2023/
+source ../my_venv/bin/activate
+pip3 install -r requirements.txt
+```
 
-The game can be run either with or without the server. Run either just client.py or 
-first server.py, then client.py
+2. Run server (optional)
 
-## Controls
+```
+cd hackceler8-2023/game
+source ../my_venv/bin/activate
+python3 server.py
+```
 
-`WASD` to move. `E` to interact with NPCs. `Space` to shoot.
+3. Run client
 
-
-
-# Have fun!!
+```
+cd hackceler8-2023/game
+source ../my_venv/bin/activate
+python3 client.py
+```

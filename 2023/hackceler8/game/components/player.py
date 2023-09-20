@@ -28,6 +28,7 @@ class Player(generics.GenericObject):
     DIR_W = "W"
     PLATFORMER_TILESET = "resources/character/AnimationSheet_Mew.tmx"
     SCROLLER_TILESET = "resources/character/AnimationSheet_OverheadMew.tmx"
+    MAX_HEALTH = 100
 
     def __init__(self, coords, outline):
         super().__init__(coords=coords, nametype="Player",
@@ -35,10 +36,13 @@ class Player(generics.GenericObject):
                          outline=outline,
                          can_flip=True, can_flash=True)
 
+        self.set_health(self.MAX_HEALTH)
         self.direction = self.DIR_S
         self.face_towards = self.DIR_E
         self.prev_x = self.x
         self.prev_y = self.y
+        self.push_speed = 0
+        self.can_control_movement = True
         self.sprite.set_animation("idle-front")
         self.sprite.scale = 1
         self.last_movement = None
@@ -47,6 +51,11 @@ class Player(generics.GenericObject):
         self.allowed_directions = set()
         self.reset_movements()
         self.jump_override = False
+        self.inverted_controls = False
+        self.weapons = []
+
+        # Will be overwritten
+        self.game = None
 
     def safe_remove_direction(self, direction):
         if direction in self.allowed_directions:
@@ -62,6 +71,8 @@ class Player(generics.GenericObject):
 
     def tick(self, pressed_keys, _newly_pressed_keys, reset_speed=True):
         self.update_movement(pressed_keys, reset_speed)
+        if self.immobilized():
+            self.x_speed = self.y_speed = 0
         self.update_animation()
         super().tick()
 
@@ -73,34 +84,62 @@ class Player(generics.GenericObject):
         if self.dead:  # Can't move
             return
 
-        running_mod = 1
         self.running = False
-        if (arcade.key.D in pressed_keys) and (arcade.key.A not in pressed_keys):
-            self.direction = self.DIR_E
-            self.face_towards = self.DIR_E
-            if arcade.key.LSHIFT in pressed_keys:
-                running_mod = 1.5
-                self.running = True
-            if "L" in self.allowed_directions:
-                self.x_speed = self.base_x_speed * running_mod
-                self.sprite.set_flipped(False)
-                self.last_movement = "right"
+        if self.can_control_movement:
+            sprinting = arcade.key.LSHIFT in pressed_keys
+            if (arcade.key.D in pressed_keys) and (arcade.key.A not in pressed_keys):
+                computed_direction = self.DIR_E if not self.inverted_controls else self.DIR_W
+                self.change_direction(computed_direction, sprinting)
 
-        if (arcade.key.A in pressed_keys) and (arcade.key.D not in pressed_keys):
-            self.direction = self.DIR_W
-            self.face_towards = self.DIR_W
-            if arcade.key.LSHIFT in pressed_keys:
-                running_mod = 1.5
-                self.running = True
-            if "R" in self.allowed_directions:
-                self.x_speed = -self.base_x_speed * running_mod
-                if self.platformer_rules:
-                    self.sprite.set_flipped(True)
-                self.last_movement = "left"
+            if (arcade.key.A in pressed_keys) and (arcade.key.D not in pressed_keys):
+                computed_direction = self.DIR_W if not self.inverted_controls else self.DIR_E
+                self.change_direction(computed_direction, sprinting)
 
-        if (arcade.key.W in pressed_keys) and (arcade.key.S not in pressed_keys):
+            if (arcade.key.W in pressed_keys) and (arcade.key.S not in pressed_keys):
+                computed_direction = self.DIR_N if not self.inverted_controls else self.DIR_S
+                self.change_direction(computed_direction, sprinting)
+
+            if (arcade.key.S in pressed_keys) and (arcade.key.W not in pressed_keys):
+                computed_direction = self.DIR_S if not self.inverted_controls else self.DIR_N
+                self.change_direction(computed_direction, sprinting)
+
+        if self.can_control_movement:
+            self.push_speed = max(0, self.push_speed-125)
+        if self.push_speed > 0:
+            match self.direction:
+                case self.DIR_N:
+                    self.y_speed += self.push_speed
+                case self.DIR_S:
+                    self.y_speed -= self.push_speed
+                case self.DIR_E:
+                    self.x_speed += self.push_speed
+                case self.DIR_W:
+                    self.x_speed -= self.push_speed
+
+    def change_direction(self, direction, sprinting):
+        self.direction = direction
+
+        if (self.direction == self.DIR_E or self.direction == self.DIR_W):
+            self.face_towards = direction
+            speed_multplier = 1
+            if sprinting:
+                speed_multplier = 1.5
+                self.running = True
+            if (direction == self.DIR_E):
+                if "L" in self.allowed_directions:
+                    self.x_speed = self.base_x_speed * speed_multplier
+                    self.sprite.set_flipped(False)
+                    self.last_movement = "right"
+            else:
+                if "R" in self.allowed_directions:
+                    self.last_movement = "left"
+                    self.x_speed = -self.base_x_speed * speed_multplier
+                    if "R" in self.allowed_directions:
+                        if self.platformer_rules:
+                            self.sprite.set_flipped(True)
+
+        if (self.direction == self.DIR_N):
             logging.debug("Jumping")
-            self.direction = self.DIR_N
             if self.platformer_rules and self.in_the_air and not self.jump_override:
                 logging.debug("Player in the air")
                 return
@@ -111,29 +150,13 @@ class Player(generics.GenericObject):
             else:
                 logging.error("not allowed")
 
-        if (arcade.key.S in pressed_keys) and (arcade.key.W not in pressed_keys):
-            self.direction = self.DIR_S
+        if (self.direction == self.DIR_S):
             if "D" in self.allowed_directions:
                 if self.in_the_air:
                     if not self.platformer_rules:
                         # This is a hack because we're still clipping through
                         self.y_speed = -self.base_y_speed
                         self.last_movement = "down"
-
-    def place_at(self, x, y):
-        self.move(x - self.x, y - self.y)
-
-    def update_position(self):
-        self.prev_x = self.x
-        self.prev_y = self.y
-        self.move(constants.TICK_S * self.x_speed, constants.TICK_S * self.y_speed)
-        self.update_hitbox([
-            hitbox.Point(self.x - 16, self.y - 16),
-            hitbox.Point(self.x + 16, self.y - 16),
-            hitbox.Point(self.x + 16, self.y + 16),
-            hitbox.Point(self.x - 16, self.y + 16),
-        ])
-        logging.debug(f"New position is {self.x, self.y}")
 
     def update_animation(self):
         if self.dead:
@@ -172,3 +195,30 @@ class Player(generics.GenericObject):
         if not self.sprite.flashing:
             self.sprite.set_blinking(0 < self.health < self.prev_health)
         self.prev_health = self.health
+
+    def regen(self):
+        self.set_health(self.MAX_HEALTH)
+        self.dead = False
+        self.x_speed = self.y_speed = self.push_speed = 0
+
+    def wear_item(self, i=None):
+        if not self.platformer_rules:
+            return
+        if i is None:
+            w = [i for i in self.game.items[::-1] if i.wearable]
+            if len(w) == 0:
+                return
+            i = w[0]
+        for item in self.game.items:
+            if item.wearable and item != i:
+                item.worn = False
+        i.worn = True
+        self.sprite.set_texture(
+            "resources/character/AnimationSheet_%s.png" % i.name.capitalize())
+
+    def immobilized(self):
+        # Don't move while charging a weapon.
+        for w in self.weapons:
+            if w.equipped and w.charging:
+                return True
+        return False

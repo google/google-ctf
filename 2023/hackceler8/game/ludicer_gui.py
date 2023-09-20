@@ -39,6 +39,8 @@ class Hackceler8(arcade.Window):
                          resizable=True)
         self.set_icon(pyglet_load("resources/character/32bit/main32.PNG"))
 
+        self.v_box = None
+
         self.net = net
         self.game = None
 
@@ -59,17 +61,17 @@ class Hackceler8(arcade.Window):
 
         self.v_box = arcade.gui.UIBoxLayout()
         start_button = arcade.gui.UIFlatButton(text="START GAME", width=200,
-                                               style={"font_name":constants.FONT_NAME})
+                                               style={"font_name": constants.FONT_NAME})
         self.v_box.add(start_button.with_space_around(bottom=20))
         quit_button = QuitButton(text="QUIT", width=200,
-                                 style={"font_name":constants.FONT_NAME})
+                                 style={"font_name": constants.FONT_NAME})
         self.v_box.add(quit_button)
         start_button.on_click = self.on_click_start
 
         w = arcade.gui.UIAnchorWidget(
-                anchor_x="center_x",
-                anchor_y="center_y",
-                child=self.v_box)
+            anchor_x="center_x",
+            anchor_y="center_y",
+            child=self.v_box)
         self.main_menu_manager.add(w)
 
     def on_click_start(self, _event):
@@ -81,6 +83,16 @@ class Hackceler8(arcade.Window):
             color=arcade.csscolor.GRAY,
             font_name=constants.FONT_NAME,
             font_size=50,
+            width=self.SCREEN_WIDTH,
+            align="center",
+        )
+        arcade.draw_text(
+            text="(THIS SHOULD TAKE LIKE 40 SECONDS)",
+            start_x=0,
+            start_y=self.SCREEN_HEIGHT // 2 - 100,
+            color=arcade.csscolor.GRAY,
+            font_name=constants.FONT_NAME,
+            font_size=20,
             width=self.SCREEN_WIDTH,
             align="center",
         )
@@ -118,8 +130,10 @@ class Hackceler8(arcade.Window):
         screen_center_y = max(screen_center_y, 0)
 
         # additional controls to avoid showing around the map
-        max_screen_center_x = self.game.tiled_map.map_size_pixels[0] - self.SCREEN_WIDTH
-        max_screen_center_y = self.game.tiled_map.map_size_pixels[1] - self.SCREEN_HEIGHT
+        max_screen_center_x = self.game.tiled_map.map_size_pixels[
+                                  0] - self.camera.viewport_width
+        max_screen_center_y = self.game.tiled_map.map_size_pixels[
+                                  1] - self.camera.viewport_height
         screen_center_x = min(screen_center_x, max_screen_center_x)
         screen_center_y = min(screen_center_y, max_screen_center_y)
 
@@ -133,29 +147,55 @@ class Hackceler8(arcade.Window):
             self.main_menu_manager.draw()
             return
 
-
         self.camera.use()
         arcade.start_render()
         self.game.tiled_map.texts[1].draw_scaled(0, 0)
-        scene_tmp = arcade.Scene.from_tilemap(self.game.tiled_map_background)
-        scene_tmp.draw()
+        if self.game.prerender is None:
+            self.game.scene.draw()
+        else:
+            arcade.draw_lrwh_rectangle_textured(
+                0, 0,
+                self.game.prerender.width,
+                self.game.prerender.height,
+                self.game.prerender
+            )
 
         for o in self.game.dynamic_artifacts:
             o.draw()
 
-        for o in self.game.objects:
+        for o in self.game.tiled_map.moving_platforms:
             o.draw()
 
+        for o in self.game.static_objs:
+            o.draw()
+
+        for o in self.game.objects:
+            if o.render_above_player:
+                continue
+            o.draw()
+
+        if self.game.grenade_system:
+            self.game.grenade_system.draw()
         self.game.combat_system.draw()
 
         if self.game.player is not None:
             self.game.player.draw()
-            # this draws the outline
+
+        for o in self.game.objects:
+            if not o.render_above_player:
+                continue
+            o.draw()
+
+        if self.game.danmaku_system is not None:
+            self.game.danmaku_system.draw()
 
         self.gui_camera.use()
 
+        if self.game.danmaku_system is not None:
+            self.game.danmaku_system.draw_gui()
+
         arcade.draw_text(
-            f"HEALTH: {self.game.player.health}",
+            "HEALTH: %.02f" % self.game.player.health,
             10,
             10,
             arcade.csscolor.RED,
@@ -166,27 +206,48 @@ class Hackceler8(arcade.Window):
         if self.game.player.dead:
             arcade.draw_text(
                 "YOU DIED",
-                600,
-                600,
+                640,
+                640,
                 arcade.csscolor.RED,
+                64,
+                font_name=constants.FONT_NAME,
+                anchor_x='center',
+                anchor_y='center',
+            )
+
+        if self.game.won:
+            arcade.draw_text(
+                "CONGRATULATIONS, YOU WIN!",
+                450,
+                600,
+                arcade.csscolor.WHITE,
+                18,
+                font_name=constants.FONT_NAME,
+            )
+            arcade.draw_text(
+                "TOTAL PLAY TIME: %s" % self.game.play_time_str(),
+                455,
+                550,
+                arcade.csscolor.WHITE,
+                18,
+                font_name=constants.FONT_NAME,
+            )
+
+        if self.game.cheating_detected:
+            arcade.draw_text(
+                "OUT OF SYNC, CHEATING DETECTED",
+                400,
+                600,
+                arcade.csscolor.ORANGE,
                 18,
                 font_name=constants.FONT_NAME,
             )
 
         if self.game.display_inventory:
-            if not self.game.prev_display_inventory:
+            if (not self.game.prev_display_inventory
+                    or self.game.inventory.display_time != self.game.play_time_str()):
                 self.game.inventory.update_display()
             self.game.inventory.draw()
-
-        if self.game.pause:
-            arcade.draw_text(
-                "GAME PAUSED (P) to unpause",
-                600,
-                600,
-                arcade.csscolor.RED,
-                18,
-                font_name=constants.FONT_NAME,
-            )
 
         if self.game.textbox is not None:
             self.game.textbox.draw()
@@ -208,12 +269,10 @@ class Hackceler8(arcade.Window):
             logging.info("Showing menu")
             self.show_menu()
             return
-        if symbol in self.game.tracked_keys:
-            self.game.pressed_keys.add(symbol)
+        self.game.raw_pressed_keys.add(symbol)
 
     def on_key_release(self, symbol: int, _modifiers: int):
         if self.game is None:
             return
-        if symbol in self.game.tracked_keys and symbol in self.game.pressed_keys:
-            self.game.pressed_keys.remove(symbol)
-
+        if symbol in self.game.raw_pressed_keys:
+            self.game.raw_pressed_keys.remove(symbol)

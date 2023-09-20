@@ -15,6 +15,7 @@
 import arcade
 import constants
 
+
 # Stores state info for the fade-in/out effect for switching between maps.
 class MapSwitch:
     def __init__(self, switch_fun, done_fun):
@@ -37,4 +38,5 @@ class MapSwitch:
 
     def draw(self):
         arcade.draw_lrtb_rectangle_filled(
-            0, constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT, 0, (0, 0, 0, self.alpha))
+            0, constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT, 0,
+            (0, 0, 0, self.alpha))

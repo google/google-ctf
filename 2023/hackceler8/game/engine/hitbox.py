@@ -22,7 +22,6 @@ import arcade
 import numpy as np
 import xxhash
 
-
 BASIC_SHAPES = {
     3: "TRIANGLE",
     4: "RECTANGLE",
@@ -46,7 +45,8 @@ class Vector(Point):
         return self.npa / np.linalg.norm(self.npa)
 
     def angle(self, other: Vector) -> float:
-        return 180 - np.arccos(np.clip(np.dot(self.unit, other.unit), -1, 1)) * 180 / np.pi
+        return 180 - np.arccos(
+            np.clip(np.dot(self.unit, other.unit), -1, 1)) * 180 / np.pi
 
     def ortho(self):
         return np.array([-self.y, self.x])
@@ -72,8 +72,9 @@ class Polygon:
         self.outline_array()
 
         if not self.is_convex():
-            logging.error(f"Shape with points {[(i.x, i.y) for i in self.outline]} and angles {self.angles} is not a "
-                          f"polygon")
+            logging.error(
+                f"Shape with points {[(i.x, i.y) for i in self.outline]} and angles {self.angles} is not a "
+                f"polygon")
 
     def outline_array(self):
         self.outline_npa = np.array([(i.x, i.y) for i in self.outline])
@@ -114,18 +115,38 @@ class Polygon:
         return [(i.x, i.y) for i in self.outline]
 
 
+def to_bytes(i):
+    i = int(round(i)) & 0xffff
+    return i.to_bytes(2, byteorder='big')
+
+
 class Rectangle:
     def __init__(self, x1, x2, y1, y2):
-        self.x1 = x1
-        self.x2 = x2
-        self.y1 = y1
-        self.y2 = y2
+        self._x1 = x1
+        self._x2 = x2
+        self._y1 = y1
+        self._y2 = y2
+
+    def x1(self):
+        return self._x1
+
+    def x2(self):
+        return self._x2
+
+    def y1(self):
+        return self._y1
+
+    def y2(self):
+        return self._y2
 
     def collides(self, other: Rectangle):
-        return self.x1 <= other.x2 and self.x2 >= other.x1 and self.y1 <= other.y2 and self.y2 >= other.y1
+        return (self.x1() <= other.x2() and self.x2() >= other.x1() and
+                self.y1() <= other.y2() and self.y2() >= other.y1())
 
     def expand(self, amount):
-        return Rectangle(self.x1-amount, self.x2+amount, self.y1-amount, self.y2+amount)
+        return Rectangle(self.x1() - amount, self.x2() + amount, self.y1() - amount,
+                         self.y2() + amount)
+
 
 class Hitbox(Polygon):
     def __init__(self, outline):
@@ -136,10 +157,14 @@ class Hitbox(Polygon):
         self._update(new_outline)
 
     def _draw(self):
-        arcade.draw_polygon_outline(self.outline_npa, arcade.color.RED)
+        r = self.get_rect()
+        if r.x2() < r.x1() or r.y2() < r.y1():
+            return
+        arcade.draw_lrtb_rectangle_outline(r.x1(), r.x2(), r.y2(), r.y1(),
+                                           arcade.color.RED)
 
     def collides(self, other: Hitbox):
-        edges = self.edges
+        edges = self.edges.copy()
         edges += other.edges
 
         orths = [i.orthogonal for i in self.vectors]
@@ -156,7 +181,6 @@ class Hitbox(Polygon):
             push_vectors.append(pv)
 
         mpv = min(push_vectors, key=(lambda v: np.dot(v, v)))
-
 
         # assert mpv pushes p1 away from p2
         d = self.centers_displacement(other)  # direction from p1 to p2
@@ -260,7 +284,6 @@ class HitboxCollection:
                 tmp = [tmp_el]
                 current_y = tmp_el.get_highest_point()
 
-
         self.polys.append(tmp)
 
         res = []
@@ -273,7 +296,7 @@ class HitboxCollection:
 
     def combine_x(self):
         a = sorted(self.polys, key=lambda x: (x.get_leftmost_point(),
-                                      x.get_highest_point()))
+                                              x.get_highest_point()))
         d = deque(a)
         tmp = [d.popleft()]
         current_x = tmp[0].get_leftmost_point()
@@ -317,7 +340,7 @@ class HitboxCollection:
     def dump_polys(self):
 
         logging.debug(f"Reduced polygon size from {self.original_length} --> "
-                     f"{len(self.polys)}")
+                      f"{len(self.polys)}")
         return self.polys
 
     @staticmethod
@@ -329,9 +352,9 @@ class HitboxCollection:
 
         return Hitbox(
             [Point(min_x, max_y),
-            Point(max_x, max_y),
-            Point(max_x, min_y),
-            Point(min_x, min_y)]
+             Point(max_x, max_y),
+             Point(max_x, min_y),
+             Point(min_x, min_y)]
         )
 
 
@@ -341,37 +364,37 @@ def main():
     p3 = Hitbox([Point(3, 0), Point(2, 1), Point(2, 0)])
 
     r1 = Hitbox([
-        Point(0,0),
-        Point(0,3),
-        Point(3,3),
-        Point(3,0),
+        Point(0, 0),
+        Point(0, 3),
+        Point(3, 3),
+        Point(3, 0),
     ])
     r2 = Hitbox([
-        Point(2,2),
-        Point(2,5),
-        Point(5,5),
-        Point(5,2),
+        Point(2, 2),
+        Point(2, 5),
+        Point(5, 5),
+        Point(5, 2),
     ])
 
     r3 = Hitbox([
-        Point(1,2),
-        Point(1,5),
-        Point(2,5),
-        Point(2,2),
+        Point(1, 2),
+        Point(1, 5),
+        Point(2, 5),
+        Point(2, 2),
     ])
 
     r4 = Hitbox([
-        Point(2,1),
-        Point(2,2),
-        Point(5,2),
-        Point(5,1),
+        Point(2, 1),
+        Point(2, 2),
+        Point(5, 2),
+        Point(5, 1),
     ])
 
     r5 = Hitbox([
-        Point(-2,1),
-        Point(-2,2),
-        Point(1,2),
-        Point(1,1),
+        Point(-2, 1),
+        Point(-2, 2),
+        Point(1, 2),
+        Point(1, 1),
     ])
 
     p4 = Hitbox([Point(56.3333, 72.3333), Point(66.33330000000001, 72.3333),
@@ -456,7 +479,8 @@ def main():
             Hitbox([Point(240, 64), Point(256, 64), Point(256, 48), Point(240, 48)])
             Hitbox([Point(256, 64), Point(272, 64), Point(272, 48), Point(256, 48)])
             Hitbox([Point(272, 64), Point(288, 64), Point(288, 48), Point(272, 48)])
-            Hitbox([Point(288, 64), Point(304, 64), Point(304, 48), Point(288, 48)])'''.split('\n')
+            Hitbox([Point(288, 64), Point(304, 64), Point(304, 48), Point(288, 48)])'''.split(
+        '\n')
 
     s = [eval(i) for i in s]
 
@@ -495,6 +519,7 @@ def main():
     print(rt1.get_common_edge(rt2))
 
     print(h.dump_polys())
+
 
 if __name__ == '__main__':
     main()
