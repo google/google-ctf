@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: chrome
+spec:
+  deployed: true
+  powDifficultySeconds: 1
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            volumeMounts:
+              - name: flag
+                mountPath: /chroot/flag
+                readOnly: true
+        volumes:
+          - name: flag
+            secret:
+              defaultMode: 0555
+              secretName: v8ctf-flag
+              optional: true

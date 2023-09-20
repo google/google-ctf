@@ -1,0 +1,15 @@
+#!/usr/bin/bash
+
+CHROME=/home/user/chrome-linux/chrome
+
+echo "Version: $($CHROME --version | head -n1)"
+echo "Please send me a URL to open."
+read -r url
+if ! echo $url | grep -E '^https?://[A-Za-z0-9.:/?%\-_+&=]*$' -q; then
+  echo 'url regex fail'
+  exit 1
+fi
+
+export HOME=/tmp
+dbus-daemon --system
+dbus-run-session -- $CHROME --headless=new --no-sandbox --disable-crashpad --disable-breakpad --disable-crash-reporter --user-data-dir=/tmp/chrome-userdata --enable-logging=stderr "${url}"

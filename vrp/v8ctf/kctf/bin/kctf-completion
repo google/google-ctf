@@ -1,0 +1,197 @@
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+  autoload -U bashcompinit
+  bashcompinit
+fi
+
+function _kctf_complete_chal_debug() {
+  if [ "$COMP_CWORD" == "3" ]; then
+    COMPREPLY=($(compgen -W "--help logs ssh port-forward docker" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+    return
+  fi
+
+  case "${COMP_WORDS[3]}" in
+    logs|ssh|docker)
+      if [ "${PREV_IS_FLAG}" = 1 ]; then
+        if [ "${PREV_WORD}" = "--container" ]; then
+          # TODO get containers from challenge.yaml
+          COMPREPLY=($(compgen -W "challenge healthcheck" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+          return
+        fi
+        return 0
+      fi
+      if [ "${COMP_WORDS[3]}" = "logs" ]; then
+        COMPREPLY=($(compgen -W "--help --container --tail" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+        return
+      fi
+      COMPREPLY=($(compgen -W "--help --container" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+      return
+      ;;
+    port-forward)
+      if [ "${PREV_IS_FLAG}" = 1 ]; then
+        return
+      fi
+      COMPREPLY=($(compgen -W "--help --port --local-port" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+      return
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+function _kctf_complete_chal() {
+  if [ "$COMP_CWORD" == "2" ]; then
+    COMPREPLY=($(compgen -W "--help create list start stop status debug" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+    return
+  fi
+
+  case "${COMP_WORDS[2]}" in
+    list)
+      return
+      ;;
+    create)
+      if [ "${PREV_IS_FLAG}" = 1 ]; then
+        if [ "${PREV_WORD}" == "--challenge-dir" ]; then
+          COMPREPLY=($(compgen -d -- "${COMP_WORDS[${COMP_CWORD}]}"))
+          return
+        fi
+        if [ "${PREV_WORD}" == "--template" ]; then
+          COMPREPLY=($(compgen -W "list $(ls ${KCTF_CTF_DIR}/kctf/challenge-templates/)" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+          return
+        fi
+        return 0
+      fi
+      COMPREPLY=($(compgen -W "--help --template --challenge-dir" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+      return
+      ;;
+    start|stop|status)
+      COMPREPLY=($(compgen -W "--help" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+      return
+      ;;
+    debug)
+      _kctf_complete_chal_debug
+      return
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+# This will be out of date at some point, but still useful so worth it?
+# We can't fetch it easily with gcloud unfortunately since it requires a project
+GCP_REGIONS="us-east1-b us-east1-c us-east1-d us-east4-c us-east4-b us-east4-a us-central1-c us-central1-a us-central1-f us-central1-b us-west1-b us-west1-c us-west1-a europe-west4-a europe-west4-b europe-west4-c europe-west1-b europe-west1-d europe-west1-c europe-west3-c europe-west3-a europe-west3-b europe-west2-c europe-west2-b europe-west2-a asia-east1-b asia-east1-a asia-east1-c asia-southeast1-b asia-southeast1-a asia-southeast1-c asia-northeast1-b asia-northeast1-c asia-northeast1-a asia-south1-c asia-south1-b asia-south1-a australia-southeast1-b australia-southeast1-c australia-southeast1-a southamerica-east1-b southamerica-east1-c southamerica-east1-a asia-east2-a asia-east2-b asia-east2-c asia-northeast2-a asia-northeast2-b asia-northeast2-c asia-northeast3-a asia-northeast3-b asia-northeast3-c asia-southeast2-a asia-southeast2-b asia-southeast2-c europe-north1-a europe-north1-b europe-north1-c europe-west6-a europe-west6-b europe-west6-c northamerica-northeast1-a northamerica-northeast1-b northamerica-northeast1-c us-west2-a us-west2-b us-west2-c us-west3-a us-west3-b us-west3-c us-west4-a us-west4-b us-west4-c"
+GCP_REGISTRIES="gcr.io asia.gcr.io eu.gcr.io us.gcr.io"
+
+function _kctf_complete_cluster() {
+  if [ "$COMP_CWORD" == "2" ]; then
+    COMPREPLY=($(compgen -W "--help start stop resize create load list set-src-ip-ranges get-src-ip-ranges" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+    return
+  fi
+
+  case "${COMP_WORDS[2]}" in
+    start|stop)
+      COMPREPLY=($(compgen -W "--help --disable-src-ranges" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+      return
+      ;;
+    resize)
+      if [ "${PREV_IS_FLAG}" = 1 ]; then
+        if [ "${PREV_WORD}" == "--old-pool" ]; then
+          COMPREPLY=($(compgen -W "$(gcloud container node-pools list --cluster ${CLUSTER_NAME} --format 'get(name)')" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+          return
+        fi
+        if [ "${PREV_WORD}" == "--machine-type" ]; then
+          COMPREPLY=($(compgen -W "$(gcloud compute machine-types list --zones="${ZONE}" --format 'get(name)')" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+          return
+        fi
+        return 0
+      fi
+      COMPREPLY=($(compgen -W "--machine-type --spot --min-nodes --max-nodes --num-nodes --pool-name --old-pool" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+      return
+      ;;
+    create)
+      if [ "${PREV_IS_FLAG}" = 1 ] && [ "${PREV_WORD}" != "--start" ] && [ "${PREV_WORD}" != "--disable-src-ranges" ]; then
+        if [ "${PREV_WORD}" == "--type" ]; then
+          COMPREPLY=($(compgen -W "gce kind" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+          return
+        fi
+        if [ "${PREV_WORD}" == "--project" ]; then
+          COMPREPLY=($(compgen -W "$(gcloud projects list --format 'get(project_id)')" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+          return
+        fi
+        if [ "${PREV_WORD}" == "--zone" ]; then
+          COMPREPLY=($(compgen -W "${GCP_REGIONS}" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+          return
+        fi
+        if [ "${PREV_WORD}" == "--registry" ]; then
+          COMPREPLY=($(compgen -W "${GCP_REGISTRIES}" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+          return
+        fi
+        if [ "${PREV_WORD}" == "--domain-name" ]; then
+          COMPREPLY=($(compgen -W "none" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+          return
+        fi
+        return 0
+      fi
+      COMPREPLY=($(compgen -W "--help --type --project --zone --registry --cluster-name --domain-name --email-address --start --disable-src-ranges" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+      return
+      ;;
+    load)
+      if [ "${COMP_CWORD}" == "3" ]; then
+        COMPREPLY=($(compgen -W "$(find ${KCTF_CTF_DIR}/kctf/config/ -type f -printf '%f\n')" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+        return
+      fi
+      return 0
+      ;;
+    list)
+      return 0
+      ;;
+    set-src-ip-ranges)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+function _kctf_complete() {
+  if [ "$COMP_CWORD" == "1" ]; then
+    COMPREPLY=($(compgen -W "--help chal cluster" -- "${COMP_WORDS[${COMP_CWORD}]}"))
+    return
+  fi
+  PREV_WORD="${COMP_WORDS[$(($COMP_CWORD - 1))]}"
+  if [ "${PREV_WORD:0:1}" = "-" ]; then
+    PREV_IS_FLAG="1"
+  else
+    PREV_IS_FLAG="0"
+  fi
+  case "${COMP_WORDS[1]}" in
+    chal)
+      _kctf_complete_chal
+      return
+      ;;
+    cluster)
+      _kctf_complete_cluster
+      return
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+complete -F _kctf_complete kctf
