@@ -15,6 +15,7 @@
 from engine import generics
 from engine import hitbox
 
+
 class ExitArea(generics.GenericObject):
     def __init__(self, coords, size, name):
         self.perimeter = [

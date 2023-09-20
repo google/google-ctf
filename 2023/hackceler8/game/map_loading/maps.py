@@ -13,33 +13,45 @@
 # limitations under the License.
 
 from enum import Enum
-
-import arcade
+from typing import NamedTuple, Optional
 
 from map_loading import tilemap
-
+import arcade
 
 class GameMode(Enum):
     MODE_PLATFORMER = "platformer"
     MODE_SCROLLER = "scroller"
 
+class MapAttrs(NamedTuple):
+    tiled_map: tilemap.BasicTileMap
+    prerender: Optional[arcade.Texture]
+    game_mode: GameMode
 
 def load() -> dict:
     base_tilemap = tilemap.BasicTileMap("resources/maps/hackceler_map.tmx")
-    base_scene = arcade.load_tilemap(
-        "resources/maps/hackceler_map.tmx")
+
+    spike_tilemap = tilemap.BasicTileMap("resources/maps/spike_map.tmx")
+
+    speed_tilemap = tilemap.BasicTileMap("resources/maps/speed_map.tmx")
+
+    boss_tilemap = tilemap.BasicTileMap("resources/maps/boss_map.tmx")
 
     cctv_tilemap = tilemap.BasicTileMap("resources/levels/cctv/cctv_level.tmx")
-    cctv_scene = arcade.load_tilemap(
-        "resources/levels/cctv/cctv_level.tmx")
+    cctv_prerender = arcade.load_texture("resources/levels/cctv/cctv_level.png")
+
+    danmaku_tilemap = tilemap.BasicTileMap("resources/maps/danmaku_map.tmx")
 
     maps_dict = {
-        "base": (base_tilemap, base_scene, GameMode.MODE_SCROLLER),
-        "cctv": (cctv_tilemap, cctv_scene, GameMode.MODE_PLATFORMER),
-        "rusty": (cctv_tilemap, cctv_scene, GameMode.MODE_PLATFORMER),
-        "space": (cctv_tilemap, cctv_scene, GameMode.MODE_PLATFORMER),
-        "water": (cctv_tilemap, cctv_scene, GameMode.MODE_PLATFORMER),
-        "debug": (cctv_tilemap, cctv_scene, GameMode.MODE_PLATFORMER)
+        "base": MapAttrs(base_tilemap, None, GameMode.MODE_SCROLLER),
+        "spike": MapAttrs(spike_tilemap, None, GameMode.MODE_SCROLLER),
+        "speed": MapAttrs(speed_tilemap, None, GameMode.MODE_SCROLLER),
+        "danmaku": MapAttrs(danmaku_tilemap, None, GameMode.MODE_SCROLLER),
+        "boss": MapAttrs(boss_tilemap, None, GameMode.MODE_SCROLLER),
+        "cctv": MapAttrs(cctv_tilemap, cctv_prerender, GameMode.MODE_PLATFORMER),
+        "rusty": MapAttrs(cctv_tilemap, cctv_prerender, GameMode.MODE_PLATFORMER),
+        "space": MapAttrs(cctv_tilemap, cctv_prerender, GameMode.MODE_PLATFORMER),
+        "water": MapAttrs(cctv_tilemap, cctv_prerender, GameMode.MODE_PLATFORMER),
+        "debug": MapAttrs(cctv_tilemap, cctv_prerender, GameMode.MODE_PLATFORMER),
     }
 
     return maps_dict

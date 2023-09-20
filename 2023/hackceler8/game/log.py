@@ -21,12 +21,16 @@ import logging
 import os
 import sys
 
+
 def get_argument_parser():
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument('--logfile', help="Logfile")
-    parser.add_argument('--logfile-loglevel', default='info', help="Minimal loglevel that is logged to the logfile")
-    parser.add_argument('--loglevel', default='info', help="Minimal loglevel that is logged to the console")
+    parser.add_argument('--logfile-loglevel', default='info',
+                        help="Minimal loglevel that is logged to the logfile")
+    parser.add_argument('--loglevel', default='info',
+                        help="Minimal loglevel that is logged to the console")
     return parser
+
 
 # ANSI color codes
 class AnsiColor(Enum):
@@ -39,10 +43,12 @@ class AnsiColor(Enum):
     CYAN = 36
     LIGHT_GRAY = 37
 
+
 # ANSI modifiers
 class AnsiModifier(Enum):
     NONE = 0
     BOLD = 1
+
 
 # Logging formatter supporting colorized output
 class LogFormatter(logging.Formatter):
@@ -67,7 +73,8 @@ class LogFormatter(logging.Formatter):
     def format(self, record, *args, **kwargs):
         if self.use_color and record.levelno in self.ANSI_STYLE:
             record.style_on = LogFormatter.color_escape_sequence(
-                    *self.ANSI_STYLE.get(record.levelno, (AnsiColor.BLACK, AnsiModifier.BOLD))
+                *self.ANSI_STYLE.get(record.levelno,
+                                     (AnsiColor.BLACK, AnsiModifier.BOLD))
             )
             record.style_off = self.RESET_CODE
         else:
@@ -77,6 +84,62 @@ class LogFormatter(logging.Formatter):
         return super(LogFormatter, self).format(record, *args, **kwargs)
 
 
+# straight from https://stackoverflow.com/questions/2183233/how-to-add-a-custom-loglevel-to-pythons-logging-facility
+# /35804945#35804945
+def add_logging_level(level_name, level_num, method_name=None):
+    """
+    Comprehensively adds a new logging level to the `logging` module and the
+    currently configured logging class.
+
+    `levelName` becomes an attribute of the `logging` module with the value
+    `levelNum`. `methodName` becomes a convenience method for both `logging`
+    itself and the class returned by `logging.getLoggerClass()` (usually just
+    `logging.Logger`). If `methodName` is not specified, `levelName.lower()` is
+    used.
+
+    To avoid accidental clobberings of existing attributes, this method will
+    raise an `AttributeError` if the level name is already an attribute of the
+    `logging` module or if the method name is already present
+
+    Example
+    -------
+    >>> addLoggingLevel('TRACE', logging.DEBUG - 5)
+    >>> logging.getLogger(__name__).setLevel("TRACE")
+    >>> logging.getLogger(__name__).trace('that worked')
+    >>> logging.trace('so did this')
+    >>> logging.TRACE
+    5
+
+    """
+    if not method_name:
+        method_name = level_name.lower()
+
+    if hasattr(logging, level_name):
+        raise AttributeError('{} already defined in logging module'.format(level_name))
+    if hasattr(logging, method_name):
+        raise AttributeError('{} already defined in logging module'.format(method_name))
+    if hasattr(logging.getLoggerClass(), method_name):
+        raise AttributeError('{} already defined in logger class'.format(method_name))
+
+    # This method was inspired by the answers to Stack Overflow post
+    # http://stackoverflow.com/q/2183233/2988730, especially
+    # http://stackoverflow.com/a/13638084/2988730
+    def log_for_level(self, message, *args, **kwargs):
+        if self.isEnabledFor(level_num):
+            self._log(level_num, message, args, **kwargs)
+
+    def log_to_root(message, *args, **kwargs):
+        logging.log(level_num, message, *args, **kwargs)
+
+    logging.addLevelName(level_num, level_name)
+    setattr(logging, level_name, level_num)
+    setattr(logging.getLoggerClass(), method_name, log_for_level)
+    setattr(logging, method_name, log_to_root)
+
+
+add_logging_level('TRACE', logging.DEBUG - 5)
+
+
 def loglevelname_to_loglevel(loglevelname):
     loglevelname = loglevelname.upper()
     if hasattr(logging, loglevelname):
@@ -84,14 +147,15 @@ def loglevelname_to_loglevel(loglevelname):
     else:
         raise Exception(f"Invalid loglevel '{loglevelname}'")
 
+
 # Setup logging
 def setup_logging(args, file_prefix=''):
     logfile_file = args.logfile
-    log_line_template='%(style_on)s%(asctime)s.%(msecs)03d %(levelname)-8s [%(filename)s:%(lineno)d %(funcName)s] %(message)s%(style_off)s'
+    log_line_template = '%(style_on)s%(asctime)s.%(msecs)03d %(levelname)-8s [%(filename)s:%(lineno)d %(funcName)s] %(message)s%(style_off)s'
 
     if not logfile_file:
         time = datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
-        time_formatted = time.replace(':','_')
+        time_formatted = time.replace(':', '_')
         pid = os.getpid()
         try:
             os.mkdir("logs")
@@ -110,7 +174,8 @@ def setup_logging(args, file_prefix=''):
     # Create console handler
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setLevel(loglevelname_to_loglevel(args.loglevel))
-    console_formatter = LogFormatter(fmt=log_line_template, use_color=True, datefmt='%H%M:%S')
+    console_formatter = LogFormatter(fmt=log_line_template, use_color=True,
+                                     datefmt='%H:%M:%S')
     console_handler.setFormatter(console_formatter)
     logger.addHandler(console_handler)
 
@@ -119,9 +184,9 @@ def setup_logging(args, file_prefix=''):
         logfile_handler = WatchedFileHandler(logfile_file)
 
         logfile_handler.setLevel(loglevelname_to_loglevel(args.logfile_loglevel))
-        logfile_formatter = LogFormatter(fmt=log_line_template, use_color=False, datefmt='%H:%M:%S')
+        logfile_formatter = LogFormatter(fmt=log_line_template, use_color=False,
+                                         datefmt='%H:%M:%S')
         logfile_handler.setFormatter(logfile_formatter)
         logger.addHandler(logfile_handler)
 
         logging.info(f"Logging to {logfile_file}")
-

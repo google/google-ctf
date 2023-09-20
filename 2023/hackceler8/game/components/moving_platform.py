@@ -14,34 +14,43 @@
 
 from engine import generics
 from engine import hitbox
+import logging
 
 
 class MovingPlatform(generics.GenericObject):
-    def __init__(self, coords, size, name, perimeter=None):
-        self.perimeter = perimeter
-        if self.perimeter is None:
-            self.perimeter = [
-                hitbox.Point(coords.x, coords.y),
-                hitbox.Point(coords.x + size.width, coords.y),
-                hitbox.Point(coords.x + size.width, coords.y - size.height),
-                hitbox.Point(coords.x, coords.y - size.height),
-            ]
-        super().__init__(coords, "MovingPlatform", None, self.perimeter,
-                         can_flash=True)
+    def __init__(self, coords, name, x_speed, y_speed, min_dx, max_dx, min_dy, max_dy):
+        path = "resources/objects/moving_platforms/%s.tmx" % name[
+                                                             len("moving_platform_"):]
+        super().__init__(coords, nametype="MovingPlatform", tileset_path=path,
+                         name=name)
 
-        self.max_x = coords.x + 20
-        self.min_x = coords.x - 20
+        self.orig_x = self.x
+        self.orig_y = self.y
+        self.x_speed = x_speed
+        self.y_speed = y_speed
+        self.min_dx = min_dx
+        self.max_dx = max_dx
+        self.min_dy = min_dy
+        self.max_dy = max_dy
 
-        self.max_y = coords.y + 20
-        self.min_y = coords.y - 20
-
-        self.y_speed = 0.5
-        self.x_speed = 0
+        w, h = self.sprite.get_dimensions()
+        outline = [
+            hitbox.Point(coords.x - w / 2, coords.y - h / 2),
+            hitbox.Point(coords.x + w / 2, coords.y - h / 2),
+            hitbox.Point(coords.x + w / 2, coords.y + h / 2),
+            hitbox.Point(coords.x - w / 2, coords.y + h / 2),
+        ]
+        self._update(outline)
 
     def move_around(self):
-        if self.y >= self.max_y:
+        if self.x - self.orig_x >= self.max_dx:
+            self.x_speed = -self.x_speed
+        if self.x - self.orig_x <= self.min_dx:
+            self.x_speed = -self.x_speed
+
+        if self.y - self.orig_y >= self.max_dy:
             self.y_speed = -self.y_speed
-        if self.y <= self.min_y:
+        if self.y - self.orig_y <= self.min_dy:
             self.y_speed = -self.y_speed
 
         self.move(self.x_speed, self.y_speed)

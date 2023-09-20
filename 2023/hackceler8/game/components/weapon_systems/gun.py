@@ -20,34 +20,32 @@ import engine.hitbox as hitbox
 
 
 class Gun(weapon.Weapon):
-    def __init__(self, coords, collectable):
+    # min time in ticks between shots. Multiply by FPS to get seconds
+    COOL_DOWN_DELAY = 20
+
+    def __init__(self, coords, name, collectable, flipped):
         super().__init__(
             coords=coords,
-            name="Gun",
+            name=name,
+            display_name="Gun",
+            flipped=flipped,
             weapon_type="projectile",
             damage_type="single",
             damage_algo="constant",
-            tileset_path="resources/objects/gun.tmx",
+            tileset_path="resources/objects/weapons/gun.tmx",
             collectable=collectable
         )
 
-        # min time in ticks between shots. Multiply by FPS to get seconds
-        self.cool_down_delay = 10
-
-        self.last_tick = 0
-
         self.destroyable = False
 
-    def fire(self,tics, direction, origin):
-        if tics - self.last_tick >= self.cool_down_delay:
-            self.last_tick = tics
+    def fire(self, tics, direction, origin):
+        if self.cool_down_timer == 0:
+            self.cool_down_timer = self.COOL_DOWN_DELAY
             speed_x = 10
             if direction == "W":
                 speed_x = -speed_x
             logging.info(f"Firing gun from coordinates {self.x, self.y} at tick "
                          f"{tics} in direction {direction}")
-            return projectile.Projectile(coords=hitbox.Point(self.x, self.y), speed_x =
-            speed_x,speed_y=0, origin=origin, damage_algo=self.damage_algo,
+            return projectile.Projectile(coords=hitbox.Point(self.x, self.y), speed_x=
+            speed_x, speed_y=0, origin=origin, damage_algo=self.damage_algo,
                                          damage_type=self.damage_type)
-
-

@@ -12,24 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import constants
 from engine import generics
+import engine.hitbox as hitbox
+
 
 class Projectile(generics.GenericObject):
     def __init__(self, coords, speed_x, speed_y, origin, damage_algo="constant",
-                 damage_type="single", base_damage=10):
+                 damage_type="single", base_damage=10, scale=1):
+        outline = [
+            hitbox.Point(coords.x - 7 * scale, coords.y - 12 * scale),
+            hitbox.Point(coords.x + 7 * scale, coords.y - 12 * scale),
+            hitbox.Point(coords.x + 7 * scale, coords.y + 12 * scale),
+            hitbox.Point(coords.x - 7 * scale, coords.y + 12 * scale),
+        ]
         super().__init__(coords, nametype="Projectile",
-                         tileset_path="resources/objects/fire.tmx", outline=None)
+                         tileset_path="resources/objects/fire.tmx", outline=outline)
+        self.sprite.scale = scale
         self.set_speed(speed_x, speed_y)
         self.origin = origin
         self.damage_algo = damage_algo
         self.damage_type = damage_type
         self.base_damage = base_damage
 
-    def check_oob(self):
-        if self.x < -10000 or self.x > 10000:
+    def check_oob(self, player):
+        if abs(player.x - self.x) > constants.SCREEN_WIDTH:
             return True
-        if self.y < -10000 or self.y > 10000:
+        if abs(player.y - self.y) > constants.SCREEN_HEIGHT:
             return True
 
         return False
-

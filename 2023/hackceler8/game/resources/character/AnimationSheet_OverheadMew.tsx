@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.1" name="AnimationSheet_OverheadMew" tilewidth="32" tileheight="48" tilecount="48" columns="12">
+<tileset version="1.10" tiledversion="1.10.2" name="AnimationSheet_OverheadMew" tilewidth="64" tileheight="48" tilecount="24" columns="6">
  <image source="AnimationSheet_OverheadMew.png" width="384" height="192"/>
  <tile id="0">
   <properties>
@@ -8,9 +8,9 @@
   </properties>
   <animation>
    <frame tileid="0" duration="2000"/>
+   <frame tileid="1" duration="125"/>
    <frame tileid="2" duration="125"/>
-   <frame tileid="4" duration="125"/>
-   <frame tileid="2" duration="125"/>
+   <frame tileid="1" duration="125"/>
   </animation>
  </tile>
  <tile id="3">
@@ -19,9 +19,9 @@
    <property name="loop" type="bool" value="true"/>
   </properties>
   <animation>
-   <frame tileid="6" duration="250"/>
+   <frame tileid="3" duration="250"/>
    <frame tileid="0" duration="250"/>
-   <frame tileid="8" duration="250"/>
+   <frame tileid="4" duration="250"/>
    <frame tileid="0" duration="250"/>
   </animation>
  </tile>
@@ -31,7 +31,7 @@
    <property name="loop" type="bool" value="true"/>
   </properties>
   <animation>
-   <frame tileid="12" duration="250"/>
+   <frame tileid="6" duration="250"/>
   </animation>
  </tile>
  <tile id="7">
@@ -40,13 +40,13 @@
    <property name="loop" type="bool" value="true"/>
   </properties>
   <animation>
-   <frame tileid="14" duration="250"/>
-   <frame tileid="16" duration="250"/>
-   <frame tileid="12" duration="250"/>
-   <frame tileid="18" duration="250"/>
-   <frame tileid="20" duration="250"/>
-   <frame tileid="18" duration="250"/>
-   <frame tileid="12" duration="250"/>
+   <frame tileid="7" duration="250"/>
+   <frame tileid="8" duration="250"/>
+   <frame tileid="6" duration="250"/>
+   <frame tileid="9" duration="250"/>
+   <frame tileid="10" duration="250"/>
+   <frame tileid="9" duration="250"/>
+   <frame tileid="6" duration="250"/>
   </animation>
  </tile>
  <tile id="12">
@@ -55,7 +55,7 @@
    <property name="loop" type="bool" value="true"/>
   </properties>
   <animation>
-   <frame tileid="24" duration="250"/>
+   <frame tileid="12" duration="250"/>
   </animation>
  </tile>
  <tile id="13">
@@ -64,11 +64,19 @@
    <property name="loop" type="bool" value="true"/>
   </properties>
   <animation>
-   <frame tileid="26" duration="250"/>
-   <frame tileid="28" duration="250"/>
-   <frame tileid="30" duration="250"/>
-   <frame tileid="28" duration="250"/>
-   <frame tileid="26" duration="250"/>
+   <frame tileid="12" duration="250"/>
+   <frame tileid="13" duration="250"/>
+   <frame tileid="12" duration="250"/>
+   <frame tileid="14" duration="250"/>
+  </animation>
+ </tile>
+ <tile id="16">
+  <properties>
+   <property name="animation" value="die"/>
+   <property name="loop" type="bool" value="true"/>
+  </properties>
+  <animation>
+   <frame tileid="16" duration="1000"/>
   </animation>
  </tile>
  <tile id="18">
@@ -77,10 +85,10 @@
    <property name="loop" type="bool" value="true"/>
   </properties>
   <animation>
-   <frame tileid="36" duration="250"/>
-   <frame tileid="38" duration="250"/>
-   <frame tileid="40" duration="250"/>
-   <frame tileid="42" duration="250"/>
+   <frame tileid="18" duration="250"/>
+   <frame tileid="19" duration="250"/>
+   <frame tileid="21" duration="250"/>
+   <frame tileid="19" duration="250"/>
   </animation>
  </tile>
  <tile id="19">
@@ -89,7 +97,7 @@
    <property name="loop" type="bool" value="true"/>
   </properties>
   <animation>
-   <frame tileid="38" duration="250"/>
+   <frame tileid="19" duration="250"/>
   </animation>
  </tile>
 </tileset>

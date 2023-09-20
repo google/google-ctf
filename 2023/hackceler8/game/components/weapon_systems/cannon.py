@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import arcade
 import logging
 
 import components.weapon_systems.base as weapon
@@ -20,43 +21,78 @@ import engine.hitbox as hitbox
 
 
 class Cannon(weapon.Weapon):
-    def __init__(self, coords, collectable):
+    # min time in ticks between shots. Multiply by FPS to get seconds
+    COOL_DOWN_TIME = 180  # 3 seconds
+
+    def __init__(self, coords, name, collectable, flipped):
         # Weapons are points, we center the outline around it
         outline = [
-            hitbox.Point(coords.x - 8, coords.y - 8),
-            hitbox.Point(coords.x + 8, coords.y - 8),
-            hitbox.Point(coords.x + 8, coords.y + 8),
-            hitbox.Point(coords.x - 8, coords.y + 8)
+            hitbox.Point(coords.x - 16, coords.y - 16),
+            hitbox.Point(coords.x + 16, coords.y - 16),
+            hitbox.Point(coords.x + 16, coords.y + 16),
+            hitbox.Point(coords.x - 16, coords.y + 16)
         ]
         super().__init__(
             coords=coords,
-            name="Cannon",
+            name=name,
+            display_name="Cannon",
+            flipped=flipped,
             weapon_type="projectile",
             damage_type="single",
             damage_algo="constant",
-            tileset_path="resources/objects/gun.tmx",
+            tileset_path="resources/objects/weapons/cannon.tmx",
             collectable=collectable,
             outline=outline
         )
 
-        # min time in ticks between shots. Multiply by FPS to get seconds
-        self.cool_down_delay = 180  # 3 seconds
-
         self.last_tick = 0
+        self.charging = None
+        self.charge_amount = 0
 
-        self.ai_controlled = True
-        self.collectable = False
-        self.active = True
+        self.destroyable = not self.collectable
+        self.active = not self.collectable
+
+    def draw(self):
+        super().draw()
+        if not self.charging:
+            return
+        radius = max(10, (270 - self.charge_amount)*0.5)
+        if self.charge_amount < 60:
+            color = arcade.csscolor.WHITE
+        elif self.charge_amount < 120:
+            color = arcade.csscolor.YELLOW
+        else:
+            color = arcade.csscolor.ORANGE
+        arcade.draw_circle_outline(self.x, self.y, radius, color, border_width=5)
 
     def fire(self, tics, _, origin):
-        if tics - self.last_tick >= self.cool_down_delay:
-            self.last_tick = tics
-            speed_x = 10
-            direction = "W"
-            if direction == "W":
-                speed_x = -speed_x
-            logging.debug(f"Firing cannon from coordinates {self.x, self.y} at tick "
-                          f"{tics} in direction {direction}")
-            return projectile.Projectile(coords=hitbox.Point(self.x, self.y), speed_x=
-            speed_x, speed_y=0, origin=origin, damage_algo=self.damage_algo,
-                                         damage_type=self.damage_type)
+        if not self.ai_controlled:
+            return
+        if self.cool_down_timer == 0:
+            self.cool_down_timer = self.COOL_DOWN_TIME
+            return self._spawn_fireball(size=2, origin=origin, damage=30)
+
+    def charge(self):
+        self.charging = True
+        self.charge_amount += 1
+
+    def release_charged_shot(self, origin):
+        self.charging = False
+        # Need to charge for at least 1 second
+        proj = None
+        if self.charge_amount >= 60:
+            # Grows to at most 4x normal size in 4 seconds.
+            size = self.charge_amount / 60
+            size = min(size, 4)
+            proj = self._spawn_fireball(size, origin, damage=20*size)
+        self.charge_amount = 0
+        return proj
+
+    def _spawn_fireball(self, size, origin, damage):
+        speed_x = 10
+        if self.sprite.flipped:
+            speed_x = -speed_x
+        return projectile.Projectile(coords=hitbox.Point(self.x, self.y),
+                                     speed_x=speed_x, speed_y=0, origin=origin,
+                                     damage_algo=self.damage_algo, damage_type=self.damage_type,
+                                     base_damage=damage, scale=size)

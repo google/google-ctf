@@ -14,8 +14,6 @@
 
 import argparse
 import logging
-import os
-import sys
 
 import ludicer_gui
 import network
