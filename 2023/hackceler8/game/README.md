@@ -6,7 +6,7 @@
 ```
 cd hackceler8-2023
 python3 -m venv my_venv
-cd 2023/
+cd game/
 source ../my_venv/bin/activate
 pip3 install -r requirements.txt
 ```
