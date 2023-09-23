@@ -9,7 +9,7 @@ MarkupSafe==2.1.2
 SQLAlchemy==2.0.10
 typing_extensions==4.5.0
 Werkzeug==2.2.3
-requests==2.29.0
+requests==2.31.0
 gunicorn==20.1.0
 pymysql==1.0.3
 gevent==22.10.2
