@@ -1,0 +1,49 @@
+# Already applied to the supplied bindings to hack in uint64 support
+diff --git a/bindings/mojo_bindings.js b/bindings/mojo_bindings.js
+index 483fbc3..6a869e2 100644
+--- a/bindings/mojo_bindings.js
++++ b/bindings/mojo_bindings.js
+@@ -867,7 +867,7 @@ if (typeof mojo.config.autoLoadMojomDeps === 'undefined') {
+       hi = this.dataView.getUint32(offset, kHostIsLittleEndian);
+       lo = this.dataView.getUint32(offset + 4, kHostIsLittleEndian);
+     }
+-    return lo + hi * kHighWordMultiplier;
++    return BigInt(lo) + BigInt(hi) * BigInt(kHighWordMultiplier);
+   }
+ 
+   Buffer.prototype.getInt8 = function(offset) {
+@@ -908,13 +908,15 @@ if (typeof mojo.config.autoLoadMojomDeps === 'undefined') {
+     this.dataView.setUint32(offset, value, kHostIsLittleEndian);
+   }
+   Buffer.prototype.setUint64 = function(offset, value) {
+-    var hi = (value / kHighWordMultiplier) | 0;
++    value = BigInt(value);
++    var hi = Number((value / BigInt(kHighWordMultiplier))) | 0;
++    var lo = Number(value & (BigInt(kHighWordMultiplier-1)));
+     if (kHostIsLittleEndian) {
+-      this.dataView.setInt32(offset, value, kHostIsLittleEndian);
++      this.dataView.setInt32(offset, lo, kHostIsLittleEndian);
+       this.dataView.setInt32(offset + 4, hi, kHostIsLittleEndian);
+     } else {
+       this.dataView.setInt32(offset, hi, kHostIsLittleEndian);
+-      this.dataView.setInt32(offset + 4, value, kHostIsLittleEndian);
++      this.dataView.setInt32(offset + 4, lo, kHostIsLittleEndian);
+     }
+   }
+ 
+@@ -2634,7 +2636,7 @@ if (typeof mojo.config.autoLoadMojomDeps === 'undefined') {
+     } else if (message.isResponse()) {
+       var reader = new internal.MessageReader(message);
+       var requestID = reader.requestID;
+-      var completer = this.completers_.get(requestID);
++      var completer = this.completers_.get(Number(requestID));
+       if (completer) {
+         this.completers_.delete(requestID);
+         completer.resolve(message);
+@@ -6159,4 +6161,4 @@ if (typeof mojo.config.autoLoadMojomDeps === 'undefined') {
+   exports.PauseUntilFlushCompletes = PauseUntilFlushCompletes;
+   exports.FlushAsync = FlushAsync;
+   exports.RunOrClosePipeInput = RunOrClosePipeInput;
+-})();
+\ No newline at end of file
++})();

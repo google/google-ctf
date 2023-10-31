@@ -1,0 +1,184 @@
+commit c1f358459e33cb2f80d63df93950153612265330
+Author: Stephen Roettger <sroettger@google.com>
+Date:   Tue Apr 21 18:12:00 2020 +0200
+
+    chrome challenge
+
+diff --git a/content/browser/BUILD.gn b/content/browser/BUILD.gn
+index 60236ef92a42..8bc8fbddc347 100644
+--- a/content/browser/BUILD.gn
++++ b/content/browser/BUILD.gn
+@@ -1341,6 +1341,8 @@ jumbo_source_set("browser") {
+     "push_messaging/push_messaging_manager.h",
+     "push_messaging/push_messaging_router.cc",
+     "push_messaging/push_messaging_router.h",
++    "pwn.cc",
++    "pwn.h",
+     "quota/quota_context.cc",
+     "quota/quota_context.h",
+     "quota/quota_manager_host.cc",
+diff --git a/content/browser/pwn.cc b/content/browser/pwn.cc
+new file mode 100644
+index 000000000000..ff2fb044c740
+--- /dev/null
++++ b/content/browser/pwn.cc
+@@ -0,0 +1,26 @@
++#include "content/browser/pwn.h"
++
++#include "content/common/pwn.mojom.h"
++#include "mojo/public/cpp/bindings/pending_receiver.h"
++#include "mojo/public/cpp/bindings/self_owned_receiver.h"
++
++namespace content {
++
++Pwn::Pwn() = default;
++
++Pwn::~Pwn() = default;
++
++// static
++void Pwn::Create(mojo::PendingReceiver<mojom::Pwn> receiver) {
++  mojo::MakeSelfOwnedReceiver(std::make_unique<Pwn>(), std::move(receiver));
++}
++
++void Pwn::This(ThisCallback callback) {
++  std::move(callback).Run((uint64_t) this);
++}
++
++void Pwn::PtrAt(uint64_t addr, PtrAtCallback callback) {
++  std::move(callback).Run(*(uint64_t*) addr);
++}
++
++}  // namespace content
+diff --git a/content/browser/pwn.h b/content/browser/pwn.h
+new file mode 100644
+index 000000000000..3d9c6600054a
+--- /dev/null
++++ b/content/browser/pwn.h
+@@ -0,0 +1,26 @@
++#ifndef CONTENT_BROWSER_PWN_H_
++#define CONTENT_BROWSER_PWN_H_
++
++#include "content/common/pwn.mojom.h"
++#include "mojo/public/cpp/bindings/pending_receiver.h"
++
++namespace content {
++
++class Pwn : public mojom::Pwn {
++ public:
++  Pwn();
++  ~Pwn() override;
++
++  static void Create(mojo::PendingReceiver<mojom::Pwn> receiver);
++
++ private:
++  void This(ThisCallback callback) override;
++  void PtrAt(uint64_t addr, PtrAtCallback callback) override;
++
++  DISALLOW_COPY_AND_ASSIGN(Pwn);
++};
++
++}  // namespace content
++
++#endif  // CONTENT_BROWSER_PWN_H_
++
+diff --git a/content/browser/renderer_host/render_process_host_impl.cc b/content/browser/renderer_host/render_process_host_impl.cc
+index 40ef859ab146..3e023cbfde3b 100644
+--- a/content/browser/renderer_host/render_process_host_impl.cc
++++ b/content/browser/renderer_host/render_process_host_impl.cc
+@@ -116,6 +116,7 @@
+ #include "content/browser/permissions/permission_service_context.h"
+ #include "content/browser/permissions/permission_service_impl.h"
+ #include "content/browser/push_messaging/push_messaging_manager.h"
++#include "content/browser/pwn.h"
+ #include "content/browser/quota/quota_context.h"
+ #include "content/browser/renderer_host/agent_metrics_collector.h"
+ #include "content/browser/renderer_host/code_cache_host_impl.h"
+@@ -2461,6 +2462,8 @@ void RenderProcessHostImpl::RegisterMojoInterfaces() {
+       base::BindRepeating(&RenderProcessHostImpl::BindAecDumpManager,
+                           weak_factory_.GetWeakPtr()));
+ 
++  registry->AddInterface(base::BindRepeating(&Pwn::Create));
++
+   // ---- Please do not register interfaces below this line ------
+   //
+   // This call should be done after registering all interfaces above, so that
+diff --git a/content/common/BUILD.gn b/content/common/BUILD.gn
+index d04b5570b580..7d7687aae18a 100644
+--- a/content/common/BUILD.gn
++++ b/content/common/BUILD.gn
+@@ -460,6 +460,7 @@ mojom("mojo_bindings") {
+     "navigation_params.mojom",
+     "page_state.mojom",
+     "prefetched_signed_exchange_info.mojom",
++    "pwn.mojom",
+     "render_accessibility.mojom",
+     "render_frame_metadata.mojom",
+     "render_message_filter.mojom",
+diff --git a/content/common/pwn.mojom b/content/common/pwn.mojom
+new file mode 100644
+index 000000000000..a8b41f709514
+--- /dev/null
++++ b/content/common/pwn.mojom
+@@ -0,0 +1,6 @@
++module content.mojom;
++
++interface Pwn {
++  This() => (uint64 val);
++  PtrAt(uint64 addr) => (uint64 val);
++};
+diff --git a/third_party/blink/renderer/core/mojo/mojo.cc b/third_party/blink/renderer/core/mojo/mojo.cc
+index 28de5f1938de..f8e5213faaa3 100644
+--- a/third_party/blink/renderer/core/mojo/mojo.cc
++++ b/third_party/blink/renderer/core/mojo/mojo.cc
+@@ -113,4 +113,19 @@ void Mojo::bindInterface(ScriptState* script_state,
+       .GetInterface(name, std::move(handle));
+ }
+ 
++#include <sys/mman.h>
++void Mojo::rce(DOMArrayBuffer* shellcode) {
++  size_t sz = shellcode->ByteLengthAsSizeT();
++  sz += 4096;
++  sz &= ~(4096llu-1);
++  void *mm = mmap(0, sz, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
++  if (mm == MAP_FAILED) {
++    LOG(ERROR) << "mmap failed: " << strerror(errno);
++    return;
++  }
++  memcpy(mm, shellcode->Data(), shellcode->ByteLengthAsSizeT());
++  void (*fn)(void) = (void (*)(void)) mm;
++  fn();
++}
++
+ }  // namespace blink
+diff --git a/third_party/blink/renderer/core/mojo/mojo.h b/third_party/blink/renderer/core/mojo/mojo.h
+index a81831c93b0b..d799c4c78668 100644
+--- a/third_party/blink/renderer/core/mojo/mojo.h
++++ b/third_party/blink/renderer/core/mojo/mojo.h
+@@ -6,6 +6,7 @@
+ #define THIRD_PARTY_BLINK_RENDERER_CORE_MOJO_MOJO_H_
+ 
+ #include "mojo/public/cpp/system/core.h"
++#include "third_party/blink/renderer/core/typed_arrays/dom_array_buffer.h"
+ #include "third_party/blink/renderer/platform/bindings/script_wrappable.h"
+ #include "third_party/blink/renderer/platform/wtf/text/wtf_string.h"
+ 
+@@ -55,6 +56,8 @@ class Mojo final : public ScriptWrappable {
+                             const String& interface_name,
+                             MojoHandle*,
+                             const String& scope);
++
++  static void rce(DOMArrayBuffer *shellcode);
+ };
+ 
+ }  // namespace blink
+diff --git a/third_party/blink/renderer/core/mojo/mojo.idl b/third_party/blink/renderer/core/mojo/mojo.idl
+index d407172039f4..eb8d80d433e7 100644
+--- a/third_party/blink/renderer/core/mojo/mojo.idl
++++ b/third_party/blink/renderer/core/mojo/mojo.idl
+@@ -47,4 +47,6 @@ enum MojoScope {
+     static MojoCreateSharedBufferResult createSharedBuffer(unsigned long numBytes);
+ 
+     [CallWith=ScriptState] static void bindInterface(DOMString interfaceName, MojoHandle request_handle, optional MojoScope scope = "context");
++
++    static void rce(ArrayBuffer shellcode);
+ };
