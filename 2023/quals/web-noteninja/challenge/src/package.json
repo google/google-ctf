@@ -18,7 +18,7 @@
     "eslint-config-next": "13.3.4",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.1.0",
-    "next": "13.3.4",
+    "next": "13.5.0",
     "postcss": "8.4.23",
     "puppeteer": "^20.2.0",
     "react": "18.2.0",
