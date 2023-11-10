@@ -10,7 +10,7 @@
         "production": "mix --production"
     },
     "devDependencies": {
-        "postcss": "^8.1.14"
+        "postcss": "^8.4.31"
     },
     "dependencies": {
         "lodash": "^4.17.19",    
