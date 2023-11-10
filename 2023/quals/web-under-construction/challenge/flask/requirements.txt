@@ -12,5 +12,5 @@ Werkzeug==2.2.3
 requests==2.29.0
 gunicorn==20.1.0
 pymysql==1.0.3
-gevent==22.10.2
+gevent==23.9.1
 cryptography==41.0.4
