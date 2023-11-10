@@ -15,7 +15,7 @@
     "dependencies": {
         "lodash": "^4.17.19",    
         "@popperjs/core": "^2.9.2",
-        "axios": "^0.21",
+        "axios": "^1.6",
         "bootstrap": "^5.0.0",
         "jquery": "^3.6",
         "laravel-mix": "^6.0.25",
