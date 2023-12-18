@@ -3,6 +3,7 @@ module crypto-tiramisu
 go 1.16
 
 require (
-	golang.org/x/crypto v0.0.0-20210506145944-38f3c27a63bf // indirect
-	google.golang.org/protobuf v1.26.0 // indirect
+	github.com/golang/protobuf v1.5.0
+	golang.org/x/crypto v0.17.0
+	google.golang.org/protobuf v1.26.0
 )
