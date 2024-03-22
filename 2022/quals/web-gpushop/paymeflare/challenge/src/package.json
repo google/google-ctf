@@ -18,7 +18,7 @@
         "axios": "^0.21",
         "bootstrap": "^5.0.0",
         "jquery": "^3.6",
-        "laravel-mix": "^6.0.25",
+        "laravel-mix": "^6.0.49",
         "resolve-url-loader": "^4.0.0",
         "sass": "^1.35.1",
         "sass-loader": "^12.1.0",
