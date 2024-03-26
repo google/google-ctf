@@ -17,7 +17,7 @@
     "cookie-parser": "^1.4.5",
     "cookie-session": "^1.4.0",
     "ejs": "^3.1.2",
-    "express": "^4.17.1",
+    "express": "^4.19.2",
     "uuid": "^8.0.0"
   }
 }
