@@ -2,7 +2,7 @@
   "dependencies": {
     "@google-cloud/pubsub": "^4.0.0",
     "cookie-parser": "^1.4.3",
-    "express": "^4.16.3",
+    "express": "^4.19.2",
     "forever": "^0.15.3",
     "sse": "0.0.8",
     "uuid": "^3.2.1"
