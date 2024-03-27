@@ -7,7 +7,7 @@
     "cookie-parser": "^1.4.5",
     "csurf": "^1.11.0",
     "ejs": "^3.1.6",
-    "express": "^4.17.1",
+    "express": "^4.19.2",
     "express-mysql-session": "^2.1.6",
     "express-session": "^1.17.2",
     "highwayhash": "^3.1.1",
