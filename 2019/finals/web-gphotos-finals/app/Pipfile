@@ -6,6 +6,6 @@ name = "pypi"
 [packages]
 django = "==2.2.5"
 wand = "==0.5.7"
-gunicorn = "==19.9.0"
+gunicorn = "==22.0.0"
 
 [dev-packages]
