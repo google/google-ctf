@@ -161,9 +161,9 @@ class GenericObject(hitbox.Hitbox):
         if self.x_speed != 0 or self.y_speed != 0:
             self.prev_x = self.x
             self.prev_y = self.y
-            self.move(round(constants.TICK_S * self.x_speed, 5),
+            self.move(round(constants.TICK_S * self.x_speed,5),
                       round(constants.TICK_S *
-                            self.y_speed, 5))
+                            self.y_speed,5))
             logging.debug(f"New position is {self.x, self.y}")
 
     def move(self, x, y):

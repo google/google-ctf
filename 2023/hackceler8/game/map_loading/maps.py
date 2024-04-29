@@ -27,17 +27,21 @@ class MapAttrs(NamedTuple):
     prerender: Optional[arcade.Texture]
     game_mode: GameMode
 
-def load() -> dict:
+def load_debug() -> dict:
+    debug_tilemap = tilemap.BasicTileMap("resources/levels/cctv/cctv_level.tmx")
+    # Can be None
+    debug_prerender = arcade.load_texture("resources/levels/cctv/cctv_level.png")
+    debug_map = MapAttrs(debug_tilemap, debug_prerender, GameMode.MODE_PLATFORMER)
+
     base_tilemap = tilemap.BasicTileMap("resources/maps/hackceler_map.tmx")
 
     spike_tilemap = tilemap.BasicTileMap("resources/maps/spike_map.tmx")
 
     speed_tilemap = tilemap.BasicTileMap("resources/maps/speed_map.tmx")
 
-    boss_tilemap = tilemap.BasicTileMap("resources/maps/boss_map.tmx")
+    logic_tilemap = tilemap.BasicTileMap("resources/maps/logic_map.tmx")
 
-    cctv_tilemap = tilemap.BasicTileMap("resources/levels/cctv/cctv_level.tmx")
-    cctv_prerender = arcade.load_texture("resources/levels/cctv/cctv_level.png")
+    boss_tilemap = tilemap.BasicTileMap("resources/maps/boss_map.tmx")
 
     danmaku_tilemap = tilemap.BasicTileMap("resources/maps/danmaku_map.tmx")
 
@@ -45,13 +49,55 @@ def load() -> dict:
         "base": MapAttrs(base_tilemap, None, GameMode.MODE_SCROLLER),
         "spike": MapAttrs(spike_tilemap, None, GameMode.MODE_SCROLLER),
         "speed": MapAttrs(speed_tilemap, None, GameMode.MODE_SCROLLER),
+        "logic": MapAttrs(logic_tilemap, None, GameMode.MODE_SCROLLER),
+        "danmaku": MapAttrs(danmaku_tilemap, None, GameMode.MODE_SCROLLER),
+        "boss": MapAttrs(boss_tilemap, None, GameMode.MODE_SCROLLER),
+        "cctv": debug_map,
+        "rusty": debug_map,
+        "space": debug_map,
+        "water": debug_map,
+        "debug": debug_map,
+    }
+
+    return maps_dict
+
+def load() -> dict:
+    base_tilemap = tilemap.BasicTileMap("resources/maps/hackceler_map.tmx")
+
+    spike_tilemap = tilemap.BasicTileMap("resources/maps/spike_map.tmx")
+
+    speed_tilemap = tilemap.BasicTileMap("resources/maps/speed_map.tmx")
+
+    logic_tilemap = tilemap.BasicTileMap("resources/maps/logic_map.tmx")
+
+    boss_tilemap = tilemap.BasicTileMap("resources/maps/boss_map.tmx")
+
+    cctv_tilemap = tilemap.BasicTileMap("resources/levels/cctv/cctv_level.tmx")
+    cctv_prerender = arcade.load_texture("resources/levels/cctv/cctv_level.png")
+
+    rusty_tilemap = tilemap.BasicTileMap("resources/levels/rusty/rusty_level.tmx")
+    rusty_prerender = arcade.load_texture("resources/levels/rusty/rusty_level.png")
+
+    space_tilemap = tilemap.BasicTileMap("resources/levels/space/space_level.tmx")
+
+    water_tilemap = tilemap.BasicTileMap("resources/levels/water/water_level.tmx")
+
+    debug_tilemap = tilemap.BasicTileMap("resources/levels/debug/debug_level.tmx")
+
+    danmaku_tilemap = tilemap.BasicTileMap("resources/maps/danmaku_map.tmx")
+
+    maps_dict = {
+        "base": MapAttrs(base_tilemap, None, GameMode.MODE_SCROLLER),
+        "spike": MapAttrs(spike_tilemap, None, GameMode.MODE_SCROLLER),
+        "speed": MapAttrs(speed_tilemap, None, GameMode.MODE_SCROLLER),
+        "logic": MapAttrs(logic_tilemap, None, GameMode.MODE_SCROLLER),
         "danmaku": MapAttrs(danmaku_tilemap, None, GameMode.MODE_SCROLLER),
         "boss": MapAttrs(boss_tilemap, None, GameMode.MODE_SCROLLER),
         "cctv": MapAttrs(cctv_tilemap, cctv_prerender, GameMode.MODE_PLATFORMER),
-        "rusty": MapAttrs(cctv_tilemap, cctv_prerender, GameMode.MODE_PLATFORMER),
-        "space": MapAttrs(cctv_tilemap, cctv_prerender, GameMode.MODE_PLATFORMER),
-        "water": MapAttrs(cctv_tilemap, cctv_prerender, GameMode.MODE_PLATFORMER),
-        "debug": MapAttrs(cctv_tilemap, cctv_prerender, GameMode.MODE_PLATFORMER),
+        "rusty": MapAttrs(rusty_tilemap, rusty_prerender, GameMode.MODE_PLATFORMER),
+        "space": MapAttrs(space_tilemap, None, GameMode.MODE_PLATFORMER),
+        "water": MapAttrs(water_tilemap, None, GameMode.MODE_PLATFORMER),
+        "debug": MapAttrs(debug_tilemap, None, GameMode.MODE_PLATFORMER),
     }
 
     return maps_dict

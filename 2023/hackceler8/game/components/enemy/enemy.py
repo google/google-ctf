@@ -25,7 +25,6 @@ from engine.walk_data import WalkData
 from collections import deque
 from components.projectile import Projectile
 
-
 class Enemy(generics.GenericObject):
     respawn_list = []
     reverse_symbol = arcade.load_texture("resources/enemies/reverse.png")
@@ -96,7 +95,7 @@ class Enemy(generics.GenericObject):
             return
 
         if len(self.walk_data.data) > 0:
-            walk_dir = self.walk_data.walk()
+            walk_dir = self.walk_data.walk(self.game)
             if walk_dir == "E":
                 self.sprite.set_flipped(False)
             if walk_dir == "W":
@@ -124,9 +123,9 @@ class Enemy(generics.GenericObject):
     def _sees_player(self):
         if (self.x - self.game.player.x > 0) != self.sprite.flipped:
             return False
-        x = abs(self.x - self.game.player.x)
-        y = abs(self.y - self.game.player.y)
-        return x * x + y * y < 400 * 400
+        x = abs(self.x-self.game.player.x)
+        y = abs(self.y-self.game.player.y)
+        return x*x+y*y < 400*400
 
     def _visible_to_player(self):
         if abs(self.game.player.x - self.x) > constants.SCREEN_WIDTH + 100:
@@ -137,43 +136,39 @@ class Enemy(generics.GenericObject):
 
     def _shoot(self):
         self.shooting = True
-        angle = math.atan2(self.game.player.x - self.x, self.game.player.y - self.y)
-        speed_x = 10 * math.sin(angle)
-        speed_y = 10 * math.cos(angle)
+        angle = math.atan2(self.game.player.x-self.x, self.game.player.y-self.y)
+        speed_x = 10*math.sin(angle)
+        speed_y = 10*math.cos(angle)
         proj = Projectile(
             coords=hitbox.Point(self.x, self.y), speed_x=speed_x, speed_y=speed_y,
             origin="AI", damage_algo="constant", damage_type="single")
         self.game.combat_system.active_projectiles.append(proj)
 
-    @classmethod
-    def respawn(self):
-        for e in self.respawn_list.copy():
+    def respawn():
+        for e in Enemy.respawn_list.copy():
             if e.respawn_timer > 0:
                 e.respawn_timer -= 1
             elif not e._spawnkill():
                 e.reset()
                 e.sprite.alpha = 0
-                self.respawn_list.remove(e)
+                Enemy.respawn_list.remove(e)
 
     def check_control_inversion(game):
-        if (game.player == None):
+        if(game.player == None):
             return
         inverted = False
         for o in game.objects:
             if o.nametype == "Enemy" and not o.dead and o.control_inverter and o._sees_player():
                 inverted = True
-        if (game.player.inverted_controls != inverted):
+        if(game.player.inverted_controls != inverted):
             game.player.inverted_controls = inverted
 
-
 class StaticJellyfish(Enemy):
-    def __init__(self, coords, name, damage, respawn, respawn_ticks, walk_data,
-                 control_inverter):
+    def __init__(self, coords, name, damage, respawn, respawn_ticks, walk_data, control_inverter):
         self.shocking = False
         super().__init__(coords, tileset_path="resources/enemies/static_jellyfish.tmx",
                          name=name, damage=damage, respawn=respawn,
-                         respawn_ticks=respawn_ticks, walk_data=walk_data,
-                         control_inverter=control_inverter)
+                         respawn_ticks=respawn_ticks, walk_data=walk_data, control_inverter=control_inverter)
         self.sprite.scale = 0.5
         self.max_health = 200
         self._init_health()
@@ -188,16 +183,14 @@ class StaticJellyfish(Enemy):
     def tick(self):
         super().tick()
         # Make blocking once the player moved out of the way.
-        if not self.blocking and not self.get_rect().collides(
-                self.game.player.get_rect()):
+        if not self.blocking and not self.get_rect().collides(self.game.player.get_rect()):
             self.blocking = True
         if self.dead:
             self.modifier = None
             return
 
         # Shock the player if they come near.
-        self.shocking = abs(self.game.player.x - self.x) < 70 and abs(
-            self.game.player.y - self.y) < 70
+        self.shocking = abs(self.game.player.x - self.x) < 70 and abs(self.game.player.y - self.y) < 70
         if self.shocking:
             self.modifier = modifier.HealthDamage(min_distance=80, damage=self.damage)
         else:
@@ -212,14 +205,11 @@ class StaticJellyfish(Enemy):
         else:
             self.sprite.set_animation("idle")
 
-
 class MovingJellyfish(Enemy):
-    def __init__(self, coords, name, damage, respawn, respawn_ticks, walk_data,
-                 control_inverter):
+    def __init__(self, coords, name, damage, respawn, respawn_ticks, walk_data, control_inverter):
         super().__init__(coords, tileset_path="resources/enemies/moving_jellyfish.tmx",
                          name=name, damage=damage, respawn=respawn,
-                         respawn_ticks=respawn_ticks, walk_data=walk_data,
-                         control_inverter=control_inverter)
+                         respawn_ticks=respawn_ticks, walk_data=walk_data, control_inverter=control_inverter)
         self.max_health = 50
         self._init_health()
         self.can_shoot = True
@@ -237,14 +227,11 @@ class MovingJellyfish(Enemy):
             name = "idle"
         super().set_animation(name)
 
-
 class EvilCamera(Enemy):
-    def __init__(self, coords, name, damage, respawn, respawn_ticks, walk_data,
-                 control_inverter):
+    def __init__(self, coords, name, damage, respawn, respawn_ticks, walk_data, control_inverter):
         super().__init__(coords, tileset_path="resources/enemies/camera.tmx",
                          name=name, damage=damage, respawn=respawn,
-                         respawn_ticks=respawn_ticks, walk_data=walk_data,
-                         control_inverter=control_inverter)
+                         respawn_ticks=respawn_ticks, walk_data=walk_data, control_inverter=control_inverter)
         self.max_health = 50
         self._init_health()
         self.can_shoot = True
@@ -256,14 +243,11 @@ class EvilCamera(Enemy):
         ]
         self._update(outline)
 
-
 class Martian(Enemy):
-    def __init__(self, coords, name, damage, respawn, respawn_ticks, walk_data,
-                 control_inverter):
+    def __init__(self, coords, name, damage, respawn, respawn_ticks, walk_data, control_inverter):
         super().__init__(coords, tileset_path="resources/enemies/martian.tmx",
                          name=name, damage=damage, respawn=respawn,
-                         respawn_ticks=respawn_ticks, walk_data=walk_data,
-                         control_inverter=control_inverter)
+                         respawn_ticks=respawn_ticks, walk_data=walk_data, control_inverter=control_inverter)
         self.max_health = 50
         self._init_health()
         self.can_shoot = True
@@ -274,6 +258,8 @@ class Martian(Enemy):
             hitbox.Point(coords.x - 15, coords.y + 22),
         ]
         self._update(outline)
+        if len(walk_data) > 0:
+            self.sprite.set_texture("resources/enemies/martian_float.png")
 
     def set_animation(self, name):
         # No walk anim

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.2" name="logic" tilewidth="32" tileheight="32" tilecount="81" columns="9">
- <image source="logic.png" width="288" height="288"/>
+<tileset version="1.10" tiledversion="1.10.2" name="logic" tilewidth="32" tileheight="32" tilecount="90" columns="9">
+ <image source="logic.png" width="288" height="320"/>
  <tile id="0">
   <properties>
    <property name="animation" value="Buffer-0"/>
@@ -649,5 +649,4 @@
    <frame tileid="80" duration="1000"/>
   </animation>
  </tile>
-
 </tileset>

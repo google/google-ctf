@@ -16,7 +16,7 @@ from collections import defaultdict
 from pathlib import Path
 import logging
 import uuid
-import pickle
+import dill
 import gzip
 
 import arcade
@@ -200,9 +200,6 @@ class BasicTileMap:
         # we assume that only modifiying element (space, water) are in this layer
         logging.debug(layer.size)
         logging.debug(layer.properties)
-        if layer.properties is None:
-            logging.critical("element layer properties cannot be none")
-            return
 
         class _Size:
             def __init__(self, w, h):
@@ -282,8 +279,7 @@ class BasicTileMap:
                         magic_items.Item(coords, layer.properties.get("item_name"),
                                          layer.properties.get("display_name"),
                                          layer.properties.get("color")))
-                    logging.debug(f"Added new object of type "
-                                  f"{layer.properties['item_name']}")
+
 
     def parse_object(self, o, max_y):
         name = o.name
@@ -312,6 +308,7 @@ class BasicTileMap:
 
         elif "npc" in o.name:
             walk_data = o.properties.get("walk_data", "")
+            logging.debug(f"{o.name} || {coords} || {walk_data}")
             self.objs.append(npc_types.NPC_TYPES[o.name](coords, o.name, walk_data))
 
         elif "enemy" in o.name:
@@ -376,9 +373,11 @@ class BasicTileMap:
             # Keep the speed if None
             x_speed = props.get("x_speed", None)
             y_speed = props.get("y_speed", None)
+            usage_limit = props.get("usage_limit", None)
             self.static_objs.append(portal.Portal(coords, o.size, o.name, dest,
                                                   x_speed=x_speed,
-                                                  y_speed=y_speed))
+                                                  y_speed=y_speed,
+                                                  usage_limit=usage_limit))
 
         elif "boss_gate" in o.name:
             self.objs.append(boss_gate.BossGate(coords, o.name))
@@ -412,11 +411,13 @@ class BasicTileMap:
 
         elif o.name == "Logic":
             logging.debug("Adding logic")
+            logging.debug(o)
             logging.debug(o.properties)
-            l = logic.parse_logic(o.properties, coords, self.logic_map, o.size)
+            l = logic.parse_logic(o.properties, coords, self.logic_map, getattr(o, "points", None))
             if l is not None:
                 self.logic_map[l.logic_id] = l
-                self.objs.append(l)
+                if not isinstance(l, logic.PassiveLogicComponent):
+                    self.objs.append(l)
                 logging.debug(f"Added new logic object of type {l.nametype}")
 
     def get_size(self):
@@ -461,4 +462,4 @@ class BasicTileMap:
     def from_mgz(path: str):
         logging.debug(f"Loading mgz map from {path}")
         with gzip.GzipFile(path, "rb") as f:
-            return pickle.load(f)
+            return dill.load(f)

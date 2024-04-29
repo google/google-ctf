@@ -10,6 +10,8 @@
     libGLU
     python3
     python3Packages.virtualenv
+    tiled
     xorg.libX11
   ];
+  runScript = ./.venv-shell.sh;
 }).env

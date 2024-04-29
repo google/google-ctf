@@ -18,7 +18,7 @@ from engine import hitbox
 
 
 class Portal(generics.GenericObject):
-    def __init__(self, coords, size, name, dest, x_speed=None, y_speed=None):
+    def __init__(self, coords, size, name, dest, x_speed=None, y_speed=None, usage_limit=None):
         self.perimeter = [
             hitbox.Point(coords.x, coords.y),
             hitbox.Point(coords.x + size.width, coords.y),
@@ -32,7 +32,23 @@ class Portal(generics.GenericObject):
         self.size = size
         self.x_speed = x_speed
         self.y_speed = y_speed
+        self.usage_count = 0
+        self.usage_limit = usage_limit
+
+    def reset(self):
+        super().reset()
+        self.usage_count = 0
 
     def draw(self):
         r = self.size.width // 2
         arcade.draw_circle_outline(self.x + r, self.y - r, r*1.2, arcade.csscolor.BLUE, border_width=5)
+
+    def deduct_usage(self):
+        if self.usage_limit is None:
+            return True
+
+        if self.usage_count >= self.usage_limit:
+            return False
+
+        self.usage_count += 1
+        return True

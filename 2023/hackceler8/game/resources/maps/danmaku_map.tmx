@@ -88,7 +88,7 @@
  <objectgroup id="5" name="Interactions">
   <object id="40" name="boss" x="640" y="288">
    <properties>
-    <property name="version" value="alpha"/>
+    <property name="version" value="lambda"/>
    </properties>
   </object>
  </objectgroup>

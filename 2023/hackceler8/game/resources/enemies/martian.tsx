@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.2" name="martian" tilewidth="50" tileheight="64" tilecount="10" columns="5">
- <image source="martian.png" width="250" height="128"/>
+<tileset version="1.10" tiledversion="1.10.2" name="martian" tilewidth="50" tileheight="70" tilecount="10" columns="5">
+ <image source="martian.png" width="250" height="140"/>
  <tile id="0">
   <properties>
    <property name="animation" value="shoot"/>

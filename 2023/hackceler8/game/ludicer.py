@@ -15,33 +15,33 @@
 from copy import copy
 from enum import Enum
 from threading import Thread, Lock
-
-import dill
-
-import constants
 import json
 import logging
 import os
-import numpy as np
 import time
 
 import arcade
+import dill
+import numpy as np
 import xxhash
 
+import constants
 from components import textbox
 from components.inventory import Inventory
 from components.llm.llm import Llm
 from components.enemy.enemy import Enemy
 from components.switch import Switch
+from components.magic_items import ItemCollection, Item
 from engine import physics, logic
 from engine.danmaku import DanmakuSystem
 from engine.combat import CombatSystem
 from engine.grenade import GrenadeSystem
 from engine.map_switcher import MapSwitch
 from engine.rng import RngSystem
-from engine.state import check_item_loaded, load_from_savefile
+from engine.state import SaveFile, check_item_loaded
 from map_loading import maps
 from map_loading.maps import GameMode
+from engine.ludifier import Ludifier
 
 from constants import PLAYER_MOVEMENT
 
@@ -58,26 +58,35 @@ COLOR_LIST = [
 
 
 class Ludicer:
-    def __init__(self, net, is_server, debug=True, eager_level_load=True,
-                 load_file='save_state'):
+    def __init__(self, net, is_server, debug=False, eager_level_load=True):
         self.mutex = Lock()
         self.net = net
+
+        # persistent stuff
+        self.items = []
+        self.win_timestamp = 0
+        self.tics = 0
+        self.ready = True
+
         if not is_server and self.net is not None:
+            self.ready = False
             self.setup_client()
         self.is_server = is_server
         self.rand_seed = None
 
-        # persistent stuff
-        self.items = []
-        self.tics = 0
+        self.save_file = SaveFile()
 
-        # If load file exists we can get it from there
-        self.load_file = load_file
-        if self.load_file != "":
-            self.items = load_from_savefile(self.load_file)
+        if is_server:
+            self.load_file = 'save_state'
+            if self.load_file != "":
+                try:
+                    self.items, self.win_timestamp, _ = self.save_file.load(
+                        preload_items=True)
+                except Exception as e:
+                    logging.critical(f"Unable to read file {self.load_file}: {e}")
 
         if debug:
-            self.maps_dict = maps.load()
+            self.maps_dict = maps.load_debug()
         else:
             self.maps_dict = maps.load()
 
@@ -87,6 +96,7 @@ class Ludicer:
         self.arena_mapping = {
             "spike_arena": "spike",
             "speed_arena": "speed",
+            "logic_arena": "logic",
             "boss_arena": "boss",
             "danmaku_arena": "danmaku",
             "purple_arena": "cctv",
@@ -110,6 +120,8 @@ class Ludicer:
 
         # use this for solid, more/less static stuff
         self.objects = []
+        self.global_match_items = None
+        self.get_all_available_items()
 
         # use this for stuff that should never move
         self.static_objs = []
@@ -132,7 +144,8 @@ class Ludicer:
         self.current_mode = None
         self.state_hash = None
         self.cheating_detected = False
-        self.won = False
+
+        self.level_modifier = None
 
         self.inventory = Inventory(self, is_server=self.is_server)
         self.llm = Llm()
@@ -145,6 +158,11 @@ class Ludicer:
 
         self.boss = None
         self.unlocked_doors = set()
+
+        self.boss_llm_exists = False
+        self.boss_danmaku_exists = False
+        self.boss_danmaku_win_time = 0
+        self.boss_llm_win_time = 0
 
         self.prev_display_inventory = False
         self.display_inventory = False
@@ -180,14 +198,25 @@ class Ludicer:
 
             # Soul Grenade
             arcade.key.T,
-
-            # Fast Save
-            arcade.key.SLASH
         }
         self.raw_pressed_keys = set()
         self.pressed_keys = set()
 
+        self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
+        self.jump_sound = arcade.load_sound(":resources:sounds/jump1.wav")
+
         self.setup()
+
+    @property
+    def won(self):
+        # Game is won if the time is neither None nor 0
+        return self.win_timestamp
+
+    @won.setter
+    def won(self, _value):
+        if self.win_timestamp > 0:
+            return
+        self.win_timestamp = time.time()
 
     def dump_state(self):
         h = ""
@@ -197,10 +226,37 @@ class Ludicer:
         h += xxhash.xxh64(str(self.tics)).hexdigest()
         self.state_hash = xxhash.xxh64(h.encode()).hexdigest()
 
-    def dump_items(self):
-        save_string = b'\xfe\xfe'.join([i.dump() for i in self.items] + [str(
-            time.time()).encode()])
-        open('save_state', 'wb').write(save_string)
+    # This section needsto be hardcoded for each match
+    def get_all_available_items(self):
+        self.boss_danmaku_exists = True
+        self.boss_llm_exists = True
+        # Need to add variable items here
+        its = [
+            Item(None, name="key_violet", display_name="Violet key", color="violet",
+                 wearable=False),
+            Item(None, name="key_purple", display_name="Purple key", color="purple",
+                 wearable=False),
+            Item(None, name="key_orange", display_name="Orange key", color="orange",
+                 wearable=False),
+            Item(None, name="key_blue", display_name="Blue key", color="blue",
+                 wearable=False),
+            #Uncomment the one that is not needed
+            Item(None, name="flag_danmaku", display_name="Danmaku flag",
+                 wearable=False),
+            Item(None, name="flag_llm", display_name="LLM flag",
+                 wearable=False),
+        ]
+
+        for i in its:
+            for ci in self.items:
+                if ci.name == i.name:
+                    i.collected_time = ci.collected_time
+
+        ic = ItemCollection(its)
+        if not ic.verify():
+            logging.critical("Duplicate item found, game will exit")
+            exit()
+        self.global_match_items = ic
 
     def play_time_str(self) -> str:
         s = round(self.tics * constants.TICK_S)
@@ -216,6 +272,22 @@ class Ludicer:
         def _process_server_pkgs():
             while True:
                 msg = self.net.recv_one()
+                if b'save_state' in msg:
+                    logging.info(msg)
+                    try:
+                        _save_sate = json.loads(msg.decode())['save_state']
+                    except Exception as e:
+                        logging.critical(f"Failed to parse save state from servert: {e}")
+                        continue
+
+                    items, win_timestamp,_ = self.save_file.parse(_save_sate)
+                    if items is not None:
+                        self.items = items
+                    if win_timestamp is not None:
+                        self.win_timestamp = win_timestamp
+                    logging.info("Loaded save state from server")
+                    with self.mutex:
+                        self.ready = True
                 with self.mutex:
                     self.pkgs_from_server.append(msg)
 
@@ -224,6 +296,7 @@ class Ludicer:
     def recv_from_server(self):
         with self.mutex:
             for msg in reversed(self.pkgs_from_server):
+                logging.critical(f"Recv new msg {msg}")
                 try:
                     d = json.loads(msg.decode())
                 except Exception as e:
@@ -254,6 +327,7 @@ class Ludicer:
         self.grenade_system = None
         self.physics_engine = None
         self.logic_engine = None
+        self.level_modifier = None
         self.current_mode = self.maps_dict[self.current_map].game_mode
 
         match self.current_mode:
@@ -289,7 +363,7 @@ class Ludicer:
             o.reset()
             self.dynamic_artifacts.append(o)
 
-        logging.debug(f"Items before parsing: {self.items}")
+        logging.info(f"Items before parsing: {self.items}")
         for o in self.tiled_map.objs:
             o.reset()
 
@@ -308,6 +382,7 @@ class Ludicer:
                 self.player.base_x_speed = PLAYER_MOVEMENT
                 self.player.base_y_speed = PLAYER_MOVEMENT
                 self.player.regen()
+                self.player.modify(self.items)
 
             elif o.nametype == "Item":
                 if not check_item_loaded(self.items, o):
@@ -319,6 +394,10 @@ class Ludicer:
                 self.objects.append(o)
                 if o.nametype == "Boss":
                     self.boss = o
+                    if self.won:
+                        o.destructing = True
+                        o.destruct_timer = 0
+                        o.dead = True
 
         targets = [o for o in self.objects if o.nametype == "Enemy"]
         self.combat_system = CombatSystem(self, self.tiled_map.weapons, targets=targets)
@@ -329,7 +408,7 @@ class Ludicer:
             self.danmaku_system = DanmakuSystem(self.player, self.boss,
                                                 is_server=self.is_server)
 
-        self.static_objs = self.tiled_map.static_objs
+        self.static_objs = self.tiled_map.static_objs.copy()
         for o in self.static_objs:
             o.reset()
 
@@ -348,9 +427,10 @@ class Ludicer:
     def setup_platformer(self):
         self.setup_scroller()
         self.player.base_y_speed = 320
+        self.level_modifier = Ludifier(self.tiled_map)
 
     def switch_maps(self, new_map):
-        if (new_map == "boss" or new_map == "danmaku") and len(self.unlocked_doors) < 2:
+        if (new_map == "boss" or new_map == "danmaku") and len(self.unlocked_doors) < 4:
             logging.warning(f"Boss area not unlocked yet, r u cheating?")
             return
         if self.current_map == "base" and self.current_map != new_map:
@@ -444,9 +524,32 @@ class Ludicer:
             return
         self.textbox.text_input.text = text
 
+    def _save(self):
+        if self.is_server and not self.save_cooldown and not self.player.dead:
+            logging.info(f"Saving state, items: {self.items}")
+            # save_to_savefile(self.load_file, self)
+            self.save_file.save(self)
+            self.save_cooldown = True
+            self.save_cooldown_timer = constants.SAVE_COOLDOWN
+
+        if self.save_cooldown_timer != 0:
+            self.save_cooldown_timer = max(self.save_cooldown_timer -
+                                           constants.TICK_S, 0)
+        else:
+            self.save_cooldown = False
+
     def tick(self):
+        if not self.ready:
+            return
+
         self.init_random()
         self.rng_system.tick(self.raw_pressed_keys, self.tics)
+
+        self.pressed_keys = self.tracked_keys & self.raw_pressed_keys
+        self.newly_pressed_keys = self.pressed_keys.difference(self.prev_pressed_keys)
+        self.prev_pressed_keys = self.pressed_keys.copy()
+
+        self._save()
 
         if self.cheating_detected or self.won:
             return self.send_game_info()
@@ -457,28 +560,11 @@ class Ludicer:
         if not self.is_server and self.net is not None:
             self.recv_from_server()
         self.dump_state()
-        self.pressed_keys = self.tracked_keys & self.raw_pressed_keys
-        self.newly_pressed_keys = self.pressed_keys.difference(self.prev_pressed_keys)
-        self.prev_pressed_keys = self.pressed_keys.copy()
-
         self.prev_display_inventory = self.display_inventory
         if arcade.key.P in self.newly_pressed_keys and self.textbox is None:
-            self.display_inventory = not (self.display_inventory)
+            self.display_inventory = not self.display_inventory
         if self.display_inventory:
             self.inventory.tick(self.newly_pressed_keys)
-
-        if arcade.key.SLASH in self.newly_pressed_keys and not self.save_cooldown and\
-                not self.player.dead:
-            self.dump_items()
-            self.save_cooldown = True
-            # We introduce a 10 seconds cooldown between saves
-            self.save_cooldown_timer = 10
-
-        if self.save_cooldown_timer != 0:
-            self.save_cooldown_timer = max(self.save_cooldown_timer -
-                                           constants.TICK_S, 0)
-        else:
-            self.save_cooldown = False
 
         if self.display_inventory:
             return self.send_game_info()
@@ -519,7 +605,7 @@ class Ludicer:
             ac.tick()
         self.combat_system.tick(self.pressed_keys, self.newly_pressed_keys, self.tics)
         if self.grenade_system:
-            self.grenade_system.tick(self.newly_pressed_keys, self.tics)
+            self.grenade_system.tick(self.newly_pressed_keys)
         if self.danmaku_system:
             self.danmaku_system.tick(self.pressed_keys)
 
@@ -530,8 +616,16 @@ class Ludicer:
                 self.objects.remove(o)
                 self.physics_engine.remove_generic_object(o)
                 self.tiled_map.objs.remove(o)
-                self.won = True
-                logging.info("Completed the game! Play time: %s" % self.play_time_str())
+                self.gather_items([o.yield_item()])
+                match o.version:
+                    case "lambda":
+                        self.boss_danmaku_win_time = time.time()
+                    case "alpha":
+                        self.boss_llm_win_time = time.time()
+        if self.global_match_items.won_all():
+            logging.info(f"Completed the game! Play time: %s" % self.play_time_str())
+            self.won = True
+            self.save_file.save(self)
         Enemy.respawn()
         Enemy.check_control_inversion(self)
         Switch.check_all_pressed(self)
@@ -549,6 +643,11 @@ class Ludicer:
         if self.physics_engine.exit_on_next:
             self.switch_maps("base")
 
+        if self.level_modifier is not None:
+            new_object = self.level_modifier.tick()
+            if new_object is not None:
+                self.static_objs.append(new_object)
+
         return self.send_game_info()
 
     def init_random(self):
@@ -561,10 +660,11 @@ class Ludicer:
             self.rng_system.seed(self.rand_seed)
             self.rand_seed = None
 
-    def gather_items(self, _items):
-        for i in _items:
+    def gather_items(self, items):
+        for i in items:
             # Make sure we record the time of collection
-            i.collected_time = time.time()
+            self.global_match_items.mark_collected(i.name)
+            # i.collected_time = time.time()
             self.items.append(i)
             if i.wearable:
                 self.player.wear_item(i)
@@ -572,9 +672,19 @@ class Ludicer:
                 logging.debug("Player received a new item!")
                 self.objects.remove(i)
                 self.tiled_map.objs.remove(i)
+        self.player.modify(self.items)
+
+        if self.is_server and not self.player.dead and len(items) > 0:
+            # Save the current progress as soon as an item has been collected
+            logging.info("Saving on account of new item collected")
+            self.save_file.save(self)
+
+            # Refresh the cooldown
+            self.save_cooldown = True
+            self.save_cooldown_timer = constants.SAVE_COOLDOWN
 
     def check_boss_area_unlocked(self):
-        if len(self.unlocked_doors) >= 2:
+        if len(self.unlocked_doors) >= 4:
             logging.info("Player unblocked boss area!")
         else:
             return
@@ -619,6 +729,11 @@ class Ludicer:
                         return
 
                     case "Portal":
+                        if not o.deduct_usage():
+                            logging.info(
+                                "Punished due to exceeding Portal usage limit.")
+                            self.player.dead = True
+
                         logging.info(f"Portal {o.name} teleports to "
                                      f"({o.dest.x}, {o.dest.y}) at tick "
                                      f"{self.tics}")
@@ -633,6 +748,7 @@ class Ludicer:
                     match o.nametype:
                         case "Door":
                             logging.info(f"Collision between player and {o.name}")
+                            arcade.play_sound(self.jump_sound)
                             if o.passthrough(self.items):
                                 logging.info("Player has the key!")
                                 self.unlocked_doors.add(o.unlocker)

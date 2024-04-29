@@ -27,7 +27,6 @@ from constants import SOUL_HP
 from constants import SOUL_SPEED
 from constants import SWING_TICKS
 
-
 class GrenadeSystem:
     ACTIVE_LIMIT = 10
 
@@ -41,6 +40,7 @@ class GrenadeSystem:
 
         # Variable stuff
         self.grenades = []
+        self.tics = 0
 
         self.game = game
 
@@ -48,9 +48,11 @@ class GrenadeSystem:
         for o in self.grenades:
             o.draw()
 
-    def tick(self, newly_pressed_keys, tick):
-        self._maybe_throw_soul(newly_pressed_keys, tick)
-        self._update_grenades(tick)
+
+    def tick(self, newly_pressed_keys):
+        self.tics += 1
+        self._maybe_throw_soul(newly_pressed_keys)
+        self._update_grenades()
 
     def _check_empty(self, player, obj):
         x0 = min(player.get_leftmost_point(), obj.get_leftmost_point())
@@ -58,13 +60,13 @@ class GrenadeSystem:
         y0 = min(player.get_lowest_point(), obj.get_lowest_point())
         y1 = max(player.get_highest_point(), obj.get_highest_point())
         space = hitbox.Hitbox([
-            hitbox.Point(x0 + 1, y1 - 1), hitbox.Point(x1 - 1, y1 - 1),
-            hitbox.Point(x1 - 1, y0 + 1), hitbox.Point(x0 + 1, y0 + 1),
+            hitbox.Point(x0+1, y1-1), hitbox.Point(x1-1, y1-1),
+            hitbox.Point(x1-1, y0+1), hitbox.Point(x0+1, y0+1),
         ])
         cx, cy, nb = self.game.physics_engine._get_collisions_list(space)
         return not len(cx) and not len(cy)
 
-    def _maybe_throw_soul(self, newly_pressed_keys, tick):
+    def _maybe_throw_soul(self, newly_pressed_keys):
         if len(self.grenades) >= self.ACTIVE_LIMIT:
             return
         if self.game.player.dead:
@@ -73,7 +75,7 @@ class GrenadeSystem:
             return
 
         # Swing from 0 deg to 90 deg in 2 secs
-        angle = abs((tick % SWING_TICKS) / SWING_TICKS * 2 - 1) * 90
+        angle = abs((self.tics % SWING_TICKS) / SWING_TICKS * 2 - 1) * 90
         rad = angle / 180 * math.pi
         x_speed, y_speed = math.cos(rad) * SOUL_SPEED, math.sin(rad) * SOUL_SPEED
 
@@ -108,14 +110,14 @@ class GrenadeSystem:
         self.grenades.remove(o)
         self.game.physics_engine.remove_generic_object(o)
 
-    def _update_grenades(self, tick):
+    def _update_grenades(self):
         for p in self.grenades.copy():
             if p.check_oob():
                 self._remove_grenade(p)
                 continue
-            self._check_projectile(p, tick)
+            self._check_projectile(p)
 
-    def _check_projectile(self, p, tick):
+    def _check_projectile(self, p):
         for t in self.targets.copy():
             c, _ = p.collides(t)
             if c:
@@ -131,7 +133,6 @@ class GrenadeSystem:
                 return
         c, _ = self.game.player.collides(p)
         if c:
-            logging.info(f"Regen: {t.health} {tick}")
             self._apply_damage(p, self.game.player)
             self._remove_grenade(p)
 

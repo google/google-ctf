@@ -54,6 +54,14 @@ class Player(generics.GenericObject):
         self.inverted_controls = False
         self.weapons = []
 
+        # modifiers
+        self.speed_multiplier = 1.5
+        self.jump_multiplier = 1
+
+        self.speed_bonus = False
+        self.jump_bonus = False
+        self.health_bonus = False
+
         # Will be overwritten
         self.game = None
 
@@ -104,7 +112,7 @@ class Player(generics.GenericObject):
                 self.change_direction(computed_direction, sprinting)
 
         if self.can_control_movement:
-            self.push_speed = max(0, self.push_speed-125)
+            self.push_speed = max(0, self.push_speed - 125)
         if self.push_speed > 0:
             match self.direction:
                 case self.DIR_N:
@@ -119,13 +127,16 @@ class Player(generics.GenericObject):
     def change_direction(self, direction, sprinting):
         self.direction = direction
 
-        if (self.direction == self.DIR_E or self.direction == self.DIR_W):
-            self.face_towards = direction
-            speed_multplier = 1
+        speed_multplier = 1
+        if not self.platformer_rules or (
+                self.direction == self.DIR_E or self.direction == self.DIR_W):
             if sprinting:
-                speed_multplier = 1.5
+                speed_multplier = self.speed_multiplier
                 self.running = True
-            if (direction == self.DIR_E):
+
+        if self.direction == self.DIR_E or self.direction == self.DIR_W:
+            self.face_towards = direction
+            if direction == self.DIR_E:
                 if "L" in self.allowed_directions:
                     self.x_speed = self.base_x_speed * speed_multplier
                     self.sprite.set_flipped(False)
@@ -138,24 +149,27 @@ class Player(generics.GenericObject):
                         if self.platformer_rules:
                             self.sprite.set_flipped(True)
 
-        if (self.direction == self.DIR_N):
+        if self.direction == self.DIR_N:
             logging.debug("Jumping")
             if self.platformer_rules and self.in_the_air and not self.jump_override:
                 logging.debug("Player in the air")
                 return
             if "U" in self.allowed_directions:
-                self.y_speed = self.base_y_speed
+                if self.platformer_rules:
+                    self.y_speed = self.base_y_speed * self.jump_multiplier
+                else:
+                    self.y_speed = self.base_y_speed * speed_multplier
                 self.last_movement = "up"
                 self.in_the_air = True
             else:
                 logging.error("not allowed")
 
-        if (self.direction == self.DIR_S):
+        if self.direction == self.DIR_S:
             if "D" in self.allowed_directions:
                 if self.in_the_air:
                     if not self.platformer_rules:
                         # This is a hack because we're still clipping through
-                        self.y_speed = -self.base_y_speed
+                        self.y_speed = -self.base_y_speed * speed_multplier
                         self.last_movement = "down"
 
     def update_animation(self):
@@ -222,3 +236,28 @@ class Player(generics.GenericObject):
             if w.equipped and w.charging:
                 return True
         return False
+
+    def modify(self, items):
+        for item in items:
+            self._modify(item.name)
+
+    def _modify(self, item):
+        match item:
+            case 'goggles':
+                if not self.health_bonus:
+                    self.MAX_HEALTH = 200
+                    self.health_bonus = True
+                    self.set_health(self.MAX_HEALTH)
+                    logging.info("Max health permanently set to 200")
+            case 'magnet':
+                pass
+            case 'boots':
+                if not self.speed_bonus:
+                    self.speed_multiplier = 2
+                    self.speed_bonus = True
+                    logging.info("Speed multiplier permanently increased")
+            case 'noogler':
+                if not self.jump_bonus:
+                    self.jump_multiplier = 2
+                    self.jump_bonus = True
+                    logging.info("Jump multiplier permanently increased")

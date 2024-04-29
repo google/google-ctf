@@ -23,7 +23,7 @@ class QuitButton(arcade.gui.UIFlatButton):
         arcade.exit()
 
 
-class Inventory():
+class Inventory:
     def __init__(self, game, is_server=False):
         self.game = game
         self.display_time = ""
@@ -96,7 +96,7 @@ class Inventory():
         self.main_box.add(self.h_box)
         self.stats_box.add(self._stats_text_area(width=400, height=30,
                                                  text="HEALTH:% 3.02f" % self.game.player.health))
-        quit_btn = QuitButton(text="QUIT", width=200,
+        quit_btn = QuitButton(text="QUIT", width=210,
                               style={"font_name": constants.FONT_NAME})
         self.stats_box.add(quit_btn)
         self.stats_box.add(self._stats_text_area(width=440, height=30,

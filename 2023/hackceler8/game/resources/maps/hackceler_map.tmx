@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="80" height="80" tilewidth="16" tileheight="16" infinite="0" nextlayerid="19" nextobjectid="66">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="80" height="80" tilewidth="16" tileheight="16" infinite="0" nextlayerid="19" nextobjectid="83">
  <tileset firstgid="1" source="hackceler_test.tsx"/>
  <tileset firstgid="121" source="hackceler_map.tsx"/>
  <tileset firstgid="607" source="../objects/Fire.tsx"/>
@@ -1097,7 +1097,7 @@
 </data>
  </layer>
  <objectgroup id="5" name="Interactions">
-  <object id="48" name="door_blue" x="640" y="448">
+  <object id="48" name="door_orange" x="640" y="336">
    <point/>
   </object>
   <object id="47" name="door_orange" x="448" y="640">
@@ -1106,7 +1106,7 @@
   <object id="50" name="door_purple" x="832" y="640">
    <point/>
   </object>
-  <object id="49" name="door_violet" x="640" y="832">
+  <object id="49" name="door_violet" x="640" y="864">
    <point/>
   </object>
   <object id="38" name="key_violet" x="250" y="51">
@@ -1140,40 +1140,82 @@
   <object id="52" name="boss_gate" x="640" y="640">
    <point/>
   </object>
-  <object id="54" name="door_orange" x="528" y="336">
+  <object id="54" name="door_purple" x="528" y="336">
    <point/>
   </object>
-  <object id="55" name="door_orange" x="944" y="528">
+  <object id="55" name="door_blue" x="944" y="528">
    <point/>
   </object>
   <object id="56" name="door_orange" x="752" y="944">
    <point/>
   </object>
-  <object id="57" name="door_blue" x="336" y="528">
+  <object id="57" name="door_blue" x="336" y="416">
    <point/>
   </object>
-  <object id="58" name="door_blue" x="944" y="752">
+  <object id="58" name="door_orange" x="944" y="864">
    <point/>
   </object>
-  <object id="59" name="door_blue" x="528" y="944">
+  <object id="59" name="door_orange" x="528" y="944">
    <point/>
   </object>
-  <object id="60" name="door_purple" x="640" y="1056">
+  <object id="60" name="door_orange" x="640" y="1040">
    <point/>
   </object>
-  <object id="61" name="door_purple" x="336" y="768">
+  <object id="61" name="door_violet" x="336" y="768">
    <point/>
   </object>
-  <object id="62" name="door_purple" x="640" y="224">
+  <object id="62" name="door_violet" x="640" y="144">
    <point/>
   </object>
   <object id="63" name="door_violet" x="224" y="640">
    <point/>
   </object>
-  <object id="64" name="door_violet" x="1056" y="640">
+  <object id="64" name="door_blue" x="1056" y="640">
    <point/>
   </object>
-  <object id="65" name="door_violet" x="752" y="336">
+  <object id="65" name="door_violet" x="864" y="336">
+   <point/>
+  </object>
+  <object id="66" name="door_purple" x="336" y="640">
+   <point/>
+  </object>
+  <object id="67" name="door_violet" x="944" y="640">
+   <point/>
+  </object>
+  <object id="70" name="door_blue" x="640" y="944">
+   <point/>
+  </object>
+  <object id="71" name="door_purple" x="416" y="944">
+   <point/>
+  </object>
+  <object id="72" name="door_purple" x="864" y="944">
+   <point/>
+  </object>
+  <object id="73" name="door_purple" x="640" y="1136">
+   <point/>
+  </object>
+  <object id="75" name="door_blue" x="128" y="640">
+   <point/>
+  </object>
+  <object id="76" name="door_blue" x="336" y="880">
+   <point/>
+  </object>
+  <object id="77" name="door_orange" x="944" y="416">
+   <point/>
+  </object>
+  <object id="78" name="door_blue" x="944" y="752">
+   <point/>
+  </object>
+  <object id="79" name="door_orange" x="1152" y="640">
+   <point/>
+  </object>
+  <object id="80" name="door_violet" x="416" y="336">
+   <point/>
+  </object>
+  <object id="81" name="door_purple" x="752" y="336">
+   <point/>
+  </object>
+  <object id="82" name="door_purple" x="640" y="240">
    <point/>
   </object>
  </objectgroup>
@@ -1185,7 +1227,7 @@
   <object id="8" name="orange_arena" type="Wall" x="978.667" y="95.3332" width="208" height="206.667"/>
   <object id="9" name="violet_arena" type="Wall" x="978.667" y="983.333" width="208" height="206.667"/>
   <object id="10" x="1118.67" y="262.667"/>
-  <object id="16" name="zone_a1" x="363.469" y="94.6667" width="243.198" height="209.301"/>
+  <object id="16" name="logic_arena" type="Wall" x="363.469" y="94.6667" width="243.198" height="209.301"/>
   <object id="17" name="zone_a2" x="673.333" y="94.9208" width="241.333" height="206.412"/>
   <object id="18" name="zone_b2a" x="672" y="364.794" width="79.7608" height="172.802"/>
   <object id="19" name="zone_b3" x="980" y="366.928" width="202.127" height="238.405"/>
@@ -1201,6 +1243,12 @@
   <object id="31" name="zone_b2b" x="742.659" y="364.524" width="174.675" height="245.341"/>
   <object id="32" name="danmaku_arena" x="640" y="559.603" width="95.745" height="200"/>
   <object id="40" name="boss_arena" x="544" y="560" width="95.745" height="200"/>
+  <object id="69" name="door_blue" x="640" y="464">
+   <point/>
+  </object>
+  <object id="74" name="door_violet" x="336" y="528">
+   <point/>
+  </object>
  </objectgroup>
  <objectgroup id="3" name="Player">
   <object id="4" name="Player" type="Player" x="64" y="64">
@@ -1212,7 +1260,7 @@
   </object>
   <object id="39" name="snake_npc" x="640" y="1216">
    <properties>
-    <property name="walk_data" value="N100,2000,S100,E220,2000,W220"/>
+    <property name="walk_data" value="N20,2000,S20,E220,2000,W220"/>
    </properties>
   </object>
   <object id="40" name="bark_npc" x="944" y="224"/>

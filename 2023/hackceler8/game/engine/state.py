@@ -11,34 +11,69 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import logging
 import dill
+import json
+import logging
+import os
+import time
 
-from components.magic_items import Item, load_from_save
+from components.magic_items import Item, load_item_from_save
 
 
-def load_from_savefile(load_file):
-    loaded_items = []
-    logging.info(f"Loading from save, using save_file {load_file}")
-    try:
-        parsed = open(load_file, 'rb').read().split(b'\xfe\xfe')
-    except Exception as e:
-        logging.critical(f"Unable to load file {load_file}: {e}")
-        return loaded_items
-    ts = parsed[-1]
-    logging.info(f"Time of save is {parsed[-1]}")
-    if len(parsed) == 1:
-        logging.info("No items in save")
-        return loaded_items
-    items_raw = parsed[:-1]
-    items_parsed = [dill.loads(i) for i in items_raw]
-    logging.info(items_parsed)
-    logging.info(f"Loading a total of {len(parsed) - 1} objects.")
-    for it in items_parsed:
-        logging.info(f"Loading item {it[1:]}")
-        loaded_items.append(load_from_save(*it[1:]))
-    logging.info("Load complete!")
-    return loaded_items
+class SaveFile:
+    def __init__(self, filename='save_state'):
+        self.filename = filename
+
+    def save(self, game):
+        logging.info("Dumping save")
+        tmp_save_file = f"{self.filename}.tmp"
+
+        d = {}
+        for i in game.global_match_items.dump():
+
+            d[i["name"]] = i
+        _save = {
+            'items': d,
+            'save_time': time.time(),
+            'win_time': game.win_timestamp,
+        }
+        if game.boss_llm_exists:
+            _save['boss_llm_time'] = game.boss_llm_win_time
+        if game.boss_danmaku_exists:
+            _save['boss_llm_time'] = game.boss_danmaku_win_time
+
+        with open(tmp_save_file, 'w') as f:
+            f.write(json.dumps(_save))
+        os.replace(tmp_save_file, self.filename)
+
+    def load(self, preload_items=False):
+        sf = open(self.filename)
+        current_save = sf.read()
+        sf.close()
+        payload = json.loads(current_save)
+        for k in ['items', 'win_time', 'save_time']:
+            if k not in payload:
+                logging.critical(f"Missing property {k} in save file")
+                return None
+        if not preload_items:
+            return payload
+        return self.parse(payload)
+
+    @staticmethod
+    def parse(payload):
+        if payload['win_time'] > 0:
+            logging.info("Player already won")
+        else:
+            logging.info("Player has not won yet")
+
+        _items = []
+        for _i in payload['items']:
+            i = payload['items'][_i]
+            it = load_item_from_save(i['name'], i['display_name'], i['color'],
+                                     i['wearable'], i['collected_time'])
+            if it.collected_time > 0:
+                _items.append(it)
+        return _items, payload['win_time'], payload['save_time']
 
 
 def check_item_loaded(items: list[Item], item) -> bool:

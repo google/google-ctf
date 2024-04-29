@@ -71,7 +71,7 @@ class Npc(generics.GenericObject):
             self.sprite.set_animation(f"idle-{direction}")
             return
 
-        walk_dir = self.walk_data.walk()
+        walk_dir = self.walk_data.walk(self.game)
         match walk_dir:
             case "I":
                 self.sprite.set_animation(f"idle-{direction}")

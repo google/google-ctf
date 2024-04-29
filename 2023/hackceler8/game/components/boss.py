@@ -16,6 +16,7 @@ import logging
 import pytiled_parser
 
 from components.explosion import Explosion
+from components.magic_items import Item
 from engine import generics
 from engine import hitbox
 import constants
@@ -123,3 +124,14 @@ class Boss(generics.GenericObject):
             super().draw()
         for e in self.explosions:
             e.draw()
+
+    def yield_item(self):
+        match self.version:
+            case "lambda":
+                return Item(coords=None,
+                            name="flag_danmaku",
+                            display_name="Danmaku flag")
+            case "alpha":
+                return Item(coords=None,
+                            name="flag_llm",
+                            display_name="LLM flag")

@@ -57,11 +57,13 @@ def load_spritesheet(tileset, flipped: bool, flashing: bool, repeat_size):
                 # Turn non-transparent pixels white.
                 img = texture.image.convert('RGBA')
                 width, _ = img.size
-                for i, px in enumerate(img.getdata()):
-                    if px[3] > 0:
-                        xx = i % width
-                        yy = i // width
-                        img.putpixel((xx, yy), (255, 255, 255, 255))
+                def flash_func(pixel):
+                    if pixel > 0:
+                        return 255
+                    else:
+                        return 0
+
+                img = Image.eval(img, flash_func)
                 texture = arcade.Texture(
                     name=f"{tileset.image},{x},{y},{flashing},{flipped}",
                     image=img)
