@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="1" height="1" tilewidth="24" tileheight="24" infinite="0" nextlayerid="3" nextobjectid="1">
+ <tileset firstgid="1" source="coin.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="1" height="1" opacity="0">
+  <data encoding="csv">
+1
+</data>
+ </layer>
+ <imagelayer id="2" name="Image Layer 1" offsetx="-1.5" offsety="-2">
+  <image source="coin.png" width="24" height="24"/>
+ </imagelayer>
+</map>

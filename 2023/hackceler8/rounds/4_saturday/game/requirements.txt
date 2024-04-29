@@ -1,0 +1,5 @@
+arcade >= 2.6.17
+numpy >= 1.25.2
+xxhash >= 3.3.0
+dill == 0.3.7
+google-generativeai == 0.1.0
