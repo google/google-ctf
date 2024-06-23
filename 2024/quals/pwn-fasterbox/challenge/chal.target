@@ -1,0 +1,6 @@
+[Unit]
+Description=Chal target
+Requires=sysinit.target
+Wants=chal.service
+After=sysinit.target
+AllowIsolate=yes

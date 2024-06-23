@@ -1,0 +1,4 @@
+I am convinced that you have the plaintext, so I am willing to send you once more.
+Here is the flag: CTF{wh0_w1l1_b3_us1n9_md5_f0r_h4sh1n9_1n_2024}.
+
+Congratulations!

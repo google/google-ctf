@@ -1,0 +1,9 @@
+{
+  "name": "session",
+  "value": "ADMIN_SESSION_ID",
+  "domain": "DOMAIN_SET_IN_DOCKERFILE",
+  "url": "https://DOMAIN_SET_IN_DOCKERFILE/",
+  "path": "/",
+  "httpOnly": true,
+  "secure": true
+}

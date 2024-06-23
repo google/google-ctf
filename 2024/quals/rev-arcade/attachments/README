@@ -1,0 +1,5 @@
+We found a dusty cartridge from an old arcade machine, how can we play it?
+
+Run with MAME:
+
+mame -hashpath hash -rp roms -nocoinlock -noautosave -skip_gameinfo neogeo gctf

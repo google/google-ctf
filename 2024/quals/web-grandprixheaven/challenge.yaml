@@ -1,0 +1,71 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: grandprixheaven
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+    ports:
+      - protocol: "HTTPS"
+        targetPort: 1337
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/grandprixheaven-healthcheck:48d7af1d818cf8b8b40a5cd4a1145f4712c371acd27ea29473b754072c19f1bc
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"
+            env:
+              - name: XSSBOT_HOST
+                value: "grandprixheaven-bot"
+              - name: XSSBOT_PORT
+                value: "1337"
+              - name: DB_HOST
+                value: "10.6.96.4"
+              - name: DB_PORT
+                value: "5432"
+              - name: DB_USER
+                value: "grandprix"
+              - name: DB_PASS
+                valueFrom:
+                  secretKeyRef:
+                    name: grandprixheaven-secret
+                    key: DB_PASS
+  allowConnectTo:
+    - grandprixheaven-bot
+  image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/grandprixheaven-challenge:becc77a3fabe068d2f100483cf6fa29ef97f0752a2157843878ccb998c1b396d
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: grandprixheaven-sql-access
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: grandprixheaven
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 10.6.96.4/32
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grandprixheaven-secret
+stringData:
+  DB_PASS: "/GK5JTOxMVyg1K(("

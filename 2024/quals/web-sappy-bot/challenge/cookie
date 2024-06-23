@@ -1,0 +1,10 @@
+{
+  "name": "flag",
+  "value": "CTF{parsing_urls_is_always_super_tricky}",
+  "domain": "DOMAIN_SET_IN_DOCKERFILE",
+  "url": "https://DOMAIN_SET_IN_DOCKERFILE/",
+  "path": "/",
+  "httpOnly": false,
+  "secure": true,
+  "sameSite": "None"
+}

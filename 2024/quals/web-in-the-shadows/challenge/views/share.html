@@ -1,0 +1,47 @@
+<!--
+ Copyright 2024 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+{{ template "header.html" . }}
+<script nonce="{{ .Nonce }}" src="https://www.google.com/recaptcha/api.js?render={{ .RecaptchaSiteKey  }}"></script>
+<script nonce="{{ .Nonce }}">
+  window.RECAPTCHA_SITE_KEY = "{{ .RecaptchaSiteKey }}"
+</script>
+<script type="module" src="js/share.js" nonce="{{ .Nonce }}"></script>
+
+  <div class="flex flex-col gap-2">
+    <h1 class="text-7xl text-red-600 font-['Jacquard_24'] text-center pb-4">
+      👻 shared message... 👻
+    </h1>
+
+    <untrusted-content
+      class="bg-black block p-4 border border-blue-200 font-[Lugrasimo] text-gray-200"
+      html="{{ .HTML }}"
+    ></untrusted-content>
+    <h2 class="text-5xl text-red-600 font-['Jacquard_24']">Share with admin</h2>
+    <p class="leading-6 text-justify tracking-widest">
+      If your heart deems this message worthy, allow it a greater purpose. Press
+      the button below, and your sentiment shall drift toward the ever-present
+      admin who oversees this space.
+    </p>
+    <button
+      class="text-4xl text-center text-red-600 bg-blue-300 p-2 rounded shadow font-['Jacquard_24'] shadow-blue-200 transition-all hover:bg-blue-400"
+      id="share-with-admin"
+      target="_blank"
+    >
+      Share with admin
+    </button>
+  </div>
+</body>

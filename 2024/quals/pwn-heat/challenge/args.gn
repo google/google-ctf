@@ -1,0 +1,4 @@
+is_debug=false
+v8_enable_memory_corruption_api=true 
+dcheck_always_on=false
+symbol_level=0

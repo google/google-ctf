@@ -1,0 +1,9 @@
+{
+  "name": "flag",
+  "value": "CTF{Car_go_FAST_hEART_Go_FASTER!!!}",
+  "domain": "DOMAIN_SET_IN_DOCKERFILE",
+  "url": "http://DOMAIN_SET_IN_DOCKERFILE/",
+  "path": "/",
+  "httpOnly": false,
+  "secure": true
+}

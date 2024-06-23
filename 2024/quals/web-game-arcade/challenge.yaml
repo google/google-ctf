@@ -1,0 +1,59 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: game-arcade
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+    ports:
+      - protocol: "HTTPS"
+        targetPort: 1337
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/game-arcade-healthcheck:ec7dc45157384fa1986ba12834c76214865b63481ff3b25aedc0df41aef70e02
+  allowConnectTo:
+    - game-arcade-bot
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"
+            env:
+              - name: DOMAIN
+                value: game-arcade-web.2024.ctfcompetition.com
+              # - name: DOMAIN
+              #   value: localhost:1337
+              - name: CAPTCHA_SITE_KEY
+                value: 6Le1lvEpAAAAAD64HPS1Zdi_mtFk_3ej8ndZweFk
+              - name: CAPTCHA_SECRET_KEY
+                value: 6Le1lvEpAAAAAHiLYW5zUsawwCLXn3nIgi69fcWo
+              - name: NO_CAPTCHA
+                value: fe324f5b3cfd662a47fdbcaf4d4b2dc3
+              - name: XSSBOT_DOMAIN
+                value: "game-arcade-bot"
+  image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/game-arcade-challenge:74e5b4eea4cfa7f0cf09e5fd2899cb81dfe2833ddeb08d1759a5c7c4d944b410

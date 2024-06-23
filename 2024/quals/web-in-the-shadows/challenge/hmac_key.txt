@@ -1,0 +1,2 @@
+This is a file with an HMAC key. Hopefully nobody will guess its contents.
+c1230d0eac622ce2b66a03a37072ab9c85723350fad040fbbb61953292e00eb17e383cd463d18ded82f1d0bfb40b5323

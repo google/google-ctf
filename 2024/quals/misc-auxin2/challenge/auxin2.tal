@@ -1,0 +1,85 @@
+( Copyright 2024 Google LLC )
+( )
+( Licensed under the Apache License, Version 2.0 <the "License">; )
+( you may not use this file except in compliance with the License. )
+( You may obtain a copy of the License at )
+( )
+(     https://www.apache.org/licenses/LICENSE-2.0 )
+( )
+( Unless required by applicable law or agreed to in writing, software )
+( distributed under the License is distributed on an "AS IS" BASIS, )
+( WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. )
+( See the License for the specific language governing permissions and )
+( limitations under the License. )
+
+|00 @System &vector $2 &expansion $2 &wst $1 &rst $1 &metadata $2 &r $2 &g $2 &b $2 &debug $1 &state $1
+|10 @Console &vector $2 &read $1 &pad $4 &type $1 &write $1 &error $1
+
+( main )
+|0100
+    ;meta .System/metadata DEO2
+    .Console/type DEI #00 EQU ?fail ( fail if no argument )
+    ;console_vec .Console/vector DEO2
+    BRK
+
+@meta 00 "auxin2 0a
+    "Google 20 "CTF 20 "2024 00
+    00
+
+@console_vec
+    .Console/type DEI
+    DUP #02 EQU ?&process_arg_char ( argument )
+    DUP #04 EQU ?run_shellcode ( argument end )
+    BRK
+
+    &process_arg_char
+    .Console/read DEI
+
+    ( convert from hex )
+    #30 SUB DUP #0a LTH ?&digit ( 0-9 )
+    #27 SUB ( a-f )
+    &digit
+
+    [ LIT &curbyte $1 ] #40 SFT ORA DUP ,&curbyte STR
+    [ LIT &nibble $1 ] DUP #01 EOR ,&nibble STR
+    ?{ POP BRK }
+
+    ( 2 chars processed, store byte in shellcode )
+    
+    ( ban lower nibble 0,2,3,6,7,e )
+    DUP #0f AND
+    DUP #00 EQU ?fail
+    DUP #02 EQU ?fail
+    DUP #03 EQU ?fail
+    DUP #06 EQU ?fail
+    DUP #07 EQU ?fail
+    DUP #0e EQU ?fail
+    POP
+
+    [ LIT2 &index $2 ] ;shellcode ADD2 STA
+    ,&index LDR2 INC2 ,&index STR2
+    BRK
+
+( util stuff, needs to be before shellcode so it can be cleared )
+
+@fail
+    LIT "N .Console/write DEO
+    LIT "o .Console/write DEO
+    LIT ". .Console/write DEO
+    #0a .Console/write DEO
+    #01 .System/state DEO
+    BRK
+
+@memset [
+    00         ( opcode )
+    =shellcode ( length )
+    0000       ( bank )
+    0000       ( addr )
+    00         ( value )
+]
+
+@run_shellcode
+    ( clear everything except shellcode )
+    ;memset .System/expansion DEO2
+
+@shellcode

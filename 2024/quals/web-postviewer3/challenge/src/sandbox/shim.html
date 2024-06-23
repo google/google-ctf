@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!--
+ Copyright 2024 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Sandbox iframe</title>
+    </head>
+    <body>
+        <script>
+            const HASH_REGEXP = /^sbx-([a-z0-9]{50})[.]/;
+            const PRODUCT_REGEXP = /[/]([a-z0-9_-]*)[/]shim.html/;
+            let FILE_HASH, PRODUCT
+
+            function _throw(err){
+              document.body.innerText = err;
+              throw Error(err);
+            }
+
+            try{
+              FILE_HASH = HASH_REGEXP.exec(location.host)[1];
+            }catch(e){
+              _throw("Incorrect hash");
+            }
+
+            try{
+              PRODUCT = PRODUCT_REGEXP.exec(location.pathname)[1];
+            }catch(e){
+              _throw("Incorrect product");
+            }
+
+            const TRUSTED_ORIGIN = new URL(location.href).searchParams.get('o');
+            if(!/^https?:\/\//.test(TRUSTED_ORIGIN)) {
+                _throw("Untrusted Origin");
+            }
+
+            function arrayToBase36(arr) {
+              return arr
+                .reduce((a, b) => BigInt(256) * a + BigInt(b), BigInt(0))
+                .toString(36);
+            }
+
+            async function calculateHash(...strings){
+              const encoder = new TextEncoder();
+              const string = strings.join('');
+              const hash = await crypto.subtle.digest('SHA-256', encoder.encode(string));
+              return arrayToBase36(new Uint8Array(hash)).padStart(50, '0').slice(0, 50);
+            }
+
+            window.onmessage = async (e) => {
+                if(e.origin !== TRUSTED_ORIGIN){
+                    _throw("Wrong origin");
+                }
+                if (e.data.body === undefined || !e.data.mimeType) {
+                    _throw("No content to render");
+                };
+
+                const {body, salt, mimeType} = e.data;
+                [body, salt, mimeType, PRODUCT, TRUSTED_ORIGIN].forEach(e=>{
+                  if (typeof e !== 'string') {
+                    _throw(`Expected '${e}' to be a string.`);
+                  }
+                });
+                const hash = await calculateHash(body, PRODUCT, TRUSTED_ORIGIN, salt);
+                if (hash !== FILE_HASH) {
+                  _throw(`Expected hash: ${hash}`);
+                }
+
+                const blob = new Blob([body], { type: mimeType });
+                window.onmessage = null;
+                e.source.postMessage('blob loaded', e.origin);
+                location.replace(URL.createObjectURL(blob));
+            };
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,36 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# Human readable task name
+name: McEliece
+# Long form description.
+description: |+
+  Mceliece cryptosystem was developed in 1978 and has resisted cryptanalysis so far.
+  Lets make allies with better error correcting codes which may call ease on the sizes of keys.
+
+  NOTE: The .sobj files were generated using Sage 10.4. It should be fine to use Sage 9.7 or onwards to parse the files.
+# The flag
+flag: CTF{1f_0nly_th3r3_w45_50m3_c0d3_1nd1st1ngu15h4bl3_fr0m_r4nd0mn355_70c2decd2dd58446e825}
+# Task category. (one of hw, crypto, pwn, rev, web, net, misc)
+category: crypto
+# === the fields below will be filled by SRE or automation ===
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# host/port for non-web challenges
+host: ''
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true
