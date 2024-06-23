@@ -183,7 +183,7 @@ After winning the race and hosting the exploit at `storage.googleapis.com` the
 players could access the shimIframe (because it's same-origin), read the inner
 iframe blob src, fetch it and read the flag.
 
-You can check out the full [exploit](soultion/solve.html), which is also thoroughly commented.
+You can check out the full [exploit](solution/solve.html), which is also thoroughly commented.
 
 
 ## Closing thoughts
