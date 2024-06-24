@@ -1,0 +1,1 @@
+../challenge/build_image.dockerfile

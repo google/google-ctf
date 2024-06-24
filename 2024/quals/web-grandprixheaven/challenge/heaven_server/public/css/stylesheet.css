@@ -1,0 +1,152 @@
+/**
+ * Copyright 2024 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@font-face {
+    font-family: RacerGirl;
+    src: url(fonts/RacingSansOne-Regular.ttf);
+}
+
+@font-face {
+    font-family: Robo;
+    src: url(fonts/RobotoMono-VariableFont_wght.ttf);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+html, body {
+    background-image: linear-gradient(#eeefff, #1e3f66);
+    background-attachment: fixed;
+    font-family: Robo;
+    font-size: 1rem;
+    line-height: 2;
+    height: 100%;
+    text-transform: uppercase;
+}
+
+H1 {
+    border-bottom: 8px solid #940000;
+    font-size: 70px;
+}
+
+H1, H2, H3 { 
+    text-align: center;
+    color: #940000; 
+    font-family: RacerGirl;
+}
+
+a {
+  text-decoration: none;
+  color: #742424;
+}
+
+li {
+  color: #af4458;
+}
+
+.arrow i {
+  display: none;
+}
+
+.arrow {
+  position:relative;
+	display: block;
+  color: #5e1919;
+}
+
+.arrow:hover {
+  cursor: pointer;
+  background-color: rgba(0,0,0,0.2);
+}
+
+.arrow:hover i { 
+  display: block;
+  position: absolute;
+  top: 0.50em; 
+  left: -6em;
+}
+
+.car-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    padding: 40px;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 10px;
+  }
+  
+.car-box h2 {
+    margin: 0 0 30px;
+    padding: 0;
+    color: #940000;
+    text-align: center;
+  }
+  
+.car-box .user-box {
+    position: relative;
+  }
+  
+.car-box .user-box input {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #940000;
+    margin-bottom: 30px;
+    border: none;
+    border-bottom: 1px solid #fff;
+    outline: none;
+    background: transparent;
+  }
+
+.car-box .user-box label {
+    position: absolute;
+    top:0;
+    left: 0;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #940000;
+    pointer-events: none;
+    transition: .5s;
+  }
+  
+.car-box .user-box input:focus ~ label,
+.car-box .user-box input:valid ~ label {
+    top: -20px;
+    left: 0;
+    color: #7d2929;
+    font-size: 12px;
+  }
+  
+.car-box form a {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    color: #5a1d1f;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    margin-top: 40px;
+    letter-spacing: 4px
+  }
+  

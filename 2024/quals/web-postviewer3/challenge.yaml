@@ -1,0 +1,59 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: postviewer3
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+    ports:
+      - protocol: "HTTPS"
+        targetPort: 1337
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/postviewer3-healthcheck:99f0d7a8887f47a6b99d66139695486270fa78cf76791567b3ccd495726bf226
+  allowConnectTo:
+    - postviewer3-bot
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: 'challenge'
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"
+            env:
+              - name: DOMAIN
+                value: postviewer3-web.2024.ctfcompetition.com
+              # - name: DOMAIN
+              #   value: localhost:1337
+              - name: CAPTCHA_SITE_KEY
+                value: 6Le1lvEpAAAAAD64HPS1Zdi_mtFk_3ej8ndZweFk
+              - name: CAPTCHA_SECRET_KEY
+                value: 6Le1lvEpAAAAAHiLYW5zUsawwCLXn3nIgi69fcWo
+              - name: NO_CAPTCHA
+                value: 1vbty8mhizeja1tiqddq
+              - name: XSSBOT_DOMAIN
+                value: "postviewer3-bot"
+  image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/postviewer3-challenge:33b57d0ca0cec532490909aab89a206d3f26e83295ea5fe7aaeecb91c534a1f2

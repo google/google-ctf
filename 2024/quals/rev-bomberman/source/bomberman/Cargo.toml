@@ -1,0 +1,17 @@
+[package]
+name = "bomberman"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bevy = { version = "0.11", features = ["wayland", "x11", "png", "bevy_core_pipeline", "bevy_asset", "bevy_render", "bevy_sprite"], default-features = false }
+rand = "0.8.5"
+serde = { version = "1.0.200", features = ["derive"] }
+serde_repr = "0.1.19"
+serde_cbor = "0.10"
+
+[profile.dev]
+opt-level = 0
+
+[profile.dev.package."*"]
+opt-level = 3

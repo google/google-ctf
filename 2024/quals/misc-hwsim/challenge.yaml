@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: hwsim
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/hwsim-healthcheck:ab00794ef31b4afd1c35121c723b2a0b3e27edc079a49c156a01c76e2f98cf04
+  image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/hwsim-challenge:8ba7436ffe694dd70d1a3ce20f643a189ee96afb957150e15cf7926b05609f35
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

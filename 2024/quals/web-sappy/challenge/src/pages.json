@@ -1,0 +1,18 @@
+{
+  "floating-point": {
+    "title": "0.1 + 0.2 != 0.3",
+    "html": "Because of the underyling floating point arithmetic, in JavaScript 0.1+0.2 is <b>not</b> equal to 0.3!"
+  },
+  "document-all": {
+    "title": "document.all",
+    "html": "document.all is an instance of Object, you can check it. But then: <code>typeof document.all === 'undefined'</code>!"
+  },
+  "plus-operator": {
+    "title": "plus operator",
+    "html": "Here's a little riddle: what is the result of <code>[]+{}</code>? It's <code>\"[object Object]\"</code>!"
+  },
+  "no-lowercase": {
+    "title": "no lowercase characters",
+    "html": "Do you know it's possible to call arbitrary JS code without using lowercase characters? Here I am calling <code>console.log(1)</code>: <code>[]['\\143\\157\\156\\163\\164\\162\\165\\143\\164\\157\\162']['\\143\\157\\156\\163\\164\\162\\165\\143\\164\\157\\162']('\\143\\157\\156\\163\\157\\154\\145\\56\\154\\157\\147\\50\\61\\51')()    </code>"
+  }
+}

@@ -1,0 +1,34 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: in-the-shadows-bot
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: false
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/in-the-shadows-bot-healthcheck:eb302874f4aa0d18fbf68cc5da293c486cb26936d7e7daa00ddd7601ebc2f63e
+  # You can allow the bot to connect to other challenges internally.
+  # This can be useful during testing so that you don't have to make your
+  # challenge public.
+  # The challenge will be reachable at $name.default.svc.cluster.local or
+  # simply at $name with the default k8s search list.
+  allowConnectTo:
+    - in-the-shadows
+  image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/in-the-shadows-bot-challenge:778aa7029535c9f1897b0f76fced1c6ca7a37be1aa4ead5cd3b4b3b7db7683f8
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 8
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "4Gi"
+                cpu: "1"

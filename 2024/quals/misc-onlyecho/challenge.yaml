@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: onlyecho
+spec:
+  deployed: true
+  powDifficultySeconds: 5
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/onlyecho-healthcheck:799bd3569cb659fc8beba9b4a0b9ebaa7bb63ce031d3bdcdce5b481ddd8d3617
+  image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/onlyecho-challenge:2189442cab9b27b68fc1ec4854151e02824451dcd06fc0909d54369bc7f26645
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "4Gi"
+                cpu: "1.5"

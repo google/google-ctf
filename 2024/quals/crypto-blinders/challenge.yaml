@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: blinders
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/blinders-healthcheck:b74f235ef533a30577b1202ed6fa1a265600cffade05289023cf5aef98125693
+  image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/blinders-challenge:3741ad9168e282c09b34af5a75f5ec8bd57ba71b41697b61718a0ee2add53469
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

@@ -1,0 +1,9 @@
+[Unit]
+Description=Chal service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/root/chal.sh
+ExecStartPost=/usr/bin/systemctl poweroff

@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: heat
+spec:
+  deployed: true
+  powDifficultySeconds: 5
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/heat-healthcheck:f07820f8ffb68e624c1bfec1f318ebcd34e75d3daa594a76f046f9d327e05ad8
+  image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/heat-challenge:6a72ac99cdbef9bcaffa602322af78209489995ff4eeaf3b80de3a134e8c3d22
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

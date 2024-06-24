@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: encrypted-runner
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/encrypted-runner-healthcheck:7fb0e2de33a011588c32e3c5c1991c25c858a61f65557d4bbe53c17466cf13d9
+  image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/encrypted-runner-challenge:46a165de807bf17c0951324e296c071cf502c00141951df9aab18d66e738cdb7
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="output"></div>
+    <script src="./static/sap.js"></script>
+    <script type="module">
+      const INTERVAL = 100;
+      let lastHeight = -1;
+      setInterval(() => {
+        const height = document.body.clientHeight;
+        if (height === lastHeight) return;
+        lastHeight = height;
+        parent.postMessage(
+          JSON.stringify({
+            method: "heightUpdate",
+            height: height,
+          }),
+          "*"
+        );
+      }, INTERVAL);
+    </script>
+  </body>
+</html>

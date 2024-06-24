@@ -1,0 +1,1 @@
+CTF{we_have_no_idea_on_related_key_attacks}

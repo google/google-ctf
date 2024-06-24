@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: idea
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/idea-healthcheck:ece3f9af4b551e7a5e03cbfb2dfb5e11550659b6af000a15edf91cd8d1dbda85
+  image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/idea-challenge:716712e2b70681d41cecd007c8149c6224d07c2c43aa6289c357b6e26c3cb5bf
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"

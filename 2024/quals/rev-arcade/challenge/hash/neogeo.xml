@@ -1,0 +1,48 @@
+<!--
+Copyright 2024 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<?xml version="1.0"?>
+<!DOCTYPE softwarelist SYSTEM "softwarelist.dtd">
+
+<softwarelist name="neogeo">
+        <software name="gctf">
+                <description>gctf</description>
+                <year>2024</year>
+                <publisher>gctf</publisher>
+                <info name="serial" value="gctf-2024"/>
+                <info name="release" value="n/a"/>
+                <sharedfeat name="release" value="MVS" />
+                <sharedfeat name="compatibility" value="MVS" />
+                <part name="cart" interface="neo_cart">
+                        <dataarea name="maincpu" width="16" endianness="big" size="0x100000">
+                                <rom loadflag="load16_word_swap" name="gctf-p1.p1" offset="0x000000" size="0x080000" crc="e2edbc21" sha1="05c4f4b801c81c373662d3198654d37c65128775" />
+                        </dataarea>
+                        <dataarea name="fixed" size="0x040000">
+                                <rom offset="0x000000" size="0x020080" name="gctf-s1.s1" crc="1f8d3712" sha1="ca9fe31b17d4a47a43af20557ce4c937050a298a" />
+                        </dataarea>
+                        
+                        <dataarea name="audiocpu" size="0x020000">
+                                <rom offset="0x000000" size="0x020000" name="gctf-m1.m1" crc="76f14fa7" sha1="8e964a59340a410bd56dbad01d5417e083d15599" />
+                        </dataarea>
+                        <dataarea name="ymsnd:adpcma" size="0x80000">
+                                <rom name="gctf-v1.v1" offset="0x000000" size="0x080000" crc="b3b56202" sha1="6aba734bf841c81063f1f6bb86d2eab378966229" />
+                        </dataarea>
+                        <dataarea name="sprites" size="0x200000">
+                                <rom loadflag="load16_byte" name="gctf-c1.c1" offset="0x000000" size="0x100000" crc="be113456" sha1="05276e500440bf72c536be943580332ed476401f" />
+                                <rom loadflag="load16_byte" name="gctf-c2.c2" offset="0x000001" size="0x100000" crc="2d35bb67" sha1="f6a597178275be76c5b922e0ef207d4d6b5d60cc" />
+                        </dataarea>
+                </part>
+        </software>
+</softwarelist>

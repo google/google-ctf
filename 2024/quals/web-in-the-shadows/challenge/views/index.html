@@ -1,0 +1,54 @@
+<!--
+ Copyright 2024 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+{{ template "header.html" . }}
+
+<script type="module" src="js/main.js" nonce="{{ .Nonce }}"></script>
+  <div class="flex flex-col gap-2">
+    <h1 class="text-7xl text-red-600 font-['Jacquard_24'] text-center pb-4">
+      👻 in the shadows... 👻
+    </h1>
+    <p class="leading-6 text-justify tracking-widest">
+      Words fade, yet some sentiments long to be whispered... Perhaps there is a
+      debt of gratitude unvoiced, a whisper of affection left unsung. Here, in
+      this place between memory and the present, shape a testament of the heart.
+      Let your fleeting touch bring warmth to another soul.
+    </p>
+    <p class="leading-6 text-justify tracking-widest font-semibold">
+      Your words await. Use the editor below to breathe life into them, and when
+      ready, press the share button. Let your message become a gentle breeze
+      upon another's heart.
+    </p>
+    <textarea
+      class="bg-gray-600 p-2 border-gray-300 border min-h-[120px] text-blue-100 font-[Inconsolata]"
+      placeholder="Enter the HTML here..."
+    ></textarea>
+    <h2 class="text-5xl text-red-600 font-['Jacquard_24']">Preview</h2>
+    <p class="leading-6 text-justify tracking-widest">
+      Your words materialize below, a wisp of your affection made visible.
+    </p>
+    <untrusted-content
+      class="bg-black block p-4 border border-blue-200 font-[Lugrasimo] text-gray-200"
+    ></untrusted-content>
+    <a
+      class="text-4xl text-center text-red-600 bg-blue-300 p-2 rounded shadow font-['Jacquard_24'] shadow-blue-200 transition-all hover:bg-blue-400"
+      id="share-url"
+      target="_blank"
+    >
+      Click here to share
+    </a>
+  </div>
+</body>

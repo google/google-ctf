@@ -1,0 +1,1 @@
+../../web-game-arcade-bot/challenge/bot.js

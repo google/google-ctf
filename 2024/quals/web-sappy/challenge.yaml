@@ -1,0 +1,41 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: sappy
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+    ports:
+      - protocol: "HTTPS"
+        targetPort: 1337
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/sappy-healthcheck:f34dbca61ced747306ddc208d84623163e79941f6cc5886fe0a183710db2ae2a
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "2Gi"
+                cpu: "1"
+            env:
+              - name: XSSBOT_HOST
+                value: "sappy-bot"
+              - name: XSSBOT_PORT
+                value: "1337"
+              - name: CAPTCHA_SITE_KEY
+                value: "6LcIi_4pAAAAAI0i1O7d8qKzuBRoHN2WIt662Vnl"
+              - name: CAPTCHA_SECRET_KEY
+                value: "6LcIi_4pAAAAAEoaWM-PZRhWnLb6ppMKSLDyChSe"
+  allowConnectTo:
+    - sappy-bot
+  image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/sappy-challenge:a7351caa8f75b2fb87f243ba57a1ac380dd3232e1dcdf04a9f40cbc90982b010

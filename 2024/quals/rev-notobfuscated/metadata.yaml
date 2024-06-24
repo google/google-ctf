@@ -1,0 +1,38 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# Human readable task name
+name: NotObfuscated
+# Long form description.
+description: |+
+  True story: I had planned on learning to write LLVM passes
+  and use them for obfuscation for this year's gCTF challenge.
+  However, when I compiled this code with optimizations enabled,
+  I decided I didn't need to write an obfuscator.
+
+  It's a crackme, you know the drill. GL HF! 
+
+  Note: The challenge outputs the flag in the wrong format, instead of "ctf{", use "CTF{" when submitting the flag.
+# The flag
+flag: CTF{I_pr0mize_its_jUsT_mAtriCeS}
+# Task category. (one of hw, crypto, pwn, rev, web, net, misc)
+category: reversing
+# === the fields below will be filled by SRE or automation ===
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true

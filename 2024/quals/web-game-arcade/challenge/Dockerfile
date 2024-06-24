@@ -1,0 +1,34 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+FROM node:18 as chroot
+
+RUN /usr/sbin/useradd --no-create-home -u 1337 user
+
+COPY src/ /home/user/
+COPY start.sh /home/user/
+
+RUN chown -R 1337 /home/user/*
+WORKDIR /home/user/
+RUN npm ci --only=production --omit=dev
+RUN npm install
+RUN apt-get update && apt-get install -y curl
+
+FROM gcr.io/kctf-docker/challenge@sha256:eb0f8c3b97460335f9820732a42702c2fa368f7d121a671c618b45bbeeadab28
+
+COPY --from=chroot / /chroot
+COPY nsjail.cfg /home/user/
+COPY drop_privs /home/user/
+
+CMD kctf_setup && \
+    (/home/user/drop_privs nsjail --config /home/user/nsjail.cfg /home/user/start.sh)

@@ -1,0 +1,27 @@
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: h8-teaser
+spec:
+  deployed: true
+  powDifficultySeconds: 5
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/h8-teaser-healthcheck:6604881f024b2826c96282f2408b570ad04f2234118dfa371a6d91a925a4e6aa
+  image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/h8-teaser-challenge:a2e7ce316ab3dc3a187faf1c524d176821c37a146d5ec1691888f8492ab9b770
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "5Gi"
+                cpu: "1.9"

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>SAPPY</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/papercss@1.9.2/dist/paper.min.css"
+    />
+    <script src="https://www.google.com/recaptcha/api.js?render=6LcIi_4pAAAAAI0i1O7d8qKzuBRoHN2WIt662Vnl"></script>
+  </head>
+  <body>
+    <div class="paper container">
+      <div class="row flex-center">
+        <div class="text-center">
+          <h1>SAPPY</h1>
+        </div>
+      </div>
+      <p>
+        Hi! I'm a beginner in programming and this is my first application,
+        called SAPPY! I'm sharing here some quirks I learnt about JavaScript.
+        Use the buttons below to find out!
+      </p>
+      <div id="pages" class="row flex-center"></div>
+      <iframe></iframe>
+      <h3>Share your learnings</h3>
+      <p>
+        Did you also learn something interesting about JavaScript? Share your
+        website below and I'll visit it as soon as I can!
+      </p>
+      <div class="form-group">
+        <form action="javascript:shareUrl()">
+          <label for="url">URL</label>
+          <input
+            type="text"
+            placeholder="Some URL here"
+            pattern="^https?://.*"
+            required
+            id="url"
+          />
+          <button>Share</button>
+        </form>
+      </div>
+    </div>
+
+    <style>
+      iframe {
+        border: 0;
+        width: 100%;
+      }
+    </style>
+    <script>
+      const divPages = document.getElementById("pages");
+      const iframe = document.querySelector("iframe");
+
+      function onIframeLoad() {
+        iframe.contentWindow.postMessage(
+          `
+            {
+                "method": "initialize", 
+                "host": "https://sappy-web.2024.ctfcompetition.com"
+            }`,
+          window.origin
+        );
+      }
+
+      iframe.src = "./sap.html";
+      iframe.addEventListener("load", onIframeLoad);
+
+      window.addEventListener("message", (event) => {
+        let data = event.data;
+        try {
+            data = JSON.parse(data);
+            if (typeof data.method !== "string") return;
+            switch (data.method) {
+              case "heightUpdate": {
+                if (typeof data.height === "number") {
+                  iframe.height = data.height + 16;
+                }
+                break;
+              }
+            }
+        } catch(e) {
+          console.log(e)
+        }
+      });
+
+      fetch("pages.json")
+        .then((r) => r.json())
+        .then((json) => {
+          for (const [id, { title }] of Object.entries(json)) {
+            const button = document.createElement("button");
+            button.setAttribute("class", "margin");
+            button.innerText = title;
+            button.addEventListener("click", () => switchPage(id));
+            divPages.append(button);
+          }
+        });
+
+      function switchPage(id) {
+        const msg = JSON.stringify({
+          method: "render",
+          page: id,
+        });
+        iframe.contentWindow.postMessage(msg, window.origin);
+      }
+
+      function isValidUrl(u) {
+        try {
+          const url = new URL(u);
+          return url.protocol === "http:" || url.protocol === "https:";
+        } catch {
+          return false;
+        }
+      }
+
+      async function shareUrl() {
+        const url = document.forms[0].elements.url.value;
+        if (!isValidUrl(url)) {
+          alert("Invalid URL");
+          return;
+        }
+        const body = new URLSearchParams({ url });
+        try {
+          grecaptcha.ready(async () => {
+              grecaptcha.execute('6LcIi_4pAAAAAI0i1O7d8qKzuBRoHN2WIt662Vnl', {action: 'submit'}).then(async (token) => {
+                  body.set('g-recaptcha-response', token);
+                  const resp = await fetch("/share", {
+                    method: "POST",
+                    body,
+                  });
+                  if (resp.status === 200) {
+                    alert("I will visit the URL soon");
+                  } else {
+                    alert("Something went wrong!");
+                  }                  
+              });
+          });
+
+        } catch {
+          alert("Something went wrong!");
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: postviewer3-bot
+spec:
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: false
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/postviewer3-bot-healthcheck:e2474e9d91a6da8a23e89b147de3e8140d462e06424e55e3931cf2f20a2ecf54
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 3
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                memory: "11Gi"
+                cpu: "1.5"
+            env:
+              - name: FLAG
+                value: CTF{iframes_are_pretty_dtough!fe050f75c9306d9da3469e131ba9f967}
+              - name: PAGE_URL
+                value: https://postviewer3-web.2024.ctfcompetition.com/
+              - name: BOT_TIMEOUT
+                value: "10000"
+              - name: MAX_BROWSERS
+                value: "5"
+  image: europe-west4-docker.pkg.dev/gctf-2024/kctf-cluster-challenges/postviewer3-bot-challenge:f3015036c4a7e1fa1c05fbb82f5c95c104bfa96339efc7869c4c8cba090472b1
