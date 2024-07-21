@@ -1,0 +1,1 @@
+cl compute_shader.cpp /link opengl32.lib glfw3dll.lib glew32.lib
