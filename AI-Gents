@@ -1,0 +1,59 @@
+import sqlite3
+
+def login(username, password):
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    query = "SELECT * FROM users WHERE username='" + username + "' AND password='" + password + "'"
+    cursor.execute(query)
+    result = cursor.fetchone()
+    conn.close()
+
+    if result:
+        return "Logged in!"
+    return "Invalid credentials!"
+
+username = input("Enter your username: ")
+password = input("Enter your password: ")
+print(login(username, password))
+
+
+
+
+
+
+
+import requests
+
+def fetch_url(url):
+    return requests.get(url).text
+
+url = input("Enter a URL to fetch: ")
+print(fetch_url(url))
+
+
+
+
+
+
+
+def read_file(filename):
+    with open(filename, 'r') as f:
+        return f.read()
+
+filename = input("Enter a filename: ")
+print(read_file(filename))
+
+
+
+
+
+
+from flask import Flask, request, render_template_string
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    name = request.args.get('name', 'World')
+    # Directly injecting user input into the rendered page without sanitizing
+    return render_template_string("<h1>Hello, " + name + "!</h1>")
