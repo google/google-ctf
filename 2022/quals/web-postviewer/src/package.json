@@ -12,7 +12,7 @@
     "description": "GCTF challenge",
     "dependencies": {
         "ejs": "^3.1.8",
-        "express": "^4.17.3",
+        "express": "^4.19.2",
         "express-recaptcha": "^5.1.0"
     }
 }
