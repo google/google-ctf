@@ -5,12 +5,12 @@ FROM ubuntu:16.04
 RUN set -e -x; \
         apt-get -y update; \
         apt-get -y upgrade; \
-	apt-get install -y software-properties-common; \
+	apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https software-properties-common; \
 	add-apt-repository -y ppa:ubuntu-toolchain-r/test; \
 	apt-get -y update; \
 	apt-get -y upgrade libstdc++6; \
-	apt-get install -y python2.7; \
-	apt-get install -y g++
+	apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https python2.7; \
+	apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https g++
 RUN set -e -x; \
   groupadd -g 1338 sandbox-runner-0; \
 	useradd -g 1338 -u 1338 -r -s /bin/false sandbox-runner-0; \

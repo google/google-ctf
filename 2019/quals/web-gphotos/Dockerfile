@@ -4,7 +4,7 @@ FROM debian
 # Install deps
 RUN apt-get update \
  && apt-get upgrade -y \
- && apt-get install -y supervisor curl apache2 apache2-utils imagemagick-6.q16 libapache2-mod-php7.0 php-dom \
+ && apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https supervisor curl apache2 apache2-utils imagemagick-6.q16 libapache2-mod-php7.0 php-dom \
  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 RUN set -e -x; groupadd -g 1337 user; useradd -g 1337 -u 1337 -m user

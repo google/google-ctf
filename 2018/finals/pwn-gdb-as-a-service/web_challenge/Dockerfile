@@ -6,9 +6,9 @@ RUN set -e -x; \
         groupadd -g 1337 user; \
         useradd -g 1337 -u 1337 -m user
 
-RUN apt-get install -y python3 python3-pip
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https python3 python3-pip
 RUN pip3 install virtualenv
-RUN apt-get install -y gdbserver
+RUN apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https gdbserver
 
 RUN virtualenv /env -p python3
 

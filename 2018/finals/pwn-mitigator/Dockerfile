@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 RUN set -e -x; \
         apt-get -y update; \
         apt-get -y upgrade; \
-	apt-get -y install socat strace; \
+	apt-get --no-install-recommends -y install socat strace; \
         groupadd -g 1337 user; \
         useradd -g 1337 -u 1337 -m user
 COPY challenge/http /home/user/http

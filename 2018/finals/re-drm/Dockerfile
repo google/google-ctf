@@ -20,7 +20,7 @@ FROM ubuntu:16.04
 RUN set -e -x; \
         apt-get -y update; \
         apt-get -y upgrade; \
-	apt-get install -y python2.7
+	apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https python2.7
 RUN set -e -x; \
         groupadd -g 1337 user; \
         useradd -g 1337 -u 1337 -m user

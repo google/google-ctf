@@ -16,7 +16,7 @@ RUN set -e -x; \
         apt-get -y update; \
         apt-get -y upgrade
 RUN set -e -x; \
-        apt-get -y update; apt-get -y install default-jdk g++ make locales wget \
+        apt-get -y update; apt-get --no-install-recommends -y install default-jdk g++ make locales wget \
         && sed 's/# en_US.UTF-8/en_US.UTF-8/' -i /etc/locale.gen \
         && locale-gen
 RUN set -e -x; \

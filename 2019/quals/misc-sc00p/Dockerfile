@@ -32,5 +32,5 @@ RUN set -e -x; \
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN sed -i -e 's/archive/old-releases/g' /etc/apt/sources.list
-RUN apt-get update && apt-get install -y openssh-client curl sshpass netcat && rm -rf /var/lib/apt/lists/
+RUN apt-get update && apt-get --no-install-recommends install -y apt-utils ca-certificates apt-transport-https openssh-client curl sshpass netcat && rm -rf /var/lib/apt/lists/
 CMD ["/launcher"]

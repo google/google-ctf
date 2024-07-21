@@ -27,8 +27,8 @@ ENV PATH /env/bin:$PATH
 ADD requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 RUN apt-get update
-RUN apt-get install -y -q libreoffice
-RUN apt-get install -y -q yelp
+RUN apt-get --no-install-recommends -q install -y apt-utils ca-certificates apt-transport-https  libreoffice
+RUN apt-get --no-install-recommends -q install -y apt-utils ca-certificates apt-transport-https  yelp
 
 # Add the application source code.
 ADD . /app

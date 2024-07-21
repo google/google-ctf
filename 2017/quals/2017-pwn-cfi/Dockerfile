@@ -1,7 +1,7 @@
 FROM debian
 RUN set -e -x ;\
         apt-get -y update; \
-        apt-get -y install python2.7
+        apt-get --no-install-recommends -y install python2.7
 COPY attachments/cfi /cfi
 COPY challenge/pow.py /pow.py
 COPY challenge/hashcash.py /hashcash.py

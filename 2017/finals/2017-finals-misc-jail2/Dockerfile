@@ -2,7 +2,7 @@ FROM ubuntu:17.04
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
-RUN apt-get -y install build-essential
+RUN apt-get --no-install-recommends -y install build-essential
 
 RUN set -e -x ;\
         groupadd -g 1337 chall ;\
