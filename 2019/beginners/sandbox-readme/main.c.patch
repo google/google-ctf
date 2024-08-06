@@ -1,0 +1,95 @@
+10a11,12
+>                 Modified for CTF challenge by Francisco Ribeiro
+> 
+19a22,23
+> #define clear() { printf("\033[H\033[J"); fflush(stdout); }
+> 
+45a50,64
+> void init_shell() 
+> { 
+>     clear(); 
+>     printf("\n\n\n\n******************"
+>         "************************"); 
+>     printf("\n\n\n\t****ALIEN SHELL****"); 
+>     printf("\n\n\n\n*******************"
+>         "***********************"); 
+>     char* username = getenv("USER"); 
+>     printf("\n\n\nUSER is: @%s", username); 
+>     printf("\n");
+>     fflush(stdout); 
+>     sleep(3); 
+>     clear(); 
+> } 
+51c70
+<    @brief Builtin command: change directory.
+---
+>    @brief Bultin command: change directory.
+58c77
+<     fprintf(stderr, "lsh: expected argument to \"cd\"\n");
+---
+>     fprintf(stderr, "aliensh: expected argument to \"cd\"\n");
+61c80
+<       perror("lsh");
+---
+>       perror("error");
+75c94
+<   printf("Stephen Brennan's LSH\n");
+---
+>   printf("Alien's shell\n");
+111c130
+<       perror("lsh");
+---
+>       perror("error");
+116c135
+<     perror("lsh");
+---
+>     perror("error forking");
+149a169
+> #define LSH_RL_BUFSIZE 1024
+156,169d175
+< #ifdef LSH_USE_STD_GETLINE
+<   char *line = NULL;
+<   ssize_t bufsize = 0; // have getline allocate a buffer for us
+<   if (getline(&line, &bufsize, stdin) == -1) {
+<     if (feof(stdin)) {
+<       exit(EXIT_SUCCESS);  // We received an EOF
+<     } else  {
+<       perror("lsh: getline\n");
+<       exit(EXIT_FAILURE);
+<     }
+<   }
+<   return line;
+< #else
+< #define LSH_RL_BUFSIZE 1024
+199c205
+<         fprintf(stderr, "lsh: allocation error\n");
+---
+>         fprintf(stderr, "aliensh: allocation error\n");
+204d209
+< #endif
+221c226
+<     fprintf(stderr, "lsh: allocation error\n");
+---
+>     fprintf(stderr, "aliensh: allocation error\n");
+236c241
+<         fprintf(stderr, "lsh: allocation error\n");
+---
+>         fprintf(stderr, "aliensh: allocation error\n");
+257a263,264
+>     fflush(stdout);
+>   
+260c267,276
+<     status = lsh_execute(args);
+---
+>     int i;
+> 
+>     for (i = 0;i < sizeof(**args); i++){
+>       if (args[i] != NULL && strstr(args[i], "busybox") != NULL){
+>         printf("busybox can not be called for alien reasons.\n");
+>       }
+>       else{
+>         status = lsh_execute(args);
+>       }
+>     } 
+275a292
+>   init_shell();

@@ -1,0 +1,11 @@
+README if you can!
+
+A challenge to read a file without most common tools used for such purpose. Player starts with access to a custom shell running in a container and should seek a way to obtain the content of one or two flags (/README.flag and /ORME.flag).
+
+To build:
+===========
+./build.sh
+
+To run:
+===========
+./run.sh

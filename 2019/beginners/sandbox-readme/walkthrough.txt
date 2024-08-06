@@ -1,0 +1,37 @@
+Solution README.flag (#1 tar):
+===============================
+cd /bin
+tar -cf /tmp/file.tar README.flag
+tar x -O -f /tmp/file.tar
+
+Solution README.flag (#2 makemime):
+====================================
+makemime /README.flag
+
+Solution ORME.flag (upx):
+===========================
+> cd /tmp                               
+> upx -o chmod /bin/busybox
+                       Ultimate Packer for eXecutables
+                          Copyright (C) 1996 - 2018
+UPX 3.95        Markus Oberhumer, Laszlo Molnar & John Reiser   Aug 26th 2018
+
+        File size         Ratio      Format      Name
+   --------------------   ------   -----------   -----------
+    796240 ->    451332   56.68%   linux/amd64   chmod                         
+
+Packed 1 file.
+> ./chmod 777 /README.hard.flag
+> upx -o cat /bin/busybox
+                       Ultimate Packer for eXecutables
+                          Copyright (C) 1996 - 2018
+UPX 3.95        Markus Oberhumer, Laszlo Molnar & John Reiser   Aug 26th 2018
+
+        File size         Ratio      Format      Name
+   --------------------   ------   -----------   -----------
+    796240 ->    451332   56.68%   linux/amd64   cat                           
+
+Packed 1 file.
+> ./cat /ORME.hard.flag
+secret2
+

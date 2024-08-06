@@ -1,0 +1,35 @@
+{
+  "challenge": {
+    "name": "Work Computer",
+    "description": "With the confidence of conviction and decision making skills that made you a contender for Xenon's Universal takeover council, now disbanded, you forge ahead to the work computer.   This machine announces itself to you, surprisingly with a detailed description of all its hardware and peripherals. Your first thought is \"Why does the display stand need to announce its price? And exactly how much does 999 dollars convert to in Xenonivian Bucklets?\" You always were one for the trivialities of things.\n\nAlso presented is an image of a fascinating round and bumpy creature, labeled \"Cauliflower for cWo\" - are \"Cauliflowers\" earthlings?  Your 40 hearts skip a beat - these are not the strange unrelatable bipeds you imagined earthings to be.. this looks like your neighbors back home. Such curdley lobes. Will it be at the party?\n\nSarahH, who appears to be  a programmer with several clients, has left open a terminal.  Oops.  Sorry clients!  Aliens will be poking around attempting to access your networks.. looking for Cauliflower.   That is, *if* they can learn to navigate such things.",
+    "points": 200,
+    "identifier": "readme",
+    "category": "sandbox",
+    "tags": [
+      "sandbox"
+    ],
+    "flag": "CTF{4ll_D474_5h4ll_B3_Fr33}",
+    "vulnbox": {
+      "jails": [
+        {
+          "type": "stdio",
+          "cwd": "/challenge",
+          "entrypoint": "/bin/busybox sh -c '/bin/busybox cp /srv/challenge_setup/README.flag /srv/challenge_setup/ORME.flag /challenge/ && /bin/busybox chmod 000 /challenge/ORME.flag && /bin/busybox chown 1338:1338 /challenge/README.flag /challenge/ORME.flag && /bin/shell'",
+          "healthcheck": "./healthcheck",
+          "early_extra_jail_opts": "-U 0:1337:1 -G 0:1337:1",
+          "extra_jail_opts": "-T /challenge --disable_no_new_privs --cap CAP_CHOWN",
+          "uid": 1337,
+          "uid_count": 2,
+          "gid": 1337,
+          "gid_count": 2,
+          "jail_uid": 1338,
+          "jail_uid_count": 1,
+          "jail_gid": 1338,
+          "jail_gid_count": 1,
+          "timeout": 600
+        }
+      ]
+    },
+    "released": true
+  }
+}
