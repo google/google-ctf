@@ -1,0 +1,74 @@
+#!/usr/bin/python3
+
+import sys
+
+# 800x800 px screen, 20x20 tiles
+W = 20
+H = 20
+TW = 32
+TH = 32
+
+WON = 'W'
+NOT_WON = '\x00'
+
+class Game:
+  def __init__(self):
+    self.count = 1
+    self.screen = '\0'*(W*H)
+    self.x = 3
+    self.y = 3
+    self.goal_x = 17
+    self.goal_y = 17
+    for i in range(W):
+      self._put(i, 0, 6)
+      self._put(i, H-1, 6)
+    for i in range(H):
+      self._put(0, i, 6)
+      self._put(W-1, i, 6)
+    self._put(self.goal_x, self.goal_y, 3)
+
+  def tick(self, keys) -> bool:
+    self.count += 1
+    if self.count % 15 == 0:
+      if keys[0] == '1': # W
+        self.y += 1
+      elif keys[1] == '1': # A
+        self.x -= 1
+      elif keys[2] == '1': # S
+        self.y -= 1
+      elif keys[3] == '1': # D
+        self.x += 1
+      if self.x <= 0 or self.x+1 >= W or self.y <= 0 or self.y+1 >= H:
+        self.x = 5
+        self.y = 5
+      block = (self.count // 15) % 12 + 4
+      self._put(self.x, self.y, block)
+      return False
+    return self.x == self.goal_x and self.y == self.goal_y
+
+  def draw(self) -> str:
+    return self.screen
+
+  def _put(self, x, y, block):
+    idx = y * W + x
+    self.screen = self.screen[:idx] + chr(block) + self.screen[idx+1:]
+
+
+if __name__ == "__main__":
+  sys.stdout.write(chr(W) + chr(H) + chr(TW) + chr(TH))
+  sys.stdout.flush()
+  game = Game()
+  for line in sys.stdin:
+    parts = line.strip().split(" ")
+    match parts[0]:
+      case "TICK":
+        if game.tick(parts[1]):
+          sys.stdout.write(WON)
+        else:
+          sys.stdout.write(NOT_WON)
+        sys.stdout.flush()
+      case "DRAW":
+        sys.stdout.write(game.draw())
+        sys.stdout.flush()
+      case _:
+          exit(1)
