@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,6 +38,7 @@ class Hx8Client(venator_gui.Hackceler8):
                 self.argv.hostname,
                 self.argv.port,
                 self.argv.cert,
+                self.argv.key,
                 ca=self.argv.ca,
             )
 
@@ -52,16 +54,22 @@ class Hx8Client(venator_gui.Hackceler8):
     @classmethod
     def add_arguments(cls, parser: argparse.ArgumentParser):
         parser.add_argument(
-            'hostname', nargs='?', default='localhost', help='Server address'
+            '--hostname', nargs='?', default='localhost', help='Server address'
         )
         parser.add_argument(
-            'port', nargs='?', type=int, default=8888, help='Server port'
+            '--port', nargs='?', type=int, default=8888, help='Server port'
         )
         parser.add_argument(
-            'cert',
+            '--cert',
             nargs='?',
-            default='ca/dev-team',
-            help='Path to client cert (without .key/.crt suffix)',
+            default='ca/dev-team.crt',
+            help='Path to client cert',
+        )
+        parser.add_argument(
+            '--key',
+            nargs='?',
+            default='ca/dev-team.key',
+            help='Path to client key',
         )
         parser.add_argument(
             '--ca', default='ca/CA-devel.crt', help='Path to CA .crt file'

@@ -96,6 +96,7 @@ class Raibbit(TrappedNpc):
             **kwargs,
         )
         coords = kwargs['coords']
-        rect = hitbox.Rectangle(coords.x - 60, coords.x + 60, coords.y - 138, coords.y + 46)
+        rect = hitbox.Rectangle(coords.x - 80, coords.x + 80, coords.y - 93, coords.y + 80)
         self.update_hitbox(rect)
+        self.sprite.scale = 0.7
         self.render_above_player = True

@@ -17,6 +17,7 @@ import logging
 import imgui
 from math import floor
 from typing import Optional, TYPE_CHECKING, Any
+import moderngl_window as mglw
 
 from game import constants
 from game.engine import gfx
@@ -43,11 +44,12 @@ class TextObj:
         self.top_padding = 30
 
     def draw(self):
+        scale = gfx.GLOBAL_WINDOW.scale
         with imgui.font(self.font):
             imgui.push_style_color(imgui.COLOR_TEXT, *self.col)
-            imgui.set_cursor_pos(imgui.Vec2(self.x+self.left_padding, self.y + self.top_padding))
+            imgui.set_cursor_pos(imgui.Vec2(scale*(self.x+self.left_padding), scale*(self.y + self.top_padding)))
             if self.allow_input:
-                imgui.push_item_width(750)
+                imgui.push_item_width(750 * scale)
                 imgui.push_style_color(imgui.COLOR_FRAME_BACKGROUND, 0, 0.5, 0)
                 imgui.push_style_color(imgui.COLOR_BORDER, *self.col)
                 imgui.push_style_var(imgui.STYLE_FRAME_BORDERSIZE, 2)
@@ -79,11 +81,13 @@ class Textbox:
             free_text=False,
             process_fun=None,
             from_server=False,
-            text_for_success="",
-            success_fun=None,
+            response_callbacks=None
     ):
         if choices is None:
             choices = []
+
+        if response_callbacks is None:
+            response_callbacks = {}
 
         self.bg = gfx.GuiImage.load(gfx.GLOBAL_WINDOW, "resources/textbox/bg.png")
         self.more_arrow = gfx.GuiImage.load(gfx.GLOBAL_WINDOW, "resources/textbox/more-arrow.png")
@@ -98,8 +102,7 @@ class Textbox:
         self.process_fun = process_fun
         self.choices = choices
         self.from_server = from_server
-        self.text_for_success = text_for_success
-        self.success_fun = success_fun
+        self.response_callbacks = response_callbacks
 
         self.selection = 0
         if free_text and len(choices) > 0:
@@ -289,9 +292,9 @@ class Textbox:
             self.scroll()
 
     def draw(self):
-        # imgui.show_metrics_window()
-        imgui.set_next_window_position(self.BG_X, self.BG_Y)
-        imgui.set_next_window_size(self.bg.width+20, self.bg.height+20)
+        scale = gfx.GLOBAL_WINDOW.scale
+        imgui.set_next_window_position(scale*self.BG_X, scale*self.BG_Y)
+        imgui.set_next_window_size(scale*(self.bg.width+20), scale*(self.bg.height+20))
         with imgui.begin("textbox",
                          flags=imgui.WINDOW_NO_DECORATION | imgui.WINDOW_NO_NAV | imgui.WINDOW_NO_BACKGROUND):
             self.bg.draw()
@@ -313,16 +316,20 @@ class Textbox:
         self.choices = choices
         self.free_text = free_text
         self.init_text(text, choices, free_text)
+        # Determine which callbacks should be invoked
+        callbacks = [cb[1] for cb in self.response_callbacks.items() if cb[0] in text]
         if len(self.choices) > 0 or self.free_text:
             # Wait for the next message once this one's done.
             def next_textbox(resp: str):
                 self.game.display_textbox(
-                    from_server=True, text_for_success=self.text_for_success,
-                    success_fun=self.success_fun)
+                    from_server=True,
+                    response_callbacks=self.response_callbacks)
 
             self.process_fun = next_textbox
-        elif self.text_for_success in text:
-            self.process_fun = self.success_fun
+        elif len(callbacks) > 0:
+            if len(callbacks) > 1:
+                logging.error("Multiple callbacks apply to this message, only invoking first one")
+            self.process_fun = callbacks[0]
         else:
             self.process_fun = None
 
@@ -352,21 +359,23 @@ class Textbox:
             if len(self.choice_objs) <= n or (i // n) == (self.selection // n):
                 c.draw()
             i += 1
-        imgui.set_cursor_pos(imgui.Vec2(TEXT_X, self.choice_objs[self.selection].y+self.LINE_DISTANCE-7))
+        imgui.set_cursor_pos(imgui.Vec2(gfx.GLOBAL_WINDOW.scale * TEXT_X,
+                                        gfx.GLOBAL_WINDOW.scale * (self.choice_objs[self.selection].y+self.LINE_DISTANCE-7)))
         self.choice_arrow.draw()
 
     def draw_more_arrow(self):
         if int(floor(self.more_arrow_time * 2)) % 2 != 0:
             return
+        scale = gfx.GLOBAL_WINDOW.scale
         if self.choices_active():
             n = self.MAX_LINES - 1
             if (
                     len(self.choice_objs) > n
                     and len(self.choice_objs) - self.selection >= n
             ):
-                imgui.set_cursor_pos(imgui.Vec2(800, self.bg.height-40))
+                imgui.set_cursor_pos(imgui.Vec2(scale*800, scale*(self.bg.height-40)))
                 self.more_arrow.draw()
             return
         if self.done_scrolling:
-            imgui.set_cursor_pos(imgui.Vec2(800, self.bg.height-40))
+            imgui.set_cursor_pos(imgui.Vec2(scale*800, scale*(self.bg.height-40)))
             self.more_arrow.draw()

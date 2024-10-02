@@ -135,15 +135,15 @@ class Hackceler8(gfx.Window):
         else:
             imgui.push_style_color(imgui.COLOR_TEXT, 0,0,0,1)
 
-        gfx.draw_img("health", self.heart, 30, constants.SCREEN_HEIGHT - 80)
+        gfx.draw_img("health", self.heart, 30, -80)
         gfx.draw_txt("health", gfx.FONT_PIXEL[30], ":%.02f" % self.game.player.health,
-                     90, constants.SCREEN_HEIGHT - 75)
-        gfx.draw_img("stars", self.star, constants.SCREEN_WIDTH - 190, constants.SCREEN_HEIGHT - 80)
+                     90, -75)
+        gfx.draw_img("stars", self.star, -190, -80)
         gfx.draw_txt("stars", gfx.FONT_PIXEL[30], ":%.d" % self.game.match_flags.stars(),
-                     constants.SCREEN_WIDTH - 130, constants.SCREEN_HEIGHT - 75)
-        gfx.draw_img("stamina", self.stamina, constants.SCREEN_WIDTH - 180, constants.SCREEN_HEIGHT - 140)
+                     -130, -75)
+        gfx.draw_img("stamina", self.stamina, -180, -140)
         gfx.draw_txt("stamina", gfx.FONT_PIXEL[30], ":%.d" % self.game.player.stamina,
-                     constants.SCREEN_WIDTH - 130, constants.SCREEN_HEIGHT - 140)
+                     -130, -140)
         imgui.pop_style_color()  # COLOR_TEXT
 
         if self.game.cheating_detected:

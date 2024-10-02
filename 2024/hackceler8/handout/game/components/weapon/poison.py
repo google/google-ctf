@@ -29,7 +29,7 @@ class Poison(Weapon):
 
     def equip(self, player):
         super().equip(player)
-        Weapon.damage = 10
+        Weapon.damage = 1
 
     def fire(self, tics, _):
-        self.player.decrease_health(10)
+        self.player.decrease_health(1)

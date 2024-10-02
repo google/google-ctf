@@ -30,6 +30,8 @@ from typing import Any, Optional, Tuple, Dict, List, Set, Iterable, Union
 
 import imgui
 import moderngl
+
+from game import constants
 from moderngl_window.context.base import KeyModifiers
 from moderngl_window.integrations.imgui import ModernglWindowRenderer
 from numpy.lib.recfunctions import structured_to_unstructured
@@ -42,7 +44,7 @@ import moderngl as mgl
 from game.engine.keys import Keys
 
 Color = Tuple[int, int, int, int]
-GL410_COMPAT = (sys.platform == "darwin")
+GL410_COMPAT = (sys.platform == "darwin") or os.environ.get('GL410_COMPAT')
 
 
 @dataclass(frozen=True, slots=True)
@@ -67,7 +69,7 @@ class Flags(enum.Enum):
 
 @dataclass(frozen=True, slots=True)
 class ShapeDrawParams(BaseDrawParams):
-    # x=xl, y=y
+    # x=xl, y=yb
     xr: float
     yt: float
     color: Color
@@ -124,7 +126,7 @@ class Window(mglw.WindowConfig):
     if GL410_COMPAT:
         gl_version = (4, 1)
     else:
-        gl_version = (4, 6)
+        gl_version = (4, 5)
     resizable = True
 
     def __init__(self, **kwargs):
@@ -143,6 +145,7 @@ class Window(mglw.WindowConfig):
         DEFAULT_SHAPE_LAYER = ShapeLayer()
         Keys.update_ui_keys(self.wnd.keys)
         self.tick_accumulator: float = 0
+        self.scale: int = 1
 
     def key_event(self, key: Any, action: Any, modifiers: KeyModifiers):
         if action == self.wnd.keys.ACTION_PRESS:
@@ -185,6 +188,12 @@ class Window(mglw.WindowConfig):
         raise NotImplementedError
 
     def resize(self, width: int, height: int):
+        # make sure the scale is proportional, so later we can only use one dimension
+        x_scale = mglw.window().viewport_width / constants.SCREEN_WIDTH
+        y_scale = mglw.window().viewport_height / constants.SCREEN_HEIGHT
+        assert abs(x_scale - y_scale) < 0.01, (x_scale, y_scale)
+        self.imgui_io.font_global_scale = x_scale
+        self.scale = x_scale
         self.imgui.resize(width, height)
         self.on_resize(width, height)
 
@@ -302,8 +311,8 @@ class TextureAtlas:
         src_file: Path
         x: int
         y: int
-        w: Optional[int]
-        h: Optional[int]
+        w: int
+        h: int
         flip_h: bool
         flip_v: bool
         flip_diag: bool
@@ -345,7 +354,10 @@ class TextureAtlas:
         if i.width > self.pil_image.width / 2 or i.height > self.pil_image.height / 2:
             if not ignore_oversize:
                 raise OversizeImageException(path)
-        # We don't know the size here, so for w/h None just forward it
+        if w is None:
+            w = i.width
+        if h is None:
+            h = i.height
         params = self.LoadParams(path, x, y, w, h, flip_h, flip_v, flip_diag)
         id_ = self.get_id_for_params(params)
         return TextureReference(weakref.proxy(self), id_)
@@ -356,13 +368,6 @@ class TextureAtlas:
             if k.src_file not in imgs:
                 i = _get_image(k.src_file)
                 imgs[k.src_file] = i.transpose(Image.FLIP_TOP_BOTTOM)
-                if k.w is None or k.h is None:
-                    w = k.w or i.width
-                    h = k.h or i.height
-                    if self.ddata.size < idx:
-                        self.ddata.resize(max(self.ddata.size, idx + 128))
-                    self.ddata[idx]['w'] = w
-                    self.ddata[idx]['h'] = h
         sizes = sorted(((v.width, v.height, k) for k, v in imgs.items()), reverse=True)
 
         # worst 2d binpacking routine in history
@@ -394,6 +399,7 @@ class TextureAtlas:
             # side
             place(x + iw, y, w - iw, ih)
 
+        self.pil_image.paste(0, (0, 0, self.pil_image.width, self.pil_image.height))     # clear
         place(0, 0, self.pil_image.width, self.pil_image.height)
         if not len(sizes) == 0:
             self.pil_image.show()
@@ -484,11 +490,12 @@ class GuiImage:
         return cls(win, ref, image.width, image.height)
 
     def draw(self, **kwargs):
+        scale = mglw.window().viewport_width / constants.SCREEN_WIDTH
         GUI_ATLAS.maybe_build()
         tex = GUI_ATLAS.texture
         self.window.imgui.register_texture(tex)
         dd = GUI_ATLAS.ddata[self.ref.region_id]
-        imgui.image(tex.glo, dd['w'], dd['h'], tuple(dd['uv_bl']), tuple(dd['uv_tr']), **kwargs)
+        imgui.image(tex.glo, dd['w']*scale, dd['h']*scale, tuple(dd['uv_bl']), tuple(dd['uv_tr']), **kwargs)
 
 
 class ShapeLayer:
@@ -634,6 +641,8 @@ class SpriteLayer:
         self.alphas_buffer.write(array("B", (i.alpha for i in infos)))
         self.flashing_buffer.write(array("B", (1 if i.flashing else 0 for i in infos)))
         if GL410_COMPAT:
+            # hack, we know the atlas is the same for all infos
+            infos[0].tex.atlas.maybe_build()
             for offset, info in enumerate(infos):
                 dd = info.tex.atlas.ddata[info.tex.region_id]
                 self.size_buffer.write(structured_to_unstructured(dd[['w', 'h']]).view('f4'), offset=offset*2*4)
@@ -643,14 +652,8 @@ class SpriteLayer:
             self.txs_buffer.write(array("i", _idxs_gen()))
 
     def draw_all(self):
-        for texid, infos in self.draws_per_tex.items():
-            count = len(infos)
-            self._update_buffer_for_texid(texid)
-            # hack
-            a = infos[0].tex.atlas
-            a.use(0)
-            self.ctx.enable_only(self.ctx.BLEND | self.ctx.PROGRAM_POINT_SIZE)
-            self.geo.render(mode=self.ctx.POINTS, vertices=count)
+        self.update_all_buffers()
+        self.draw_all_cached()
 
     def update_all_buffers(self):
         for texid in self.draws_per_tex:
@@ -659,9 +662,7 @@ class SpriteLayer:
     def draw_all_cached(self):
         for texid, infos in self.draws_per_tex.items():
             count = len(infos)
-            # hack
-            a = infos[0].tex.atlas
-            a.use(0)
+            infos[0].tex.atlas.use(0)
             self.ctx.enable_only(self.ctx.BLEND | self.ctx.PROGRAM_POINT_SIZE)
             self.geo.render(mode=self.ctx.POINTS, vertices=count)
 
@@ -723,16 +724,42 @@ class TileMap:
 
     def draw(self):
         for layer in self.layers.values():
+            if GL410_COMPAT:
+                # If the texture atlas was rebuilt since this Tilemap.build(), the uvs in compat spritelayer uv buffers
+                # no longer match the texture, so we need to regenerate the whole VAO. This is not an issue on gl450,
+                # as the atlas will update the SSBO directly.
+                layer.update_all_buffers()
             layer.draw_all_cached()
 
-def draw_img(name, img, x, y):
+
+def _clamp_viewport_x(x: int):
+    x *= GLOBAL_WINDOW.scale
+    if x < 0:
+        x = mglw.window().viewport_width + x
+    return x
+
+
+def _clamp_viewport_y(y: int):
+    y *= GLOBAL_WINDOW.scale
+    if y < 0:
+        y = mglw.window().viewport_height + y
+    return y
+
+
+# Negative x/y values mean distance from the right/bottom
+def draw_img(name: str, img: GuiImage, x: int, y: int):
+    x = _clamp_viewport_x(x)
+    y = _clamp_viewport_y(y)
     imgui.set_next_window_position(x, y)
     imgui.set_next_window_size(0, 0)
     with imgui.begin(name+"_img",
                      flags=imgui.WINDOW_NO_DECORATION|imgui.WINDOW_NO_NAV|imgui.WINDOW_NO_BACKGROUND):
         img.draw()
 
+
 def draw_txt(name, font, txt, x, y, color=None):
+    x = _clamp_viewport_x(x)
+    y = _clamp_viewport_y(y)
     imgui.set_next_window_position(x, y)
     imgui.set_next_window_size(0, 0)
     with imgui.begin(name+"_txt",

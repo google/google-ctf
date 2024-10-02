@@ -29,7 +29,7 @@ class DialogueBoss(Boss):
         if self.game.is_server or self.game.net is None:
             self.secret_server_dialogue()
         else:
-            self.game.display_textbox(from_server=True, text_for_success="Imposssssible, that's correct", success_fun=self._start_destruct)
+            self.game.display_textbox(from_server=True, response_callbacks={"Imposssssible, that's correct": self._start_destruct})
 
     def secret_server_dialogue(self):
         self.game.display_textbox("Boss battle only available on the sssserver.")

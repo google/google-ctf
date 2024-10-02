@@ -32,6 +32,7 @@ class Player(generics.GenericObject):
     DIR_N = "N"
     DIR_E = "E"
     DIR_W = "W"
+    DIR_S = "S"
     MAX_HEALTH = 100
     MELEE_DAMAGE = 10
 
@@ -77,11 +78,15 @@ class Player(generics.GenericObject):
         self.damage_bonus = False
         self.shoot_bonus = False
         self.health_bonus = False
+        self.scroller_mode = False
 
         # Will be overwritten
         self.game: Optional[Venator] = None
 
     def reset_can_jump(self):
+        if self.scroller_mode:
+            self.can_jump = True
+            return
         self.can_jump = False
         self.move(0, -1)
         _, collisions_y, _ = self.game.physics_engine._get_collisions_list(self)
@@ -90,16 +95,11 @@ class Player(generics.GenericObject):
                 self.can_jump = True
         self.move(0, 1)
 
-    def is_falling(self, bound):
-        if self.y_speed < 0:
-            return "down"
-        return bound
-
     def melee(self, pressed_keys, newly_pressed_keys):
         if self.dead or self.immobilized:
             return
 
-        if self.melee_hitbox != None and not self.melee_attacked_this_cycle:
+        if self.melee_hitbox and not self.melee_attacked_this_cycle:
             for o in self.game.objects:
                 if (o.nametype == "Enemy" or o.name == "fighting_boss") and not o.dead and self.melee_hitbox.collides(o):
                     o.decrease_health(self.MELEE_DAMAGE, "melee")
@@ -107,8 +107,8 @@ class Player(generics.GenericObject):
                     o.sprite.set_flashing(True)
                     self.melee_attacked_this_cycle = True
         if (Keys.SPACE in newly_pressed_keys
-            and not self.in_the_air
-            and not (self.sprite.get_animation() == "melee" and self.melee_anim_counter > 0)):
+                and not self.in_the_air
+                and not (self.sprite.get_animation() == "melee" and self.melee_anim_counter > 0)):
             for weapon in self.weapons:
                 if weapon.equipped:
                     self.melee_attack = False
@@ -121,8 +121,8 @@ class Player(generics.GenericObject):
             elif self.last_movement == "left":
                 self.melee_hitbox = hitbox.Rectangle(self.x - 16, self.x - 32, self.y - 28, self.y + 10)
         elif self.sprite.get_animation() == "melee" and self.melee_anim_counter == 0:
-              self.melee_attack = False
-              self.melee_hitbox = None
+            self.melee_attack = False
+            self.melee_hitbox = None
 
     def tick(self, pressed_keys, newly_pressed_keys):
         self.update_movement(pressed_keys, newly_pressed_keys)
@@ -139,6 +139,9 @@ class Player(generics.GenericObject):
 
     def update_movement(self, pressed_keys, newly_pressed_keys):
         self.x_speed = 0
+        if self.scroller_mode:
+            self.y_speed = 0
+
         self.running = False
         if self.immobilized:
             return
@@ -148,7 +151,6 @@ class Player(generics.GenericObject):
         self.is_crouching = (Keys.LCTRL in pressed_keys or Keys.S in pressed_keys)
         if self.sprite.get_animation() == "melee" or self.dead or self.damage_anim_counter > 0:  # Can't move
             return
-
 
         if Keys.D in pressed_keys and Keys.A not in pressed_keys:
             computed_direction = self.DIR_E
@@ -161,6 +163,19 @@ class Player(generics.GenericObject):
         if Keys.W in newly_pressed_keys:
             computed_direction = self.DIR_N
             self.change_direction(computed_direction, sprinting)
+
+        if Keys.W in pressed_keys and self.scroller_mode:
+            computed_direction = self.DIR_N
+            self.change_direction(computed_direction, sprinting)
+
+        if self.scroller_mode:
+            if Keys.S in pressed_keys:
+                computed_direction = self.DIR_S
+                self.change_direction(computed_direction, sprinting)
+
+        if not self.scroller_mode:
+            if not self.in_the_air:
+                self.last_ground_pos = Point(self.x, self.y)
 
         if not self.in_the_air:
             self.last_ground_pos = Point(self.x, self.y)
@@ -188,6 +203,10 @@ class Player(generics.GenericObject):
 
         if self.direction == self.DIR_N:
             logging.debug("Jumping")
+            if self.scroller_mode:
+                self.y_speed = self.base_x_speed * speed_multiplier
+                return
+
             self.reset_can_jump()
             if not self.can_jump and not self.jump_override:
                 logging.debug("Player in the air")
@@ -197,6 +216,9 @@ class Player(generics.GenericObject):
                 self.y_speed = self.base_y_speed * speed_multiplier
             self.last_movement = "up"
             self.in_the_air = True
+
+        if self.direction == self.DIR_S and self.scroller_mode:
+            self.y_speed = -self.base_x_speed * speed_multiplier
 
     def update_animation(self):
         if self.dead:
@@ -242,39 +264,6 @@ class Player(generics.GenericObject):
         self.stamina = 100
         self.dead = False
         self.immobilized = False
-
-    def modify(self, items):
-        for item in items:
-            self._modify(item.name)
-
-    def _modify(self, item):
-        match item:
-            case "hat":
-                if not self.health_bonus:
-                    self.MAX_HEALTH = 200
-                    self.health_bonus = True
-                    self.set_health(self.MAX_HEALTH)
-                    logging.info("Max health permanently set to 200")
-            case "bowtie":
-                if not self.damage_bonus:
-                    self.damage_multiplier = 2
-                    self.damage_bonus = True
-                    logging.info("Damage dealt permanently increased")
-            case "pizza":
-                if not self.speed_bonus:
-                    self.speed_multiplier = 2
-                    self.speed_bonus = True
-                    logging.info("Speed permanently increased")
-            case "sunglasses":
-                if not self.jump_bonus:
-                    self.jump_multiplier = 2
-                    self.jump_bonus = True
-                    logging.info("Jump height permanently increased")
-            case "ears":
-                if not self.shoot_bonus:
-                    self.shoot_multiplier = 2
-                    self.shoot_bonus = True
-                    logging.info("Shooting speed permanently increased")
 
     def equip_weapon(self, weapon):
         weapon.equip(self)

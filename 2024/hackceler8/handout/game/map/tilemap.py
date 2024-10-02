@@ -44,6 +44,7 @@ from game.engine.generics import GenericObject
 from game.engine.point import Point
 from game.engine import gfx
 from game.map.tileset import Tileset, read_str
+from game.components.stateful import Crops
 import xxhash
 
 
@@ -55,11 +56,26 @@ class _Size:
     def __repr__(self):
         return "[%d x %d]" % (self.width, self.height)
 
+class Coin:
+    def __init__(self, lvl: str, x, y: int, id: str):
+        self.lvl = lvl
+        self.x = x
+        self.y = y
+        self.id = id
+
+def init_coins():
+    return [
+        Coin("base", 3296, 4352, "vr"),
+        Coin("beach", 5376, 288, "wj"),
+        Coin("ruins", 1072, 2128, "ru"),
+        Coin("ocean", 3824, 416, "ba"),
+    ]
 
 class TileMap:
     H_FLIP_MASK = 0x8000
     V_FLIP_MASK = 0x4000
     DIAG_FLIP_MASK = 0x2000
+    coins = init_coins()
 
     def __init__(self, map_file: str):
         self.file_path = map_file
@@ -70,6 +86,7 @@ class TileMap:
         self.tile_size: Optional[_Size] = None
         self.map_size_pixels: Optional[_Size] = None
         self.arcade_scene: Optional[gfx.TileMap] = None
+        self.stateful_objects = []
 
         self.parse(map_file)
 
@@ -278,7 +295,23 @@ class TileMap:
             self.weapons.append(o)
 
         elif name.startswith("stateful_"):
+            match name.split("stateful_")[1]:
+                case "crops":
+                    c = Crops(coords=coords)
+                    self.objects.append(c)
+                    logging.info("Got some crops")
             logging.info("Got a new stateful object")
+
+    def parse_coins(self):
+        for c in self.coins:
+            if c.lvl in self.file_path:
+                self.objects.append(
+                    items.Item(
+                    Point(c.x, c.y),
+                    "coin_"+c.id,
+                    "Coin",
+                )
+            )
 
     def parse(self, map_file):
         logging.debug(f"Parsing file {map_file}")
@@ -301,6 +334,7 @@ class TileMap:
                 mf.seek(2, 1)
 
             self.parse_layers(mf)
+            self.parse_coins()
 
     def get_arcade_scene(self) -> gfx.TileMap:
         if self.arcade_scene is not None:

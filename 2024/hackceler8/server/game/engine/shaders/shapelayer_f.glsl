@@ -14,11 +14,11 @@
 
 #version 410
 
+const int f_RECTANGLE_FILLED  = 0;
 const int f_CIRCLE_FILLED  = 1;
+const int f_RECTANGLE_OUTLINE = 2;
 const int f_CIRCLE_OUTLINE = 3;
 const int f_CIRCLE_FILLED_SOFT = 5;
-const int f_RECTANGLE_FILLED  = 0;
-const int f_RECTANGLE_OUTLINE = 2;
 
 in FragData {
     vec4 fillColor;

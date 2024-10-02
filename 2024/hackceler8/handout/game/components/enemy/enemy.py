@@ -63,6 +63,7 @@ class Enemy(generics.GenericObject):
         self.walk_data = WalkData(self, walk_data)
         self.max_health = 50 if max_health is None else max_health
         self.should_block = False if blocking is None else blocking
+        self.blocking = self.should_block
         self.dead = False
         self.death_timer = 0
         self.reset()
@@ -382,11 +383,12 @@ class Block(Enemy):
         self.update_hitbox(rect)
         if kwargs.get('blocking') is None:
             self.should_block = True
+        self.blocking = self.should_block
 
 
     def decrease_health(self, points, source=None):
         if self.color != "grey":
-            if source and source.startswith(self.color):
+            if source and source.lower().startswith(self.color):
                 return super().decrease_health(points, source)
             return False
         else:

@@ -25,6 +25,8 @@ class MapAttrs(NamedTuple):
     tiled_map: tilemap.TileMap
 
     def has_prerender(self) -> bool:
+        if os.environ.get('DISABLE_PRERENDER'):
+            return False
         prerender_path = self.tiled_map.file_path[:-4]+"_prerender.png"
         return os.path.exists(prerender_path)
 

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#version 460
+#version 450
 
 in vec2 in_pos;
 in float in_alpha;

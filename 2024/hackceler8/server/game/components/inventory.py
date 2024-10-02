@@ -70,8 +70,20 @@ class Inventory:
         if len(self.game.items) == 0:
             gfx.draw_txt("items_none", gfx.FONT_PIXEL[20], "* None *", 730, iy)
             iy += 50
+
+        coin_drawn = False
+        coin_count = len([i for i in self.game.items if i.name.startswith("coin_")])
         for i in self.game.items:
-            gfx.draw_txt("items_"+str(iy), gfx.FONT_PIXEL[20], "  " + i.display_name, 730, iy)
+            txt = i.display_name
+            if i.name.startswith("coin_"):
+                if coin_drawn:
+                    continue
+                coin_drawn = True
+                if coin_count == 1:
+                    txt = "Coin"
+                else:
+                    txt = "Coins (%d)" % coin_count
+            gfx.draw_txt("items_"+str(iy), gfx.FONT_PIXEL[20], "  " + txt, 730, iy)
             iy += 50
 
         gfx.draw_txt("play_time", gfx.FONT_PIXEL[30], "Play time: %s" % self.display_time,

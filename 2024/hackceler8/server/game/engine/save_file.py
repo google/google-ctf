@@ -16,13 +16,15 @@ import logging
 import os
 import time
 
-from game.components.items import load_items_from_save
+from game.components.items import load_items_from_save, display_to_name
 
 
 class SaveFile:
 
-  def __init__(self, filename='save_state'):
+  def __init__(self, filename, version, extra_items):
     self.filename = filename
+    self.version = version
+    self.extra_items = extra_items
 
   def save(self, game):
     if not game.is_server:
@@ -31,8 +33,10 @@ class SaveFile:
     tmp_save_file = f'{self.filename}.tmp'
 
     _save = {
+        'version': self.version,
         'flags': game.match_flags.dump(),
         'items': [i.dump() for i in game.items],
+        'coins': len([i for i in game.items if i.name.startswith("coin_")]),
         'save_time': time.time(),
         'win_time': game.win_timestamp,
     }
@@ -45,10 +49,17 @@ class SaveFile:
     with open(self.filename) as sf:
       current_save = sf.read()
     payload = json.loads(current_save)
-    for k in ['flags', 'items', 'win_time', 'save_time']:
+    for k in ['version', 'flags', 'coins', 'items', 'win_time', 'save_time']:
       if k not in payload:
         logging.critical(f'Missing property {k} in save file')
         return None
+    if self.extra_items is not None:
+      items = payload["items"]
+      for d in self.extra_items:
+        if not any([i["display_name"] == d for i in items]):
+          items.append(
+              {"name": display_to_name(d), "display_name": d, "collected_time": time.time()},
+          )
     return payload
 
 def apply_save_state(state, game):

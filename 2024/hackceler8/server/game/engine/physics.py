@@ -66,6 +66,10 @@ class PhysicsEngine:
         return tmp[0]
 
     def tick(self):
+        if self.gravity == 0:
+            self.player.scroller_mode = True
+        else:
+            self.player.scroller_mode = False
         for o in self.moving_objects:
             o.update_position()
         self._detect_collision()

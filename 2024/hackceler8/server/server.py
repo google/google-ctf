@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +21,7 @@ import os
 import time
 
 from game import log, venator, network, scheduler
+from game.components.items import Item
 from game.engine.keys import Keys
 from game.engine.save_file import SaveFile
 
@@ -38,16 +40,13 @@ def extract_state(msg):
       msg.get("tics", None),
       msg.get("state", None),
       msg.get("keys", None),
-      msg.get("seed", None),
       msg.get("text_input", None),
   )
 
 
 def integrity_check(game_session, msg):
-  _ticks, state, keys, seed, text_input = extract_state(msg)
+  _ticks, state, keys, text_input = extract_state(msg)
   game_session.raw_pressed_keys = set(Keys.from_serialized(i) for i in keys)
-  if seed is not None:
-    game_session.rand_seed = seed
   if text_input is not None:
     game_session.set_text_input(text_input)
   game_session.tick()
@@ -78,9 +77,9 @@ def game_tick(connection, game_session):
     return
 
 
-def startup(connection):
+def startup(connection, save_file_path, save_version, extra_items):
   try:
-    s = SaveFile()
+    s = SaveFile(save_file_path, save_version, extra_items)
     json_packet = s.load()
     logging.info(f"Got save state: {json_packet}")
   except FileNotFoundError:
@@ -97,13 +96,16 @@ def startup(connection):
     return
 
 
-def game_loop(connection):
+def game_loop(connection, save_file_path, save_version, extra_items):
   global GAME_RUNNING
 
-  game_session = venator.Venator(net=connection, is_server=True)
+  game_session = venator.Venator(
+      net=connection, is_server=True, save_file_path=save_file_path,
+      save_version=save_version, extra_items=extra_items
+  )
   GAME_RUNNING = True
 
-  startup(connection)
+  startup(connection, save_file_path, save_version, extra_items)
 
   clock = scheduler.TickScheduler(MAX_TPS, 5.0)
   clock.start()
@@ -122,17 +124,24 @@ def main():
   )
   parser.add_argument("--hostname", default="0.0.0.0", help="Server bind")
   parser.add_argument(
-      "port", nargs="?", type=int, default=8888, help="Server port"
+      "--port", nargs="?", type=int, default=8888, help="Server port"
   )
   parser.add_argument(
-      "team", nargs="?", default="dev-team", help="team name (certificate CN)"
+      "--team", nargs="?", default="dev-team", help="team name (certificate CN)"
   )
 
   parser.add_argument(
-      "cert",
+      "--cert",
       nargs="?",
-      default="ca/dev-team",
-      help="Path to server cert (without .key/.crt suffix)",
+      default="ca/dev-team.crt",
+      help="Path to server cert",
+  )
+
+  parser.add_argument(
+      "--key",
+      nargs="?",
+      default="ca/dev-team.key",
+      help="Path to server key",
   )
   parser.add_argument(
       "--ca", default="ca/CA-devel.crt", help="Path to CA .crt file"
@@ -142,15 +151,30 @@ def main():
   parser.add_argument(
       "--stateport", default=1337, type=int, help="State server port (HTTP)"
   )
+  parser.add_argument(
+      "--save-file", default="save_state", help="Path of the save state file"
+  )
+  parser.add_argument(
+      "--save-version", default="current", type=str, help="The version of the current save file"
+  )
+  parser.add_argument("--extra-items", nargs="+", help="Additional helpful items to give to the player")
   args = parser.parse_args()
   log.setup_logging(args, file_prefix="server")
   logging.getLogger("arcade").setLevel(logging.WARNING)
   logging.getLogger("PIL").setLevel(logging.WARNING)
 
+  # Check if this is the correct round's save file
+  if os.path.exists(args.save_file):
+    with open(args.save_file) as f:
+      data = json.load(f)
+    if data.get('version') != args.save_version:
+      logging.warning("Save file is for other version, deleting")
+      os.remove(args.save_file)
+
   # Create a save state if there is none yet
-  if not os.path.exists("save_state"):
-    logging.info("Save file does not exist yet, creating a new one")
-    game_instance = venator.Venator(None, True)
+  if not os.path.exists(args.save_file):
+    logging.warning("Save file does not exist yet, creating a new one")
+    game_instance = venator.Venator(None, True, args.save_file, args.save_version, args.extra_items)
     game_instance._save()
     del game_instance
 
@@ -158,6 +182,7 @@ def main():
       args.hostname,
       args.port,
       cert=args.cert,
+      key=args.key,
       ca=args.ca,
       expected_cn=args.team,
       keylog_filename=args.keylog,
@@ -165,7 +190,7 @@ def main():
   logging.info(f"Server running on {args.hostname}:{args.port} for {args.team}")
 
   child_process = None
-  with network.StatusServer(("", args.stateport), args.team):
+  with network.StatusServer(("", args.stateport), args.team, args.save_file, args.save_version, args.extra_items):
     try:
       while True:
         try:
@@ -183,7 +208,7 @@ def main():
 
         logging.info("Spawning game_loop")
         child_process = multiprocessing.Process(
-            target=game_loop, args=[connection]
+            target=game_loop, args=[connection, args.save_file, args.save_version, args.extra_items]
         )
         child_process.start()
     finally:

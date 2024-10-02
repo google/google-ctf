@@ -34,6 +34,7 @@ from game.components.flags import load_match_flags
 from game.components.inventory import Inventory
 from game.components.items import Item, check_item_loaded
 from game.components.player import Player
+from game.components.stateful import StatefulObject
 from game.engine import physics
 from game.engine.arcade_system.arcade_system import ArcadeSystem
 from game.engine.generics import GenericObject
@@ -53,7 +54,8 @@ class MagicItem(Enum):
 
 
 class Venator:
-    def __init__(self, net, is_server: bool):
+    def __init__(self, net, is_server: bool, save_file_path: str = "save_state",
+                 save_version: str = "current", extra_items: list = None):
         self.mutex = Lock()
         self.net = net
 
@@ -63,22 +65,20 @@ class Venator:
         self.win_timestamp = 0
         self.tics = 0
         self.ready = True
+        self.waiting_for_server_txt = False
 
         if not is_server and self.net is not None:
             self.ready = False
             self.setup_client()
         self.is_server: bool = is_server
-        self.rand_seed = None
 
-        self.save_file = SaveFile()
+        self.save_file = SaveFile(save_file_path, save_version, extra_items)
 
         if is_server:
-            self.load_file = "save_state"
-            if self.load_file != "":
-                try:
-                    apply_save_state(self.save_file.load(), self)
-                except Exception as e:
-                    logging.critical(f"Unable to read file {self.load_file}: {e}")
+            try:
+                apply_save_state(self.save_file.load(), self)
+            except Exception as e:
+                logging.critical(f"Unable to read file {self.save_file.filename}: {e}")
 
         self.maps_dict = maps.load()
 
@@ -97,6 +97,7 @@ class Venator:
         self.player_starting_position: dict[str, (int, int)] = {}
 
         self.objects: list[GenericObject] = []
+        self.stateful_objects: list[StatefulObject] = []
 
         self.next_map = None
         self.current_map = "base"
@@ -225,6 +226,7 @@ class Venator:
                             choices = []
                         free_text = msg["chat_free_text"]
                         self.textbox.set_text_from_server(text, choices, free_text)
+                        self.waiting_for_server_txt = False
                 if "u_cheat" in msg:
                     self.cheating_detected = True
                 if "module_reload" in msg:
@@ -284,6 +286,9 @@ class Venator:
         logging.info(f"Items before parsing: {self.items}")
         for o in self.tiled_map.objects:
             o.reset()
+            if o.nametype == "Stateful" and o not in self.stateful_objects:
+                logging.info("A stateful object appeared")
+                self.stateful_objects.append(o)
 
             if o.nametype == "Player":
                 assert isinstance(o, Player)
@@ -301,7 +306,6 @@ class Venator:
                     self.player_starting_position[self.current_map] = (o.x, o.y)
                 self.player = o
                 self.player.game = self
-                self.player.modify(self.items)
 
             elif o.nametype == "Item":
                 if not check_item_loaded(self.items, o):
@@ -356,8 +360,7 @@ class Venator:
             free_text: bool = False,
             process_fun=None,
             from_server=False,
-            text_for_success="",
-            success_fun=None,
+            response_callbacks=None,
     ):
         if self.textbox is not None:  # Already displaying
             return
@@ -371,9 +374,12 @@ class Venator:
 
         self.textbox = textbox.Textbox(
             self, text, cleanup, choices, free_text, process_fun, from_server,
-            text_for_success, success_fun
+            response_callbacks,
         )
         self.player.immobilized = True
+        if from_server:
+            with self.mutex:
+                self.waiting_for_server_txt = True
         if self.is_server:
             logging.info(f"Sending chat message to client: \"{text}\"")
             msg = json.dumps({"chat_text": text, "chat_choices": choices,
@@ -393,9 +399,6 @@ class Venator:
             "keys": [i.serialized for i in self.raw_pressed_keys],
             "text_input": self.get_text_input(),
         }
-        if self.rand_seed != 0:
-            msg["seed"] = self.rand_seed
-            self.rand_seed = 0
 
         msg = json.dumps(msg).encode()
         self.net.send_one(msg)
@@ -459,6 +462,10 @@ class Venator:
         if not self.ready:
             return
 
+        if self.waiting_for_server_txt:
+            self.recv_from_server()
+            return
+
         if self.module_reloading:
             assert not self.is_server and self.net is not None
             self.recv_from_server()
@@ -507,6 +514,8 @@ class Venator:
                 self.objects.remove(o)
                 self.physics_engine.remove_generic_object(o)
                 self.tiled_map.objects.remove(o)
+        for o in self.stateful_objects:
+            o.tick()
 
         if self.objects_frozen():
             self.send_game_info()
@@ -574,12 +583,14 @@ class Venator:
                 self.objects.remove(i)
                 self.tiled_map.objects.remove(i)
             self.physics_engine.remove_generic_object(i)
-        self.player.modify(self.items)
 
         if not self.player.dead and len(items) > 0:
             # Save the current progress as soon as an item has been collected
             logging.info("Saving on account of new item collected")
             self.save_file.save(self)
+
+    def has_item(self, name_substr: str) -> bool:
+        return any(name_substr in i.name for i in self.items)
 
     def free_npc(self, npc, stars: int):
         def free_npc():

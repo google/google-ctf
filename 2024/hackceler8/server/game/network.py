@@ -24,9 +24,9 @@ from game.engine.save_file import SaveFile
 
 
 def perform_ssl_handshake(
-        sock, cert, ca, is_server, expected_cn=None, keylog_filename=None
+        sock, cert, key, ca, is_server, expected_cn=None, keylog_filename=None
 ):
-    logging.info(f"Performing SSL handshake, cert={cert}, ca={ca}")
+    logging.info(f"Performing SSL handshake, cert={cert}, key={key}, ca={ca}")
     if is_server:
         context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH, cafile=ca)
     else:
@@ -38,7 +38,7 @@ def perform_ssl_handshake(
 
     context.verify_mode = ssl.CERT_REQUIRED
     context.minimum_version = ssl.TLSVersion.TLSv1_3
-    context.load_cert_chain(f"{cert}.crt", f"{cert}.key")
+    context.load_cert_chain(cert, key)
     try:
         ssl_sock = context.wrap_socket(sock, server_side=is_server)
     except ssl.SSLError:
@@ -66,9 +66,10 @@ def perform_ssl_handshake(
 class ListeningSocket:
 
     def __init__(
-            self, sock, cert, ca, expected_cn=None, keylog_filename=None, **kwargs
+            self, sock, cert, key, ca, expected_cn=None, keylog_filename=None, **kwargs
     ):
         self.cert = cert
+        self.key = key
         self.ca = ca
         self.socket = sock
         self.kwargs = kwargs
@@ -80,6 +81,7 @@ class ListeningSocket:
         s = perform_ssl_handshake(
             s,
             self.cert,
+            self.key,
             self.ca,
             is_server=True,
             expected_cn=self.expected_cn,
@@ -110,7 +112,7 @@ class NetworkConnection:
             raise
 
     @classmethod
-    def create_client(cls, address, port, cert, ca, **kwargs):
+    def create_client(cls, address, port, cert, key, ca, **kwargs):
         assert "server" not in kwargs
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         x = s.getsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF)
@@ -118,7 +120,7 @@ class NetworkConnection:
 
         try:
             s.connect((address, port))
-            s = perform_ssl_handshake(s, cert, ca, is_server=False)
+            s = perform_ssl_handshake(s, cert, key, ca, is_server=False)
             if not s:
                 logging.critical("SSL handshake failed")
                 return None
@@ -161,7 +163,7 @@ class NetworkConnection:
 # Serves the current game state via http as json
 class StatusServerRequestHandler(http.server.BaseHTTPRequestHandler):
     team = None
-    save_file = SaveFile("save_state")
+    save_file = None
 
     def do_GET(self):
         try:
@@ -204,8 +206,9 @@ class StatusServerRequestHandler(http.server.BaseHTTPRequestHandler):
 # Status server implementation, use via `with StatusServer(...) as sth:`
 class StatusServer:
 
-    def __init__(self, server_address, team_name):
+    def __init__(self, server_address, team_name, save_file_path, save_version, extra_items):
         StatusServerRequestHandler.team = team_name
+        StatusServerRequestHandler.save_file = SaveFile(save_file_path, save_version, extra_items)
         self._srv = http.server.ThreadingHTTPServer(
             server_address, StatusServerRequestHandler
         )

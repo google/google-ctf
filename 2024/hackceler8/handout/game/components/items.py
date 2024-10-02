@@ -23,10 +23,9 @@ from game.engine.point import Point
 if TYPE_CHECKING:
     from game.venator import Venator
 
-ITEMS = ['key']
-
-
 def _get_image(name: str):
+    if name.startswith("coin_"):
+        return 'resources/objects/items/coin.png'
     path = 'resources/objects/items/%s.png' % name
     if not exists(path):
         return 'resources/objects/placeholder_item.png'
@@ -37,9 +36,6 @@ class Item(generics.GenericObject):
     game: Venator
 
     def __init__(self, coords, name, display_name):
-        if name not in ITEMS:
-            logging.critical(f'Untracked item: {name}')
-
         if coords is None:  # Placeholder values for items not on the map.
             coords = Point(0, 0)
         rect = hitbox.Rectangle(coords.x, coords.x + 10, coords.y - 10, coords.y)
@@ -93,3 +89,7 @@ def check_item_loaded(items: list[Item], item) -> bool:
         if i.is_identical(item):
             return True
     return False
+
+
+def display_to_name(display: str) -> str:
+    return "".join([c for c in display if (c.isalnum() or c == " ")]).lower().replace(" ", "_")
