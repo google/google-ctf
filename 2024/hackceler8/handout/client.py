@@ -16,6 +16,11 @@
 import argparse
 import logging
 
+# numpy's multithreading is too smart for its own good
+# do this _before_ it gets imported
+import os
+os.environ['OMP_NUM_THREADS'] = '1'
+
 from game import log
 from game import venator_gui
 from game import network
