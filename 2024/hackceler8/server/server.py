@@ -190,6 +190,7 @@ def main():
   logging.info(f"Server running on {args.hostname}:{args.port} for {args.team}")
 
   child_process = None
+  multiprocessing.set_start_method("fork")
   with network.StatusServer(("", args.stateport), args.team, args.save_file, args.save_version, args.extra_items):
     try:
       while True:
