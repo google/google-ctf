@@ -177,9 +177,6 @@ class Player(generics.GenericObject):
             if not self.in_the_air:
                 self.last_ground_pos = Point(self.x, self.y)
 
-        if not self.in_the_air:
-            self.last_ground_pos = Point(self.x, self.y)
-
     def change_direction(self, direction: str, sprinting):
         self.direction = direction
 

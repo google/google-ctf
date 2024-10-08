@@ -79,7 +79,7 @@ class Weapon(generics.GenericObject):
             origin="player",
             base_damage=Weapon.damage,
             scale=size,
-            weapon=self.name,
+            weapon=self.display_name,
         )
 
     def equip(self, player):

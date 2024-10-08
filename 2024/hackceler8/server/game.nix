@@ -31,8 +31,8 @@ let
       src = fetchFromGitHub {
         owner = "implr";
         repo = "moderngl-window";
-        rev = "150b9cbcd16f7d505b2753503753ab033099b6b3";
-        hash = "sha256-zFuN+PFUc5w+YzHQjqG9neUs0rt87bxix5IB7b/V/4Y=";
+        rev = "d089e9b1499449f59d0b138e8501cbeae50844bd";
+        hash = "sha256-d+1Q+D4RKIHxToAi+d8q8G43kSCTRVt0PsKMk+WECCQ=";
       };
     });
   pythonEnv = pkgs.python3.withPackages (p:

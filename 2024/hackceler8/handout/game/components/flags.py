@@ -63,7 +63,9 @@ class Flags:
                 total += 1
         return total == beat + 1
 
-    def obtain_flag(self, name, coll_time=time.time()):
+    def obtain_flag(self, name, coll_time=None):
+        if coll_time is None:
+            coll_time = time.time()
         for f in self.flags:
             if f.name == name:
                 if f.collected_time == 0:

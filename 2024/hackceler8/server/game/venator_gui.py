@@ -193,6 +193,8 @@ class Hackceler8(gfx.Window):
         self._center_camera_to_player()
 
     def on_key_press(self, symbol: int, _modifiers: int):
+        if self.game is None:
+            return
         k = Keys.from_ui(symbol)
         if k:
             self.game.raw_pressed_keys.add(k)
