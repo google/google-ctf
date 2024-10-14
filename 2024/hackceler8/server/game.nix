@@ -45,6 +45,7 @@ let
       xxhash
       dill
       pylint
+      pylint-venv
       pyrr
       (pkgs.callPackage imgui { })
     ]);
@@ -52,10 +53,13 @@ in
 stdenv.mkDerivation {
   name = "game";
   src = ./.;
-
   buildInputs = [ pythonEnv ];
   nativeBuildInputs = [ pkgs.makeWrapper ];
-
+  buildPhase = ''
+    # Patch, because we already have the custom version installed above
+    sed -i '/moderngl-window/c\moderngl-window' requirements.txt
+    pip install -r requirements.txt
+  '';
   installPhase = ''
     mkdir -p $out/libexec $out/bin
     cp -r . $out/libexec

@@ -16,7 +16,7 @@ import logging
 import os
 import time
 
-from game.components.items import load_items_from_save, display_to_name
+from game.components.items import load_items_from_save, display_to_name, check_item_loaded
 
 
 class SaveFile:
@@ -37,6 +37,7 @@ class SaveFile:
         'flags': game.match_flags.dump(),
         'items': [i.dump() for i in game.items],
         'coins': len([i for i in game.items if i.name.startswith("coin_")]),
+        'stars_for_boss': game.match_flags.stars_for_boss,
         'save_time': time.time(),
         'win_time': game.win_timestamp,
     }
@@ -49,7 +50,7 @@ class SaveFile:
     with open(self.filename) as sf:
       current_save = sf.read()
     payload = json.loads(current_save)
-    for k in ['version', 'flags', 'coins', 'items', 'win_time', 'save_time']:
+    for k in ['version', 'flags', 'coins', 'items', 'stars_for_boss', 'win_time', 'save_time']:
       if k not in payload:
         logging.critical(f'Missing property {k} in save file')
         return None
@@ -73,3 +74,14 @@ def apply_save_state(state, game):
     game.items = load_items_from_save(state["items"])
   if "win_timestamp" in state:
     game.win_timestamp = state["win_timestamp"]
+  try:
+    for o in list(game.tiled_map.objects):
+      if o.nametype == "Item":
+        if check_item_loaded(game.items, o):
+          logging.info(f"Duplicate object {o.nametype, o.name} detected")
+          if o in game.objects:
+            game.objects.remove(o)
+            game.tiled_map.objects.remove(o)
+          game.physics_engine.remove_generic_object(o)
+  except:
+    pass
