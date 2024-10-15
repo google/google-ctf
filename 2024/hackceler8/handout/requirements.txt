@@ -1,10 +1,10 @@
-numpy >= 1.25.2
-xxhash >= 3.3.0
-dill >= 0.3.7
-pylint-venv >= 3.0.0
-pylint >= 3.0.0
-imgui >= 2.0.0
-pillow >= 10.3.0
+numpy == 1.26.4
+xxhash == 3.4.1
+dill == 0.3.8
+pylint-venv == 3.0.3
+pylint == 3.1.1
+imgui == 2.0.0
+pillow == 10.3.0
 pyrr >= 0.10.3
 # 5.11 breaks renderdoc, TODO report this
 moderngl == 5.10.0

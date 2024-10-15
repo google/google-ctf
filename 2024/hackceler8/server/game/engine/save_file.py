@@ -74,14 +74,3 @@ def apply_save_state(state, game):
     game.items = load_items_from_save(state["items"])
   if "win_timestamp" in state:
     game.win_timestamp = state["win_timestamp"]
-  try:
-    for o in list(game.tiled_map.objects):
-      if o.nametype == "Item":
-        if check_item_loaded(game.items, o):
-          logging.info(f"Duplicate object {o.nametype, o.name} detected")
-          if o in game.objects:
-            game.objects.remove(o)
-            game.tiled_map.objects.remove(o)
-          game.physics_engine.remove_generic_object(o)
-  except:
-    pass

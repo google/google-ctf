@@ -56,6 +56,9 @@ class Hackceler8(gfx.Window):
         pass
 
     def _center_camera_to_player(self):
+        if not self.game.ready or not self.game.map_loaded:
+            return
+
         screen_center_x = self.game.player.x - (self.camera.viewport_width / 2)
         screen_center_y = self.game.player.y - (self.camera.viewport_height / 2)
 
@@ -77,7 +80,7 @@ class Hackceler8(gfx.Window):
         self.camera.move_to(player_centered)
 
     def draw(self):
-        if self.game is None:
+        if self.game is None or not self.game.ready or not self.game.map_loaded:
             mglw.ContextRefs.WINDOW.set_icon(os.path.abspath("resources/character/32bit/main32.PNG"))
             self.wnd.ctx.clear(color=(0, 0.5, 0, 1))
             gfx.draw_txt("loading", gfx.FONT_PIXEL[60], "Loading game...",

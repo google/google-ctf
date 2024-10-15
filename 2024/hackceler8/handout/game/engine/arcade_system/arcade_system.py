@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import dataclasses
 import logging
 import os
 import subprocess
@@ -151,9 +151,19 @@ class ArcadeSystem:
             self._draw_tiles()
             return
         assert all(i < self.MAX_TILE_ID for i in buf)
-        # The sprite shader wants a buffer of indexes into the sprite descriptor SSBO. We never _move_ the sprite
-        # positions here, just change their textures, so we can Simply push the entire index buffer to the gpu.
-        self.layer.txs_buffer.write(buf.astype(np.uint32).tobytes())
+        if not gfx.GL410_COMPAT:
+            # The sprite shader wants a buffer of indexes into the sprite descriptor SSBO. We never _move_ the sprite
+            # positions here, just change their textures, so we can Simply push the entire index buffer to the gpu.
+            self.layer.txs_buffer.write(buf.astype(np.uint32).tobytes())
+        else:
+            texids = list(self.layer.draws_per_tex.keys())
+            assert len(texids) == 1
+            assert len(self.layer.draws_per_tex[texids[0]]) == len(buf)
+            for i in range(len(buf)):
+                old = self.layer.draws_per_tex[texids[0]][i]
+                self.layer.draws_per_tex[texids[0]][i] = dataclasses.replace(
+                    old, tex=dataclasses.replace(old.tex, region_id=buf[i]))
+            self.layer.update_all_buffers()
         self._draw_tiles()
 
     def _draw_tiles(self):

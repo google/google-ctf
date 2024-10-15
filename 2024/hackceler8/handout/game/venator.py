@@ -65,6 +65,7 @@ class Venator:
         self.win_timestamp = 0
         self.tics = 0
         self.ready = True
+        self.map_loaded = False
         self.waiting_for_server_txt = False
 
         if not is_server and self.net is not None:
@@ -153,8 +154,6 @@ class Venator:
         }
         self.raw_pressed_keys: set[Keys] = set()
         self.pressed_keys = set()
-
-        self.setup()
 
     @property
     def won(self):
@@ -447,7 +446,7 @@ class Venator:
         self.screen_fader = ScreenFader(close, cleanup)
 
     def _save(self):
-        if self.is_server and not self.save_cooldown and not self.player.dead:
+        if self.is_server and not self.save_cooldown and (self.player is None or not self.player.dead):
             logging.info(f"Saving state, items: {self.items}")
             self.save_file.save(self)
             self.save_cooldown = True
@@ -470,6 +469,10 @@ class Venator:
             assert not self.is_server and self.net is not None
             self.recv_from_server()
             return
+
+        if not self.map_loaded:
+            self.map_loaded = True
+            self.setup()
 
         self.pressed_keys = self.tracked_keys & self.raw_pressed_keys
         self.newly_pressed_keys = self.pressed_keys.difference(

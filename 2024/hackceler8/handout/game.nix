@@ -1,6 +1,6 @@
-{ stdenv, python3Packages, fetchPypi, fetchFromGitHub, pkgs, runtimeShell }:
+{ stdenv, python312Packages, fetchPypi, fetchFromGitHub, pkgs, runtimeShell }:
 let
-  latestCython0 = python3Packages.cython_0.overrideAttrs (self: super: rec {
+  latestCython0 = python312Packages.cython_0.overrideAttrs (self: super: rec {
     version = "0.29.37";
     src = fetchPypi {
       pname = "Cython";
@@ -8,8 +8,8 @@ let
       hash = "sha256-+BPUpt2Ure5dT/JmGR0dlb9tQWSk+sxTVCLAIbJQTPs=";
     };
   });
-  imgui = { python3Packages, pkg-config, imgui, fetchPypi, fetchFromGitHub }:
-    with python3Packages;
+  imgui = { python312Packages, pkg-config, imgui, fetchPypi, fetchFromGitHub }:
+    with python312Packages;
     buildPythonPackage rec {
       pname = "imgui";
       version = "2.0.0";
@@ -26,7 +26,7 @@ let
       doCheck = false;
     };
   # moderngl-window with applied fix
-  moderngl-window = python3Packages.moderngl-window.overrideAttrs
+  moderngl-window = python312Packages.moderngl-window.overrideAttrs
     (self: super: {
       src = fetchFromGitHub {
         owner = "implr";
@@ -35,7 +35,7 @@ let
         hash = "sha256-d+1Q+D4RKIHxToAi+d8q8G43kSCTRVt0PsKMk+WECCQ=";
       };
     });
-  pythonEnv = pkgs.python3.withPackages (p:
+  pythonEnv = pkgs.python312.withPackages (p:
     with p; [
       pip
       moderngl
