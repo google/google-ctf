@@ -1,0 +1,225 @@
+#!/usr/bin/env python3
+
+import sys
+import random
+from collections import deque
+
+# 800x800 px screen, 20x20 tiles
+W = 21
+H = 21
+TW = 32
+TH = 32
+
+WON = 'W'
+NOT_WON = '\x00'
+WALL = '\x08'
+COIN = 28
+PLAYER = [24, 25, 26, 27]
+PLAYER_DEATH = [27, 29, 30, 31, 0]
+RIGHT = 0
+LEFT = 1
+DOWN = 2
+UP = 3
+ENEMY_COLORS = [16, 18, 20, 22]
+UPDATE_PERIOD = 20
+
+num = 0x1dfff780000d7ffd4000015df75a820ad5d7568808b55b55a888ad701d6a222b55b55a2022d5d756a082b5df750000057ffd600003dfff7
+WALLS = ''
+for i in range(W*H):
+  WALLS += WALL if (num&1 == 1) else '\0'
+  num >>= 1
+ENEMIES = [
+    # Level 1
+    [(1,1), (1,19), (19,1), (19,19)],
+    # Level 2
+    [(1,1), (1,19), (19,1), (19,19), (3,10), (17,10), (10,3), (10,17), (5,5), (5,15)],
+    # Level 3
+    [(1,1), (1,19), (19,1), (19,19), (3,10), (17,10), (10,3), (10,17), (5,5), (5,15), (15,5), (15,15), (10,7), (10,13), (7,10), (13,10)],
+]
+COIN_COUNT = [4, 6, 8]
+
+class Enemy:
+  def __init__(self, x, y, color, direction):
+    self.x = x
+    self.y = y
+    self.color = color
+    self.direction = direction
+
+  def walk(self, game):
+    # BFS to find closest path to the player.
+    q = deque()
+    q.append((self.x, self.y))
+    prev_coords = {(self.x, self.y): None}
+    next_x = None
+    next_y = None
+    while len(q) > 0:
+      x, y = q.popleft()
+      if x == game.x and y == game.y:
+        # Traverse back to the second element of the path to player.
+        curr_x = x
+        curr_y = y
+        while True:
+          prev_x, prev_y = prev_coords[(curr_x, curr_y)]
+          if prev_coords[(prev_x, prev_y)] is None:
+            next_x = curr_x
+            next_y = curr_y
+            break
+          curr_x = prev_x
+          curr_y = prev_y
+        break
+      for coords in [(x+1, y), (x, y+1), (x-1, y), (x, y-1)]:
+        new_x, new_y = coords
+        if new_x >= W or new_y >= H or new_x < 0 or new_y < 0:
+          continue
+        if WALLS[new_x*H+new_y] != '\0':
+          continue
+        if (new_x, new_y) in prev_coords:
+          continue
+        prev_coords[(new_x, new_y)] = (x, y)
+        q.append((new_x, new_y))
+    if next_x is None: # No path found
+      return
+    prev_x = self.x
+    self.x = next_x
+    self.y = next_y
+    if self.x > prev_x:
+      self.direction = RIGHT
+    elif self.x < prev_x:
+      self.direction = LEFT
+
+class Game:
+  def __init__(self):
+    self.level = 1
+    self._reset()
+
+  def tick(self, keys) -> bool:
+    if self.death_timer > 0:
+      self.death_timer += 1
+      if self.death_timer == 5*UPDATE_PERIOD:
+        exit(0)
+      self._update_screen()
+      return False
+
+    self.enemy_walk_timer += 1
+    if self.enemy_walk_timer == UPDATE_PERIOD:
+      self.enemy_walk_timer = 0
+    for e in self.enemies:
+      if self.enemy_walk_timer == 0:
+        e.walk(self)
+
+    if self.move_timer == 0:
+      moving = True
+      if keys[0] == '1':
+        self.direction = UP
+      elif keys[1] == '1':
+        self.direction = LEFT
+      elif keys[2] == '1':
+        self.direction = DOWN
+      elif keys[3] == '1':
+        self.direction = RIGHT
+      else:
+        moving = False
+      if moving:
+        prev = (self.x, self.y)
+        self.move_timer = UPDATE_PERIOD-1
+        if self.direction == UP:
+          self.y += 1
+          if self.y >= H:
+            self.y -= H
+        elif self.direction == DOWN:
+          self.y -= 1
+          if self.y < 0:
+            self.y += H
+        elif self.direction == LEFT:
+          self.x -= 1
+          if self.x < 0:
+            self.x += W
+        elif self.direction == RIGHT:
+          self.x += 1
+          if self.x >= W:
+            self.x -= W
+        if WALLS[self.x*H+self.y] != '\0': # Don't move through walls
+          self.x, self.y = prev
+    else:
+      self.move_timer -= 1
+
+    for e in self.enemies:
+      if self.x == e.x and self.y == e.y:
+        self.death_timer = 1
+        self._update_screen()
+        return False
+
+    for c in self.coins:
+      if self.x == c[0] and self.y == c[1]:
+        self.coins.remove(c)
+        break
+    if len(self.coins) == 0:
+      self.level += 1
+      if self.level > 3:
+        self._update_screen()
+        return True
+      self._reset()
+
+    self._update_screen()
+    return False
+
+  def draw(self) -> str:
+    return self.screen
+
+  def _put(self, x, y, block):
+    idx = y * W + x
+    self.screen = self.screen[:idx] + chr(block) + self.screen[idx+1:]
+
+  def _update_screen(self):
+    self.screen = WALLS
+    for c in self.coins:
+      self._put(c[0], c[1], COIN)
+    for e in self.enemies:
+      self._put(e.x, e.y, ENEMY_COLORS[e.color]+(1 if e.direction == LEFT else 0))
+    player_tile = PLAYER[self.direction]
+    if self.death_timer > 0:
+      player_tile = PLAYER_DEATH[min(len(PLAYER_DEATH)-1, self.death_timer // UPDATE_PERIOD)]
+    self._put(self.x, self.y, player_tile)
+
+  def _reset(self):
+    self.screen = WALLS
+    self.x = self.y = 10
+    self.direction = RIGHT
+    self.move_timer = 0
+    self.death_timer = 0
+    self.enemy_walk_timer = 0
+    # Init coins.
+    self.coins = []
+    random.seed(self.level*1234)
+    for i in range(COIN_COUNT[self.level-1]):
+      x = y = 0
+      while WALLS[x*H+y] != '\0' or (x == self.y and y == self.y):
+        x = random.randrange(W)
+        y = random.randrange(H)
+      self.coins.append((x, y))
+    # Init enemies.
+    self.enemies = []
+    color = 0
+    for e in ENEMIES[self.level-1]:
+      self.enemies.append(Enemy(e[0], e[1], color,  RIGHT if e[0] <= 10 else LEFT))
+      color = (color + 1) % 4
+
+
+if __name__ == "__main__":
+  sys.stdout.write(chr(W) + chr(H) + chr(TW) + chr(TH))
+  sys.stdout.flush()
+  game = Game()
+  for line in sys.stdin:
+    parts = line.strip().split(" ")
+    match parts[0]:
+      case "TICK":
+        if game.tick(parts[1]):
+          sys.stdout.write(WON)
+        else:
+          sys.stdout.write(NOT_WON)
+        sys.stdout.flush()
+      case "DRAW":
+        sys.stdout.write(game.draw())
+        sys.stdout.flush()
+      case _:
+          exit(1)

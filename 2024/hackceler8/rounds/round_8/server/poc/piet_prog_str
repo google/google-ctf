@@ -1,0 +1,635 @@
+
+replay.enqueue(increase_left)
+
+for i in range(15):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(7):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(15):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(19):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(4):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(4):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(5):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(19):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(7):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(15):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(15):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(4):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(13):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(19):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(5):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(4):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(15):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(19):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(5):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(19):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(4):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(4):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(15):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(4):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(5):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(15):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(8):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_right)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_right)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_right)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_right)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_right)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_right)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_right)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_right)
+
+for i in range(15):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_right)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_right)
+
+for i in range(6):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_right)
+
+for i in range(8):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(4):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(15):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(6):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(4):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(15):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(19):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(5):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(4):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(18):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(18):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(2):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_up)
+
+for i in range(11):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(19):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_left)
+
+for i in range(11):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(15):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(15):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(20):
+    replay.enqueue(go_next_color)
+
+replay.enqueue(increase_down)
+
+for i in range(17):
+    replay.enqueue(go_next_color)

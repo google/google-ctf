@@ -1,0 +1,62 @@
+From 36f2935a517750d7e48353ae15f4c60d0f146df7 Mon Sep 17 00:00:00 2001
+From: Erik Varga <erikvarga@google.com>
+Date: Tue, 17 Sep 2024 22:38:00 +0200
+Subject: [PATCH 1/1] Patch to bypass the 'spiky wall' curse.
+
+Change-Id: I70ae3cf67ee3c66edfc6563e8f0d0ad2ece43441
+---
+ game/venator.py | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/game/venator.py b/game/venator.py
+index 8c849f0..bc16d53 100644
+--- a/game/venator.py
++++ b/game/venator.py
+@@ -24,6 +24,7 @@ import sys
+ from threading import Lock, Thread
+ import time
+ from typing import Optional
++from game.engine.hitbox import Rectangle
+ 
+ # TODO BEFORE RELEASING TO PLAYERS: Remove block start
+ from dev import generate_maps
+@@ -405,6 +406,7 @@ class Venator:
+ 
+     def send_game_info(self):
+         if self.is_server or self.net is None:
++            self.raw_pressed_keys = self.saved_pressed_keys.copy()
+             return
+         logging.debug(f"{self.tics} : {self.raw_pressed_keys}")
+         msg = {
+@@ -429,6 +431,7 @@ class Venator:
+ 
+         msg = json.dumps(msg).encode()
+         self.net.send_one(msg)
++        self.raw_pressed_keys = self.saved_pressed_keys.copy()
+ 
+     def get_text_input(self) -> Optional[str]:
+         if self.is_server:
+@@ -494,6 +497,20 @@ class Venator:
+             self.recv_from_server()
+             return
+ 
++        self.saved_pressed_keys = self.raw_pressed_keys.copy()
++        # Spiky wall bypass
++        if Keys.D in self.raw_pressed_keys or Keys.A in self.raw_pressed_keys:
++            if self.player is not None:
++                player_rect = Rectangle(self.player.x1, self.player.x2, self.player.y1, self.player.y2)
++                if Keys.D in self.raw_pressed_keys:
++                    player_rect = player_rect.offset(self.player.base_x_speed * self.player.speed_multiplier, 0)
++                elif Keys.A in self.raw_pressed_keys:
++                    player_rect = player_rect.offset(-self.player.base_x_speed * self.player.speed_multiplier, 0)
++                for o in self.objects:
++                    if o.blocking and o.collides(player_rect) and int(round(o.get_mpv(player_rect).y, 2)) == 0 and int(round(o.get_mpv(player_rect).x, 2)) != 0:
++                        self.raw_pressed_keys.discard(Keys.D)
++                        self.raw_pressed_keys.discard(Keys.A)
++
+         self.pressed_keys = self.tracked_keys & self.raw_pressed_keys
+         self.newly_pressed_keys = self.pressed_keys.difference(
+             self.prev_pressed_keys
+-- 
+2.46.0.662.g92d0881bb0-goog
+

@@ -1,0 +1,47 @@
+From 6e2aa9e7831839581f8c984c1a5461c080176716 Mon Sep 17 00:00:00 2001
+From: Erik Varga <erikvarga@google.com>
+Date: Tue, 17 Sep 2024 21:40:28 +0200
+Subject: [PATCH 1/1] Patch to bypass the 'forgetful keys' curse.
+
+Change-Id: I816fb57c49300f8f35f193ad4f0f6b89a10d54cf
+---
+ game/venator.py | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/game/venator.py b/game/venator.py
+index 8c849f0..5ca20e9 100644
+--- a/game/venator.py
++++ b/game/venator.py
+@@ -405,6 +405,7 @@ class Venator:
+ 
+     def send_game_info(self):
+         if self.is_server or self.net is None:
++            self.raw_pressed_keys = self.saved_pressed_keys.copy()
+             return
+         logging.debug(f"{self.tics} : {self.raw_pressed_keys}")
+         msg = {
+@@ -429,6 +430,7 @@ class Venator:
+ 
+         msg = json.dumps(msg).encode()
+         self.net.send_one(msg)
++        self.raw_pressed_keys = self.saved_pressed_keys.copy()
+ 
+     def get_text_input(self) -> Optional[str]:
+         if self.is_server:
+@@ -494,6 +496,13 @@ class Venator:
+             self.recv_from_server()
+             return
+ 
++        self.saved_pressed_keys = self.raw_pressed_keys.copy()
++        # Forgetful key bypass
++        if Keys.D in self.raw_pressed_keys or Keys.A in self.raw_pressed_keys:
++            if self.player is not None and self.player.forget_timer == 30:
++                self.raw_pressed_keys.discard(Keys.D)
++                self.raw_pressed_keys.discard(Keys.A)
++
+         self.pressed_keys = self.tracked_keys & self.raw_pressed_keys
+         self.newly_pressed_keys = self.pressed_keys.difference(
+             self.prev_pressed_keys
+-- 
+2.46.0.662.g92d0881bb0-goog
+

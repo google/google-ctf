@@ -1,0 +1,117 @@
+#!/usr/bin/env python3
+
+import sys
+from collections import deque
+
+class Point:
+  def __init__(self, x, y):
+    self.x = x
+    self.y = y
+
+# 800x800 px screen, 20x20 tiles
+W = 20
+H = 20
+TW = 32
+TH = 32
+
+WON = 'W'
+NOT_WON = '\x00'
+WALL = '\x0a'
+COIN = 3
+
+num = 0xfffff800e1800018080180f8183881800c1f00018000f8000180001f0001c0021820e180081f80018803f880018a001fffff
+DEFAULT_SCREEN = ''
+for i in range(W*H):
+  DEFAULT_SCREEN += WALL if (num&1 == 1) else '\0'
+  num >>= 1
+COINS = []
+for p in [(13, 4), (10, 9), (13, 16), (3, 12), (3, 4), (4, 2), (17, 2)]:
+  COINS.append(Point(p[0], p[1]))
+
+class Game:
+  def __init__(self):
+    self._reset()
+
+  def tick(self, keys) -> bool:
+    if keys[0] == '1':
+      self.direction = "W"
+    elif keys[1] == '1':
+      self.direction = "A"
+    elif keys[2] == '1':
+      self.direction = "S"
+    elif keys[3] == '1':
+      self.direction = "D"
+    self.tic += 1
+    if self.tic % 10 == 0:
+      head = Point(self.snek[-1].x, self.snek[-1].y)
+      match self.direction:
+        case "W":
+          head.y += 1
+        case "A":
+          head.x -= 1
+        case "S":
+          head.y -= 1
+        case "D":
+          head.x += 1
+      self.snek.append(head)
+
+      if self._get(head.x, head.y) == COIN:
+        self.coin_num += 1
+        if self.coin_num == len(COINS):
+          # Congrats, you got all the coins!
+          return True
+        self._put(COINS[self.coin_num].x, COINS[self.coin_num].y, COIN)
+      else:
+        tail = self.snek.popleft()
+        self._put(tail.x, tail.y, 0)
+        if self._get(head.x, head.y) != 0:
+          self._reset()
+          return False
+
+      tail = self.snek[0]
+      self._put(head.x, head.y, self._get(tail.x, tail.y))
+
+    return False
+
+  def draw(self) -> str:
+    return self.screen
+
+  def _reset(self):
+    self.tic = 1
+    self.screen = DEFAULT_SCREEN
+    self.direction = "D"
+    self.snek = deque()
+    self.snek.append(Point(4, 4))
+    self.snek.append(Point(5, 4))
+    self.snek.append(Point(6, 4))
+    for p in self.snek:
+      self._put(p.x, p.y, 7)
+    self.coin_num = 0
+    self._put(COINS[0].x, COINS[0].y, COIN)
+
+  def _put(self, x, y, block):
+    idx = y * W + x
+    self.screen = self.screen[:idx] + chr(block) + self.screen[idx+1:]
+
+  def _get(self, x, y):
+    idx = y * W + x
+    return ord(self.screen[idx])
+
+if __name__ == "__main__":
+  sys.stdout.write(chr(W) + chr(H) + chr(TW) + chr(TH))
+  sys.stdout.flush()
+  game = Game()
+  for line in sys.stdin:
+    parts = line.strip().split(" ")
+    match parts[0]:
+      case "TICK":
+        if game.tick(parts[1]):
+          sys.stdout.write(WON)
+        else:
+          sys.stdout.write(NOT_WON)
+        sys.stdout.flush()
+      case "DRAW":
+        sys.stdout.write(game.draw())
+        sys.stdout.flush()
+      case _:
+          exit(1)

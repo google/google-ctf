@@ -1,0 +1,12 @@
+numpy == 1.26.4
+xxhash == 3.4.1
+dill == 0.3.8
+pylint-venv == 3.0.3
+pylint == 3.1.1
+imgui == 2.0.0
+pillow == 10.3.0
+pyrr >= 0.10.3
+# 5.11 breaks renderdoc, TODO report this
+moderngl == 5.10.0
+# https://github.com/moderngl/moderngl-window/pull/195, https://github.com/moderngl/moderngl-window/pull/194
+-e git+https://github.com/implr/moderngl-window.git@d089e9b1499449f59d0b138e8501cbeae50844bd#egg=moderngl_window

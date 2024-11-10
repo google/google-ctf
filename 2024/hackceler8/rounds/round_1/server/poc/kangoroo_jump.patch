@@ -1,0 +1,47 @@
+diff --git a/game/venator.py b/game/venator.py
+index 62c7e25..0ae929c 100644
+--- a/game/venator.py
++++ b/game/venator.py
+@@ -24,6 +24,7 @@ import sys
+ from threading import Lock, Thread
+ import time
+ from typing import Optional
++from game.engine.hitbox import Rectangle
+ 
+ from arcade import Texture
+ 
+@@ -423,6 +424,7 @@ class Venator:
+ 
+     def send_game_info(self):
+         if self.is_server or self.net is None:
++            self.raw_pressed_keys = self.saved_pressed_keys.copy()
+             return
+         logging.debug(f"{self.tics} : {self.raw_pressed_keys}")
+         msg = {
+@@ -447,6 +449,7 @@ class Venator:
+ 
+         msg = json.dumps(msg).encode()
+         self.net.send_one(msg)
++        self.raw_pressed_keys = self.saved_pressed_keys.copy()
+ 
+     def get_text_input(self) -> Optional[str]:
+         if self.is_server:
+@@ -511,6 +514,20 @@ class Venator:
+             self.recv_from_server()
+             return
+ 
++        self.saved_pressed_keys = self.raw_pressed_keys.copy()
++
++        # Re-enable kangoroo jumping
++        if Keys.W in self.raw_pressed_keys and self.player is not None:
++            player_rect = Rectangle(self.player.x1, self.player.x2, self.player.y1 - 1, self.player.y2 - 1)
++            can_jump = False
++            _, collisions_y, _ = self.physics_engine._get_collisions_list(player_rect)
++            for _, mpv in collisions_y:
++                if mpv.y > 0:
++                    can_jump = True
++                    break
++            if not can_jump:
++                self.raw_pressed_keys.discard(Keys.W)
++
+ 

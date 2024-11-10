@@ -1,0 +1,49 @@
+From 13f0c393136647a42b9f89d977c42b74a0d26f8d Mon Sep 17 00:00:00 2001
+From: Erik Varga <erikvarga@google.com>
+Date: Tue, 17 Sep 2024 22:14:28 +0200
+Subject: [PATCH 1/1] Patch to bypass the 'sticky keys' curse.
+
+Change-Id: I38044e09d03d57b4c3d35fb9aa9e1af5c3e3600c
+---
+ game/venator.py | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/game/venator.py b/game/venator.py
+index 8c849f0..aacd07f 100644
+--- a/game/venator.py
++++ b/game/venator.py
+@@ -405,6 +405,7 @@ class Venator:
+ 
+     def send_game_info(self):
+         if self.is_server or self.net is None:
++            self.raw_pressed_keys = self.saved_pressed_keys.copy()
+             return
+         logging.debug(f"{self.tics} : {self.raw_pressed_keys}")
+         msg = {
+@@ -429,6 +430,7 @@ class Venator:
+ 
+         msg = json.dumps(msg).encode()
+         self.net.send_one(msg)
++        self.raw_pressed_keys = self.saved_pressed_keys.copy()
+ 
+     def get_text_input(self) -> Optional[str]:
+         if self.is_server:
+@@ -494,6 +496,15 @@ class Venator:
+             self.recv_from_server()
+             return
+ 
++        self.saved_pressed_keys = self.raw_pressed_keys.copy()
++        self.saved_prev_keys = self.prev_pressed_keys.copy()
++        if self.player is not None:
++            if Keys.A not in self.raw_pressed_keys and Keys.D not in self.raw_pressed_keys:
++                if self.player.sticky_direction == self.player.DIR_E and Keys.D not in self.saved_prev_keys:
++                    self.raw_pressed_keys.add(Keys.D)
++                elif self.player.sticky_direction == self.player.DIR_W and Keys.A not in self.saved_prev_keys:
++                    self.raw_pressed_keys.add(Keys.A)
++
+         self.pressed_keys = self.tracked_keys & self.raw_pressed_keys
+         self.newly_pressed_keys = self.pressed_keys.difference(
+             self.prev_pressed_keys
+-- 
+2.46.0.662.g92d0881bb0-goog
+

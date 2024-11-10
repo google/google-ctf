@@ -1,0 +1,68 @@
+From e8a619de903ea99e5ec7b1eb884907fa57c6d07e Mon Sep 17 00:00:00 2001
+From: Erik Varga <erikvarga@google.com>
+Date: Tue, 17 Sep 2024 21:22:52 +0200
+Subject: [PATCH 1/1] Patch to bypass the 'evil portal' curse.
+
+Change-Id: I22c5f0bfccf09d95f90241c2c119b5fb02bb8078
+---
+ game/venator.py | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/game/venator.py b/game/venator.py
+index 8c849f0..13d1a70 100644
+--- a/game/venator.py
++++ b/game/venator.py
+@@ -24,6 +24,7 @@ import sys
+ from threading import Lock, Thread
+ import time
+ from typing import Optional
++from game.engine.hitbox import Rectangle
+ 
+ # TODO BEFORE RELEASING TO PLAYERS: Remove block start
+ from dev import generate_maps
+@@ -405,6 +406,7 @@ class Venator:
+ 
+     def send_game_info(self):
+         if self.is_server or self.net is None:
++            self.raw_pressed_keys = self.saved_pressed_keys.copy()
+             return
+         logging.debug(f"{self.tics} : {self.raw_pressed_keys}")
+         msg = {
+@@ -429,6 +431,7 @@ class Venator:
+ 
+         msg = json.dumps(msg).encode()
+         self.net.send_one(msg)
++        self.raw_pressed_keys = self.saved_pressed_keys.copy()
+ 
+     def get_text_input(self) -> Optional[str]:
+         if self.is_server:
+@@ -494,6 +497,26 @@ class Venator:
+             self.recv_from_server()
+             return
+ 
++        self.saved_pressed_keys = self.raw_pressed_keys.copy()
++        # Evil portal bypass
++        if Keys.D in self.raw_pressed_keys or Keys.A in self.raw_pressed_keys:
++            if self.player is not None:
++                player_rect = Rectangle(self.player.x1, self.player.x2, self.player.y1, self.player.y2)
++                if Keys.D in self.raw_pressed_keys:
++                    player_rect = player_rect.offset(self.player.base_x_speed * self.player.speed_multiplier, 0)
++                elif Keys.A in self.raw_pressed_keys:
++                    player_rect = player_rect.offset(-self.player.base_x_speed * self.player.speed_multiplier, 0)
++                for o in self.objects:
++                    if o.nametype == "Portal" and o.collides(player_rect):
++                        if self.tics % 3 == 1:
++                            pass
++                            print("XX GOOO", self.tics, player_rect.x2)
++                        else:
++                            print("XX STOOOP", self.tics, player_rect.x2)
++                            self.raw_pressed_keys.discard(Keys.D)
++                            self.raw_pressed_keys.discard(Keys.A)
++                        break
++
+         self.pressed_keys = self.tracked_keys & self.raw_pressed_keys
+         self.newly_pressed_keys = self.pressed_keys.difference(
+             self.prev_pressed_keys
+-- 
+2.46.0.662.g92d0881bb0-goog
+

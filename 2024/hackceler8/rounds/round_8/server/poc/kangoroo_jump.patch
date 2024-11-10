@@ -1,0 +1,54 @@
+From 93e090e0f5bf693dde2b1b6ceb6ce157c1be82f1 Mon Sep 17 00:00:00 2001
+From: Erik Varga <erikvarga@google.com>
+Date: Sat, 12 Oct 2024 15:02:14 +0200
+Subject: [PATCH 1/1] Patch to enable kangoroo jumps.
+
+Change-Id: I969feed5ca672061cda871f66a903b81213f2ff2
+---
+ game/venator.py | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/game/venator.py b/game/venator.py
+index e31f6de..1a48ecf 100644
+--- a/game/venator.py
++++ b/game/venator.py
+@@ -408,6 +408,7 @@ class Venator:
+ 
+     def send_game_info(self):
+         if self.is_server or self.net is None:
++            self.raw_pressed_keys = self.saved_pressed_keys.copy()
+             return
+         logging.debug(f"{self.tics} : {self.raw_pressed_keys}")
+         msg = {
+@@ -429,6 +430,7 @@ class Venator:
+ 
+         msg = json.dumps(msg).encode()
+         self.net.send_one(msg)
++        self.raw_pressed_keys = self.saved_pressed_keys.copy()
+ 
+     def get_text_input(self) -> Optional[str]:
+         if self.is_server:
+@@ -498,6 +500,20 @@ class Venator:
+             self.recv_from_server()
+             return
+ 
++        self.saved_pressed_keys = self.raw_pressed_keys.copy()
++        # Re-enable kangoroo jumping
++        from game.engine import hitbox
++        if Keys.W in self.raw_pressed_keys and self.player is not None:
++            player_rect = hitbox.Rectangle(self.player.x1, self.player.x2, self.player.y1 - 1, self.player.y2 - 1)
++            can_jump = False
++            _, collisions_y, _ = self.physics_engine._get_collisions_list(player_rect)
++            for _, mpv in collisions_y:
++                if mpv.y > 0:
++                    can_jump = True
++                    break
++            if not can_jump:
++                self.raw_pressed_keys.discard(Keys.W)
++
+         self.pressed_keys = self.tracked_keys & self.raw_pressed_keys
+         self.newly_pressed_keys = self.pressed_keys.difference(
+             self.prev_pressed_keys
+-- 
+2.47.0.rc1.288.g06298d1525-goog
+

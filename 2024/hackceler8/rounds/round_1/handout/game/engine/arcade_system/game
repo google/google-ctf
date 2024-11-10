@@ -1,0 +1,159 @@
+#!/usr/bin/env python3
+
+import sys
+
+# 800x800 px screen, 20x20 tiles
+W = 30
+H = 20
+TW = 32
+TH = 32
+
+WON = 'W'
+NOT_WON = '\x00'
+
+PLAYER_Y = 3
+PLAYER_W = 4
+OPP_Y = 16
+
+PLAYER_TILE = 8
+OPP_TILE = 12
+OPP_W = [4, 6, 8, 18]
+OPP_COOLDOWN = 20
+
+WALL_1 = 5
+WALL_2 = 24
+BALL_TILE = 3
+
+
+class Game:
+  def __init__(self):
+    self.tics = 0
+    self.level = 0
+    self._reset()
+
+  def tick(self, keys) -> bool:
+    self.tics += 1
+    if self.tics % 3 == 0:
+      if keys[1] == '1': # A
+        self.player_x -= 1
+        self._put(self.player_x+PLAYER_W, PLAYER_Y, 0)
+        self._put(self.player_x, PLAYER_Y, PLAYER_TILE)
+      elif keys[3] == '1': # D
+        self._put(self.player_x, PLAYER_Y, 0)
+        self._put(self.player_x+PLAYER_W, PLAYER_Y, PLAYER_TILE)
+        self.player_x += 1
+      dx = self._opp_move()
+      if dx == -1:
+        self.opp_x -= 1
+        self._put(self.opp_x+OPP_W[self.level], OPP_Y, 0)
+        self._put(self.opp_x, OPP_Y, OPP_TILE)
+      elif dx == 1:
+        self._put(self.opp_x, OPP_Y, 0)
+        self._put(self.opp_x+OPP_W[self.level], OPP_Y, OPP_TILE)
+        self.opp_x += 1
+
+    if self.tics % 6 == 0:
+      self._put(self.ball_x, self.ball_y, 0)
+      coll = []
+      for x in range(min(0, self.dx), max(0, self.dx)+1):
+        for y in range(min(0, self.dy), max(0, self.dy)+1):
+          if self._get(self.ball_x+x, self.ball_y+y) != 0:
+            coll.append((x, y))
+
+      hit_side = False
+      for c in coll:
+        if c[0] != 0 and c[1] == 0:
+          self.dx *= -1
+          hit_side = True
+        if c[0] == 0 and c[1] != 0:
+          self.dy *= -1
+          hit_side = True
+      if len(coll) > 0 and not hit_side: # hit a corner
+          self.dx *= -1
+          self.dy *= -1
+
+      self.ball_x += self.dx
+      self.ball_y += self.dy
+      self._put(self.ball_x, self.ball_y, BALL_TILE)
+      if self.ball_y == 0: # Won!
+        self.level = 0
+        self._reset()
+      if self.ball_y == H-1: # Lost :C
+        self.level += 1
+        if self.level >= len(OPP_W):
+          return True
+        self._reset()
+    return False
+
+  def draw(self) -> str:
+    return self.screen
+
+  def _opp_move(self) -> int:
+    need_to_wait = self.opp_last_pause is not None and (self.tics - self.opp_last_pause) < OPP_COOLDOWN
+    # Waiting
+    if need_to_wait or self.dy < 0:
+      if self.opp_last_pause is None:
+        self.opp_last_pause = self.tics
+      return 0
+    # Moving
+    self.opp_last_pause = None
+    if self.ball_x < self.opp_x:
+      return -1
+    if self.ball_x >= self.opp_x + OPP_W[self.level]:
+      return 1
+
+    # Nothing to do
+    if self.opp_last_pause is None:
+        self.opp_last_pause = self.tics
+    return 0
+
+  def _reset(self):
+    self.screen = '\0'*(W*H)
+
+    self.player_x = W // 2 - PLAYER_W // 2
+    for x in range(PLAYER_W):
+      self._put(self.player_x + x, PLAYER_Y, PLAYER_TILE)
+
+    self.opp_last_pause = None
+    self.opp_x = W // 2 - OPP_W[self.level] // 2
+    for x in range(OPP_W[self.level]):
+      self._put(self.opp_x + x, OPP_Y, OPP_TILE)
+
+    for x in [WALL_1, WALL_2]:
+      for y in range(PLAYER_Y+1, OPP_Y):
+        self._put(x, y, 6)
+
+    self.ball_x = W // 2
+    self.ball_y = PLAYER_Y + 1
+    self.dx = self.dy = 1
+    self._put(self.ball_x, self.ball_y, BALL_TILE)
+
+  def _put(self, x, y, block):
+    idx = y * W + x
+    self.screen = self.screen[:idx] + chr(block) + self.screen[idx+1:]
+
+  def _get(self, x, y):
+    try:
+      idx = y * W + x
+      return ord(self.screen[idx])
+    except:
+      return 0
+
+if __name__ == "__main__":
+  sys.stdout.write(chr(W) + chr(H) + chr(TW) + chr(TH))
+  sys.stdout.flush()
+  game = Game()
+  for line in sys.stdin:
+    parts = line.strip().split(" ")
+    match parts[0]:
+      case "TICK":
+        if game.tick(parts[1]):
+          sys.stdout.write(WON)
+        else:
+          sys.stdout.write(NOT_WON)
+        sys.stdout.flush()
+      case "DRAW":
+        sys.stdout.write(game.draw())
+        sys.stdout.flush()
+      case _:
+          exit(1)
