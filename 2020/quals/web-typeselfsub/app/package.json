@@ -13,9 +13,9 @@
     "puppeteer": "*",
     "body-parser": "^1.19.0",
     "cookie-parser": "*",
-    "cookie-session": "^1.4.0",
+    "cookie-session": "^2.1.1",
     "ejs": "^3.1.2",
-    "express": "^4.17.1",
+    "express": "^4.21.2",
     "mysql": "*",
     "uuid": "^8.0.0",
     "request": "*"

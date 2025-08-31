@@ -5,8 +5,8 @@
   "main": "backend.js",
   "dependencies": {
     "bufferutil": "^4.0.1",
-    "express": "^4.17.1",
-    "express-session": "^1.17.1",
+    "express": "^4.21.2",
+    "express-session": "^1.18.2",
     "utf-8-validate": "^5.0.2",
     "ws": "^7.3.0"
   },
