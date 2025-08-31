@@ -10,6 +10,6 @@
   "license": "ISC",
   "description": "Support site for another challenge",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.21.2"
   }
 }
