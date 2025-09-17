@@ -24,8 +24,8 @@ RUN mkdir binutils-build && cd binutils-build && \
     cd /build && rm -rf /build/binutils-2.43 /build/binutils-build
 
 # Install GCC
-RUN git clone --no-checkout https://github.com/antoyo/gcc --depth=2
-RUN cd gcc && git checkout 4e995bd73c4490edfe5080ec6014d63aa9abed5f
+RUN git clone --no-checkout https://github.com/rust-lang/gcc --depth=2
+RUN cd gcc && git checkout 4a8c8ec7c375a2f6bb5ca832efa45375a590bb5d
 RUN mkdir gcc-build && cd gcc-build && \
     ../gcc/configure \
         --enable-host-shared \
