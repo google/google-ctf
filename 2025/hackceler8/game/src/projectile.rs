@@ -22,6 +22,7 @@ use crate::get_map_mut;
 use crate::map;
 use crate::res::sprites::arrow::Anim;
 
+pub const SPRITE_SIZE: i16 = 16;
 pub const HITBOX_SIZE: i16 = 4;
 pub const SPEED_PER_FRAME: i16 = 2;
 
@@ -113,6 +114,10 @@ impl Projectile {
     pub fn should_unload(&self) -> bool {
         matches!(self.status, Status::Dead)
     }
+
+    pub fn reset_trajectory(&mut self) {
+        self.trajectory.reset(self.x, self.y);
+    }
 }
 
 // Info about the direction the projectile is going on and current progress.
@@ -147,13 +152,20 @@ impl Trajectory {
             self.start_y + self.dy * self.curr_frame / self.frames_to_dest,
         )
     }
+
+    /// Resets the trajectory to start from the given coordinates.
+    fn reset(&mut self, x: i16, y: i16) {
+        self.start_x = x;
+        self.start_y = y;
+        self.curr_frame = 0;
+    }
 }
 
 impl Entity for Projectile {
     fn hitbox(&self) -> Hitbox {
         Hitbox {
-            x: self.x - HITBOX_SIZE / 2,
-            y: self.y + HITBOX_SIZE / 2,
+            x: self.x + SPRITE_SIZE / 2 - HITBOX_SIZE / 2,
+            y: self.y + SPRITE_SIZE / 2 - HITBOX_SIZE / 2,
             w: HITBOX_SIZE,
             h: HITBOX_SIZE,
         }

@@ -131,7 +131,7 @@ impl InventoryItem {
     pub fn apply_effect(&self, player: &mut Player) {
         match self.item_type {
             ItemType::Boots => {
-                player.speed += 1;
+                player.speed += crate::player::SPEED_SCALE_FACTOR;
             }
             ItemType::Goggles => {
                 player.health += 3;
@@ -148,8 +148,8 @@ impl InventoryItem {
     pub fn remove_effect(&self, player: &mut Player) {
         match self.item_type {
             ItemType::Boots => {
-                if player.speed > 1 {
-                    player.speed -= 1;
+                if player.speed > crate::player::SPEED_SCALE_FACTOR {
+                    player.speed -= crate::player::SPEED_SCALE_FACTOR;
                 }
             }
             ItemType::Goggles => {

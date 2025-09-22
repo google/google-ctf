@@ -18,30 +18,42 @@ use crate::game::Ctx;
 use crate::res::maps::WorldType;
 use crate::res::palettes;
 
-pub fn fade_in(ctx: &mut Ctx) {
-    fade(false, ctx.world.world_type, &mut ctx.vdp);
+#[derive(Copy, Clone)]
+pub enum FadeMode {
+    /// Fade from a color to the current level view
+    In,
+    /// Fade from the current level view to a color
+    Out,
 }
 
-pub fn fade_out(ctx: &mut Ctx) {
-    ctx.draw(); // Make sure sprites are updated.
-    fade(true, ctx.world.world_type, &mut ctx.vdp);
+#[derive(Copy, Clone)]
+pub enum FadeColor {
+    /// Fades from/to a black background
+    Black,
+    /// Fades from/to a white background
+    White,
 }
 
-fn fade(out: bool, world_type: WorldType, vdp: &mut TargetVdp) {
+pub fn fade(ctx: &mut Ctx, mode: FadeMode, color: FadeColor) {
     for t in 0..32 {
-        let mul = if out { t + 1 } else { 31 - t };
+        let mul = match mode {
+            FadeMode::Out => t + 1,
+            FadeMode::In => 31 - t,
+        };
         fade_palettes(
-            world_type,
+            color,
+            ctx.world.world_type,
             &[Palette::A, Palette::B, Palette::C, Palette::D],
             mul,
-            vdp,
+            &mut ctx.vdp,
         );
-        vdp.wait_for_vblank();
+        ctx.vdp.wait_for_vblank();
     }
 }
 
 // Fade the specified palettes with the specified amount (0 means completely black, 32 means completely visible).
 pub fn fade_palettes(
+    fade_color: FadeColor,
     world_type: WorldType,
     palettes: &[Palette],
     fade_amount: u16,
@@ -54,7 +66,10 @@ pub fn fade_palettes(
             for offs in [0, 4, 8] {
                 // r, g, b offsets
                 let mut comp = (color[i] >> offs) & 0xF;
-                comp = (comp * fade_amount) >> 5;
+                comp = match fade_color {
+                    FadeColor::Black => (comp * fade_amount) >> 5,
+                    FadeColor::White => (comp + fade_amount / 2).min(0xF),
+                };
                 new_color |= comp << offs;
             }
             color[i] = new_color;

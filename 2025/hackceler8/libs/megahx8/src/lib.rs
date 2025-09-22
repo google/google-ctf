@@ -3,6 +3,7 @@
 use ufmt::derive::uDebug;
 
 mod controller;
+mod portal;
 mod renderer;
 mod rng;
 mod sprite;
@@ -14,6 +15,8 @@ pub mod ports;
 pub use controller::Button;
 pub use controller::ControllerState;
 pub use controller::Controllers;
+pub use portal::Portal;
+pub use portal::ServerState;
 pub use ports::Serial;
 pub use renderer::Renderer;
 pub use rng::PseudoRng;
@@ -29,9 +32,11 @@ pub use vdp::VScrollMode;
 pub use vdp::Vdp;
 pub use vdp::WindowDivide;
 
+
 pub type TargetVdp = vdp::m68k::Vdp;
 pub type TargetControllers = controller::m68k::Controllers;
 pub type TargetRenderer = renderer::m68k::Renderer;
+pub type TargetPortal = portal::m68k::Portal;
 
 /// Default error trait
 pub enum Error {
@@ -49,6 +54,7 @@ impl core::fmt::Debug for Error {
         }
     }
 }
+
 
 #[derive(uDebug)]
 pub enum LogLevel {
@@ -110,15 +116,17 @@ pub static DEFAULT_FONT_1X1: Font = Font {
     start_index: 1,
 };
 
+
 mod m68k;
 pub mod z80;
 pub use m68k::*;
 
 #[must_use]
-pub fn init_hardware() -> (TargetVdp, TargetRenderer, TargetControllers) {
+pub fn init_hardware() -> (TargetVdp, TargetRenderer, TargetControllers, TargetPortal) {
     (
         unsafe { vdp::m68k::Vdp::new() },
         renderer::m68k::Renderer::default(),
         controller::m68k::Controllers::new(),
+        portal::m68k::Portal::new(),
     )
 }

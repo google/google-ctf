@@ -20,8 +20,8 @@ mod tileset;
 mod world;
 
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 use std::collections::HashMap;
-use std::collections::HashSet;
 use std::path::Path;
 use std::path::PathBuf;
 
@@ -348,11 +348,11 @@ pub struct Converter {
     palettes: HashMap<PaletteID, Palette>,
     tilesets: Vec<String>,
     images: Vec<String>,
-    sprites: HashSet<String>,
-    world: HashSet<String>,
-    enemy_types: HashSet<String>,
-    npc_types: HashSet<String>,
-    item_types: HashSet<String>,
+    sprites: BTreeSet<String>,
+    world: BTreeSet<String>,
+    enemy_types: BTreeSet<String>,
+    npc_types: BTreeSet<String>,
+    item_types: BTreeSet<String>,
 }
 
 impl Converter {
@@ -362,11 +362,11 @@ impl Converter {
             palettes: HashMap::new(),
             tilesets: Vec::new(),
             images: Vec::new(),
-            sprites: HashSet::new(),
-            world: HashSet::new(),
-            enemy_types: HashSet::new(),
-            npc_types: HashSet::new(),
-            item_types: HashSet::new(),
+            sprites: BTreeSet::new(),
+            world: BTreeSet::new(),
+            enemy_types: BTreeSet::new(),
+            npc_types: BTreeSet::new(),
+            item_types: BTreeSet::new(),
         }
     }
 

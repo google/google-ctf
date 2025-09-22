@@ -14,8 +14,7 @@
 
 use megahx8::*;
 
-mod boss;
-mod data;
+pub mod boss;
 mod harmless;
 mod melee;
 mod shooter;
@@ -24,6 +23,7 @@ mod singer;
 use resources::MapTileAttribute;
 
 use crate::big_sprite::BigSprite;
+use crate::data;
 use crate::entity::*;
 use crate::game;
 use crate::game::Ctx;
@@ -41,10 +41,12 @@ use crate::Direction;
 use crate::Player;
 use crate::Projectile;
 
-// Stop knockback after 30 frames (0.5s)
+/// Stop knockback after 30 frames (0.5s)
 pub const KNOCKBACK_COOLDOWN: u8 = 30;
-// Remove dying sprite after 60 frames (1s)
-pub const DEATH_COOLDOWN: u8 = 60;
+/// Regular enemies disappear after death in 1s, the boss death
+/// sequence takes longer.
+pub const REGULAR_DEATH_COOLDOWN: u16 = 50;
+pub const BOSS_DEATH_COOLDOWN: u16 = 210;
 
 pub struct Stats {
     speed: i16,
@@ -109,7 +111,7 @@ pub struct Enemy {
 }
 
 /// Collection of enemy type-specific functions.
-struct EnemyImpl {
+pub struct EnemyImpl {
     stats: fn(EnemyType) -> Stats,
     update_animation: fn(enemy: &mut Enemy, walked: bool),
 }
@@ -119,8 +121,7 @@ pub enum Status {
     Idle,
     Shooting { cooldown: u8 },
     Singing,
-    Dying { cooldown: u8, falling: bool },
-    Dead,
+    Dying { cooldown: u16, falling: bool },
 }
 
 impl Enemy {
@@ -180,6 +181,7 @@ impl Enemy {
     }
 
     pub fn update(ctx: &mut Ctx, enemy_id: usize) {
+        let mut should_save = false;
         let closest_player_id = Self::get_closest_player(ctx, enemy_id);
         let enemy = &mut ctx.world.enemies[enemy_id];
         let map = get_map_mut!(ctx);
@@ -187,24 +189,23 @@ impl Enemy {
         let mut hits = None;
 
         match enemy.status {
-            Status::Dead => {}
-            Status::Dying { cooldown, falling } => {
-                // Add flags for newly defeated minibosses.
-                if enemy.is_miniboss() && ctx.defeated_minibosses & enemy.enemy_type as u16 == 0 {
-                    ctx.defeated_minibosses |= enemy.enemy_type as u16;
-                    ctx.captured_flags += enemy.flags;
-                }
-                enemy.status = if cooldown > 0 {
-                    Status::Dying {
-                        cooldown: cooldown - 1,
-                        falling: falling,
-                    }
-                } else {
-                    if enemy.is_boss() {
+            Status::Dying {
+                falling,
+                mut cooldown,
+            } => {
+                cooldown = cooldown + 1;
+                if cooldown >= enemy.death_cooldown() {
+                    // Add flags for newly defeated bosses.
+                    if (enemy.is_miniboss() || enemy.is_boss())
+                        && ctx.defeated_minibosses & enemy.enemy_type as u16 == 0
+                    {
                         ctx.defeated_minibosses |= enemy.enemy_type as u16;
+                        ctx.captured_flags += enemy.flags;
+                        should_save = true;
                     }
-                    Status::Dead
-                };
+                }
+
+                enemy.status = Status::Dying { cooldown, falling };
             }
             Status::Idle => {
                 for p in 0..ctx.players.len() {
@@ -391,13 +392,17 @@ impl Enemy {
 
         enemy.update_animation(walking);
         enemy.update_sub_sprite_position();
+
+        if should_save {
+            ctx.save_game_challenges();
+        }
     }
 
     pub fn kill(&mut self, falling: bool) {
-        if !matches!(self.status, Status::Dead) {
+        if !matches!(self.status, Status::Dying { .. }) {
             self.status = Status::Dying {
-                cooldown: DEATH_COOLDOWN,
-                falling: falling,
+                cooldown: 0,
+                falling,
             };
             if falling {
                 self.fall_sprite.set_anim(FallSprite::Anim::Fall as usize);
@@ -412,7 +417,7 @@ impl Enemy {
         if self.stats.health != 0 && self.stats.health <= damage {
             self.stats.health = 0;
             self.status = Status::Dying {
-                cooldown: 60,
+                cooldown: 0,
                 falling: false,
             };
             return;
@@ -425,13 +430,28 @@ impl Enemy {
     }
 
     pub fn is_alive(&self) -> bool {
-        !matches!(self.status, Status::Dead | Status::Dying { .. })
+        !matches!(self.status, Status::Dying { .. })
     }
 
     /// Returns true if the enemy should be unloaded from memory.
     /// This mean the entity is fully dead and not rendered anymore.
     pub fn should_unload(&self) -> bool {
-        matches!(self.status, Status::Dead)
+        match self.status {
+            Status::Dying {
+                falling: _,
+                cooldown,
+            } => cooldown == self.death_cooldown(),
+            _ => false,
+        }
+    }
+
+    /// Amount of ticks until this enemy should finish its death sequence and be unloaded.
+    fn death_cooldown(&self) -> u16 {
+        if self.is_boss() {
+            BOSS_DEATH_COOLDOWN
+        } else {
+            REGULAR_DEATH_COOLDOWN
+        }
     }
 
     /// Enemies that return flags are minibosses. Only one of each EnemyType can be a miniboss.
@@ -452,7 +472,7 @@ impl Enemy {
             self.status,
             Status::Dying {
                 cooldown: _,
-                falling: true
+                falling: true,
             }
         )
     }

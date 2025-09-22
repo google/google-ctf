@@ -10,7 +10,7 @@ pub const WIDTH: usize = {{width}};
 // Height of the world in maps
 pub const HEIGHT: usize = {{height}};
 
-const MAPS: [Option<NewFn>; {{width}}*{{height}}] = [
+pub const MAPS: [Option<NewFn>; {{width}}*{{height}}] = [
 {{#each map_identifiers}}    {{#if this}}Some({{this.0}}::new){{else}}None{{/if}}{{#unless @last}},{{/unless}}
 {{/each}}
 ];

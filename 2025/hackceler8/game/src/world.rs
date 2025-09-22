@@ -14,6 +14,7 @@
 
 use megahx8::*;
 
+use crate::enemy::boss::BossState;
 use crate::entity::Entity;
 use crate::game;
 use crate::game::Ctx;
@@ -100,6 +101,7 @@ pub struct World {
     pub switches: heapless::Vec<Switch, 16>,
     pub switches_completed: Bitmask,
     pub projectiles: heapless::Vec<Projectile, 16>,
+    pub boss_state: Option<BossState>,
 }
 
 impl World {
@@ -133,17 +135,24 @@ impl World {
             doors_opened: Bitmask::new(),
             switches: heapless::Vec::new(),
             switches_completed: Bitmask::new(),
+            boss_state: None,
         };
 
-        // Clear the path to the boss gate if enough flags have been captured.
-        if matches!(world_type, maps::WorldType::Overworld)
-            && captured_flags >= game::FLAGS_FOR_BOSS_TEMPLE
-        {
-            world.doors_opened = Bitmask::all_set();
+        match world_type {
+            maps::WorldType::Overworld => {
+                // Clear the path to the boss gate if enough flags have been captured.
+                if captured_flags >= game::FLAGS_FOR_BOSS_TEMPLE {
+                    world.doors_opened = Bitmask::all_set();
+                }
+            }
+            maps::WorldType::BossTemple => {
+                world.boss_state = Some(BossState::new(state, vdp));
+            }
+            _ => {}
         }
 
         let (x, y) = world_position.unwrap_or(initial_position);
-        let map = maps::map(world_type, x, y).unwrap()(state, vdp);
+        let map = maps::map(world_type, x, y).unwrap()();
         world.load_map(state, vdp, map, defeated_minibosses, players, x, y);
         world
     }
@@ -152,7 +161,7 @@ impl World {
         &mut self,
         res_state: &mut State,
         vdp: &mut TargetVdp,
-        map: Map,
+        mut map: Map,
         defeated_minibosses: u16,
         players: &mut [Player],
         x: i16,
@@ -183,7 +192,7 @@ impl World {
             self.load_switches(res_state, vdp, &map, 0, 0);
 
             self.plane_window = PlaneWindow::new();
-            map.load_to_vram(self.plane_window.vram_address(), vdp);
+            map.load_to_vram(self.plane_window.vram_address(), vdp, res_state);
         } else {
             // Remove objects of previous map.
             self.enemies.retain(|e| !map::off_screen(e.x, e.y));
@@ -304,6 +313,8 @@ impl World {
         }
         ctx.world.enemies.retain(|e| !e.should_unload());
 
+        BossState::update(ctx);
+
         for npc_id in 0..ctx.world.npcs.len() {
             Npc::update(ctx, npc_id);
         }
@@ -333,6 +344,7 @@ impl World {
     pub fn update_map_transition(ctx: &mut Ctx) -> bool {
         let world = &mut ctx.world;
         let vdp = &mut ctx.vdp;
+        let res_state = &mut ctx.res_state;
         let mut mt = world.map_transition.take().unwrap();
 
         if mt.frame_counter == 0 {
@@ -363,6 +375,7 @@ impl World {
                 projectile.x - per_frame_offset.0,
                 projectile.y - per_frame_offset.1,
             );
+            projectile.reset_trajectory();
         }
         for item in &mut world.items {
             item.set_position(item.x - per_frame_offset.0, item.y - per_frame_offset.1);
@@ -399,6 +412,7 @@ impl World {
                     map_column_offset as u16,
                     addr + (vram_addr_offset as i16, 0i16),
                     vdp,
+                    res_state,
                 );
             }
             vdp.set_h_scroll(0, &[-(cur.0 as i16), 0]);
@@ -418,6 +432,7 @@ impl World {
                     map_row_offset as u16,
                     addr + (0i16, vram_addr_offset as i16),
                     vdp,
+                    res_state,
                 );
             }
             vdp.set_v_scroll(0, &[cur.1 as i16, image::SCREEN_V_SCROLL]);
@@ -526,7 +541,7 @@ impl World {
             ctx.new_world = Some(maps::WorldType::Overworld);
             return;
         };
-        let next_map = initer(&mut ctx.res_state, &mut ctx.vdp);
+        let next_map = initer();
 
         // Add entities of the new map.
         world.load_enemies(
@@ -607,5 +622,28 @@ impl World {
         self.doors.clear();
         self.switches.clear();
         self.projectiles.clear();
+    }
+
+    /// Computes the number of flags received from defeating the given minibosses,
+    /// specified in a bitmap.
+    pub fn get_flags_for_minibosses(defeated_minibosses: u16) -> u16 {
+        let mut captured_flags = 0;
+        for map in maps::forest_temple::MAPS
+            .iter()
+            .chain(maps::fire_temple::MAPS.iter())
+            .chain(maps::sky_temple::MAPS.iter())
+            .chain(maps::water_temple::MAPS.iter())
+        {
+            if let Some(map) = map {
+                for enemy in map().enemies {
+                    if defeated_minibosses & enemy.0 as u16 > 0 {
+                        if let Some(flags) = enemy.4.flags {
+                            captured_flags += flags;
+                        }
+                    }
+                }
+            }
+        }
+        captured_flags
     }
 }

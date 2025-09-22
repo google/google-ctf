@@ -17,6 +17,7 @@
 use ufmt::derive::uDebug;
 
 mod big_sprite;
+mod data;
 mod dialogue;
 mod door;
 mod enemy;

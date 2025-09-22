@@ -50,6 +50,6 @@ const SWITCHES: &[(i16, i16, &SwitchProperties)] = &[{{#each switches}}
     ({{this.x}}, {{this.y}}, &SwitchProperties{id: {{this.id}}, event_id: {{this.event_id}}}),{{/each}}
 ];
 
-pub fn new(state: &mut State, vdp: &mut TargetVdp) -> Map {
-    Map::new(state, vdp, /*tiles_idx=*/{{tiles_idx}}, map::Array2d::new(GFX_LAYER, map::WIDTH, map::HEIGHT), map::Array2d::new(ATTR_LAYER, map::WIDTH, map::HEIGHT), PALETTE, PLAYER_SPAWN_POSITION, ENEMIES, NPCS, ITEMS, DOORS, SWITCHES)
+pub fn new() -> Map {
+    Map::new(/*tiles_idx=*/{{tiles_idx}}, map::Array2d::new(GFX_LAYER, map::WIDTH, map::HEIGHT), map::Array2d::new(ATTR_LAYER, map::WIDTH, map::HEIGHT), PALETTE, PLAYER_SPAWN_POSITION, ENEMIES, NPCS, ITEMS, DOORS, SWITCHES)
 }

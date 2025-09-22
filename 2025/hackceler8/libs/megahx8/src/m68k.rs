@@ -147,12 +147,14 @@ fn panic(info: &core::panic::PanicInfo) -> ! {
 
     // Since we don't know where the panic occurred, we can't assume the vdp and renderer are
     // initialized yet
-    let (mut vdp, mut renderer, _) = crate::init_hardware();
+    let (mut vdp, mut renderer, _, _) = crate::init_hardware();
 
     vdp.enable_interrupts(false, true, false);
     vdp.enable_display(true);
     vdp.set_background(Palette::A, 2);
     vdp.set_plane_size(vdp::ScrollSize::Cell64, vdp::ScrollSize::Cell64);
+    vdp.set_h_scroll(0, &[0, 0]);
+    vdp.set_v_scroll(0, &[0, 0]);
 
     // Initialize the default font tiles
     DEFAULT_FONT_1X1.load(&mut vdp);

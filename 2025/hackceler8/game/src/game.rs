@@ -137,11 +137,12 @@ pub enum GameState {
     Win,
 }
 
-pub type Ctx = Game<TargetControllers, TargetRenderer, TargetVdp>;
+pub type Ctx = Game<TargetControllers, TargetRenderer, TargetVdp, TargetPortal>;
 
-pub struct Game<C: Controllers, R: Renderer, V: Vdp> {
+pub struct Game<C: Controllers, R: Renderer, V: Vdp, P: Portal> {
     pub vdp: V,
     pub res_state: State,
+    pub portal: P,
     renderer: R,
     pub controller: C,
 
@@ -175,7 +176,7 @@ pub struct Game<C: Controllers, R: Renderer, V: Vdp> {
     win_scene: Option<YouWin>,
 }
 
-impl Game<TargetControllers, TargetRenderer, TargetVdp> {
+impl Game<TargetControllers, TargetRenderer, TargetVdp, TargetPortal> {
     /// Creates a new [`Game`]
     ///
     /// # Panics
@@ -184,9 +185,8 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp> {
         mut vdp: TargetVdp,
         renderer: TargetRenderer,
         controller: TargetControllers,
+        mut portal: TargetPortal,
     ) -> Self {
-        let mut res_state = crate::resource_state::init(&mut vdp);
-
         vdp.enable_interrupts(false, true, false);
         vdp.enable_display(true);
         vdp.set_plane_size(ScrollSize::Cell64, ScrollSize::Cell64);
@@ -194,23 +194,31 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp> {
         vdp.set_h_scroll(0, &[0, 0]);
         vdp.set_v_scroll(0, &[0, image::SCREEN_V_SCROLL]);
 
+        wait_for_server_init(&mut vdp, &mut portal);
+
+        let mut res_state = crate::resource_state::init(&mut vdp);
+
         // Load sprites that must not be evicted first.
         Player::preload_persistent_sprites(&mut res_state, &mut vdp);
         UI::preload_persistent_sprites(&mut res_state, &mut vdp);
 
+        let team_id = portal.get_team_id();
         let mut players = [
-            Player::new(player::ID::P1, &mut res_state, &mut vdp),
-            Player::new(player::ID::P2, &mut res_state, &mut vdp),
-            Player::new(player::ID::P3, &mut res_state, &mut vdp),
-            Player::new(player::ID::P4, &mut res_state, &mut vdp),
+            Player::new(player::ID::P1, team_id, &mut res_state, &mut vdp),
+            Player::new(player::ID::P2, team_id, &mut res_state, &mut vdp),
+            Player::new(player::ID::P3, team_id, &mut res_state, &mut vdp),
+            Player::new(player::ID::P4, team_id, &mut res_state, &mut vdp),
         ];
+
+        let (captured_flags, defeated_minibosses) = Self::load_game_challenges(&portal);
+        Self::load_persistent_state(&portal);
 
         let world = World::new(
             WorldType::Overworld,
             &mut res_state,
             &mut vdp,
-            /*defeated_minibosses=*/ 0,
-            /*captured_flags=*/ 0,
+            defeated_minibosses,
+            captured_flags,
             &mut players,
             None,
         );
@@ -220,14 +228,15 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp> {
         Game {
             vdp,
             res_state,
+            portal,
             renderer,
             controller,
             world,
             new_world: None,
             ui,
             exiting_world: false,
-            defeated_minibosses: 0,
-            captured_flags: 0,
+            defeated_minibosses,
+            captured_flags,
             overworld_map_position: None,
             overworld_player_position: None,
             frame: 0,
@@ -246,7 +255,14 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp> {
     /// When don't have a map set, or other weird things happen.
     pub fn update(&mut self) {
         let ctx = self;
+
+        ctx.block_if_server_paused();
         ctx.controller.update();
+
+        if ctx.frame % 500 == 0 {
+            // Save state every 10s.
+            ctx.save_persistent_state();
+        }
 
         match ctx.state {
             GameState::Playing => {
@@ -273,6 +289,7 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp> {
                 // Win if the boss has been defeated.
                 if ctx.defeated_minibosses & EnemyType::Boss as u16 != 0 {
                     ctx.state = GameState::Win;
+                    fader::fade(ctx, fader::FadeMode::Out, fader::FadeColor::White);
                     ctx.win_scene = Some(YouWin::new(&mut ctx.vdp, ctx.captured_flags));
                 } else if Player::reset_pressed(ctx) {
                     ctx.reset();
@@ -291,7 +308,7 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp> {
                 }
 
                 if let Some(new_world) = ctx.new_world {
-                    fader::fade_in(ctx);
+                    fader::fade(ctx, fader::FadeMode::In, fader::FadeColor::Black);
 
                     // Entering world -> Store current player positions.
                     let override_position = if ctx.exiting_world {
@@ -328,7 +345,8 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp> {
                         }
                     }
                     ctx.exiting_world = false;
-                    fader::fade_out(ctx);
+                    ctx.draw(); // Make sure sprites are updated.
+                    fader::fade(ctx, fader::FadeMode::Out, fader::FadeColor::Black);
                 } else if World::update_map_transition(ctx) {
                     ctx.state = GameState::Playing;
                 }
@@ -389,6 +407,10 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp> {
 
     pub fn update_sprites(&mut self) {
         self.renderer.clear();
+
+        if let Some(boss_state) = &mut self.world.boss_state {
+            boss_state.render(&mut self.renderer);
+        }
 
         for projectile in &mut self.world.projectiles {
             projectile.render(&mut self.renderer);
@@ -453,12 +475,81 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp> {
         self.state = GameState::MapSwitch;
         self.new_world = Some(new_world);
     }
+
+    /// Save and load completed challenges.
+    pub fn save_game_challenges(&mut self) {
+        self.portal.save_challenges(self.defeated_minibosses);
+    }
+
+    fn load_game_challenges(portal: &TargetPortal) -> (u16, u16) {
+        let defeated_minibosses = portal.load_challenges();
+        (
+            World::get_flags_for_minibosses(defeated_minibosses),
+            defeated_minibosses,
+        )
+    }
+
+    /// Save and load other persistent state info.
+    fn save_persistent_state(&mut self) {
+        self.portal
+            .save_to_persistent_storage(&[0x1234, 0x5678, 0x9ABC, 0xDEF0])
+    }
+
+    fn load_persistent_state(portal: &TargetPortal) {
+        let mut save_buf = [0; 4];
+        portal.load_from_persistent_storage(&mut save_buf);
+        info!("Loaded data from storage: {:?}", save_buf);
+    }
+
+    /// Check if the server is paused and block + display a loading text until it gets unpaused.
+    fn block_if_server_paused(&mut self) {
+        if matches!(self.portal.get_server_state(), ServerState::Running) {
+            return;
+        }
+
+        let text = "Match paused, please stand by...";
+        UI::draw_text(text, 4, 14, &self.ui.inventory_text_img, &mut self.vdp);
+
+        loop {
+            self.vdp.wait_for_vblank();
+            if matches!(self.portal.get_server_state(), ServerState::Running) {
+                break;
+            }
+        }
+
+        UI::clear_text(text, 4, 14, &mut self.vdp);
+
+        // Reload challenges in case the server scoreboard changed.
+        let (captured_flags, defeated_minibosses) = Self::load_game_challenges(&mut self.portal);
+        self.captured_flags = captured_flags;
+        self.defeated_minibosses = defeated_minibosses;
+    }
+}
+
+/// Display a loading screen until the server has been initialized.
+fn wait_for_server_init(vdp: &mut TargetVdp, portal: &mut TargetPortal) {
+    if matches!(portal.get_server_state(), ServerState::Running) {
+        return;
+    }
+
+    DEFAULT_FONT_1X1.load(vdp);
+    vdp.set_palette(Palette::A, &DEFAULT_PALETTE);
+    DEFAULT_FONT_1X1.blit_text_to_plane(Plane::A, vdp, "Waiting for server init...", 14 * 64 + 6);
+
+    loop {
+        vdp.wait_for_vblank();
+        if matches!(portal.get_server_state(), ServerState::Running) {
+            break;
+        }
+    }
+
+    State::clear_screen(vdp, &[Plane::A, Plane::B]);
 }
 
 #[no_mangle]
 pub extern "C" fn game_main() -> ! {
-    let (vdp, renderer, controller) = init_hardware();
-    let mut game = Game::new(vdp, renderer, controller);
+    let (vdp, renderer, controller, portal) = init_hardware();
+    let mut game = Game::new(vdp, renderer, controller, portal);
     loop {
         game.update();
         game.draw();

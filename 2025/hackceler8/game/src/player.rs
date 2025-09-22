@@ -16,17 +16,19 @@ use megahx8::*;
 use resources::MapTileAttribute;
 
 use crate::big_sprite::BigSprite;
+use crate::data;
 use crate::entity::*;
 use crate::game::Ctx;
 use crate::get_map;
 use crate::physics;
 use crate::res::items::ItemType;
-use crate::res::sprites::hat as HatSprite;
-use crate::res::sprites::player as PlayerSprite;
+use crate::res::sprites::hat_base as HatSprite;
+use crate::res::sprites::player_base as PlayerSprite;
 use crate::resource_state::State;
 use crate::Direction;
 
 const DEFAULT_MAX_HEALTH: u16 = 3;
+pub const SPEED_SCALE_FACTOR: i16 = 64;
 
 /// macro to get the current map from [`Ctx`]
 #[macro_export]
@@ -73,7 +75,7 @@ pub enum ID {
     P4,
 }
 
-#[derive(PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum Status {
     // Not doing anything special (= moving, standing)
     Idle,
@@ -86,7 +88,7 @@ pub enum Status {
 }
 
 impl Player {
-    pub fn new(id: ID, res_state: &mut State, vdp: &mut TargetVdp) -> Self {
+    pub fn new(id: ID, team_id: u8, res_state: &mut State, vdp: &mut TargetVdp) -> Self {
         Self {
             id,
             // Coords are overwritten after initialization.
@@ -95,12 +97,12 @@ impl Player {
             prev_x: 0,
             prev_y: 0,
             facing: Direction::Down,
-            sprite: PlayerSprite::new(res_state, vdp, /* keep_loaded= */ true),
-            hat_sprite: HatSprite::new(res_state, vdp, /* keep_loaded= */ true),
+            sprite: data::get_player_sprite(team_id, res_state, vdp),
+            hat_sprite: data::get_hat_sprite(team_id, res_state, vdp),
             active: matches!(id, ID::P1),
             health: DEFAULT_MAX_HEALTH,
             max_health: DEFAULT_MAX_HEALTH,
-            speed: 1,
+            speed: SPEED_SCALE_FACTOR,
             strength: 1,
             status: Status::Idle,
             moving: false,
@@ -138,10 +140,12 @@ impl Player {
         self.status = Status::Idle;
         self.health = DEFAULT_MAX_HEALTH;
         self.max_health = DEFAULT_MAX_HEALTH;
-        self.speed = 1;
+        self.speed = SPEED_SCALE_FACTOR;
+        self.strength = 1;
         self.facing = Direction::Down;
         self.sprite.set_anim(PlayerSprite::Anim::IdleDown as usize);
-        self.hat_sprite.set_anim(self.get_hat_anim() as usize);
+        self.hat_sprite
+            .set_anim(data::get_player_hat_anim(self.status, self.id) as usize);
         self.sprite.flip_h = false;
         self.sprite.flip_v = false;
     }
@@ -170,7 +174,8 @@ impl Player {
                 (PlayerSprite::Anim::DamageUp as usize, false)
             };
             self.sprite.set_anim(anim);
-            self.hat_sprite.set_anim(self.get_hat_anim() as usize);
+            self.hat_sprite
+                .set_anim(data::get_player_hat_anim(self.status, self.id) as usize);
             self.sprite.flip_h = flip;
         }
     }
@@ -233,7 +238,9 @@ impl Player {
                         *speed -= 1;
                     }
                 }
-                player.status = if cooldown > 0 {
+                player.status = if player.health > 0 {
+                    Status::Idle
+                } else if cooldown > 0 {
                     Status::Dying {
                         cooldown: cooldown - 1,
                         speed,
@@ -260,20 +267,21 @@ impl Player {
             Status::Idle => {
                 let mut dir = (0i16, 0i16);
                 if let Some(input) = input {
+                    let scaled_speed = Self::scale_speed(player.speed, frame);
                     if input.is_pressed(Button::Up) {
-                        dir.1 = -1 * player.speed;
+                        dir.1 = -1 * scaled_speed;
                         player.facing = Direction::Up;
                     }
                     if input.is_pressed(Button::Down) {
-                        dir.1 = player.speed;
+                        dir.1 = scaled_speed;
                         player.facing = Direction::Down;
                     }
                     if input.is_pressed(Button::Left) {
-                        dir.0 = -1 * player.speed;
+                        dir.0 = -1 * scaled_speed;
                         player.facing = Direction::Left;
                     }
                     if input.is_pressed(Button::Right) {
-                        dir.0 = player.speed;
+                        dir.0 = scaled_speed;
                         player.facing = Direction::Right;
                     }
                     if input.just_pressed(Button::A) {
@@ -301,7 +309,7 @@ impl Player {
                     if input.just_pressed(Button::B) && inventory.contains(ItemType::Key) {
                         // Open a nearby door.
                         let interaction_hitbox = player.hitbox().expand(5);
-                        for door in doors {
+                        for door in doors.iter_mut() {
                             if !door.open && interaction_hitbox.collides(&door.hitbox()) {
                                 door.open();
                                 doors_opened.set(door.id);
@@ -377,7 +385,7 @@ impl Player {
         }
         player
             .hat_sprite
-            .maybe_set_anim(player.get_hat_anim() as usize);
+            .maybe_set_anim(data::get_player_hat_anim(player.status, player.id) as usize);
 
         if player.is_active() {
             if let Some(hits) = &hits {
@@ -427,38 +435,41 @@ impl Player {
     }
 
     fn update_hat_sprite_position(&mut self) {
-        let (dx, dy) = match self.status {
-            Status::Attacking { .. } => match self.facing {
-                Direction::Right => (-7, -25),
-                Direction::Left => (-7, -25),
-                Direction::Up => (-7, -26),
-                _ => (-8, -24),
-            },
-            _ => match self.facing {
-                Direction::Left => (-6, -25),
-                Direction::Up => (-7, -25),
-                _ => (-8, -25),
-            },
-        };
+        let (dx, dy) = data::get_player_hat_position(self.status, self.facing);
         let center = self.hitbox().center();
         self.hat_sprite.set_position(center.0 + dx, center.1 + dy);
     }
 
-    fn get_hat_anim(&self) -> HatSprite::Anim {
-        match self.status {
-            Status::KnockedBack { .. } => match self.id {
-                ID::P1 => HatSprite::Anim::Damage1,
-                ID::P2 => HatSprite::Anim::Damage2,
-                ID::P3 => HatSprite::Anim::Damage3,
-                ID::P4 => HatSprite::Anim::Damage4,
-            },
-            _ => match self.id {
-                ID::P1 => HatSprite::Anim::Idle1,
-                ID::P2 => HatSprite::Anim::Idle2,
-                ID::P3 => HatSprite::Anim::Idle3,
-                ID::P4 => HatSprite::Anim::Idle4,
-            },
+    /// Scales player speed
+    /// Takes raw speed value and current frame
+    /// Returns distance in pixels player should move this frame
+    fn scale_speed(speed: i16, frame: u16) -> i16 {
+        let abs_scaled_speed =
+            i16::try_from(Self::scale_abs_speed(speed.unsigned_abs(), frame)).unwrap();
+        if speed < 0 {
+            -abs_scaled_speed
+        } else {
+            abs_scaled_speed
         }
+    }
+
+    fn scale_abs_speed(speed: u16, frame: u16) -> u16 {
+        // Scaled speed in whole pixels / frame
+        let scaled_speed = speed / (SPEED_SCALE_FACTOR as u16);
+        // Remainder = fixed point fractional part of the speed
+        let fract_speed = speed % (SPEED_SCALE_FACTOR as u16);
+        if fract_speed != 0 {
+            // Instead of keeping the fractional part of the location, we move an
+            // additional whole pixel each (1 / fractional_speed) frames.
+            // This is equivalent to moving when:
+            //   floor(frame * fractional_speed) > floor((frame - 1) * fractional_speed)
+            // for 0 < fractional_speed < 1 this is equivalent to:
+            //   frac(frame * fractional_speed) < fractional_speed
+            if frame.wrapping_mul(fract_speed) % (SPEED_SCALE_FACTOR as u16) < fract_speed {
+                return scaled_speed + 1;
+            }
+        }
+        scaled_speed
     }
 }
 

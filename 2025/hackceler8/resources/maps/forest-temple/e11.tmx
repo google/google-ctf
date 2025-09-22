@@ -110,7 +110,7 @@
   <object id="6" name="HeartItem" type="Item" x="160.228" y="116.801">
    <point/>
   </object>
-  <object id="7" name="Sword" type="Item" x="104" y="184">
+  <object id="7" name="Sword" type="Item" x="104" y="180">
    <point/>
   </object>
  </objectgroup>

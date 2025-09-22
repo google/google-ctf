@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.8" tiledversion="1.8.2" name="player" tilewidth="16" tileheight="24" tilecount="20" columns="5">
- <image source="player.png" width="80" height="96"/>
+<tileset version="1.8" tiledversion="1.8.2" name="player-team3" tilewidth="16" tileheight="24" tilecount="20" columns="5">
+ <image source="player-team3.png" width="80" height="96"/>
  <tile id="0">
   <properties>
    <property name="animation" value="idle-down"/>

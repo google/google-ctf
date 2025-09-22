@@ -360,6 +360,7 @@ impl UI {
             16
         };
         fader::fade_palettes(
+            fader::FadeColor::Black,
             self.render_state.world_type,
             // Palette::B (inventory palette) should not be darkened
             &[Palette::A, Palette::C, Palette::D],

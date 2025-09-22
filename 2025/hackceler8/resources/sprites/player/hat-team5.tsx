@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.8" tiledversion="1.8.2" name="hat" tilewidth="16" tileheight="16" tilecount="8" columns="4">
- <image source="hat.png" width="64" height="32"/>
+<tileset version="1.8" tiledversion="1.8.2" name="hat-team5" tilewidth="16" tileheight="16" tilecount="8" columns="4">
+ <image source="hat-team5.png" width="64" height="32"/>
  <tile id="0">
   <properties>
    <property name="animation" value="idle-1"/>

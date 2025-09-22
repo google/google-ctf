@@ -3,7 +3,9 @@ use crate::big_sprite::*;
 use crate::resource_state::State;
 use crate::res::tileset::{{tileset}}::PALETTE;
 
-const SPRITES: &[Sprite] = &[
+pub const TILES_IDX: usize = {{tiles_idx}};
+
+pub const SPRITES: &[Sprite] = &[
 {{#each sprites as |definition definition_idx|}}
     Sprite {
         size: SpriteSize::Size{{this.width}}x{{this.height}},
@@ -24,7 +26,7 @@ pub enum Anim {
 {{/each}}
 }
 {{/if}}
-const ANIMS: &[Animation] = &[
+pub const ANIMS: &[Animation] = &[
 {{#each animation_definitions as |definition definition_idx|}}
     Animation { loops: {{definition.loops}}, frames: &[
 {{#each definition.frames}}        Frame { tile_offs: {{this.tile_offset}}, duration: {{this.duration}} }{{#unless @last}},{{/unless}}
@@ -34,5 +36,5 @@ const ANIMS: &[Animation] = &[
 ];
 
 pub fn new(state: &mut State, vdp: &mut TargetVdp, keep_loaded: bool) ->  BigSprite {
-    BigSprite::new(state, vdp, /*tiles_idx=*/{{tiles_idx}}, /*w=*/{{width}}, /*h=*/{{height}}, SPRITES, ANIMS, keep_loaded)
+    BigSprite::new(state, vdp, TILES_IDX, /*w=*/{{width}}, /*h=*/{{height}}, SPRITES, ANIMS, keep_loaded)
 }

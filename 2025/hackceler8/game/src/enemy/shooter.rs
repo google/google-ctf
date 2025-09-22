@@ -64,7 +64,7 @@ pub fn get_projectile_start_offset(enemy_type: EnemyType, direction: Direction) 
             Direction::Up => (10, 0),
             Direction::Down => (2, 10),
         },
-        EnemyType::Flameboi => (0, 17),
+        EnemyType::Flameboi => (4, 17),
         _ => (0, 0),
     }
 }

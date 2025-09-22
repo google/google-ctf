@@ -33,7 +33,7 @@ pub const WIDTH: usize = 40;
 // Height of maps in tiles
 pub const HEIGHT: usize = 28;
 
-pub type NewFn = fn(state: &mut State, vdp: &mut TargetVdp) -> Map;
+pub type NewFn = fn() -> Map;
 
 /// macro to get the current map from [`Ctx`]
 #[macro_export]
@@ -102,7 +102,8 @@ impl HitTiles {
 }
 
 pub struct Map {
-    start_tile: u16,
+    start_tile: Option<u16>,
+    tiles_idx: usize,
     gfx_layer: GfxLayer,
     attr_layer: AttrLayer,
     palette: Palette,
@@ -119,8 +120,6 @@ pub struct Map {
 impl Map {
     #[expect(clippy::too_many_arguments)]
     pub fn new(
-        res_state: &mut State,
-        vdp: &mut TargetVdp,
         tiles_idx: usize,
         gfx_layer: GfxLayer,
         attr_layer: AttrLayer,
@@ -133,7 +132,8 @@ impl Map {
         switches: &'static [(i16, i16, &SwitchProperties)],
     ) -> Map {
         Map {
-            start_tile: res_state.load_tiles_to_vram(vdp, tiles_idx, /* keep_loaded= */ false),
+            start_tile: None,
+            tiles_idx,
             gfx_layer,
             attr_layer,
             palette,
@@ -147,7 +147,13 @@ impl Map {
     }
 
     /// Load the map to vram
-    pub(crate) fn load_to_vram(&self, vram_offset: PlaneAddress, vdp: &mut TargetVdp) {
+    pub(crate) fn load_to_vram(
+        &mut self,
+        vram_offset: PlaneAddress,
+        vdp: &mut TargetVdp,
+        res_state: &mut State,
+    ) {
+        let start_tile = self.init_tiles(vdp, res_state);
         vdp.set_plane_size(ScrollSize::Cell64, ScrollSize::Cell64);
         vdp.set_h_scroll(0, &[-(vram_offset.0 as i16), 0]);
         vdp.set_v_scroll(0, &[vram_offset.1 as i16, image::SCREEN_V_SCROLL]);
@@ -157,7 +163,7 @@ impl Map {
             for x in 0..self.gfx_layer.width.min(40) {
                 let tile_index = self.gfx_layer.get(x, y).unwrap();
                 if *tile_index != 0 {
-                    tiles[x] = TileFlags::for_tile(self.start_tile + tile_index - 1, self.palette);
+                    tiles[x] = TileFlags::for_tile(start_tile + tile_index - 1, self.palette);
                 }
             }
 
@@ -167,22 +173,24 @@ impl Map {
     }
 
     pub(crate) fn load_tile_column(
-        &self,
+        &mut self,
         column_index: u16,
         // Describes the vram offset where the column should be inserted into
         vram_offset: PlaneAddress,
         vdp: &mut TargetVdp,
+        res_state: &mut State,
     ) {
         if column_index >= 40 {
             // Means that the scrolling logic is buggy.
             panic!("Column index is out of bounds");
         }
+        let start_tile = self.init_tiles(vdp, res_state);
 
         for y in 0..self.gfx_layer.height {
             let mut tile = TileFlags::new();
             let tile_index = self.gfx_layer.get(column_index as usize, y).unwrap();
             if *tile_index != 0 {
-                tile = TileFlags::for_tile(self.start_tile + tile_index - 1, self.palette);
+                tile = TileFlags::for_tile(start_tile + tile_index - 1, self.palette);
             }
 
             vdp.set_plane_tiles(
@@ -194,22 +202,24 @@ impl Map {
     }
 
     pub(crate) fn load_tile_row(
-        &self,
+        &mut self,
         row_index: u16,
         // Describes the vram offset where the column should be inserted into
         vram_offset: PlaneAddress,
         vdp: &mut TargetVdp,
+        res_state: &mut State,
     ) {
         if row_index >= 28 {
             // Means that the scrolling logic is buggy.
             panic!("Row index is out of bounds");
         }
+        let start_tile = self.init_tiles(vdp, res_state);
 
         for x in 0..self.gfx_layer.width.min(40) {
             let mut tile = TileFlags::new();
             let tile_index = self.gfx_layer.get(x, row_index as usize).unwrap();
             if *tile_index != 0 {
-                tile = TileFlags::for_tile(self.start_tile + tile_index - 1, self.palette);
+                tile = TileFlags::for_tile(start_tile + tile_index - 1, self.palette);
             }
             vdp.set_plane_tiles(
                 Plane::A,
@@ -217,6 +227,19 @@ impl Map {
                 &[tile],
             );
         }
+    }
+
+    /// Load this map tiles into the VRAM if it's not loaded yet.
+    /// Return the start index of the loaded tiles.
+    fn init_tiles(&mut self, vdp: &mut TargetVdp, res_state: &mut State) -> u16 {
+        if self.start_tile.is_none() {
+            self.start_tile = Some(res_state.load_tiles_to_vram(
+                vdp,
+                self.tiles_idx,
+                /* keep_loaded= */ false,
+            ));
+        }
+        self.start_tile.unwrap()
     }
 
     /// Compute and return all the tiles of this map that are hit by the hitbox.

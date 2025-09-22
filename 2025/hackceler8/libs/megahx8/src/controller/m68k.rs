@@ -1,6 +1,15 @@
 #![allow(dead_code)]
 
+use core::ptr::read_volatile;
+
 use crate::ports::IOPort;
+
+/// This address is set to a magic value on the custom cartridge.
+const CARTRIDGE_HARDWARE_PRESENT: *const u16 = 0xA13000 as _;
+const CARTRIDGE_HARDWARE_PRESENT_VALUE: u16 = 1337;
+/// The cartridge for the game has a slot for the P3 and P4 controller inputs
+/// and stores the button presses at this address.
+const CARTRIDGE_CONTROLLER_BASE: *const u16 = 0xA13002 as _;
 
 /// Control value that makes the EA multitap ("4-way-play")
 /// return the current selected player ID.
@@ -44,12 +53,22 @@ impl super::ControllerState for ControllerState {
     }
 }
 
+#[derive(Copy, Clone, Default)]
+pub enum ControllerExtensions {
+    #[default]
+    None,
+    /// An EA multitap ("4-way-play") is connected to the console input ports.
+    /// Used on emulators to simulate 4 player input.
+    Multitap,
+    /// The console is running on a custom cartridge
+    /// which has its own P3 and P4 slots.
+    Custom,
+}
+
 #[derive(Default)]
 pub struct Controllers {
     controllers: [ControllerState; 4],
-    /// Whether an EA multitap ("4-way-play") is connected to the
-    /// console input ports.
-    uses_multitap: bool,
+    extensions: ControllerExtensions,
 }
 
 impl Controllers {
@@ -62,16 +81,27 @@ impl Controllers {
         let c1 = crate::ports::controller_1();
         let c2 = crate::ports::controller_2();
 
-        let mut uses_multitap = true;
+        if running_on_console() {
+            Controllers::configure_regular_input(&c1, &c2);
+            // No need configure the cartridge's P3 and P4 pins separately.
+            return Controllers {
+                controllers: Default::default(),
+                extensions: ControllerExtensions::Custom,
+            };
+        }
+
+        // Fallback for emulators: Use the multitap to simulate 4 player mode,
+        // if the emulator supports it. Otherwise only enable P1 and P2.
+        let mut extensions = ControllerExtensions::Multitap;
         Controllers::configure_multitap(&c1, &c2);
         if !Controllers::is_multitap_present(&c1, &c2) {
             Controllers::configure_regular_input(&c1, &c2);
-            uses_multitap = false;
+            extensions = ControllerExtensions::None;
         }
 
         Controllers {
             controllers: Default::default(),
-            uses_multitap,
+            extensions,
         }
     }
 
@@ -194,7 +224,7 @@ impl super::Controllers for Controllers {
     }
 
     fn update(&mut self) {
-        if self.uses_multitap {
+        if matches!(self.extensions, ControllerExtensions::Multitap) {
             // Multitap mode: All 4 controllers are on port 1
             // and port 2 is the selector.
             let c2 = crate::ports::controller_2();
@@ -219,14 +249,62 @@ impl super::Controllers for Controllers {
 
         Controllers::update_state_with_pins(&mut self.controllers[0], c1_pins, c1_ext1);
         Controllers::update_state_with_pins(&mut self.controllers[1], c2_pins, c2_ext1);
-        // Other controllers aren't connected.
+
         for i in 2..4 {
-            Controllers::update_state(
-                &mut self.controllers[i],
-                /*connected=*/ false,
-                false,
-                0,
-            );
+            match self.extensions {
+                ControllerExtensions::Custom => {
+                    // P3 and P4 input is read from the custom cartridge addresses.
+                    let (buttons, connected) = custom_cartridge_controller_buttons(i);
+                    Controllers::update_state(
+                        &mut self.controllers[i],
+                        connected,
+                        /*is_6button=*/ false,
+                        buttons,
+                    );
+                }
+                _ => {
+                    // P3 and P4 isn't connected.
+                    Controllers::update_state(
+                        &mut self.controllers[i],
+                        /*connected=*/ false,
+                        false,
+                        0,
+                    );
+                }
+            }
         }
     }
+}
+
+fn running_on_console() -> bool {
+    unsafe { read_volatile(CARTRIDGE_HARDWARE_PRESENT) == CARTRIDGE_HARDWARE_PRESENT_VALUE }
+}
+
+/// Queries the button press state of the given controller (P3 or P4) on the
+/// custom cartridge. Returns the buttons and whether the controller is connected.
+fn custom_cartridge_controller_buttons(controller_id: usize) -> (u16, bool) {
+    assert!(controller_id == 2 || controller_id == 3);
+    let val =
+        !unsafe { read_volatile(CARTRIDGE_CONTROLLER_BASE.offset(controller_id as isize - 2)) };
+    let mut buttons = 0;
+
+    // Controller button bitmasks.
+    const CONNECTED: u16 = 0b0000_0000_1100;
+    const UP: u16 = 0b0000_0100_0001;
+    const DOWN: u16 = 0b0000_1000_0010;
+    const LEFT: u16 = 0b0001_0000_0000;
+    const RIGHT: u16 = 0b0010_0000_0000;
+    const A: u16 = 0b0000_0001_0000;
+    const B: u16 = 0b0100_0000_0000;
+    const C: u16 = 0b1000_0000_0000;
+    const START: u16 = 0b0000_0010_0000;
+
+    let connected = val & CONNECTED > 0;
+    for (i, btn) in [UP, DOWN, LEFT, RIGHT, B, C, A, START].iter().enumerate() {
+        if val & btn > 0 {
+            buttons |= 1 << i;
+        }
+    }
+
+    (buttons, connected)
 }

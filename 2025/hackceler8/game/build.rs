@@ -80,11 +80,75 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // List of sprites. Do not use map tilesets here.
     let sprite_list = [
         (
-            resources_root().join("sprites/player.tsx"),
+            resources_root().join("sprites/player/player-base.tsx"),
             &GamePalette::Player.global(),
         ),
         (
-            resources_root().join("sprites/hat.tsx"),
+            resources_root().join("sprites/player/player-team1.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/player-team2.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/player-team3.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/player-team4.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/player-team5.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/player-team6.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/player-team7.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/player-team8.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/hat-base.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/hat-team1.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/hat-team2.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/hat-team3.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/hat-team4.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/hat-team5.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/hat-team6.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/hat-team7.tsx"),
+            &GamePalette::Player.global(),
+        ),
+        (
+            resources_root().join("sprites/player/hat-team8.tsx"),
             &GamePalette::Player.global(),
         ),
         (
@@ -233,6 +297,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ),
         (
             resources_root().join("sprites/orc-minion.tsx"),
+            &GamePalette::Enemy.for_world("boss-temple"),
+        ),
+        (
+            resources_root().join("sprites/explosion.tsx"),
             &GamePalette::Enemy.for_world("boss-temple"),
         ),
     ];
