@@ -308,6 +308,12 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp, TargetPortal> {
                 }
 
                 if let Some(new_world) = ctx.new_world {
+                    if matches!(new_world, WorldType::BossTemple)
+                        && ctx.captured_flags < FLAGS_FOR_BOSS_TEMPLE
+                    {
+                        panic!("Insufficient flags to unlock boss");
+                    }
+
                     fader::fade(ctx, fader::FadeMode::In, fader::FadeColor::Black);
 
                     // Entering world -> Store current player positions.
