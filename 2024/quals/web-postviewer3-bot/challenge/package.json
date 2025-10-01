@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "puppeteer": "^22.10.0",
+    "puppeteer": "^22.15.0",
     "double-ended-queue": "^2.1.0-0"
   }
 }
