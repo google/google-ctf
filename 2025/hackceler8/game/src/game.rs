@@ -198,11 +198,12 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp, TargetPortal> {
 
         let mut res_state = crate::resource_state::init(&mut vdp);
 
+        let team_id = portal.get_team_id();
+
         // Load sprites that must not be evicted first.
-        Player::preload_persistent_sprites(&mut res_state, &mut vdp);
+        Player::preload_persistent_sprites(team_id, &mut res_state, &mut vdp);
         UI::preload_persistent_sprites(&mut res_state, &mut vdp);
 
-        let team_id = portal.get_team_id();
         let mut players = [
             Player::new(player::ID::P1, team_id, &mut res_state, &mut vdp),
             Player::new(player::ID::P2, team_id, &mut res_state, &mut vdp),

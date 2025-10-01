@@ -88,6 +88,9 @@ impl Portal {
         unsafe { write_volatile(CARTRIDGE_LOCK, !read_volatile(CARTRIDGE_LOCK)) }
         assert!(self.running_on_console());
         unsafe { write_volatile(CARTRIDGE_GAME_STATE, new_game_state) };
+
+        // Write 0xFFFF to CARTRIDGE_LOCK to lock write access again.
+        unsafe { write_volatile(CARTRIDGE_LOCK, 0xFFFF) }
     }
 }
 
@@ -150,6 +153,7 @@ impl super::Portal for Portal {
 
         unsafe {
             write_volatile(CARTRIDGE_GAME_CHALLENGES, challenges);
+            write_volatile(CARTRIDGE_LOCK, 0xFFFF)
         }
     }
 
@@ -174,6 +178,10 @@ impl super::Portal for Portal {
         // Increment save data revision to let the server know it changed.
         self.save_data_revision = self.save_data_revision.wrapping_add(1);
         self.write_game_state();
+
+        unsafe {
+            write_volatile(CARTRIDGE_LOCK, 0xFFFF);
+        }
     }
 
     fn load_from_persistent_storage(&self, buffer: &mut [u16]) {

@@ -22,7 +22,6 @@ use crate::game::Ctx;
 use crate::get_map;
 use crate::physics;
 use crate::res::items::ItemType;
-use crate::res::sprites::hat_base as HatSprite;
 use crate::res::sprites::player_base as PlayerSprite;
 use crate::resource_state::State;
 use crate::Direction;
@@ -408,9 +407,9 @@ impl Player {
     }
 
     /// Preload all sprites that must always be loaded.
-    pub fn preload_persistent_sprites(res_state: &mut State, vdp: &mut TargetVdp) {
-        PlayerSprite::new(res_state, vdp, /* keep_loaded= */ true);
-        HatSprite::new(res_state, vdp, /* keep_loaded= */ true);
+    pub fn preload_persistent_sprites(team_id: u8, res_state: &mut State, vdp: &mut TargetVdp) {
+        data::get_player_sprite(team_id, res_state, vdp);
+        data::get_hat_sprite(team_id, res_state, vdp);
     }
 
     /// Whether the level reset button combo (A+B+C) has been pressed.
