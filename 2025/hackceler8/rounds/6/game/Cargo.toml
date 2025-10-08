@@ -1,0 +1,21 @@
+[package]
+name = "game"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+path = "src/lib.rs"
+
+
+[dependencies]
+heapless = { version = "0.8.0", features = ["ufmt"] }
+libm = "0.2.11"
+megahx8 = { path = "../libs/megahx8" }
+resources = { path = "../libs/resources/" }
+ufmt = "0.2.0"
+
+[build-dependencies]
+convert = { path = "../libs/convert" }
