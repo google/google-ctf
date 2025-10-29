@@ -1,0 +1,352 @@
+From 456a9dbf5e31297a638475afb1b3b8fef5f12969 Mon Sep 17 00:00:00 2001
+From: User <user@example.com>
+Date: Wed, 15 Jan 2025 11:46:50 +0000
+Subject: [PATCH] Make project compile with GCC
+
+---
+ Cargo.toml                         |   3 +-
+ examples/megapong/entry.S          | 154 ++++++++++++++---------------
+ examples/megapong/hack.c           |  27 +++++
+ libs/megadrive-graphics/src/lib.rs |   2 +-
+ libs/megadrive-util/src/panic.rs   |   5 +-
+ share/ldscripts/megadrive.x        |  11 ++-
+ 6 files changed, 116 insertions(+), 86 deletions(-)
+ create mode 100644 examples/megapong/hack.c
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 03b1a1c..b0624fb 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -11,8 +11,9 @@ members = [
+ ]
+
+ [profile.release]
+-lto = true
++lto = "fat"
+ panic = "abort"
+
+ [profile.dev]
++lto = "fat"
+ panic = "abort"
+diff --git a/examples/megapong/entry.S b/examples/megapong/entry.S
+index e5343ed..0dde62b 100644
+--- a/examples/megapong/entry.S
++++ b/examples/megapong/entry.S
+@@ -6,91 +6,91 @@
+ .set HBLANK, _int
+ .set VBLANK, _vblank
+
+-.long 0x0             ; Initial Stack Address
+-.long START           ; Start of program Code
+-.long INT             ; Bus error
+-.long INT             ; Address error
+-.long INT             ; Illegal instruction
+-.long INT             ; Division by zero
+-.long INT             ; CHK exception
+-.long INT             ; TRAPV exception
+-.long INT             ; Privilage violation
+-.long INT             ; TRACE exception
+-.long INT             ; Line-A emulator
+-.long INT             ; Line-F emulator
+-.long INT             ; Reserved (NOT USED)
+-.long INT             ; Co-processor protocol violation
+-.long INT             ; Format error
+-.long INT             ; Uninitialized Interrupt
+-.long INT             ; Reserved (NOT USED)
+-.long INT             ; Reserved (NOT USED)
+-.long INT             ; Reserved (NOT USED)
+-.long INT             ; Reserved (NOT USED)
+-.long INT             ; Reserved (NOT USED)
+-.long INT             ; Reserved (NOT USED)
+-.long INT             ; Reserved (NOT USED)
+-.long INT             ; Reserved (NOT USED)
+-.long INT             ; Spurious Interrupt
+-.long INT             ; IRQ Level 1
+-.long INT             ; IRQ Level 2 (EXT Interrupt)
+-.long INT             ; IRQ Level 3
+-.long HBLANK          ; IRQ Level 4 (VDP Horizontal Interrupt)
+-.long INT             ; IRQ Level 5
+-.long VBLANK          ; IRQ Level 6 (VDP Vertical Interrupt)
+-.long INT             ; IRQ Level 7
+-.long INT             ; TRAP #00 Exception
+-.long INT             ; TRAP #01 Exception
+-.long INT             ; TRAP #02 Exception
+-.long INT             ; TRAP #03 Exception
+-.long INT             ; TRAP #04 Exception
+-.long INT             ; TRAP #05 Exception
+-.long INT             ; TRAP #06 Exception
+-.long INT             ; TRAP #07 Exception
+-.long INT             ; TRAP #08 Exception
+-.long INT             ; TRAP #09 Exception
+-.long INT             ; TRAP #10 Exception
+-.long INT             ; TRAP #11 Exception
+-.long INT             ; TRAP #12 Exception
+-.long INT             ; TRAP #13 Exception
+-.long INT             ; TRAP #14 Exception
+-.long INT             ; TRAP #15 Exception
+-.long INT             ; (FP) Branch or Set on Unordered Condition
+-.long INT             ; (FP) Inexact Result
+-.long INT             ; (FP) Divide by Zero
+-.long INT             ; (FP) Underflow
+-.long INT             ; (FP) Operand Error
+-.long INT             ; (FP) Overflow
+-.long INT             ; (FP) Signaling NAN
+-.long INT             ; (FP) Unimplemented Data Type
+-.long INT             ; MMU Configuration Error
+-.long INT             ; MMU Illegal Operation Error
+-.long INT             ; MMU Access Violation Error
+-.long INT             ; Reserved (NOT USED)
+-.long INT             ; Reserved (NOT USED)
+-.long INT             ; Reserved (NOT USED)
+-.long INT             ; Reserved (NOT USED)
+-.long INT             ; Reserved (NOT USED)
++.long 0x0
++.long START
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long HBLANK
++.long INT
++.long VBLANK
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
++.long INT
+
+-.ascii  "SEGA MEGADRIVE  "      ; SEGA must be the first four chars for TMSS
++.ascii  "SEGA MEGADRIVE  "
+ .ascii  "(C)2021.JAN     "
+-.ascii  "TESTPROJECT     "      ; export name
++.ascii  "TESTPROJECT     "
+ .ascii  "                "
+ .ascii  "                "
+-.ascii  "TESTPROJECT     "      ; domestic (Japanese) name
++.ascii  "TESTPROJECT     "
+ .ascii  "                "
+ .ascii  "                "
+ .ascii  "GM MK-0000 -01"
+-.short  0x0000                  ; checksum - not needed
++.short  0x0000
+ .ascii  "J6              "
+-.long   0x00000000, 0x0007ffff  ; ROM start, end
+-.long   0x00ff0000, 0x00ffffff  ; RAM start, end
+-.ascii  "            "          ; no SRAM
++.long   0x00000000, 0x0007ffff
++.long   0x00ff0000, 0x00ffffff
++.ascii  "            "
+ .ascii  "    "
+ .ascii  "        "
+-.ascii  "        "              ; memo
++.ascii  "        "
+ .ascii  "                "
+ .ascii  "                "
+-.ascii  "F               "      ; enable any hardware configuration
++.ascii  "F               "
+
+ .global vblank
+ _vblank:
+@@ -100,14 +100,14 @@ _vblank:
+ .global _start
+ .global main
+ _start:
+-  move.l #_stack_top, sp
+-  move.w #0x2500, sr
++  move.l #_stack_top, %sp
++  move.w #0x2500, %sr
+   jsr _init_runtime
+-  bra #main
++  bra main
+
+ .global abort
+ abort:
+-  bra #abort
++  bra abort
+
+ _int:
+   rte
+diff --git a/examples/megapong/hack.c b/examples/megapong/hack.c
+new file mode 100644
+index 0000000..f853c8b
+--- /dev/null
++++ b/examples/megapong/hack.c
+@@ -0,0 +1,27 @@
++#if 1
++void* memcpy(void *dst, const void *src, long unsigned int n) {
++	char *dst_ = dst;
++	const char *src_ = src;
++	while (--n) *dst_++ = *src_++;
++}
++#endif
++
++#if 0
++void *memset(char *s, int c, long unsigned int n) {
++	while (--n) *s++ = c;
++}
++#endif
++
++
++#if 0
++int memcmp(char *a, char *b, long unsigned n) {
++	while (--n) {
++		if (*a < *b) return -1;
++		if (*a > *b) return 1;
++		++a;
++		++b;
++	}
++
++	return (*a == *b) ? 0 : 1;
++}
++#endif
+diff --git c/examples/megapong/src/lib.rs i/examples/megapong/src/lib.rs
+index be53fc8c873c..74321ac26310 100644
+--- c/examples/megapong/src/lib.rs
++++ i/examples/megapong/src/lib.rs
+@@ -378,7 +378,6 @@ fn vblank() {
+ }
+
+ #[panic_handler]
+-#[no_mangle]
+ fn panic(_info: &PanicInfo) -> ! {
+     loop {}
+ }
+diff --git a/libs/megadrive-graphics/src/lib.rs b/libs/megadrive-graphics/src/lib.rs
+index d7aa284..5e7f929 100644
+--- a/libs/megadrive-graphics/src/lib.rs
++++ b/libs/megadrive-graphics/src/lib.rs
+@@ -5,7 +5,7 @@ use core::mem::MaybeUninit;
+ use megadrive_sys::vdp::{Sprite, VDP};
+
+ pub mod default_ascii {
+-    include!(concat!(env!("OUT_DIR"), "/default_ascii.rs"));
++    // include!(concat!(env!("OUT_DIR"), "/default_ascii.rs"));
+ }
+ mod font;
+
+diff --git a/libs/megadrive-util/src/panic.rs b/libs/megadrive-util/src/panic.rs
+index 8564bbd..edb1663 100644
+--- a/libs/megadrive-util/src/panic.rs
++++ b/libs/megadrive-util/src/panic.rs
+@@ -3,7 +3,6 @@ use core::ptr::read_volatile;
+
+ use megadrive_sys::vdp::VDP;
+ use megadrive_graphics::Renderer;
+-use megadrive_graphics::default_ascii::DEFAULT_FONT_1X1;
+
+ static mut NEW_FRAME: u16 = 0;
+
+@@ -19,7 +18,7 @@ fn panic(_info: &PanicInfo) -> ! {
+     vdp.enable_display(true);
+
+     // Initialize the default font tiles
+-    DEFAULT_FONT_1X1.load(&mut vdp);
++    // DEFAULT_FONT_1X1.load(&mut vdp);
+
+     let resolution = vdp.resolution();
+     let half_screen_width = (resolution.0 >> 1) as i16;
+@@ -36,7 +35,7 @@ fn panic(_info: &PanicInfo) -> ! {
+         // let mut panic_text: &str = &_info.payload().downcast_ref::<&str>().unwrap();
+         let panic_text= "Panic!";
+
+-        DEFAULT_FONT_1X1.blit_text(&mut renderer, panic_text, x_off as u16, y_off as u16);
++        // DEFAULT_FONT_1X1.blit_text(&mut renderer, panic_text, x_off as u16, y_off as u16);
+         renderer.render(&mut vdp);
+         // vsync
+         wait_for_vblank();
+diff --git a/share/ldscripts/megadrive.x b/share/ldscripts/megadrive.x
+index 95e1cf3..dd61c42 100644
+--- a/share/ldscripts/megadrive.x
++++ b/share/ldscripts/megadrive.x
+@@ -4,6 +4,8 @@ MEMORY
+     RAM (rwx) : ORIGIN = 0xFF0000, LENGTH = 0x10000
+ }
+
++ENTRY(_start)
++
+ SECTIONS
+ {
+     _stack_top = 0x1000000;
+@@ -16,25 +18,26 @@ SECTIONS
+
+     .rodata :
+     {
++        . = ALIGN(4);
+         *(.rodata .rodata.*);
+         _data_src = .;
+     } > ROM
+
+     .data :
+     {
+-        ALIGN(4);
++        . = ALIGN(4);
+         _data_start = .;
+         *(.data);
+-        ALIGN(4);
++        . = ALIGN(4);
+         _data_end = .;
+     } > RAM AT > ROM
+
+     .bss (NOLOAD) :
+     {
+-        ALIGN(4);
++        . = ALIGN(4);
+         _bss_start = .;
+         *(.bss);
+-        ALIGN(4);
++        . = ALIGN(4);
+         _bss_end = .;
+     } > RAM AT > ROM
+
+--
+2.34.1

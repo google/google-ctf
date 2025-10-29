@@ -1,0 +1,1 @@
+../../challenge/bot.mjs

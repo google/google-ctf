@@ -1,0 +1,18 @@
+--- ./GoogleCTF2025-CoreNLP/CoreNLP-4.5.8/src/edu/stanford/nlp/optimization/GoldenSectionLineSearch.java	2025-05-20 19:01:17.474360728 +0000
++++ CoreNLP-4.5.8/src/edu/stanford/nlp/optimization/GoldenSectionLineSearch.java	2024-12-12 21:31:47.000000000 +0000
+@@ -8,14 +8,13 @@
+ import java.util.Map;
+ import java.util.Arrays;
+ import java.util.function.DoubleUnaryOperator;
+-import java.io.Serializable;
+ 
+ /**
+  * A class to do golden section line search.  Should it implement Minimizer?  Prob. not.
+  *
+  * @author Galen Andrew
+  */
+-public class GoldenSectionLineSearch implements LineSearcher,Serializable  {
++public class GoldenSectionLineSearch implements LineSearcher  {
+ 
+   /** A logger for this class */
+   private static final Redwood.RedwoodChannels log = Redwood.channels(GoldenSectionLineSearch.class);

@@ -1,0 +1,55 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# Human readable task name
+name: sphinx
+# Long form description.
+description: >
+  The whispers of forgotten ages had led you here, to a scar in the earth
+  veiled by shimmering heat and illusion. Before you lay the threshold to
+  the fabled Hall of Records. As your shadow fell upon the entrance, a
+  silent thunder echoed not in the air but the very marrow of your bones.
+  A voice that knew your name without you ever speaking it. Your gaze was
+  compelled upward to meet the monolithic stare of the Giza Sphinx, the
+  ageless stone titan. It did not offer a choice, it imposed a trial.
+  Your passage was barred, your fate held in the balance of a single,
+  timeless riddle. Three scrolls of papyrus, brittle as a desert bone,
+  materialized before you. They hinted at the question, yet a deeper,
+  chilling certainty gripped you: the true key was not in these cryptic
+  texts, but in a different tome, yet unseen.
+
+
+  The voice of the Sphinx did not merely echo in your mind, it engrained
+  itself onto your consciousness. The words were structures of immense
+  power, each one a key to a concept so vast it threatened to overwhelm
+  you. You stood between the time-eater and the Hall of Records, with
+  three scrolls whispering secrets you couldn't parse, armed only with
+  the desperate knowledge that the key to your survival was Biham's book.
+  One that did not exist in this place. The riddle was not just in the
+  scrolls. The riddle was your predicament.
+
+
+  Note: sphinx.py is compatible with US5003597
+flag: CTF{AFACE0FDEADC0DE5}
+# Task category. (one of hw, crypto, pwn, rev, web, net, misc)
+category: crypto
+# === the fields below will be filled by SRE or automation ===
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true
+host: sphinx.2025.ctfcompetition.com 1337

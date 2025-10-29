@@ -1,0 +1,12 @@
+/target
+sonk.elf
+lib*.a
+**/history
+.cargo_home
+*~
+*.dmp
+\#*\#
+.\#*
+cfg
+nvram
+target.docker

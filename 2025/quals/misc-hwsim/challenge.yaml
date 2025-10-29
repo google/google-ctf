@@ -1,0 +1,41 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: hwsim
+spec:
+  deployed: true
+  powDifficultySeconds: 30
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2025/gctf-2025-kctf-managed-challenges/hwsim-healthcheck:26fd8146cb46f0a8ae623a0dc0aefd9cfc3b7082996e9f737ee8bc143bdd7849
+  image: europe-west4-docker.pkg.dev/gctf-2025/gctf-2025-kctf-managed-challenges/hwsim-challenge:7c15bf249acc1d8ff7508a8661a6f8247c1c5d9da62f23f11ac242c1ae8f7793
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                cpu: "1"
+                memory: "512Mi"

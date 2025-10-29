@@ -1,0 +1,5 @@
+build/
+**/.pytest_cache
+**/__pycache__
+.vscode
+**/.gdb_history

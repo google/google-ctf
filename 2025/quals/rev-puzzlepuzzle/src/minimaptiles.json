@@ -1,0 +1,21 @@
+{ "columns":10,
+ "image":"minimaptiles.png",
+ "imageheight":45,
+ "imagewidth":90,
+ "margin":0,
+ "name":"tiles",
+ "spacing":0,
+ "tilecount":50,
+ "tiledversion":"1.8.2",
+ "tileheight":9,
+ "tilewidth":9,
+ "transformations":
+    {
+     "hflip":true,
+     "preferuntransformed":false,
+     "rotate":true,
+     "vflip":true
+    },
+ "type":"tileset",
+ "version":"1.8"
+}

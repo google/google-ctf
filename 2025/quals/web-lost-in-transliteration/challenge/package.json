@@ -1,0 +1,13 @@
+{
+  "name": "challenge",
+  "version": "1.0.0",
+  "description": "CTF challenge",
+  "dependencies": {
+    "puppeteer": "^24.9.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Google",
+  "license": "MIT"
+}

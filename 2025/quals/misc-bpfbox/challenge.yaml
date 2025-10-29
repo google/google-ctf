@@ -1,0 +1,51 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: bpfbox
+spec:
+  deployed: true
+  powDifficultySeconds: 120
+  network:
+    public: true
+  healthcheck:
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2025/gctf-2025-kctf-managed-challenges/bpfbox-healthcheck:14cf4732655480e43cf95c35f76c8cd83839a7f447b0445fff06bf78f046ccb1
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        nodeSelector:
+          nested-virtualization: enabled
+        volumes:
+          - name: kvm-volume
+            hostPath:
+              path: /dev/kvm
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                cpu: "1.1"
+                memory: "6Gi"
+            volumeMounts:
+              - name: kvm-volume
+                mountPath: /dev/kvm
+            securityContext:
+              privileged: true
+  image: europe-west4-docker.pkg.dev/gctf-2025/gctf-2025-kctf-managed-challenges/bpfbox-challenge:1619ae71cb77118b7e442e9821414e5e249102d63d4bac7b6d91b5d53e7b6632

@@ -1,0 +1,36 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Human readable task name
+name: MYTHOS
+# Long form description.
+description: |+
+  Legends tell of a far away kingdom in a far away land, of a far away guardian and a far away princess. Explore the myth at your leisure.
+
+  Author: Vie
+# The flag
+flag: CTF{I_like_my_packages_like_I_like_my_python_classes_like_I_like_my_javascript_objects...polluted.Anyway_hope_to_see_some_of_yall_in_mexico_city!}
+# Task category. (one of hardware, crypto, pwn, reversing, web, net, misc)
+category: web
+# === the fields below will be filled by SRE or automation ===
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true
+# Whether the challenge will be put behind an instancer
+instanced: true

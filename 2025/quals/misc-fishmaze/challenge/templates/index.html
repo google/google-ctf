@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<!--
+ Copyright 2025 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FishMaze</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <p style="font-family: Georgia, serif; font-style: italic;">"Determinism is the friend, not the foe, of those who
+        dislike inevitability."</p>
+    <p style="font-family: Georgia, serif;">&mdash;Daniel Dennett</p>
+    <style>
+        body {
+            font-family: 'Google Sans', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 5px;
+            background-color: #1a1a1a;
+            /* Dark background */
+            color: #e0e0e0;
+            /* Light text for contrast */
+        }
+
+        h1 {
+            color: #f0f0f0;
+            /* Slightly brighter for the main title */
+        }
+
+        /* --- Code Editor Styles --- */
+        .code-editor-container {
+            width: 80%;
+            /* Adjust width as needed */
+            max-width: 800px;
+            /* Limit max width */
+            background-color: #282c34;
+            /* Matches atom-one-dark background */
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid #555;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Styles for the uneditable signature part */
+        #codeSignature {
+            /* This is the uneditable part */
+            background-color: #2e323b;
+            /* Slightly different background for signature */
+            border-bottom: 1px dashed #555;
+            /* Visual separation */
+            color: #98c379;
+            /* A distinct color for the signature */
+            font-family: 'Fira Code', 'Roboto Mono', monospace;
+            /* Ensure consistent font stack */
+            font-size: 1em;
+            line-height: 1.5;
+            padding: 15px;
+            margin: 0;
+            /* Remove default pre margin */
+            overflow-x: auto;
+            white-space: pre-wrap;
+            /* Ensure it wraps if too long */
+            word-wrap: break-word;
+        }
+
+        /* Wrapper for the editable code area */
+        .editable-code-wrapper {
+            position: relative;
+            flex-grow: 1;
+            /* Allows it to take up available height */
+            min-height: 150px;
+            /* Minimum height for the editable area */
+        }
+
+        /* The hidden <pre> element that highlight.js will render into */
+        #highlighted-content-display {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            overflow: auto;
+            /* Allow scrolling for the highlighted content */
+            white-space: pre-wrap;
+            /* Ensure text wraps */
+            word-wrap: break-word;
+            z-index: 1;
+            /* Behind the textarea */
+            background-color: #282c34;
+            /* Matches atom-one-dark background */
+            font-family: 'Fira Code', 'Roboto Mono', monospace;
+            /* Ensure consistent font stack */
+            font-size: 1em;
+            line-height: 1.5;
+        }
+
+        /* The actual textarea where the user types */
+        #kernelInput {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Fira Code', 'Roboto Mono', monospace;
+            /* Ensure consistent font stack */
+            font-size: 1em;
+            line-height: 1.5;
+            padding: 15px;
+            box-sizing: border-box;
+            background-color: transparent;
+            /* Crucial: makes textarea transparent */
+            color: transparent;
+            /* Make the actual text input transparent */
+            border: none;
+            outline: none;
+            resize: none;
+            /* Prevent manual resizing */
+            overflow: auto;
+            /* Allow textarea to scroll */
+            z-index: 2;
+            /* On top of highlighted content */
+            caret-color: #abb2bf;
+            /* Set caret color for visibility */
+            white-space: pre-wrap;
+            /* Ensure text wraps correctly */
+            word-wrap: break-word;
+            /* Breaks long words */
+        }
+
+        #kernelInput::placeholder {
+            color: #7b838f;
+        }
+
+        /* --- Selection Styling for the textarea --- */
+        #kernelInput::selection {
+            background: rgba(0, 86, 179, 0.5);
+            /* A semi-transparent blue for selection background */
+            color: transparent;
+            /* Crucial: make selected text in textarea transparent */
+        }
+
+        #kernelInput::-moz-selection {
+            /* For Firefox */
+            background: rgba(0, 86, 179, 0.5);
+            color: transparent;
+        }
+
+        .input-controls {
+            display: flex;
+            justify-content: flex-end;
+            /* Align button to the right */
+            padding: 10px 15px;
+            background-color: #2e323b;
+            border-top: 1px solid #555;
+        }
+
+
+        #submitButton {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        #submitButton:hover {
+            background-color: #0056b3;
+        }
+
+
+        /* --- Grid & Controls Styles (from your original CSS) --- */
+        .grid-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Align items vertically */
+            gap: 15px;
+            /* Space between controls */
+            margin-bottom: 10px;
+        }
+
+        .play-button {
+            padding: 5px 10px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .play-button:hover {
+            background-color: #218838;
+        }
+
+        #stepLabel {
+            font-size: 1em;
+            color: #c0c0c0;
+        }
+
+        #stepSlider {
+            width: 250px;
+            /* Fixed width for slider */
+            -webkit-appearance: none;
+            height: 8px;
+            background: #555;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+            border-radius: 5px;
+        }
+
+        #stepSlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #007bff;
+            cursor: pointer;
+        }
+
+        #stepSlider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #007bff;
+            cursor: pointer;
+        }
+
+        .grid-container {
+            border: 2px solid #555;
+            background-color: #333;
+            display: grid;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .grid-cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Center images both horizontally and vertically */
+            box-sizing: border-box;
+        }
+
+        .grid-cell img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+
+        #responseMessage {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #282828;
+            border-radius: 4px;
+            min-width: 300px;
+            text-align: center;
+        }
+
+        /* --- Help Box Styles --- */
+        .help-box {
+            border: 1px solid #555;
+            background-color: #282828;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 15px;
+            max-width: 90%;
+            width: fit-content;
+            text-align: center;
+        }
+
+        .legend-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+            min-width: 100px;
+        }
+
+        .legend-item img {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 5px;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+
+        .legend-item p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #c0c0c0;
+            line-height: 1.2;
+        }
+
+        .legend-item strong {
+            display: block;
+            font-size: 1em;
+            color: #f0f0f0;
+            margin-bottom: 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>FishMaze</h1>
+
+    <div class="code-editor-container">
+        <pre><code class="language-python" id="codeSignature"></code></pre>
+
+        <div class="editable-code-wrapper">
+            <pre><code class="language-python" id="highlighted-content-display"></code></pre>
+            <textarea id="kernelInput" oninput="highlightCode()" spellcheck="false"
+                placeholder="Enter your Python code here..."></textarea>
+        </div>
+        <div class="input-controls">
+            <button id="submitButton">Submit Code</button>
+        </div>
+    </div>
+
+    <div class="help-box">
+        <div class="legend-item">
+            <img src="/static/fish.png" alt="Fish">
+            <strong>Fish:</strong>
+            <p>This is you, escape the Maze.</p>
+        </div>
+        <div class="legend-item">
+            <img src="/static/positron.png" alt="Positronic Rays">
+            <strong>Positronic Rays:</strong>
+            <p>Dodge these dangerous rays.</p>
+        </div>
+        <div class="legend-item">
+            <img src="/static/falcon.png" alt="Killer Falcons">
+            <strong>Killer Falcons:</strong>
+            <p>Be wary of these efficient killers.</p>
+        </div>
+        <div class="legend-item">
+            <img src="/static/wall.png" alt="Coral Reef">
+            <strong>Coral Reef:</strong>
+            <p>This cell is blocked.</p>
+        </div>
+    </div>
+
+    <div class="grid-controls">
+        <button class="play-button">&#9658; Play</button>
+        <div id="stepLabel">T: <span id="currentStep">0</span></div>
+        <input type="range" min="0" max="0" value="0" id="stepSlider">
+    </div>
+
+    <div class="grid-container" id="gridArea">
+    </div>
+
+    <div id="responseMessage"></div>
+
+    <script>
+        const SIGNATURE_CODE = `def player_kernel(mapdata_ref, auxdata_ref, out_ref):`;
+
+        function highlightCode() {
+            const inputTextElement = document.getElementById('kernelInput');
+            const highlightedContentDisplay = document.getElementById('highlighted-content-display');
+
+            const userCodeWithIndentation = inputTextElement.value;
+
+            const tempUserCodeBlock = document.createElement('code');
+            tempUserCodeBlock.classList.add('language-python');
+            tempUserCodeBlock.textContent = userCodeWithIndentation;
+
+            hljs.highlightElement(tempUserCodeBlock);
+            highlightedContentDisplay.innerHTML = tempUserCodeBlock.innerHTML;
+
+            highlightedContentDisplay.scrollTop = inputTextElement.scrollTop;
+            highlightedContentDisplay.scrollLeft = inputTextElement.scrollLeft;
+
+            inputTextElement.style.height = 'auto';
+            inputTextElement.style.height = inputTextElement.scrollHeight + 'px';
+
+            const editableWrapper = document.querySelector('.editable-code-wrapper');
+            editableWrapper.style.height = inputTextElement.style.height;
+        }
+
+        // Initial highlighting setup on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const signatureElement = document.getElementById('codeSignature');
+            signatureElement.textContent = SIGNATURE_CODE;
+            hljs.highlightElement(signatureElement);
+
+            const inputTextElement = document.getElementById('kernelInput');
+            // Set the starter kernel code here.
+            // IMPORTANT: Ensure correct indentation for the function body!
+            inputTextElement.value = `    out_ref.at[0].set(1)`;
+            highlightCode();
+            loadInitialMap();
+        });
+
+        document.getElementById('kernelInput').addEventListener('scroll', function () {
+            const highlightedContentDisplay = document.getElementById('highlighted-content-display');
+            highlightedContentDisplay.scrollTop = this.scrollTop;
+            highlightedContentDisplay.scrollLeft = this.scrollLeft;
+        });
+
+
+        // --- Configuration Variables (easily changeable) ---
+        const GRID_DIMENSION = 800;
+        const CELL_SIZE_PX = 32;
+        const enemyImages = {
+            '#': 'wall.png',
+            'F': 'falcon.png',
+            'R': 'positron.png',
+            'P': 'fish.png',
+            ' ': 'empty',
+        }
+        // ----------------------------------------------------
+
+        const gridContainer = document.getElementById('gridArea');
+        const stepSlider = document.getElementById('stepSlider');
+        const stepLabel = document.getElementById('currentStep');
+
+        let gameTrace = {};
+        let gameStates = [];
+        let animationInterval;
+        let currentStep = 0;
+
+
+        gridContainer.style.width = `${GRID_DIMENSION}px`;
+        gridContainer.style.height = `${GRID_DIMENSION}px`;
+        gridContainer.style.gridTemplateColumns = `repeat(${GRID_DIMENSION / CELL_SIZE_PX}, 1fr)`;
+        gridContainer.style.gridTemplateRows = `repeat(${GRID_DIMENSION / CELL_SIZE_PX}, 1fr)`;
+
+        document.querySelector('.grid-controls').style.width = `${GRID_DIMENSION}px`;
+
+
+        function populateGrid(gameState) {
+            gridContainer.innerHTML = '';
+
+            const maze = gameState.maze;
+            const mapn = gameTrace.mapn;
+
+            const numCellsPerSide = mapn;
+            const cellSize = GRID_DIMENSION / numCellsPerSide;
+
+            gridContainer.style.width = `${GRID_DIMENSION}px`;
+            gridContainer.style.height = `${GRID_DIMENSION}px`;
+            gridContainer.style.gridTemplateColumns = `repeat(${numCellsPerSide}, 1fr)`;
+            gridContainer.style.gridTemplateRows = `repeat(${numCellsPerSide}, 1fr)`;
+
+            const rows = maze.split('\n');
+            for (let row = 0; row < rows.length; row++) {
+                for (let col = 0; col < rows[row].length; col++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('grid-cell');
+
+                    cell.style.width = `${cellSize}px`;
+                    cell.style.height = `${cellSize}px`;
+
+                    const cellContent = rows[row][col];
+                    let currentCellImage = enemyImages[cellContent] || 'empty';
+
+
+                    if (currentCellImage !== 'empty') {
+                        const img = document.createElement('img');
+                        img.src = `/static/${currentCellImage}`;
+                        img.alt = currentCellImage.split('.')[0];
+                        cell.appendChild(img);
+                    }
+
+                    gridContainer.appendChild(cell);
+                }
+            }
+        }
+
+        function updateVisualization(step) {
+            if (gameStates.length === 0) return;
+
+            step = parseInt(step);
+            const gameState = gameStates[step];
+            populateGrid(gameState);
+            stepLabel.textContent = step;
+            stepSlider.value = step;
+        }
+
+
+        document.getElementById('submitButton').addEventListener('click', function () {
+            const kernelInput = document.getElementById('kernelInput').value;
+            // kernelInput.value already contains the user's indented code.
+            const fullKernelCode = SIGNATURE_CODE + '\n' + kernelInput;
+
+            fetch('/submit_kernel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `kernel_input=${encodeURIComponent(fullKernelCode)}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('responseMessage').textContent = data.gametrace.flag;
+                    console.log(data);
+                    gameStates = data.gametrace.game_states;
+                    gameTrace = data.gametrace;
+
+                    stepSlider.max = gameStates.length - 1;
+                    stepSlider.value = 0;
+                    currentStep = 0;
+                    updateVisualization(0);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('responseMessage').textContent = 'Error processing kernel.';
+                    document.getElementById('responseMessage').style.color = 'red';
+                });
+        });
+
+        document.querySelector('.play-button').addEventListener('click', function () {
+            const playButton = document.querySelector('.play-button');
+            currentStep = parseInt(stepSlider.value);
+
+            if (playButton.textContent === '\u25B6 Play') {
+                playButton.textContent = '\u23F9 Stop';
+                animationInterval = setInterval(() => {
+                    currentStep++;
+                    if (currentStep >= gameStates.length) {
+                        clearInterval(animationInterval);
+                        playButton.textContent = '\u25B6 Play';
+                    } else {
+                        updateVisualization(currentStep);
+                    }
+                }, 200);
+            } else {
+                playButton.textContent = '\u25B6 Play';
+                clearInterval(animationInterval);
+            }
+        });
+
+        stepSlider.addEventListener('input', function () {
+            updateVisualization(this.value);
+        });
+
+        async function loadInitialMap() {
+            try {
+                const response = await fetch('/static/map1.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const initialMapBooleanData = await response.json();
+                const mapn = initialMapBooleanData.length;
+                // Create the initial game state structure for the slider/playback
+                // The maze here is the raw boolean array from map1.json
+                let initialMapAsciiString = '';
+                for (let r = 0; r < mapn; r++) {
+                    for (let c = 0; c < mapn; c++) {
+                        initialMapAsciiString += initialMapBooleanData[r][c] ? '#' : ' ';
+                    }
+                    if (r < mapn - 1) {
+                        initialMapAsciiString += '\n'; // Add newline between rows
+                    }
+                }
+
+                const initialGameState = {
+                    maze: initialMapAsciiString, // This is the 2D boolean array
+                    player_pos: { x: mapn/2, y: mapn/2 },
+                    // Add other initial elements (falcons, rays) if needed for the first frame
+                    falcons: [], // Assuming no falcons initially unless defined in map1.json
+                    rays: []     // Assuming no rays initially unless defined in map1.json
+                };
+
+                gameStates = [initialGameState]; // Set the first game state
+                gameTrace = {
+                    mapn: mapn, // Store the dimension
+                    game_states: gameStates,
+                    flag: "Initial map loaded." // Placeholder flag
+                };
+                stepSlider.max = gameStates.length - 1;
+                stepSlider.value = 0;
+                currentStep = 0;
+                updateVisualization(0); // Display the initial state
+                document.getElementById('responseMessage').textContent = "Map loaded. Enter your code to play!";
+
+
+            } catch (error) {
+                console.error("Error loading initial map data:", error);
+                document.getElementById('responseMessage').textContent = 'Failed to load initial map.';
+                document.getElementById('responseMessage').style.color = 'red';
+            }
+        }
+    </script>
+    <div style="display:none;">
+        Note to our intern: make Sure to remove these notes so players don't see it!
+
+        mapdata.shape is (8,)
+        It has ASCII codes of:
+        A0 A1 A2
+        A3 * A4
+        A5 A6 A7
+        Where "#" is wall, " " is open, "R" is ray, "F" is falcon
+
+        output.shape is (1 + 64,)
+        aux.shape is (64,)
+        OUTPUT ACTIONS:
+        0 : stay still
+        1 : move left
+        2 : move right
+        3 : move up
+        4 : move down
+        Put your action in output[0]
+        After each turn:OUTPUT[1:] gets copied into AUX_DATA so you can use aux as memory/scratch
+    </div>
+</body>
+
+</html>

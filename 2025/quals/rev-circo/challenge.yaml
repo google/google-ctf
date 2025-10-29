@@ -1,0 +1,43 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: circo
+spec:
+  deployed: true
+  powDifficultySeconds: 30
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: false
+  image: europe-west4-docker.pkg.dev/gctf-2025/gctf-2025-kctf-managed-challenges/circo-challenge:3438596fc3d792e8c2fb6ff6db3c2b316d100a8f208a12751c947892637459fb
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        runtimeClassName: kata-qemu
+        nodeSelector:
+          nested-virtualization: enabled
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                cpu: "1"
+                memory: "256Mi"

@@ -1,0 +1,399 @@
+{
+    "events": [
+        {
+            "ev_id": 0,
+            "ev_name": "The Antechamber",
+            "ev_content": "You find yourself in a large foyer, with marble walls and glass columns. Red velvet adorns most surfaces, leading up to an arched gate at the end of the room. Alternatively, one of the many ceiling-high windows is available to jump out into the courtyard below.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 9,
+                    "desc": "Go through the arched doors"
+                },
+                {
+                    "id": 1,
+                    "goto": 1,
+                    "desc": "Go out the window"
+                }
+
+
+            ]
+        },
+        {
+            "ev_id": 1,
+            "ev_name": "The Courtyard",
+            "ev_content": "You find yourself in the castle courtyard, lush with exotic plants and flora. Every kind of flower seems to make their home here, and the air is sweet with nectar. Ahead of you is a circular fountain and pond, and a small grove of interesting trees ahead. Across from you is a red door leading back inside the castle, and above you are a series of windows leading into the antechamber.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 2,
+                    "desc": "Investigate the fountain and pond"
+                },
+                {
+                    "id": 1,
+                    "goto": 23,
+                    "desc": "Investigate the trees"
+                },
+                {
+                    "id": 2,
+                    "goto": 0,
+                    "desc": "Go back into the window"
+                },
+                {
+                    "id": 3,
+                    "goto": 3,
+                    "desc": "Go through the red door"
+                }
+            ]
+        },
+        {
+            "ev_id": 2,
+            "ev_name": "The fountain and pond",
+            "ev_content": "The fountain feeds a small waterfall into a larger, and surprisingly deeper, pond. Lilypads dot the edge alongside tall grass. Actually, wait. This pond is really, really deep.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 7,
+                    "desc": "Look closer"
+                },
+                {
+                    "id": 1,
+                    "goto": 1,
+                    "desc": "Go back"
+                }
+            ]
+        },
+        {
+            "ev_id": 3,
+            "ev_name": "The Art Gallery",
+            "ev_content": "You find yourself in a gigantic, opulent art gallery. Dotting the walls are paintings framed in ornate filligree, facing across small velvet benches. There are many paintings around, but the 3 biggest ones are ahead of you: A painting of a red-winged angel, a painting of a princess, and a painting of a cat in a blue jumpsuit",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 4,
+                    "desc": "The angel?"
+                },
+                {
+                    "id": 1,
+                    "goto": 5,
+                    "desc": "The princess?"
+                },
+                {
+                    "id": 2,
+                    "goto": 6,
+                    "desc": "Blue jumpsuit?"
+                },
+                {
+                    "id": 3,
+                    "goto": 1,
+                    "desc": "Go back"
+                }
+            ]
+        },
+        {
+            "ev_id": 4,
+            "ev_name": "The Painting of The Red Guardian",
+            "ev_content": "The painting of the angel is a grand one, depicting a warrior in gold armour and platinum white hair. She looks like a force to be reckoned with. The small plaque on the base of her painting is scratched out, you can't make out what her name is. There seems to be a piece of cloth wedged between the frame and the wall.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 3,
+                    "desc": "Okay cool"
+                }
+            ],
+            "ev_item": "angels_scarf"
+        },
+        {
+            "ev_id": 5,
+            "ev_name": "The Painting of The Regal Princess",
+            "ev_content": "The painting of what appears to be high royalty is a regal one. She's adorned in dressed in champagne colors and equally-colored jewellry. You take a step closer, only to immediately plunge into the ground - a trapdoor has opened beneath you!",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 26,
+                    "desc": "uh oh"
+                }
+            ]
+        },
+        {
+            "ev_id": 6,
+            "ev_name": "Mew",
+            "ev_content": "The Painting of the Hero is an odd one - a small, brown tabby wearing a purple jumpsuit, eating a giant fish. You notice that the plaque on the base of the frame has fallen off.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 3,
+                    "desc": "Pick it up and head back"
+                }
+            ],
+            "ev_item": "mew_plaque"
+        },
+        {
+            "ev_id": 7,
+            "ev_name": "The Mermaid",
+            "ev_content": "Emerging from the depths is a beautiful, scaly, mermaid. The scales on her tail shimmer against the sunlight, and she looks at you with curiosity.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 24,
+                    "desc": "Haha heyyyy girl how you doin"
+                },
+                {
+                    "id": 1,
+                    "goto": 8,
+                    "desc": "Maybe she likes gifts"
+                }
+            ]
+        },
+        {
+            "ev_id": 8,
+            "ev_name": "A Gift From the Mermaid",
+            "ev_content": "You fish around in your pockets for a suitable trinket. You find a small, rusty coin, and hold it apprehensively towards her. She smiles, exposing a row of sharp teeth, snatches the trinket and dives deep into the water. There's a silence until she emerges from the depths again, her hands outstretched to offer you a gift as well: a scale from her tail.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 2,
+                    "desc": "Cool thanks"
+                }
+            ],
+            "ev_item": "mermaid_scale"
+        },
+        {
+            "ev_id": 9,
+            "ev_name": "The Ballroom",
+            "ev_content": "You find yourself in a large, oval ballroom with gigantic curtains and crystal chandeliers all over the place. What a grand display of regality. Ahead of you is a set of crystal doors. To the right, a hallway that seems to open up into another room.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 18,
+                    "desc": "Go through the door"
+                },
+                {
+                    "id": 1,
+                    "goto": 10,
+                    "desc": "Go to the hallway"
+                }
+            ]
+        },
+        {
+            "ev_id": 10,
+            "ev_name": "The Stairway",
+            "ev_content": "The hallway opens up to a large, grand staircase. There's a small desk on each wall of the room and large carpets that run along the stairs. Underneath the stairs is an alcove that is unusually dark - there's no candles or other lighting sources around, as if deliberately removed. ",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 13,
+                    "desc": "Go up the stairs"
+                },
+                {
+                    "id": 1,
+                    "goto": 11,
+                    "desc": "Explore the alcove. What could go wrong?"
+                }
+            ]
+        },
+        {
+            "ev_id": 11,
+            "ev_name": "The Basilisk",
+            "ev_content": "I admire your bravery, but I don't think that means much in the face of the giant serpent that slithered out from underneath the staircase. You take one look at its eyes and feel your bones and flesh hardening like a statue.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 12,
+                    "desc": "Oops"
+                }
+            ]
+        },
+        {
+            "ev_id": 12,
+            "ev_name": "BAD END!",
+            "ev_content": "You've become a permanent fixture of the castle, congratulations! I mean that literally. You are a statue.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 12,
+                    "desc": "Damn!"
+                }
+            ]
+        },
+        {
+            "ev_id": 13,
+            "ev_name": "The Crystal Tower",
+            "ev_content": "The stairs lead up a spiral vertical entryway that's lined with crystal architecture. It eventually opens up to an inner balcony of sorts, with a random chest on the side. The stairs continue upwards on the other side.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 14,
+                    "desc": "Keep going up the stairs"
+                },
+                {
+                    "id": 1,
+                    "goto": 15,
+                    "desc": "A chest you say"
+                }
+            ]
+        },
+        {
+            "ev_id": 14,
+            "ev_name": "The Private Study",
+            "ev_content": "The stairs eventually lead you to a heavy wooden door that reveals a small, cozy study. There are bookshelves that line the walls with all manner of literature scattered across them. You think to yourself if someone has the time for all these books. There's a small window that reveals the inner courtyard outside. You could probably traverse the rooftops and make it there, if you wanted.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 1,
+                    "desc": "Go to the courtyard"
+                }
+            ]
+        },
+        {
+            "ev_id": 15,
+            "ev_name": "The Mimic",
+            "ev_content": "That wasn't just any random chest! It's a mimic! Spindly arms sprout from its sides and the top half of the trunk swings open to reveal a row of sharp teeth.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 17,
+                    "desc": "Oh no"
+                },
+                {
+                    "id": 1,
+                    "goto": 16,
+                    "desc": "RUN!"
+                }
+            ]
+        },
+        {
+            "ev_id": 16,
+            "ev_name": "Stumble Away",
+            "ev_content": "You narrowly avoid the mimic's grasp by jumping backwards just in time. As it misses you, it fumbles forward and topples itself, spilling some treasures that lined the base of its mouth. You have a precious few seconds to collect yourself and run!",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 13,
+                    "desc": "Roger that"
+                }
+            ],
+            "ev_item": "mimic_gem"
+        },
+        {
+            "ev_id": 17,
+            "ev_name": "BAD END!",
+            "ev_content": "Like a python, the chest unhinges its jaws and swallows you whole.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 17,
+                    "desc": "chomp"
+                }
+            ]
+        },
+        {
+            "ev_id": 18,
+            "ev_name": "The Throne Room",
+            "ev_content": "You enter a gigantic room with massive columns and open air windows. It's a bit dusty in here, so you can only make out the vague figures of 2 people beyond the haze. One is seated on the throne, presumably royalty. The other flanks their side, with gigantic wings silhouetting them.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 19,
+                    "desc": "Hi"
+                }
+            ]
+        },
+        {
+            "ev_id": 19,
+            "ev_name": "The Guardians of MYTHOS",
+            "ev_content": "The princess and angel don't seem too pleased that you're here. It's likely that you running around their castle has caused quite a disturbance for them. The princess has a quiver of arrows at her side and a longbow in her hand, while the angel has a gigantic claymore that seems as tall as her. I don't think you wanna mess with these people.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 20,
+                    "desc": "I'm sure I can talk it out"
+                }
+            ]
+        },
+        {
+            "ev_id": 20,
+            "ev_name": "TRANSITION",
+            "ev_content": "TRANSITION event, you shouldn't be able to see this",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 20,
+                    "desc": "ooookay"
+                }
+            ]
+        },
+        {
+            "ev_id": 21,
+            "ev_name": "MYTHOS GOOD ENDING",
+            "ev_content": "The pair look at each other before they beckon you to approach. In a soft voice, the princess explains: 'we see that you have encountered all sorts of adventures within my castle. I hope you enjoyed yourself, but I think it's time for you to go. We are expecting guests, you see'. With a flick of her hand, you're whisked away back to the entrance of the castle where you started, a voice still echoing in your head: 'you seem tenacious enough. I suppose I will see you again soon'.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 21,
+                    "desc": "Nice"
+                }
+            ]
+        },
+        {
+            "ev_id": 22,
+            "ev_name": "MYTHOS BAD ENDING",
+            "ev_content": "The pair look at each other before they beckon you to approach, and they do not look happy. The angel bellows, terrifyingly, of your misdeeds. 'First, you mess up the antechamber, tread dust on the carpets, and disrupt our guests. Do you think you are above the rules of this castle?' In one quick movement, a gust of wind takes you through the window and into the open air. It seems like the MYTHOS has claimed yet another victim.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 22,
+                    "desc": "Oh no"
+                }
+            ]
+        },
+        {
+            "ev_id": 23,
+            "ev_name": "Dryads",
+            "ev_content": "Wait! As you get closer, the trees stop looking like trees. Limbs and torsos begin to form themselves from the branches and you find yourself surrounded by wooden creatures - dryads!",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 25,
+                    "desc": "I have allergies"
+                }
+            ]
+        },
+        {
+            "ev_id": 24,
+            "ev_name": "BAD END: Drowned",
+            "ev_content": "I'm not sure what you were expecting here. Mermaids are carnivorous creatures! She grabs you by your shirt-collar, dragging you into the water with considerable force.",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 24,
+                    "desc": "Gurgle"
+                }
+            ]
+        },
+        {
+            "ev_id": 25,
+            "ev_name": "BAD END: Fungus",
+            "ev_content": "The dryads surround you, and a quick stab from any of their appendages means a fast-acting poison that puts you to sleep. Good night!",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 25,
+                    "desc": "Honk shoo mi mi mi"
+                }
+            ]
+        },
+        {
+            "ev_id": 26,
+            "ev_name": "BAD END: Dungeon",
+            "ev_content": "That was a great fall! You doing ok? Anyway, look around - looks like you're in a holding cell. Better get comfy!",
+            "ev_choice": [
+                {
+                    "id": 0,
+                    "goto": 26,
+                    "desc": "Aw man"
+                }
+            ]
+        }
+    ]
+}
