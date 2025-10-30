@@ -1,0 +1,24 @@
+# RGBDS, these are the binaries that compile the Game Boy cartridge
+rgbds*
+
+# Compiled roms folder
+roms/
+!attachments/roms
+
+# Object files.
+*.o
+
+# Boot rom
+src/boot/gbc_boot.1
+src/boot/gbc_boot.2
+
+# MAME
+cfg/
+nvram/
+snap/
+
+# Python script that solves it.
+encrypted_flag
+key_in_vram1
+user_encrypted_flag
+plaintext_flag

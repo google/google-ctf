@@ -1,0 +1,1 @@
+CTF{aaaaaaaaaaaaaaaaaaaaaa_FAKE_FLAG_aaaaaaaaaaaaaaaaaaaaaa}

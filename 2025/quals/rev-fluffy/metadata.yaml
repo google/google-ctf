@@ -1,0 +1,31 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# Human readable task name
+name: fluffy
+# Long form description.
+description: |+
+  I don’t trust anyone anymore... I have written my own App to protect my secrets. I also used my own encryption algorithm, because I believe security by obscurity is the best. But, I didn’t have time to implement the decryption functionality yet. My friend from Switzerland told me to not bother myself with it as he was able to recover my secrets in 5 minutes... How is this even possible?
+# The flag
+flag: CTF{Ok4y_h4v3_u_0ptim1zed_brUt3_f0rcE_0R_y0u_jUst_uSeD_a_l0t_0f_c0Res?}
+# Task category. (one of hw, crypto, pwn, rev, web, net, misc)
+category: reversing
+# === the fields below will be filled by SRE or automation ===
+# Task label
+label: ''
+# URL for web challenges
+link: ''
+# the URL for attachments, to be filled in by automation
+attachment: ''
+# is this challenge released? Will be set by SREs
+visible: true

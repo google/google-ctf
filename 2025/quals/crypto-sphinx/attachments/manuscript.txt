@@ -1,0 +1,1515 @@
+[See the parent article <79...@hoptoad.uucp> for the legalese. This
+netnews article is exportable under 22 CFR 120.18, 22 CFR 125.1 (a),
+and 15 CFR 379.3(a). It can be sent to all foreign as well as US
+domestic destinations. -- John]
+A Software Encryption Function
+by
+Ralph C. Merkle
+Xerox PARC
+3333 Coyote Hill Road
+Palo Alto, CA 94304
+
+
+ABSTRACT
+
+Encryption hardware is not available on most computer systems in use
+today. Despite this fact, there is no well accepted encryption
+function designed for software implementation -- instead, hardware
+designs are emulated in software and the resulting performance loss is
+tolerated. The obvious solution is to design an encryption function
+for implementation in software. Such an encryption function is
+presented here -- on a SUN 4/260 it can encrypt at 4 to 8 megabits per
+second. The combination of modern processor speeds and a faster
+algorithm make software encryption feasible in applications which
+previously would have required hardware. This will effectively reduce
+the cost and increase the availability of cryptographic protection.
+
+
+Introduction
+
+The computer community has long recognized the need for security and
+the essential role that encryption must play. Widely adopted,
+standard encryption functions will make a great contribution to
+security in the distributed heavily networked environment which is
+already upon us. IBM recognized the coming need in the 1970's and
+proposed the Data Encryption Standard. or DES [19]. Although
+controversy about its key size has persisted, DES has successfully
+resisted all public attack and been widely accepted. After some
+debate its use as a U.S. Federal Standard has recently been reaffirmed
+until 1992 [14]. However, given the inherent limitations of the 56
+bit key size used in DES [16] it seems clear that the standard will at
+least have to be revised at some point. A recent review of DES by the
+Office of Technology Assessment [15] quotes Dennis Branstad as saying
+the 'useful lifetime' of DES would be until the late 199O's.
+
+Despite the widespread acceptance of DES the most popular software
+commercial encryption packages (for, e.g., the IBM PC or the Apple
+Macintosh) typically offer both DES encryption and their own
+home-grown encryption function. The reason is simple -- DES is often
+50 to 100 times slower than the home-grown alternative. While some of
+this performance differential is due to a sub-optimal DES
+implementation or a faster but less secure home-grown encryption
+function, it seems that DES is inherently 5 to 10 times slower than an
+equivalent, equally secure encryption function designed for software
+implementation. This is not to fault DES -- one of the design
+objectives in DES was quite explicitly a fast hardware implementation:
+when hardware is available, DES is an excellent choice. However, a
+number of design decisions were made in DES reflecting the hardware
+orientation which result in slow software performance -- making the
+current extensive use of DES in software both unplanned-for and rather
+anomalous.
+
+Having offered a rationale for an encryption function designed for
+software implementation, we now turn to the design principles,
+followed by the actual design.
+
+
+Basic Principles
+
+The basic design principles in DES seem sound. The fact that DES has
+not been publicly broken speaks in their favor. However, upon
+examining specific design decisions in DES, we find that several
+should be revised -- either in light of the software orientation of
+the new encryption function, or because of the decreased cost of
+hardware since the early '70's. Examining the basic design decisions
+one by one, and in no particular order, we can decide what reasonably
+should be changed.
+
+The selection of a 56 bit key size is too small, a problem which can
+be easily remedied. This subject has already been debated
+extensively, and while 56 bits seems to offer just sufficient
+protection for many commercial applications, the negligible cost of
+increasing the key size virtually dictates that it be done.
+
+The extensive use of permutations is expensive in software, and should
+be eliminated -- provided that a satisfactory alternative can be
+found. While permutations are cheap in hardware and provide an
+effective way to spread information (also called `diffusion' [21])
+they are not the best choice for software. In the faster
+implementations of DES, the permutations are implemented by table
+look-ups on several bits at once. That is, the 48-to-32 bit
+permutation P is implemented by looking up several bits at once in a
+table -- where each individual table entry is 32 bits wide and the
+table has been pre-computed to contain the permutation of the bits
+looked up. Using a table-lookup in a software encryption function
+seems a good idea and can effectively provide the desired `diffusion'
+-- however there seems no reason to limit such a table to being a
+permutation, Having once paid the cost of looking up an entry in a
+table, it seems preferable that the entry should contain as much
+information as possible rather than being arbitrarily restricted to a
+small range of possibilities.
+
+Each individual S-box in DES provides only 64 entries of 4 bits each,
+or 32 bytes per S-box. Memory sizes have greatly increased since the
+mid 1970's when DES was designed, and larger S-boxes seem appropriate.
+More subtly, DES uses 8 S-boxes and looks up 8 different values in
+them simultaneously. While this is appropriate for hardware (where
+the 8 lookups can occur in parallel) it seems an unreasonable
+restriction for software. In software, each table lookup must follow
+the preceding lookups anyway -- for that is the nature of sequential
+program execution. It seems more valuable cryptographically to make
+each lookup depend upon the preceding lookup, because in software such
+dependency is nearly free. This means that the cascade of
+unpredictable changes that are so central to DES-type encryption
+functions can achieve greater depth with fewer lookups. Looked at
+another way, DES has a maximum circuit depth of 16 S-boxes, even
+though it has a total of 128 S-box lookups. If those same 128 S-box
+operations were done sequentially, with the output of each lookup
+operation altering the input to the next lookup, then the maximum
+circuit depth would be 128 S-boxes -- eight times as many and almost
+certainly providing greater cryptographic strength. This change would
+have very little impact on the running time of a software
+implementation on a typical sequential processor. A larger S-box size
+and sequential (rather than parallel) S-box usage should be adopted.
+
+The initial and final permutations in DES are widely viewed as
+cryptographically pointless -- or at least not very important. They
+are therefore discarded.
+
+The key schedule in DES has received mild criticism for not being
+sufficiently complicated[9]. In practice, all of the faster DES
+software implementations pre-compute the key schedule. This
+pre-computation seems a good idea when large volumes of data are being
+encrypted -- the pre-computation allows a more leisurely and careful
+arrangement of the encryption tables and means the actual encryption
+function can more rapidly scramble the data with less effort. A more
+complex key pre-computation therefore seems desirable.
+
+Finally, the design criteria used for the DES S-boxes were kept
+secret. Even though there is no particular reason to believe that
+they conceal a trap door, it would seem better if the criteria for
+S-box selection were made explicit, and some sort of assurances
+provided that the S-boxes were actually chosen randomly in accordance
+with the published criteria. This would both quiet the concerns about
+trap doors, and also allow a fuller and more explicit consideration of
+the S-box selection criteria.
+
+With this overview of design principles we can now proceed to the design.
+
+
+Khufu, Khafre and Snefru
+
+There are actually two encryption functions named Khufu and Khafre,
+and a one-way hash function named Snefru (all three names were taken
+from the Pharoahs of ancient Egypt following a suggestion by Dan
+Greene. To quote the Encyclopedia Britannica, "The ideal pyramid was
+eventually built by Snefru's successor, Khufu, and the first --- the
+Great Pyramid at Giza --- was the finest and must successful." Khafre
+was Khufu's son).
+
+The basic hardware model around which they are optimized is a 32-bit
+register oriented microprocessor. The basic operations are 32-bit
+load, store, shift, rotate, `xor' and `and'.
+
+The two encryption functions are optimized for somewhat different
+tasks, but use very similar design principles. Khufu is designed for
+fast bulk encryption of large amounts of data. To achieve the fastest
+possible speed, the tables used in encryption are pre-computed. This
+pre-computation is moderately expensive, and makes Khufu unsuited for
+the encryption of small amounts of data. The other encryption
+function -- Khafre -- does not require any pre-computation. This
+means Khafre can efficiently encrypt small amounts of data. On the
+other hand, Khafre is somewhat slower than Khufu for the encryption of
+large volumes of data because it takes more time to encrypt each
+block.
+
+The one-way hash function -- Snefru -- is designed to rapidly reduce
+large blocks of data to a small residue (perhaps 128 or 256 bits).
+Snefru requires no pre-computation and therefore can be efficiently
+applied to small arguments. Snefru will be used exclusively for
+authentication purposes and does not provide secrecy.
+
+We first discuss the design of Khufu.
+
+
+Khufu
+
+Khufu is a block cipher operating on 64-bit blocks. Although
+increasing block size was a very tempting design alternative, the
+64-bit block size of DES has not been greatly criticized. More
+important, many systems built around DES assume that the block size is
+64 bits. The pain of using a different encryption function is better
+minimized if the new encryption function can be easily 'plugged in' in
+place of the old -- which can be done if the block size is the same
+and the key size is larger. The new encryption function essentially
+looks exactly like the old encryption function -- but with some new
+keys added to the key space. Increasing the block size might have
+forced changes in more than just a single subroutine -- it might (for
+example) have forced changes in data formats in a communications
+systems.
+
+Khufu, like DES, is a multi-round encryption function in which two
+32-bit halves (called L and R for Left and Right) are used alternately
+in the computations. Each half is used as input to a function F,
+whose output is XORed with the other half -- the two halves are
+exchanged and the computation repeated until the result appears to be
+random (no statistically detectable patterns). Khufu uses a different
+F-function than DES -- and uses different F-functions during the
+course of encryption. One round of DES uses an F-function defined by
+8 table lookups and associated permutations. By contrast, one round
+of Khufu uses a single table lookup in a larger S-box. In addition,
+in the first step of encryption (prior to the main loop) the plaintext
+is XORed with 64 bits of key material, and again in the final step of
+encryption (following the main loop) the 64-bit block is XORed with
+another 64 bits of key material to produce the ciphertext.
+
+In somewhat more detail, the 64-bit plaintext is first divided into
+two 32-bit pieces designated L and R. L and R are then XORed with two
+32-bit pieces of auxiliary key material. Then the main loop is
+started, in which the bottom byte from L is used as the input to a
+256-entry S-box. Each S-box entry is 32-bits wide, The selected
+32-bit entry is XORed with R. L is then rotated to bring a new byte
+into position, after which L and R are swapped. The S-box itself is
+changed to a new S-box after every 8 rounds (which we shall sometimes
+call an `octet'). This means that the number of S-boxes required
+depends on the number of rounds of encryption being used. Finally,
+after the main loop has been completed, we again XOR L and R with two
+new 32-bit auxiliary key values to produce the ciphertext.
+
+For efficiency reasons, we restrict the number of rounds to be a
+multiple of 8, i.e., an integral number of octets. If the main
+encryption loop is always executed a multiple of 8 times, then it can
+be unrolled 8 times -- which is substantially more efficient than the
+definitionally correct but inefficient versions given in this paper.
+For this reason, the variable `enough' given below must be an exact
+multiple of 8. Various integer calculations will not work correctly
+for values of 'enough' that are not multiples of 8. Encryption of a
+single 64-bit plaintext by Khufu can be viewed algorithmically as
+follows:
+
+L, R: int32;
+enough: integer; -- the security parameter, default of 16 seems appropriate.
+-- values of 8, 16, 24, 32, 40, 48, 56, and 64 are possible.
+SBoxes: ARRAY [1 .. enough/8] OF ARRAY [0 .. 255] OF int32; -- key material
+AuxiliaryKeys: ARRAY[1 .. 4] OF int32; -- additional key material
+rotateSchedule: ARRAY [1 .. 8] := [16,16,8,8,16,16,24,24];
+octet: integer; -- really (round + 7)/8
+-- it keeps track of which 8-round 'octet' we are currently in
+
+L := L XOR AuxiliaryKeys[l];
+R := R XOR AuxiliaryKeys[2];
+octet := 1;
+FOR round := 1 to enough DO -- Note that 'enough' must be a multiple of 8
+Begin
+R := R XOR SBoxes[octet] [L AND #FF];
+L := RotateRight[L, rotateSchedule[(round-1) mod 8 + 1] ];
+SWAP[L,R];
+if (round mod 8 = 0) then octet := octet + 1;
+End;
+
+L := L XOR AuxiliaryKeys[3];
+R := R XOR AuxiliaryKeys[4];
+
+Notationally, it will be convenient to index the different variables
+at different rounds. This indexing is explicitly given by re-writing
+the above algorithm and replacing L and R with arrays. In addition,
+we add the array 'i' to denote the indices used to index into the
+S-box.
+
+L, R: ARRAY [0 .. enough] OF int32;
+enough: integer; -- the security parameter, default of 16 seems appropriate.
+-- values of 8, 16, 24, 32, 40, 48, 56, and 64 are possible.
+i: ARRAY[0 .. enough] OF int8; -- 8-bit bytes
+SBoxes: ARRAY [1 .. enough/8] OF ARRAY [0 .. 255] OF int32; -- key material
+AuxiliaryKeys: ARRAY[1 .. 4] OF int32: -- additional key material
+rotateSchedule: ARRAY [1 .. 8] := [16,16,8,8,16,16,24,24];
+octet: integer; -- really (round + 7)/8
+-- it keeps track of which 8-round 'octet' we are currently in
+
+L[0] := L[-1] XOR AuxiliaryKeys[l];
+R[0] := R[-1] XOR AuxiliaryKeys[2];
+
+octet := 1;
+
+FOR round := 1 to enough DO -- Note that `enough' must be a multiple of 8
+Begin
+i[round] := L[round-1] AND #FF
+L[round] := R[round-1] XOR SBoxes[octet] [ i[round] ];
+R[round] := RotateRight[ L[round-1], rotateSchedule[(round-1) mod 8 + 1] ];
+if (round mod 8 = 0) then octet := octet+ 1;
+End;
+
+L[enough + 1] := L[enough] XOR AuxiliaryKeys[3];
+R[enough + 1] := R[enough] XOR AuxiliaryKeys[4];
+
+The plaintext is (by definition) [L[-1], R[-1]], while the ciphertext
+is [L[enough + 1], R[enough + 1]]. By definition, round 1 computes
+L[1] and R[1] from L[0] and R[0], using index 1 -- or i[1].
+Similarly, round n computes L[n] and R[n] from L[n-1] and R[n-1] using
+i[n]. We shall sometimes say that 'round' 0 computes L[0] and R[0]
+from L[-1] and R[-1], and that 'round' enough + 1 computes L[enough + 1]
+and R[enough + 1] from L[enough] and R[enough].
+
+The primary purpose of the rotation schedule is to bring new bytes
+into position so that all 8 bytes of input are used in the first 8
+rounds (or first octet). This means that a change in any single input
+bit is guaranteed to force the use of a different S-box entry within 8
+rounds, and so initiate the cascade of unpredictable changes needed to
+hide the input. A secondary purpose of the rotation schedule is to
+maximize the number of rotates by 16 because they tend to be faster on
+many microprocessors. For example, the 68000 has a SWAP instruction
+which is equivalent to rotating a 32-bit register by 16 bits. Also,
+rotation by 16 tends to be very fast on processors with 16 bit
+registers -- simply by altering one`s viewpoint about which register
+contains the lower 16 bits and which register contains the upper 16
+bits it is possible to perform this operation with no instructions at
+all. The final purpose of the rotation schedule was to restore the
+data to its original rotational position after each octet of 8 rounds.
+Thus, the sum of the rotations is equal to 0 module 32.
+
+A different S-box is used after each octet of encryption. This has
+two beneficial effects: first, it means that the same S-box entry will
+never be used twice with the same rotational alignment. That is, if a
+single S-box were used for all octets, then it might be that i[1] (the
+index used to select an S-box entry on the first round) and i[9] might
+be the same -- and therefore the same S-box entry would be used in
+rounds 1 and 9. These identical S-box entries would cancel each other
+out because a value XORed with itself produces 0. (If i[1] = i[9],
+then SBox[i[1]] XOR ...stuff... XOR SBox[i[9]] would equal
+...stuff...) Both i[1] and i[9] would have had no effect on the
+encryption process. This would weaken the encryption function. If,
+however, the S-box is changed after every octet then even if i[1] =
+i[9], cancellation is very unlikely to occur (because SBoxes[1][i[1]]
+is almost certainly different from SBoxes[2][i[9]], even though i[1] =
+i[9]). A second beneficial effect is to insure that the encryption
+process is entirely different during the second octet than in the
+first octet. If the same S-box were used, then the second octet would
+compute the same function as the first octet -- which can be a serious
+weakness.
+
+The parameter 'enough' is used because encryption must continue for
+enough rounds to obscure and conceal the data. The exact number of
+rounds that is sufficient will no doubt be a matter of considerable
+debate -- it is left as a parameter precisely so that those who wish
+greater security can use more rounds, while those who are satisfied
+with fewer rounds can encrypt and decrypt data more rapidly. It seems
+very unlikely that fewer than 8 rounds (one octet) will ever be used,
+nor more than 64 rounds (8 octets). The author expects that almost
+all applications will use 16, 24, or 32 rounds. Values of 'enough'
+that are not multiples of 8 are banned.
+
+
+Pre-Computing the S-Boxes
+
+While 128 bits of key material is used at the start and finish of the
+encryption process (e.g., 64 bits at the start and 64 bits at the
+finish from the 128-bit array 'AuxiliaryKeys'), most of the key
+material is mixed in implicitly during the encryption process by
+selection of entries from the S- boxes. All the S-boxes (along with
+the 128 bits of auxiliary key material) are pre-computed from a
+(presumably short) user supplied key. The S-boxes ARE most of the
+key. This raises the question of how the S-boxes are computed and
+what properties they have. While the specific method of computing the
+S-boxes is complex, the essential idea is simple: generate the S-boxes
+in a pseudo-random fashion from a user supplied key so that they
+satisfy one property: all four of the one-byte columns in each S-box
+must be permutations. Intuitively, we require that selection of a
+different S-box entry change all four bytes produced by the S-box.
+More formally, (where `#' means 'not equal to' and SBoxes[o][i][k]
+refers to the kth byte in the ith 32-bit entry of the SBox used during
+octet 'o'): for all o, i, j, k; i # j implies SBoxes[o][i][k] #
+SBoxes[o][j][k].
+
+We can divide the pre-computation of a pseudo-random S-box satisfying
+the desired properties into two parts: first, we generate a stream of
+good pseudo-random bytes; second, we use the stream of pseudo-random
+bytes to generate four pseudo-random permutations that map 8 bits to 8
+bits. These four pseudo-random permutations ARE the generated S-box.
+We repeat this process and compute additional S-boxes until we have
+enough for the number of rounds of encryption that we anticipate.
+
+We could generate a stream of pseudo-random bytes using an encryption
+function -- but we have no S-box to use in such an encryption
+function! To circumvent this circularity problem, we can assume the
+existence of a single 'initial' S-box. Although we must get this
+initial S-box from somewhere, for the moment we assume it exists and
+satisfies the properties described earlier. We will discuss where it
+comes from later.
+
+We (rather arbitrarily) adopt a 64-byte 'state' value for our
+pseudo-random byte-stream generator. That is, the user-provided key
+is used to initialize a 64-byte block (which effectively limits the
+key size to 512 bits -- this does not seem to be a significant limit).
+This 64-byte block is then encrypted using Khufu (using the standard
+S-box for all octets, and setting the auxiliary keys to 0) in cipher
+block chaining mode. (Although use of a single S-box for all rounds
+will result in occasional cancellations as described earlier, this is
+acceptable for this particular application.) This provides 64
+pseudo-random bytes. When these 64 bytes have been used, the 64-byte
+block is again encrypted, providing an additional 64 pseudo-random
+bytes. This process is repeated as long as more pseudo-random bytes
+are needed.
+
+Now that we have a stream of pseudo-random bytes, we must convert them
+into the needed permutations. We adopt the algorithm given in Knuth
+Vol II. In this algorithm, we start with some pre-existing (not
+necessarily random) permutation. For our purposes, we can start with
+the initial S-box. We then interchange each element in the initial
+permutation with some other randomly chosen element, thus producing a
+random permutation. In a pseudo programming language we have:
+
+FOR octet := 1 to enough/8 DO
+SBox:= initialSBox;
+FOR column := 0 to 3 DO
+BEGIN
+FOR i := 0 to 255 DO
+BEGIN
+randomRow := RandomInRange[i,255]; -- returns a random number
+-- between i and 255, inclusive
+SwapBytes [SBox[i,column], SBox[randomRow,column]];
+END;
+END;
+SBoxes[octet] := SBox;
+END;
+
+The routine 'RandomInRange' uses the stream of random bytes to
+actually generate a number in the requested range.
+
+
+Khafre
+
+The design of Khafre is similar to the design of Khufu except that
+Khafre does not pre-compute its S-box. Instead, Khafre uses a set of
+standard S-boxes (discussed in the next section -- note that the
+standard S-boxes are different from the one initial S-box). The use
+of standard S-boxes means that Khafre can quickly encrypt a single
+64-bit block without the lengthy pre-computation used in Khufu;
+however it also means that some new mechanism of mixing in key
+material must be adopted because the standard S-boxes can not serve as
+the key. The mechanism of key-mixing is simple -- key material is
+XORed with the 64-bit data block before the first round and thereafter
+following every 8 rounds. A consequence of this method is that the
+key must be a multiple of 64 bits -- it is expected that 64-bit and
+128-bit key sizes will typically be used in commercial applications.
+Arbitrarily large key sizes can be used, though this will slow down
+encryption.
+
+We can summarize Khafre as follows:
+
+L, R: int32;
+standardSBoxes: ARRAY [1 .. enough/8] OF ARRAY [0 .. 255] OF int32;
+key: ARRAY [0 .. enoughKey-1] OF ARRAY [0 .. 1] of int32:
+keyIndex: [0 .. enoughKey-1];
+rotateSchedule: ARRAY [1 .. 8] := [16,16,8,8,16,16,24,24];
+
+L := L XOR key[0][0];
+R := R XOR key[0][1];
+keyIndex := 1 MOD enoughKey;
+round := 1;
+octet := 1;
+WHILE (round <= enough) DO
+Begin
+L := L XOR standardSBoxes[octet] [R AND #FF];
+R := RotateRight[R, rotateSchedule[round mod 8 + 1] ];
+SWAP[L,R];
+IF round MOD 8 = 0 THEN
+BEGIN
+L := L XOR RotateRight[ key[keyIndex][0], octet];
+R := R XOR RotateRight[ key[keyIndex][1], octet];
+keyIndex := keyIndex + 1;
+IF keyIndex = enoughKey THEN keyIndex := 0;
+octet := octet + 1;
+END;
+round := round + 1;
+End;
+IF keyIndex # 0 THEN ERROR;
+
+We again require that the number of rounds be a multiple of 8 for
+efficiency reasons. In addition, we will require that the key size
+evenly divide the number of octets + 1, That is, we require that
+enoughKey MOD (enough/8 + 1) = 0. (This requirement is shown in the
+code by the final test and error condition). This condition is
+imposed to insure that decryption can be done correctly. If we did
+not impose this condition, then we would have to compute the correct
+value of 'keyIndex' to use when we started to decrypt. For example,
+if we used a 128-bit key for 32 rounds to encrypt a 64-bit plaintext,
+then the final entry used in the key array would be key[1]. If,
+however, we had encrypted for 24 rounds the final entry would have
+been key[0]. Computing the correct value of keyIndex with which to
+start the decryption process would require additional computational
+steps -- it would require a MOD operation which is computationally
+expensive. To avoid this, we simply impose the condition that we can
+always decrypt by starting from the last entry in the key array
+(keyIndex = enoughKey-1). This effectively imposes the constraint
+that (enough/8 + 1)/enoughKey is exactly 0.
+
+Khafre will probably require more rounds than Khufu to achieve a
+similar level of security because it uses a fixed S-box. In addition,
+each Khafre round is somewhat more complex than each Khufu round. As
+a consequence of these two factors, Khafre will take longer than Khufu
+to encrypt each 64-bit block. In compensation for this slower
+encryption speed, Khafre does not require pre-computation of the S-box
+and so will encrypt small amounts of data more quickly than Khufu.
+
+
+Snefru
+
+Snefru is a one-way hash function. One-way hash functions are
+fundamentally intended for authentication, not secrecy, and so their
+design is somewhat different than that of conventional encryption
+functions. However, many of the same basic principles are applicable.
+Snefru in particular uses many of the design principles used in Khufu
+and Khafre.
+
+One way hash functions (also known as MDC's (Manipulation Detection
+Codes)) have been generally known for some time. The first definition
+was apparently given by Merkle [1,2] who also gave a method of
+constructing one-way hash functions from random block ciphers. A more
+recent overview was given by Jueneman, Matyas, and Meyer[11] and
+Jueneman[4].
+
+The major use of one-way hash functions is for authentication. If a
+value y can be authenticated, then we can authenticate x by computing:
+
+y = F(x)
+
+No other input x' can be found (although they probably exist) which
+will generate y. A 128 bit y can authenticate an arbitrarily large x.
+This property is crucial for the convenient authentication of large
+amounts of information.
+
+Broadly speaking, there are two definitions for one-way hash
+functions. The first definition is for a `weak' one-way hash
+function. A weak one-way hash function is a function F such that:
+
+1.) F can be applied to any argument of any size. For notational
+convenience, F applied to more than one argument is equivalent to F
+applied to the bit-wise concatenation of all its arguments.
+
+2.) F produces a fixed size output. (The output might be 64 bits).
+
+3.) Given F and x, it is easy to compute F(x).
+
+4.) Given F and a 'suitably chosen' (e.g., random) x, it is
+computationally infeasible to find a x' # x such that F(x) = F(x').
+
+The phrase 'computationally infeasible' used above can be replaced
+with any one of several more precise definitions -- each definition
+will in turn result in a somewhat different definition of a one way
+hash function. Snefru is intended to be a 'random' one-way hash
+function -- e.g., for all practical purposes it can be modelled by a
+very large table of random numbers, or by a `demon' who selects a
+random number whenever we wish to compute some output value for
+Snefru. This is discussed further in [18].
+
+In a weak one way hash function there is no guarantee that it's
+computationally infeasible to find pairs of inputs that produce the
+same output. That is, it might be that F(z) = F(z') for some inputs z
+and z' that someone in fact found. However, if x # z and x # z', then
+this doesn't matter. Clearly, we must prevent someone from
+deliberately picking x so that it is equal to a value of z or z' which
+they know has this undesirable property. What's more, it must be
+difficult to generate too many z-z' pairs (and it clearly must be
+impossible to generate z-z' pairs in which we can effectively control
+the value of z or z') or even a randomly chosen x would not be safe.
+Thus, choosing x in a random fashion should make it unlikely that
+anyone can find an x' such that F(x)=F(x'). It is possible, however,
+to choose x in a non-random fashion and still be safe, if we assume
+that F is random (a reasonable assumption for Snefru), then any method
+of choosing x that does not depend on F is effectively random with
+respect to F and therefore suitable. This observation is sometimes
+important in practice, for it allows simpler (therefore faster and
+cheaper) methods of selecting x.
+
+Weak one-way hash functions also suffer from the problem that repeated
+use weakens them. That is, if a weak one-way hash function is used
+to hash 1,000 different random values for x (which might represent
+1,000 different messages signed by a 1,000 different people) then the
+chances of finding an x' such that one of the thousand values of x
+satisfies F(x) = F(x') might be 1,000 times higher. As more people
+sign more messages with the same weak one-way hash function, the
+overall security of the system is degraded. This undesirable state of
+affairs can be dealt with by parameterization, which is the approach
+taken with Snefru. We simply define a family of one-way hash
+functions with the property that each member Fi of the family is
+different from all other members of the family, and so any information
+about how to break Fi will provide no help in breaking Fj for i # j.
+If the system is designed so that every use of a weak one-way hash
+function is parameterized by a different parameter, then overall
+system security can be kept high.
+
+The alternative definition is of a `strong' one-way hash function. A
+strong one-way hash function is a function F such that:
+
+1.) F can be applied to any argument of any size. For notational
+convenience, F applied to more than one argument is equivalent to F
+applied to the bit-wise concatenation of all its arguments.
+
+2.) F produces a fixed size output. (The output might be 128 bits).
+
+3.) Given F and x, it is easy to compute F(x).
+
+4.) Given F, it is computationally infeasible to find any pair x,
+x' such that x # x' and F(x) = F(x').
+
+Strong one-way hash functions are easier to use in systems design than
+weak one-way hash functions because there are no pre-conditions on the
+selection of x, and they provide the full claimed level of security
+even when used repeatedly (or misused either because of error or
+sub-optimal system design). Many authors recommend the exclusive use
+of strong one-way hash functions[4,11] because of the practical
+difficulties of insuring that the pre-conditions on x imposed by a
+weak one-way hash function are met, and the increased problems in
+insuring that different parameters are selected for each use. In
+practice, the constraints imposed by use of a weak one- way hash
+function imply that x cannot be chosen by an agent who has a motive to
+break the system. If A signs a message which B provides, then A will
+have to 'randomize' the message by some means before signing it. If A
+fails to randomize the message, then B can select a 'rigged' message,
+and later surprise A by exhibiting a novel message and showing that A
+signed it.
+
+Weak one-way hash functions can be quite valuable in some system
+designs, although they must be used with caution. Parameterized weak
+one-way hash functions in particular appear to be under-rated.
+
+Snefru can be used as either a weak or a strong one-way hash function,
+with or without parameterization depending on the desires of the
+system designer.
+
+A one-way hash function F accepts an arbitrarily large input --
+however, it is much easier to specify a function that accepts a fixed
+size input. We will, therefore, follow a two-step procedure to define
+F. First, we will define a fixed size function F0 which has the same
+properties as F but which accepts a fixed size input, and then we will
+use F0 to construct F. By definition, F0 has properties 2, 3, and 4
+listed above for F; but replaces property 1 (which says that F can
+have an unlimited input size) with the simpler property that F0 can
+accept only a fixed size input.
+
+A fixed-size strong one-way hash function F0 has the following properties:
+
+1.) F0 can be applied to a fixed size input argument (the input
+might be 256 bits). The size of the input must be larger than the
+size of the output. For notational convenience, F0 applied to more
+than one argument is equivalent to F0 applied to the bit-wise
+concatenation of all its arguments.
+
+2.) F0 produces a fixed size output. (The output might be 128 bits).
+
+3.) Given F0 and x, it is easy to compute F0(x).
+
+4.) Given F0, it is computationally infeasible to find any pair x,
+x' such that x # x' and F0(x) = F0(x').
+
+It is often convenient if the following property is also satisfied:
+
+5.) Given F0(x), and a randomly chosen x, it is computationally
+infeasible to determine x.
+
+If we view x as an array, then we can define F(x) in terms of F0 in the following fashion:
+
+FUNCTION F(x[1 .. n])
+BEGIN
+result := 0;
+FOR i := 1 to n DO
+result := F0(result,x[i]);
+END DO;
+RETURN(result);
+END;
+
+(Note that x can be padded with zero's at the end to insure that x[n]
+is of the correct size).
+
+We have added property 5 to our fixed-size strong one-way hash
+function because it will be convenient and useful to use F0 as a
+normal one-way function -- that is, the input is chosen randomly and
+is kept secret, while the output is made public. When used in this
+way, it is not necessary that we reduce the size of the input. For
+this reason, we will only require that F0 have this property, and will
+not attempt to show that F also has this property.
+
+We can show that F must satisfy properties 1 through 4 if F0 satisfies
+properties 2 through 4, and if F0 accepts only a fixed size input.
+From the program defining F it is obvious that it will accept an input
+of arbitrary size, so property 1 is satisfied. It is also obvious
+that F will produce a fixed size output -- which is the size of
+'result' -- so property 2 is satisfied. Property 3 follows because
+computation of F(x) requires time linear in the size of x -- (which we
+actually take as the definition of 'easy') -- and because computation
+of F0 is 'easy'. The fact that property 4 holds can be shown
+inductively as follows:
+
+Clearly, if n = 1, then property 4 holds for it holds for F0. Assume,
+then, that the property holds for n-1, and we wish to prove it for n.
+We know that:
+
+result := F0( F(x[1 .. n-1]), x[n])
+
+From the fact that property 4 holds for F0 it follows that neither
+F(x[1 .. n-1]) nor x[n] could have been changed -- if they had been,
+we would have two inputs to F0 that produced the same output. But if
+F(x[1 .. n-1]) has not been changed, then x[1 .. n-1] has not been
+changed, by the induction hypothesis. Q.E.D.
+
+The preceding paragraphs mean simply that in order to design a strong
+one-way hash function we need to design a fixed-size strong one-way
+hash function F0, from which we can then build F. In what follows, we
+shall define F0 and present intuitive arguments that it is difficult
+to break.
+
+Traditionally, one-way hash functions have been designed by treating the input, x, as the key and
+then encrypting a fixed size block. We will pursue a different approach. In this approach, we will
+treat the input, x, as the input to a block cipher which uses a fixed key. We will then encrypt x
+and exclusive or the output of the encryption function with x. That is,
+
+F0(x) is defined as: E(0, x) XOR x
+
+where E(key, plaintext) is a 'good' conventional block cipher.
+
+We then retain as many bits of the output as we desire.
+
+This general approach has been used before[12,23] but must still be
+justified. We prefer this approach to the more traditional approach
+(in which x is treated as the key to an encryption function) because
+it is faster. In the traditional approach, it is necessary to mix the
+key with a fixed plaintext block during the encryption process. This
+mixing process requires additional steps. In particular, the key must
+be repeatedly re-loaded from memory to be re-mixed with the block
+being encrypted. (By way of example, consider that the 56 bit key used
+in DES is actually expanded internally into a 768-bit key, so that
+each bit of key material can be mixed into the block being encrypted
+several times). On the other hand, if we treat x as the input to a
+block cipher then we can use a fixed key, need do no key mixing, and
+can still provide excellent security. To show that security is
+preserved using this method, we will appeal to the intuition that a
+'good' encryption function appears to be random. That is, any change
+to the input will produce an unpredictable and apparently random
+change in the output. E(0, x) is totally unrelated to E(0, x XOR 1)
+-- changing a single bit produced a 'random' change. We presume that
+there is no effective method of analyzing E and that therefore it must
+be viewed as a 'black box' -- it's possible to encrypt or decrypt, but
+it's not possible to make any prediction about the value that will be
+produced (unless we've already encrypted or decrypted that particular
+value).
+
+If E is random in the sense discussed above, then E(0, x) is random --
+even if x is highly structured. Therefore E(0, x) XOR x is random and
+cannot be predicted from a knowledge of x. To determine an x' such
+that F0(x) = F0(x'), x' must (by definition) satisfy the equation:
+
+E(0, x) XOR x = y = E(0, x') XOR x'
+
+However, if we assume that the only operations we can perform for the
+cryptanalysis are encryption and decryption of a block, i.e., the
+computation of E(0,w) or D(0,w) (where D stands for Decryption) for
+any value of w that we choose, then our chances of actually finding x'
+are little better than chance. We can select some w by any method we
+desire, and then compute E(0,w) -- but this will produce a nearly
+random value which, when XORed with w, will have a very small
+probability of being equal to y. If we operate in the reverse fashion
+and compute D(0,w) XOR w it too, for the same reason, will only equal
+y by chance.
+
+The critical question that we cannot answer with absolute reliability
+is whether F0 is in fact 'random' in the sense needed for the
+foregoing proof. This question (at present) can only be answered
+empirically by means of a certificational attack -- we have been
+unable to break this system, and so we hope that it cannot be broken.
+
+We will in fact propose 3 fixed-size one-way hash functions: HASH128,
+HASH256, and HASH512 which hash down 128, 256, or 512 bits,
+respectively. We will then define the final hash function, HASH, in
+terms of these four basic functions. The primary purpose of providing
+4 one-way hash functions is efficiency -- if we wish to hash only 128
+bits it is significantly more efficient to use a function which
+accepts a 128 bit input than to use a function which accepts a 512 bit
+input and zero-pad the 128-bit value out to 512 bits.
+
+In addition, HASH, HASH128 and HASH256 accept a 64-bit parameter,
+while HASH512 accepts a 96-bit parameter. The reader can ignore these
+parameters without loss of continuity, the general ideas presented
+below do not depend on them. It is quite possible (and simpler) to
+design a system that does not use these parameters -- however, we
+might have to double the amount of authentication information that we
+store. That is, the output would have to be around 128 bits to
+provide good security[4]. Whether or not this is a significant
+problem will depend on the specific system being designed and the
+particular way the hash functions are being used.
+
+In essence the additional parameters can be used to make exhaustive
+search attacks harder. The basic idea will be familiar to those who
+have thought about the problems of applying a one-way function to
+passwords -- if the same one-way function is used for all users, then
+the fact that two users used the same password is readily apparent if
+you examine the password file that contains the encrypted result for
+each user. Furthermore, by applying the one-way function to all the
+words in a dictionary, it is possible to recover all passwords that
+are English words. However, if each one-way function used to encrypt
+each user's password is slightly different from all the other one-way
+functions, then any would-be system cracker must encrypt each word in
+the dictionary not with a globally known and fixed one-way function,
+but with each individual user's one-way function before recovering all
+passwords that are English words.
+
+In a similar way, if HASH is used throughout a system, then we can
+reasonably expect that many arguments x0, x1, x2,.... will have been
+hashed into many results y0, y1, y2,.... Now, if an interloper wishes
+to attack the system he need only find a false xbad that maps onto
+some legitimate yi: that is, HASH(xi) = yi = HASH(xbad). This clearly
+is a problem because it might let the interloper 'authenticate' the
+false xbad when in fact it is not authentic. The more y's there are,
+the greater the probability that a randomly chosen x will map onto one
+of them. Thus, the more HASH is used, the more popular it becomes,
+the easier it will be to find an xbad for some legitimate xi such that
+HASH(xi) = yi = HASH(xbad). If, however, each use of HASH is
+parameterized with a different value, then the interloper must attack
+each use of HASH as though it were an entirely different hash function
+-- as indeed it will be if the hash function is correctly designed.
+More precisely, if the interloper finds an xbad such that HASH(p,xi) =
+yi = HASH(p',xbad) this will do him absolutely no good as long as p
+and p' are not equal.
+
+This parameter must be passed from HASH to the basic functions
+HASH128, and HASH256 which are used to define it. HASH512 must not
+only receive the parameter passed from HASH, but must also receive an
+additional parameter because HASH512 is used repeatedly when hashing
+down a large argument. That is, hashing a one-gigabyte file will need
+some 16,000,000 usages of HASH512 -- if two of these uses produced the
+same result, then we could simply delete the part of the file between
+them and produce a shortened file that would still produce the same
+result. To prevent this, all 16,000,000 uses of HASH512 invoked by
+HASH to hash down the one-gigabyte file must accept an additional
+parameter to insure that each use is different.
+
+We start with the design of HASH512 -- the largest fixed-size one-way
+hash function and therefore the most efficient for hashing large
+blocks of data.
+
+Conceptually, the hash functions all return 128 bits. If fewer bits
+are needed (e.g., adequate security is provided by 128 bits), then
+trailing bits are discarded. In practice, it will often be more
+efficient to return only as many bits as are required.
+
+HASH512 accepts an input, x, and two parameters which are named p64 (a
+64-bit parameter) and p32 (a 32-bit parameter). Because HASH512
+accepts p64 and p32 it is necessary to add these arguments to the
+conventional block cipher E which is used to define HASH512. (Note
+that we assume E returns a full 512-bit value -- conceptually we
+discard any unneeded bits after E512 has been computed). We can now
+provide a definition of HASH512 in terms of E512 as follows:
+
+HASH512(p64, p32, x) = leading 128 bits of ( E512(p64, p32, 0, x) XOR x)
+
+If we now specify E512(p64, p32, 0, x) -- a conventional block cipher
+that encrypts a 512-bit block with parameters 'p64' and 'p32' and
+which uses a fixed key -- our task is complete.
+
+In essence, we extend the design of Khufu by assuming a block size of
+512 bits (16 32-bit words). This block size was selected as a
+compromise between two factors. We can more efficiently hash more
+data if the block size is large. On the other hand, if the block size
+is too large it won't fit into the registers on the computer
+implementing the hash function, so parts of the block will have to be
+repeatedly loaded and stored. Most modern RISC chips have many
+registers (more than 16 32-bit registers), so on most of these chips
+the entire 512-bit block being encrypted can be kept in registers.
+There will then be no need to load or store parts of the block during
+computation of the hash function.
+
+We modify the basic encryption loop for Khufu as follows: instead of
+two halves, L and R, we have 16 'halves' in an array. We designate
+this array as 'Block[0 .. 15]'. Because we have also added a 64-bit
+parameter to this fixed-size one-way hash function we need to mix in
+this parameter as well. The algorithm for doing this is given below:
+
+Function E512(p64, p32, 0, x)
+p64: INT64;
+p32: 1NT32;
+x: INT512; -- a 512 bit 'integer'.
+BEGIN
+blockSize = 512; -- the block size in bits
+blockSizeInBytes = blockSize/8; -- the block size in 8-bit bytes, here just 64 bytes
+blockSizeInWords = blockSize/32 -- the blocksize in 32-bit words, here just 16 words
+p64upper, p64lower: int32; -- the 64-bit parameter, which is represented as two 32-bit halves
+tempBlock, Block: array [0 .. blockSizeInWords-1] of int32;
+StandardSBoxes: ARRAY [1 .. enough/8] OF ARRAY [0 .. 255] OF int32; -- Fixed for all time
+rotateSchedule: ARRAY [1 .. 4] := [16,8,16,24];
+index: integer;
+byteInWord: integer;
+sBoxEntry: int32;
+
+p64upper := Upper32BitsOf(p64);
+p64lower := Lower32BitsOf(p64);
+Block := x; -- note that x must be 512 bits or smaller. The
+-- trailing bits in Block are zero-filled
+
+FOR index + 1 to enough/blockSizeInBytes - 1 DO
+-- Mix in the parameters that parameterizes this instance
+Block[0] + Block[0] XOR p64lower;
+Block[1] + Block[1] XOR p64upper;
+Block[2] + Block[2] XOR p32;
+
+FOR byteInWord := 1 to 4 DO -- for each of the four columns
+FOR i := 0 to blockSizeInWords-1 DO
+next := (i+1) MOD blockSizeInWords;
+last := (i-1) MOD blockSizeInWords:
+
+-- Pick sboxes in sequence of 1,1,2,2,1,1,2,2,1,1,2,2,...
+-- ...1,1,2,2,3,3,4,4,3,3,4,4,... etc. Note that
+-- using the S-boxes in this sequence prevents self cancellation
+-- if the same entry is used twice.
+SBoxEntry := standardSBoxes[ 2*index-1 + (i MOD 2)] [Block[i].bottomByte];
+Block[next] + Block[next] XOR SBoxEntry;
+Block[last] + Block[last] XOR SBoxEntry;
+ENDLOOP;
+
+-- rotate all the 32-bit words in the block at once by the correct amount
+FOR i: INTEGER IN [0.. wordCount) DO
+Block[i] + RotateRight[Block[i], rotateSchedule[byteInWord]];
+ENDLOOP;
+
+ENDLOOP; -- end of byteInWord going from 1 to 4
+
+ENDLOOP; -- end of index going from 1 to enough/blockSizeInBytes-1
+
+-- flip the Block. The first word and the last word are interchanged, etc.
+tempBlock := Block;
+For i := 0 to blockSizeInWords-1 DO
+BEGIN
+Block[i] := tempBlock[blockSizeInWords-i-1];
+END;
+
+RETURN(Block);
+End;
+
+For efficiency reasons, it is expected that in an actual
+implementation the inner loops would be unrolled blocksize or
+4*blocksize times. This would mean that all shifts would be by fixed
+amounts (if unrolled 4*blocksize times) and that no array indexing,
+divisions or mod computations would actually be performed in the
+unrolled loop because the values would be known at compile time. The
+array 'Block' would be kept in 16 registers, and reference to
+individual array elements (because the array indices would be known at
+compile time) would be to specific registers.
+
+HASH512 can be used to efficiently hash large amounts of data. If
+only small amounts of data need be hashed, then the related functions
+HASH256 and HASH128 should be used. They are precisely the same as
+HASH512 except that 'blockSize' is changed from 512 bits to 256 or 128
+bits as appropriate, and p32 (the 32-bit parameter) is always 0.
+
+Finally, we define HASH(p, x) in terms of the fixed size hash
+functions. To insure that HASH will always be computed efficiently,
+we first determine the size of the argument, x. If the argument is
+small, we use the appropriate fixed-size hash function for speed of
+computation. If the argument is large, we use HASH512 repeatedly to
+reduce its size.
+
+We now define HASH as follows:
+
+Function HASH(p64,x): INT128;
+x: ARRAY[0 .. n-1] OF INT512; -- note that this declaration actually defines n
+p64: INT64;
+p32: INT32; -- a 32-bit integer variable that counts how many times HASH512 is used
+hashArray: ARRAY[0 .. 3] OF INT128; -- an array of 128-bit 'integers'
+hashLoc: integer; -- index into hashArray
+BEGIN
+p32 := 0;
+-- SizeOf returns the size of its argument in bits
+-- Yes, it is somewhat inconsistent to view 'x' as an array of 512-bit elements and
+-- also allow it to have a length of less than 512 bits if there is only one element
+-- in the array - but this is a very high-level programming language that understands
+-- such oddities.
+IF SizeOf(x) <= 128 THEN RETURN(HASH128(p64, x)) ELSE
+IF SizeOf(x) <= 256 THEN RETURN(HASH256(p64, x)) ELSE
+IF SizeOf(x) <= 512 THEN RETURN(HASH512(p64, p32, x)) ELSE
+-- actually have to reduce a large amount of data
+BEGIN
+p32 := 0; -- count of number of calls to HASH512 starts at 0
+hashLoc := 0; -- start using hashArray[0]
+hashArray := 0; -- zero out all entries in this array
+FOR i := 0 to n-1 DO
+BEGIN
+hashArray[hashLoc] := HASH512(p64,p32,x[i]);
+p32 := p32 + 1;
+hashLoc := hashLoc + 1;
+IF hashLoc >= 4 THEN
+BEGIN
+hashArray[0] := HASH512(p64,p32,hashArray);
+p32 := p32+1;
+hashLoc := 1;
+END;
+END;
+END;
+RETURN(HASH512(hashArray,p64,p32));
+END;
+
+HASH is more complex than the function F which we discussed earlier
+for two reasons. First, the precise pattern used to hash down a large
+x is different; and second it uses a more efficient mechanism for
+small arguments. The fundamental concepts, however, are identical.
+
+
+Making the Initial and Standard S-Boxes
+
+We need an initial S-box to generate a pseudo-random stream of bytes.
+We also need a set of standard S-boxes to use in Khafre and Snefru
+during the encryption process. In all three applications, we need
+assurances about how the S-boxes were generated. This was a major
+question in DES -- whether any structure (intentional or accidental)
+might be present in the S-boxes that would weaken the encryption
+function. Because the method of selecting the DES S-boxes was kept
+secret, the published articles on the structure of DES are necessarily
+incomplete. Published discussions of the structure in the DES S-boxes
+makes it clear that very strong selection criteria were used, and much
+of the structure actually found can reasonably be attributed to design
+principles intended to strengthen DES. The purpose behind some of the
+structure detected is unclear; though it does not appear to weaken DES
+it would be useful to know if the structure serves some purpose or
+whether it occurred as an unintended consequence of the particular
+method chosen to actually generate the S-boxes.
+
+To avoid these questions, the standard S-boxes will be generated from
+the initial S-box according to the standard (and public) algorithm for
+generating a set of S-boxes from a key. The key selected for the
+standard S-boxes will be the null (all 0) key. In this way, not only
+the standard S- boxes but also the algorithm for generating them are
+made public and can be examined to determine if there are any
+weaknesses.
+
+The initial S-box must be generated from some stream of random
+numbers. In order to insure that the initial S-box does not have
+hidden or secret structure, we adopt the following rules:
+
+1.) The program that generates the initial S-box from a stream of
+random numbers will be public.
+
+2.) The stream of random numbers used as input to the program
+should be above reproach -- it should be selected in such a fashion
+that it could not reasonably have been tampered with in a fashion that
+might allow insertion of a trap-door or other weakness.
+
+The first criteria is met rather simply by publishing the algorithm
+used to generate the standard S-box (publication is planned in the
+near future). The second criteria is met by using the random numbers
+published in 1955 by the RAND corporation in 'A Million Random Digits
+with 100,000 Normal Deviates' (available on magnetic tape for a
+nominal fee). Given this approach, insertion of a trap-door would
+require (1) that the publicly known programs that generate the initial
+and standard S-boxes insert the trap door under the very nose of a
+watching world or that (2) the trap-door have been planned and
+inserted into the random numbers generated by RAND in 1955, over 30
+years prior to the design of Khufu (at a time when Khufu's chief
+designer found successfully negotiating a flight of stairs an
+absorbing challenge).
+
+
+Methods of Cryptanalysis
+
+Questions about the security of a new cryptographic algorithm are
+inevitable. Often, these questions are of the form 'Have you
+considered the following attack...' It is therefore useful to describe
+the attacks that were considered during the design process. This
+serves two purposes. First, it reassures those who find their attack
+has already been considered (and presumably found non-threatening).
+Second, it tells those who are considering a new attack that the
+matter might not be settled and is worth pursuing further. A second
+question typically asked is 'How many rounds are enough?' This will
+vary with three factors: the value of the data being encrypted, the
+encryption speed (delay) that is acceptable, and the estimated cost of
+cryptanalysis. This last cost is inferred by considering how many
+rounds are sufficient to thwart various certificational attacks.
+
+Attacks can be broadly divided into a number of categories -- starting
+with chosen plaintext, known plaintext and ciphertext only. We shall
+primarily consider attacks of the chosen plaintext variety -- a system
+secure against chosen plaintext attacks is presumably also secure
+against the two weaker attacks. Some consideration will be given to
+known plaintext and ciphertext only attacks. Protection against
+casual browsers is valuable and can be provided more cheaply (i.e.,
+with fewer rounds in the encryption process and hence less delay). An
+attack by a casual browser is better modeled by a ciphertext only
+attack. At the same time, the cryptographic resources the casual
+browser is likely to bring to bear are markedly inferior. Finally,
+the cost of encryption (in user inconvenience or delay) might be
+significant and the value of the data might not justify much
+inconvenience -- the choice might be between rapid encryption that
+offers protection against casual attack and no encryption at all.
+
+Without further ado, and in no particular order, we discuss the major
+attacks considered during the design phase.
+
+We first consider attacks against Khufu with a reduced number of
+rounds. We shall here consider attacks against an 8 round Khufu and
+will start with a chosen plaintext attack. We assume that the
+objective is to determine the entries in the S-box and the values of
+the auxiliary keys. While it might theoretically be possible to take
+advantage of the fact that the S-box was generated in a pseudo-random
+fashion from a smaller key (effectively limited to 64 bytes) this has
+so far not proven to be the case. The pseudo-random method of
+generating the S-box from the key is sufficiently complex that the
+64-byte to 1024-byte expansion involved in this process appears quite
+strong. This is probably due to the relaxed computational time
+requirements on the pre-computation, i.e., the pre-computation is
+probably over-kill, but in most applications an additional fixed delay
+of some tens of milliseconds probably won't be noticed, so it wasn't
+further optimized.
+
+An 8 round encryption can be readily broken under a chosen plaintext attack by noting that each
+round of the encryption process is affected by only a single byte of the initial plaintext.
+Therefore, given 8 rounds and 8 bytes of plaintext, some byte of plaintext is used last; e.g., in the
+8th round. By encrypting two plaintext blocks that differ only in
+this last byte, we obtain two ciphertext blocks in which the
+encryption process differs only in the 8th round, and therefore in
+which the two left halves have the same difference as two S-box
+entries. That is, if the two ciphertext left halves are designated
+L[8] and L'[8] and if the indices of the S-box entries used in the 8th
+rounds are designated i[8] and i'[8], then L[8] XOR L'[8] equals
+SBox[i[8]] XOR SBox[i'[8]]. L[8] and L'[8] are known, as are i[8] and
+i'[8], so this provides an equation about two S-box entries. After we
+recover roughly 256 equations we will almost be able to solve for the
+256 entries in the S-box. At this point, the recovery of the S-box
+will not quite be complete -- we can arbitrarily set the value of a
+single S-box entry and determine values for the rest of the entries
+that will satisfy the equations we have. Further equations will not
+help us, for if we have one solution to the equations, we can generate
+another solution by complementing the ith bit in every proposed S-box
+entry. The new set of values will also satisfy the equations, for
+every equation XOR's two S-box entries, and hence complementing the
+ith bit in both entries will leave the XOR of the two bits unchanged.
+We need another method for resolving this last ambiguity. This is
+conceptually easy (in the worst case, we could simply examine all
+2**32 possibilities) but an efficient algorithm is difficult to
+explain in a short space -- we therefore leave this as an exercise for
+the reader. Once the S-box entries are known, it is also relatively
+simple to determine the auxiliary keys.
+
+If we consider a known plaintext attack against an 8 round encryption,
+we find the problem is more difficult. Certainly, we could request a
+large number of plaintext-ciphertext pairs and hope that at least some
+of the pairs differed only in the final few bytes (e.g., the bytes
+that are used only on the 7th and 8th rounds of encryption) but this
+would require many millions of such pairs. This, of course, presumes
+that the plaintext is selected randomly -- which implies that cipher
+block chaining (or some other pseudo-randomization method) is used to
+insure that patterns in the plaintext are eliminated prior to
+encryption. Direct encryption (without some 'whitening' or pre-
+randomization) of sufficient text would probably result in 8-byte
+blocks that differed only in a single byte -- which might allow use of
+the method described above.
+
+The following paragraph condenses an entire Ph.D. thesis and some
+speculative ideas. It can be skipped without loss of continuity.
+
+A statistical attack of the 'hill-climbing' variety [22] might prove
+successful. In such attacks the discrete points in the key-space are
+embedded in a continuous space. Once this is done, it is possible to
+search the space using continuous optimization methods that are
+difficult to apply to a discrete space. A version of such an attack
+that would be relatively easy to implement on commercially available
+computers might view the encryption process as acting on bytes. In
+the cryptanalysis, each byte (whether it be a byte of plaintext, of
+ciphertext, a byte in the S-box, or a byte in some intermediate
+computation) would be represented by a vector with 256 entries, each
+entry being a real number in the range from 0.0 to 1.0 inclusive.
+Intuitively, these real numbers represent the probability that the
+byte takes on the corresponding value, That is, if the 23rd entry in
+such a vector were .3, then there would be a 30% chance that the byte
+associated with that vector was 23. (The sum of the entries for a
+given vector should be 1.0, i.e., the probability that the byte has
+some value between 0 and 255 inclusive should be 1). Because the
+S-box is initially completely unknown, we would associate each byte in
+the S-box with a vector all of whose entries were equal to 1/256. By
+representing each actual byte in the computation with a vector of real
+numbers, we have effectively mapped the discrete cryptographic
+encryption process onto a continuous process. Given a
+plaintext-ciphertext pair, we can map the discrete encryption process
+into a continuous analog computation. We can 'encrypt' the continuous
+plaintext with the continuous 'S-box' and produce a continuous
+'ciphertext'. The continuous plaintext, because it is known, would be
+represented by 8 vectors each of which had a single 1 entry in the
+correct place, with all other entries being 0. Because the initial
+continuous approximation to the S-box does not correspond to any
+discrete S-box, the result of the encryption would be continuous
+'ciphertext' which would consist of 8 vectors with some (initially
+flat) distribution showing the probable values for the bytes in the
+actual ciphertext. Because the computed probability distribution for
+the ciphertext will differ from the actual ciphertext (which is known)
+it is possible to generate an error signal. If we compute many
+continuous 'ciphertexts' from many plaintexts and compare all the
+continuous 'ciphertexts' with the actually known ciphertext values,
+then we can generate an aggregate error signal that reflects all the
+available information. By changing the probability distributions
+associated with the bytes in the S-box (e.g., by moving to adjacent
+points in the continuous key space) it is possible to change this
+error signal. Minimizing the error signal as a function of the S-box
+values is an optimization problem, and there are many algorithms in
+the literature which can be applied. The simplest approach would be
+to find the direction in the continuous key space which best minimizes
+the error, and then travel some distance in that direction. This is
+simply the method of steepest descent. In general, the solution of
+non-linear optimization problems is difficult, and whether or not such
+an approach will work with an 8 round Khufu is an interesting and as
+yet unanswered question. Because such an attack must depend on
+statistical 'roughness' in the encryption process, and because (as
+discussed later) 8 rounds is significantly 'rough', such an attack
+might work.
+
+Finally, a ciphertext only attack against an 8-round Khufu results in
+a very difficult problem. A modification of the attack sketched above
+might be mounted in which the ciphertext is 'decrypted' and the
+resulting 'plaintext' is then viewed statistically to measure how
+'close' it is to being reasonable. For example, we could score the
+'decryption' by multiplying the probability vector for each byte of
+'plaintext' times the actual probability distribution (assuming that
+some reasonable approximation to this distribution is known).
+Fundamentally, hill climbing and other statistical attacks must rely
+on statistically detectable differences between various alternatives.
+If the statistics are flat, then such techniques will fail. An
+important question with Khufu is the number of rounds required to
+achieve a statistically flat distribution. Preliminary results
+indicate that 16 rounds produces flat statistics. The use of
+auxiliary keys were largely adopted for three reasons: first, it
+seemed intuitively reasonable that randomization of the input by
+XORing an unknown quantity would assist in the encryption process.
+Second, four additional register-to-register XOR operations are cheap
+to implement. Finally, the auxiliary keys foil a specific chosen
+ciphertext attack. This attack depends on the observation that,
+although the S-box has 256 entries, the encryption process does not
+use all entries for each plaintext-ciphertext pair. Even worse,
+although a typical 8-round encryption will use 8 different S-box
+entries it doesn't have to: some entries could be repeated. In the
+worst case, a single entry would be repeated 8 times -- which would
+effectively mean that only 32 bits of key material was used. If the
+auxiliary keys were not present then we could simply guess at the
+value of one of the S-box entries, and then confirm our guess if we
+could find a plaintext-ciphertext pair that used only that entry for
+all 8 rounds. Because each of the 8 rounds uses a single byte from
+the plaintext, we could actually construct the plaintext needed to
+confirm our guess (if the auxiliary keys were not present). For
+example, if we guess that the 0th S-box entry has some specific value,
+then we would select the first byte of our specially-built plaintext
+(by 'first byte' we mean i[1], or that byte of plaintext used as an
+index into the S-box in the first round) to be 0. Then, knowing what
+happens in the first round, we can select the second byte of plaintext
+so that the 0th entry is again selected on the second round -- which
+would tell us what happens in the third round. By repeating this
+process for 8 rounds, we can construct a plaintext which, when
+enciphered, will tell us whether or not the 0th S-box entry does or
+does not have a specific value. After trying 2**32 values we will
+surely find the correct one. If we then repeat this whole process for
+the 1st entry, and then the 2nd entry, etc, we could determine the
+values of all the entries in the S-box.
+
+The auxiliary keys prevent this attack because they effectively inject
+64 bits of key material into the encryption process prior to selecting
+S-box entries. Thus, correctly guessing a 32-bit S-box entry is
+insufficient because we would also have to guess the 64-bit value
+XORed with the plaintext prior to encryption. If we guessed a single
+such bit incorrectly, then the incorrectly guessed bit would (within
+the first 8 rounds) cause selection of an uncontrolled S-box entry
+which would then initiate the uncontrolled avalanche of changes that
+we rely upon to provide cryptographic strength.
+
+Although this attack is actually rather inefficient compared with our
+first chosen ciphertext attack, it does point out that there is no
+guarantee that multiple different S-box entries have actually been
+used during encryption. Instead, we must assure ourselves that the
+risk of this occurring is sufficiently low by explicitly computing the
+probability of its occurrence.
+
+Another attack in this general class is the cancellation attack. In
+this attack, we alter the first byte of the 8 bytes in the plaintext,
+and then attempt to cancel the effects of this alteration by altering
+the other 32-bit half in a compensating fashion. That is, by altering
+the first byte of plaintext used in the first round, we cause a change
+in the second round that we can understand. Because we can also
+change the other 32-bit half, this understandable change in the second
+round can be cancelled. (Notice that the auxiliary keys have very
+little impact on this attack). Now, if the first byte were 3, and we
+changed it to a 5, then this would produce a predictable change in the
+value XORed with the other 32-bit half, R, in the first round. This
+first round is computed as:
+
+i[1] := L[0] AND #FF:
+L[1] := R[0] XOR SBox[ i[1] ];
+
+For the first plaintext we encrypted, this would become:
+
+L[1] := R[0] XOR SBox[3];
+
+while for the second plaintext encrypted, this would become:
+
+L'[1] := R'[0] XOR SBox[5];
+
+Therefore, if we select R'[0] = R[0] XOR SBox[3] XOR SBox[5], then the
+second equation becomes:
+
+L'[1] := R[0] XOR SBox[3] XOR SBox[5] XOR SBox[5]
+or
+L'[1] := R[0] XOR SBox[3]
+
+But this means that L'[1] = R[0] XOR SBox[3] = L[1]
+
+In other words, L[1] and L'[1] are identical -- by knowing SBox[3] XOR
+SBox[5] we were able to cancel out the change that should have taken
+place in L[1]. This, of course, means that the avalanche of changes
+upon which encryption so critically depends has been thwarted at the
+very start. Notice that after the first round of encryption, the two
+blocks differ only in the first byte -- that is, the byte used in the
+first round. After 8 rounds of encryption, the resulting ciphertexts
+will also differ in only this one byte.
+
+In practice, this attack seems to require that you first guess the
+correct value of SBox[i] XOR SBox[j] for two different values of i and
+j. This is a 32-bit value, and so on average it seems necessary to
+try 2**32 different values before encountering the correct one. After
+8 rounds of encryption, however, the fact that we have determined the
+correct 32-bit 'cancellation value' will be obvious because the final 64
+bits of ciphertext generated by the two different plaintexts will
+differ in only a single byte.
+
+It might not at first be obvious, but we can in fact modify this
+attack so that only 2 * 2**16 plaintext- ciphertext pairs are required
+in order to find the correct cancellation value. Although as described
+above, it would seem that we need 2**32 pairs of plaintext-ciphertext
+pairs to test each possible 32-bit cancellation value, this is not the
+case. We can generate two lists of plaintext-ciphertext pairs, and
+then by selecting one plaintext-ciphertext pair from one list and the
+other plaintext- ciphertext pair from the other list, we can generate
+2**32 possible combinations of entries from the two lists. If we
+select the plaintexts used to generate the lists carefully, then every
+32-bit cancellation value can be represented by one entry from the
+first list, and one entry from the second list.
+
+When we consider this attack on a 16 round Khufu it is much weaker.
+If we can determine the correct 32-bit cancellation value it will cause
+collapse of the encryption process up until the changed byte is again
+used. If the first byte has been changed, then it will again be used
+on the 9th round -- this means that in a 16-round Khufu a cancellation
+attack will effectively strip off 8 rounds. The remaining 8 rounds
+must then provide sufficient cryptographics strength to resist attack.
+Empirical statistical tests indicate that 8 rounds in which changes
+take place in the first one or two rounds will result in apparently
+random output -- though of course, this result demonstrates only that
+the output was random with respect to the specific statistical tests
+used, not that all possible statistical tests would reveal no pattern.
+
+An attack proposed by Dan Greene is based on the observation that each
+32-bit half is being XORed with values selected (possibly with a
+rotation) from the S-box. Once the key has been chosen this S-box is
+fixed -- so at most 256 different values can be used and each value
+can be rotated (in the first 8 rounds of Khufu) in only four different
+ways. That is, we are at best applying a fixed and rather limited set
+of operations to each half. If we focus on the right half R, (and if
+we neglect the effect of the auxiliary keys) then we find that:
+
+R8 = R0 XOR ROTATE[SBox[i1,0] XOR ROTATE[SBox[i3],16] XOR ROTATE[SBox[i5],24]
+XOR ROTATE[SBox[i7],8]]
+
+R8 designates the right half following 8 rounds of Khufu, i.e., the
+right half of the ciphertext. R0 designates the right half before
+encryption begins, i.e., the right half of the plaintext. Although
+the indices used to select the S-box entries are computed during
+encryption, we are going to ignore their actual values. Instead, we
+will assume that i1, i3, i5 and i7 are selected randomly. This should
+not weaken the encryption function, so any cryptanalytic success we
+have using this assumption indicates weakness in the original system
+as well.
+
+If we define
+
+Y = Y[i1, i3, i5, i7] = ROTATE[SBox[i1,0] XOR ROTATE[SBox[i3],16] XOR
+ROTATE[SBox[i5],24] XOR ROTATE[SBox[i7],8]]
+
+we can re-express the earlier equation as:
+
+R8 XOR R0 = Y[i1, i3, i5, i7]
+
+The left side of this equation is readily computed from a
+plaintext-ciphertext pair, and with enough such pairs we can compute
+the probability distribution of (R8 XOR R0). The right side should
+determine the same distribution (if we assume the actual indices are
+more or less random -- which should be a good approximation if the
+plaintext is random!). The 4 8-bit indices clearly could generate at
+most 2 possible values for Y, but it seems more plausible that some
+values for Y will be produced more than once while other values for Y
+will not be produced at all. That is to say, the distribution of Y's
+will not be uniform. If we can compute this distribution from enough
+plaintext-ciphertext pairs, and if it is non-uniform, could we then
+cryptanalyze an 8 round Khufu? Statistical evidence gathered on a
+16-round Khufu suggests that this attack will fail for 16 rounds, but
+its success for 8 rounds is still unclear. Even given the
+distribution of Y's it is not clear (at the time of writing) how to
+determine the actual S-box entries.
+
+
+Summary
+
+An 8-round Khufu can be broken by several attacks, though it is
+reasonably resistant t0 ciphertext only attack. A 16-round Khufu has
+so far resisted cryptanalysis. Preliminary statistical analysis
+suggests that a 16-round Khufu produces random output. We are hopeful
+at the current writing that a 16-round Khufu will be useful for
+general commercial encryption, and that a 32-round Khufu can be used
+for high security applications. This conclusion is tentative and
+requires further investigation.
+
+The analysis of Khafre and Snefru have so far been less detailed -- as
+a consequence, we do not yet have recommendations on the number of
+rounds that should be used with them. It seems probable that Khafre
+will require more rounds of encryption to provide equivalent security
+than Khufu, because the S-boxes used with Khafre are public. Khufu,
+by contrast, generates different S-boxes for each key and keeps the
+S-boxes secret -- and so uses more key material per round than Khafre.
+
+Although we believe at the time of writing that the conclusions given
+above are sound, any reader seriously considering use of these
+encryption functions is advised that (1) waiting for one or two years
+following their publication should allow sufficient time for their
+examination by the public cryptographic community and (2) current
+information about their status should be obtained by contacting the
+author.
+
+
+Acknowledgements
+
+The author would like to particularly thank Dan Greene for his many
+comments and the many hours of discussion about cryptography in
+general and the various design proposals for Khufu in particular.
+Thanks are also due to Luis Rodriguez, who implemented the C version
+of Khufu and gathered most of the statistics. I would also like to
+thank Dan Swinehart and the many researchers at PARC who have shown
+both interest and support during the many months this effort has
+required.
+
+
+Bibliography
+
+1.) `Secrecy, Authentication, and Public Key Systems', Stanford
+Ph.D. thesis, 1979, by Ralph C. Merkle.
+
+2.) `A Certified Digital Signature', unpublished paper, 1979.
+
+3.) Moti Yung, private communication.
+
+4.) `A High Speed Manipulation Detection Code', by Robert R.
+Jueneman, Advances in Cryptology - CRYPTO '86, Springer Verlag,
+Lecture Notes on Computer Science, Vol. 263, page 327 to 346.
+
+5.) `Another Birthday Attack' by Don Coppersmith, Advances in
+Cryptology - CRYPTO '85, Springer Verlag, Lecture Notes on Computer
+Science, Vol. 218, pages 14 to 17.
+
+6.) `A digital signature based on a conventional encryption
+function', by Ralph C. Merkle, Advances in Cryptology CRYPTO 87,
+Springer Verlag, Lecture Notes on Computer Science, Vol. 293, page
+369-378.
+
+7.) `Cryptography and Data Security', by Dorothy E. R. Denning,
+Addison-Wesley 1982, page 170.
+
+8.) `On the security of multiple encryption', by Ralph C.
+Merkle, CACM Vol. 24 No. 7, July 1981 pages 465 to 467.
+
+9.) `Results of an initial attempt to cryptanalyze the NBS Data
+Encryption Standard', by Martin Hellman et. al., Information Systems
+lab. report SEL 76-042, Stanford University 1976.
+
+10.) `Communication Theory of Secrecy Systems', by C. E. Shannon,
+Bell Sys. Tech. Jour. 28 (Oct. 1949) 656-715
+
+11.) `Message Authentication' by R. R. Jueneman, S. M. Matyas, C.
+H. Meyer, IEEE Communications Magazine, Vol. 23, No, 9, September 1985
+pages 29-40.
+
+12.) `Generating strong one-way functions with cryptographic
+algorithm', by S. M. Matyas, C. H. Meyer, and J. Oseas, IBM Technical
+Disclosure Bulletin, Vol. 27, No. 10A, March 1985 pages 5658-5659
+
+13.) `Analysis of Jueneman's MDC Scheme', by Don Coppersmith,
+preliminary version June 9, 1988. Analysis of the system presented in
+[4].
+
+14.) `The Data Encryption Standard: Past and Future' by M. E.
+Smid and D. K. Branstad, Proc. of the IEEE, Vol 76 No. 5 pp 550-559,
+May 1988
+
+15.) `Defending Secrets, Sharing Data; New Locks and Keys for
+Electronic Information', U.S. Congress, Office of Technology
+Assessment, OTA-CIT-310, U.S. Government Printing Office, October 1987
+
+16.) `Exhaustive cryptanalysis of the NBS data encryption
+standard', by Whitfield Diffie and Martin Hellman, Computer, June
+1977, pages 74-78
+
+17.) `Cryptography: a new dimension in data security', by Carl H.
+Meyer and Stephen M. Matyas, Wiley 1982.
+
+18.) 'One Way Hash Functions and DES', by Ralph C. Merkle, Xerox Disclosure Bulletin.
+
+19.) 'Data Encryption Standard (DES)', National Bureau of
+Standards (U.S.), Federal Information Processing Standards Publication
+46, National Technical Information Service, Springfield, VA, Apr. 1977
+
+20.) ???
+
+21.) `Cryptography and Computer Privacy', by H. Feistel, Sci.
+Amer. Vol. 228, No. 5 pp 15-23, May 1973
+
+22.) `Maximum Likelihood Estimation Applied to Cryptanalysis', by
+Dov Andelman, Stanford Ph.D. Thesis, 1979
+
+23.) IBM has recently proposed a specific one-way hash function
+which has so far resisted attack.

@@ -1,0 +1,16 @@
+[package]
+name = "game"
+version = "0.1.0"
+authors = ["Google"]
+edition = "2021"
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+heapless = { version = "0.8.0", features = ["ufmt"] }
+megarust = { path = "../libs/megarust" }
+ufmt = "0.2.0"

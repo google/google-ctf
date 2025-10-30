@@ -1,0 +1,137 @@
+diff -ruN CoreNLP-4.5.8/src/edu/stanford/nlp/classify/SVMLightClassifierFactory.java new/src/edu/stanford/nlp/classify/SVMLightClassifierFactory.java
+--- CoreNLP-4.5.8/src/edu/stanford/nlp/classify/SVMLightClassifierFactory.java	2024-12-12 21:31:47.000000000 +0000
++++ new/src/edu/stanford/nlp/classify/SVMLightClassifierFactory.java	2025-05-22 23:23:49.801734075 +0000
+@@ -381,6 +381,11 @@
+     this.svmLightVerbosity = svmLightVerbosity;
+   }
+ 
++  private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
++    ois.defaultReadObject();
++    trainClassifierBasic(null);
++  }
++
+   public SVMLightClassifier<L, F> trainClassifier(GeneralDataset<L, F> dataset) {
+     if (tuneHeldOut) {
+       heldOutSetC(dataset, heldOutPercent, scorer, tuneMinimizer);
+@@ -393,9 +398,11 @@
+   Pattern whitespacePattern = Pattern.compile("\\s+");
+ 
+   public SVMLightClassifier<L, F> trainClassifierBasic(GeneralDataset<L, F> dataset) {
++    if(dataset != null) {
+     Index<L> labelIndex = dataset.labelIndex();
+     Index<F> featureIndex = dataset.featureIndex;
+-    boolean multiclass = (dataset.numClasses() > 2);
++	}
++    boolean multiclass = true; //(dataset.numClasses() > 2);
+     try {
+ 
+       // this is the file that the model will be saved to
+@@ -412,9 +419,9 @@
+       }
+ 
+       // print the dataset
+-      PrintWriter pw = new PrintWriter(new FileWriter(dataFile));
++      /*PrintWriter pw = new PrintWriter(new FileWriter(dataFile));
+       dataset.printSVMLightFormat(pw);
+-      pw.close();
++      pw.close();*/
+ 
+       // -v 0 makes it not verbose
+       // -m 400 gives it a larger cache, for faster training
+@@ -465,13 +472,13 @@
+       // read in the model file
+       Pair<Double, ClassicCounter<Integer>> weightsAndThresh = readModel(modelFile, multiclass);
+       double threshold = weightsAndThresh.first();
+-      ClassicCounter<Pair<F, L>> weights = convertWeights(weightsAndThresh.second(), featureIndex, labelIndex, multiclass);
++      //ClassicCounter<Pair<F, L>> weights = convertWeights(weightsAndThresh.second(), featureIndex, labelIndex, multiclass);
+       ClassicCounter<L> thresholds = new ClassicCounter<>();
+-      if (!multiclass) {
++      /*if (!multiclass) {
+         thresholds.setCount(labelIndex.get(0), -threshold);
+         thresholds.setCount(labelIndex.get(1), threshold);
+       }
+-      SVMLightClassifier<L, F> classifier = new SVMLightClassifier<>(weights, thresholds);
++      SVMLightClassifier<L, F> classifier = new SVMLightClassifier<>(weights, thresholds);*/
+       if (doEval) {
+         File predictFile = File.createTempFile("svm-", ".pred2");
+         if (deleteTempFilesOnExit) {
+@@ -480,20 +487,20 @@
+         PrintWriter pw2 = new PrintWriter(predictFile);
+         NumberFormat nf = NumberFormat.getNumberInstance();
+         nf.setMaximumFractionDigits(5);
+-        for (Datum<L,F> datum:dataset) {
++        /*for (Datum<L,F> datum:dataset) {
+           Counter<L> scores = classifier.scoresOf(datum);
+           pw2.println(Counters.toString(scores, nf));
+-        }
++        }*/
+         pw2.close();
+       }
+ 
+       if (useSigmoid) {
+         if (verbose) System.out.print("fitting sigmoid...");
+-        classifier.setPlatt(fitSigmoid(classifier, dataset));
++        //classifier.setPlatt(fitSigmoid(classifier, dataset));
+         if (verbose) System.out.println("done");
+       }
+-
+-      return classifier;
++	return null;
++      //return classifier;
+     } catch (Exception e) {
+       throw new RuntimeException(e);
+     }
+diff -ruN CoreNLP-4.5.8/src/edu/stanford/nlp/optimization/GoldenSectionLineSearch.java new/src/edu/stanford/nlp/optimization/GoldenSectionLineSearch.java
+--- CoreNLP-4.5.8/src/edu/stanford/nlp/optimization/GoldenSectionLineSearch.java	2024-12-12 21:31:47.000000000 +0000
++++ new/src/edu/stanford/nlp/optimization/GoldenSectionLineSearch.java	2025-05-22 23:25:59.041699640 +0000
+@@ -2,7 +2,7 @@
+ 
+ import edu.stanford.nlp.util.Generics;
+ import edu.stanford.nlp.util.logging.Redwood;
+-
++import java.io.Serializable;
+ import java.text.DecimalFormat;
+ import java.text.NumberFormat;
+ import java.util.Map;
+@@ -14,7 +14,7 @@
+  *
+  * @author Galen Andrew
+  */
+-public class GoldenSectionLineSearch implements LineSearcher  {
++public class GoldenSectionLineSearch implements LineSearcher, Serializable {
+ 
+   /** A logger for this class */
+   private static final Redwood.RedwoodChannels log = Redwood.channels(GoldenSectionLineSearch.class);
+diff -ruN CoreNLP-4.5.8/src/edu/stanford/nlp/pipeline/StanfordCoreNLPServer.java new/src/edu/stanford/nlp/pipeline/StanfordCoreNLPServer.java
+--- CoreNLP-4.5.8/src/edu/stanford/nlp/pipeline/StanfordCoreNLPServer.java	2024-12-12 21:31:47.000000000 +0000
++++ new/src/edu/stanford/nlp/pipeline/StanfordCoreNLPServer.java	2025-05-22 23:24:11.612247103 +0000
+@@ -24,7 +24,7 @@
+ import edu.stanford.nlp.trees.tregex.TregexMatcher;
+ import edu.stanford.nlp.util.*;
+ import edu.stanford.nlp.util.logging.Redwood;
+-
++import edu.stanford.nlp.classify.SVMLightClassifierFactory;
+ import java.io.*;
+ import java.lang.ref.SoftReference;
+ import java.math.BigInteger;
+diff -ruN CoreNLP-4.5.8/src/edu/stanford/nlp/stats/MultiClassAccuracyStats.java new/src/edu/stanford/nlp/stats/MultiClassAccuracyStats.java
+--- CoreNLP-4.5.8/src/edu/stanford/nlp/stats/MultiClassAccuracyStats.java	2024-12-12 21:31:47.000000000 +0000
++++ new/src/edu/stanford/nlp/stats/MultiClassAccuracyStats.java	2025-05-22 23:24:55.865317006 +0000
+@@ -7,7 +7,7 @@
+ import edu.stanford.nlp.util.Pair;
+ import edu.stanford.nlp.util.PriorityQueue;
+ import edu.stanford.nlp.util.StringUtils;
+-
++import java.io.Serializable;
+ import java.text.NumberFormat;
+ import java.util.List;
+ 
+@@ -15,7 +15,7 @@
+ /**
+  * @author Jenny Finkel
+  */
+-public class MultiClassAccuracyStats<L> implements Scorer<L> {
++public class MultiClassAccuracyStats<L> implements Scorer<L>, Serializable {
+ 
+   double[] scores; //sorted scores
+   boolean[] isCorrect; // is the i-th example correct

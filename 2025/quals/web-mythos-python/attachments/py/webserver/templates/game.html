@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!--
+ Copyright 2025 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <title>MYTHOS</title>
+    <script>
+        async function make_choice(choice) {
+            const url = "/play"
+
+            try {
+                const resp = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        choice: choice
+                    })
+                })
+
+                if (!resp.ok) {
+                    throw new Error(`Response status: ${resp.status}`);
+                }
+                document.location = "/play";
+            } catch (e) {
+                console.error(e.message);
+            }
+        }
+    </script>
+
+    <script>
+        async function keep_score() {
+            const elem = document.getElementById("score");
+            const url = "/score";
+
+            try {
+                const resp = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({})
+                })
+
+                if (!resp.ok) {
+                    throw new Error(`Response status: ${resp.status}`);
+                }
+                const resp_score = await resp.json();
+                const item_score = Object.keys(resp_score["items"]).length;
+                
+                elem.innerHTML = `CURRENT SCORE: ${item_score}`;
+            } catch (e) {
+                console.error(e.message);
+            }
+        }
+    </script>
+</head>
+
+<body onload="keep_score()">
+    <h1>{{ev_title}}</h1>
+    <br>
+    <br>
+    <h2>{{ev_desc}}</h2>
+
+    {% for item in ev_choice %}
+    <li>
+        <div onclick="make_choice('{{item.id}}');" choice="{{item.id}}">{{ item.desc }}</div>
+        <br>
+    </li>
+    {% endfor %}
+
+    <div id="score"> </div>
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: kctf.dev/v1
+kind: ChallengeInstanceTemplate
+metadata:
+  name: web-lost-in-transliteration
+spec:
+  domainName: "lost-in-transliteration.instancer.2025.ctfcompetition.com"
+  gatewayName: "instancer-challenge-gateway"
+  defaultDuration: 900
+  deployed: true
+  powDifficultySeconds: 0
+  network:
+    public: true
+    ports:
+      - protocol: "TCP"
+        targetPort: 1337
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: false
+  image: europe-west4-docker.pkg.dev/gctf-2025/gctf-2025-kctf-managed-challenges/web-lost-in-transliteration-challenge:94ab0f8ace785bea4c0f61fda9881b0b538e3af7358223bca44649f3ef5ae228
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                cpu: "0.5"
+                memory: "1Gi"

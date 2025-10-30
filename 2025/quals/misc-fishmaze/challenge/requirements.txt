@@ -1,0 +1,5 @@
+Flask==2.2.5
+waitress
+jax
+absl-py
+flatbuffers

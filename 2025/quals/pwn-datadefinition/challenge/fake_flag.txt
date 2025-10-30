@@ -1,0 +1,3 @@
+It's not that easy pal... The flag is not here.
+
+You need to get RCE for actual pwnage!

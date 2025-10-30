@@ -1,0 +1,1 @@
+../challenge/flake.nix

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<!--
+ Copyright 2025 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuit Animator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- gif.js for creating animated GIFs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-file-button input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-4xl bg-gray-800 rounded-lg shadow-xl p-6 md:p-8 space-y-6">
+        <div class="text-center">
+            <h1 class="text-2xl md:text-3xl font-bold text-white">Circo Demo</h1>
+            <p class="text-gray-400 mt-2">Visualize your Verilog circuits with Circo</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Circuit Program File (.prg)</label>
+                    <div class="custom-file-button">
+                        <label for="circuitFile" class="w-full text-center cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-200">
+                            Select Circuit File
+                        </label>
+                        <input type="file" id="circuitFile" accept=".prg">
+                    </div>
+                    <p id="fileName" class="text-sm text-gray-400 mt-2">No file selected.</p>
+                    <p class="text-xs text-yellow-400 mt-2">Demo: `<a href="signed_gol.prg" download>signed_gol.prg</a>` and `<a href="signed_counter.prg" download>signed_counter.prg</a>`.</p>
+                </div>
+                 <div>
+                    <label for="programData" class="block text-sm font-medium text-gray-300 mb-2">Program Data (Hex)</label>
+                    <textarea id="programData" rows="6" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2.5 text-gray-200 font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., 10000010aaaaaaff..."></textarea>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center justify-center bg-gray-900/50 rounded-lg p-4 h-full min-h-[300px]">
+                 <div id="outputContainer" class="w-full h-full flex items-center justify-center">
+                    <p class="text-gray-500">Animation will appear here</p>
+                </div>
+                <div id="loading" class="hidden text-center">
+                    <div class="spinner border-4 border-t-4 border-gray-600 border-t-blue-500 rounded-full w-12 h-12 animate-spin"></div>
+                    <p id="status" class="mt-4 text-gray-300">Generating...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-4 text-center">
+            <button id="generateBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-200 disabled:bg-gray-500 disabled:cursor-not-allowed">
+                Generate Animation
+            </button>
+        </div>
+        
+        <div id="error-console" class="hidden bg-red-900/50 border border-red-500 rounded-md p-4 mt-4">
+            <h3 class="text-lg font-semibold text-red-300">Error</h3>
+            <pre id="error-message" class="text-red-300 text-sm whitespace-pre-wrap font-mono"></pre>
+        </div>
+
+    </div>
+
+    <script>
+        const circoUrlInput = document.getElementById('circoUrl');
+        const circuitFileInput = document.getElementById('circuitFile');
+        const fileNameDisplay = document.getElementById('fileName');
+        const programDataTextarea = document.getElementById('programData');
+        const generateBtn = document.getElementById('generateBtn');
+        const outputContainer = document.getElementById('outputContainer');
+        const loadingIndicator = document.getElementById('loading');
+        const statusText = document.getElementById('status');
+        const errorConsole = document.getElementById('error-console');
+        const errorMessage = document.getElementById('error-message');
+
+        programDataTextarea.value = "10000010aaaaaaff" + "00".repeat(256 - 8);
+
+        circuitFileInput.addEventListener('change', () => {
+            fileNameDisplay.textContent = circuitFileInput.files.length > 0 ? circuitFileInput.files[0].name : 'No file selected.';
+        });
+        generateBtn.addEventListener('click', handleGeneration);
+
+        /**
+         * Converts 2D spiral coordinates to a 1D address.
+         * This is a direct translation of the Python function `coordinates_to_address`.
+         * @param {number} x - The x-coordinate from the center.
+         * @param {number} y - The y-coordinate from the center.
+         * @returns {number} The 1D address.
+         */
+        function coordinates_to_address(x, y) {
+            if (x === 0 && y === 0) {
+                return 0;
+            }
+
+            const layer = Math.max(Math.abs(x), Math.abs(y));
+            let addr = (2 * layer - 1) ** 2 - 1;
+
+            if (y === -layer) { // Bottom edge
+                addr += 7 * layer + x;
+            } else if (x === -layer) { // Left edge
+                addr += 5 * layer - y;
+            } else if (y === layer) { // Top edge
+                addr += 3 * layer - x;
+            } else if (x === layer) { // Right edge
+                addr += layer + y;
+            }
+            return addr;
+        }
+
+        /**
+         * Retrieves a single bit from a Uint8Array at a given index.
+         * A direct translation of the `get_bit` Python function.
+         * @param {Uint8Array} program - The byte array.
+         * @param {number} idx - The bit index.
+         * @returns {number} 0 or 1.
+         */
+        function get_bit(program, idx) {
+            const byte_idx = idx >> 3;
+            const bit_idx = idx & 7;
+            if (byte_idx >= program.length) {
+                return 0;
+            }
+            return (program[byte_idx] >> bit_idx) & 1;
+        }
+
+        /**
+         * Generates an image on a canvas from program data.
+         * Replicates the functionality of `get_program_image` using the Canvas API.
+         * @param {Uint8Array} program - The byte array for a single frame.
+         * @returns {HTMLCanvasElement} A 256x256 canvas element with the generated image.
+         */
+        function get_program_image_canvas(program) {
+            const size = Math.floor(Math.sqrt(program.length * 8));
+            const center = Math.floor(size / 2);
+
+            const offscreenCanvas = document.createElement('canvas');
+            offscreenCanvas.width = size;
+            offscreenCanvas.height = size;
+            const ctx = offscreenCanvas.getContext('2d');
+            const imageData = ctx.createImageData(size, size);
+            const data = imageData.data;
+
+            for (let y = 0; y < size; y++) {
+                for (let x = 0; x < size; x++) {
+                    const addr = coordinates_to_address(x - center, y - center);
+                    const bit = get_bit(program, addr);
+                    
+                    // Python code results in black for bit=1 and white for bit=0 after inversion.
+                    const color = bit === 1 ? 0 : 255; 
+
+                    const pixelIndex = (x * size + y) * 4;
+                    data[pixelIndex] = color;     // Red
+                    data[pixelIndex + 1] = color; // Green
+                    data[pixelIndex + 2] = color; // Blue
+                    data[pixelIndex + 3] = 255;   // Alpha
+                }
+            }
+            ctx.putImageData(imageData, 0, 0);
+            
+            const finalCanvas = document.createElement('canvas');
+            finalCanvas.width = 256;
+            finalCanvas.height = 256;
+            const finalCtx = finalCanvas.getContext('2d');
+            finalCtx.imageSmoothingEnabled = false; 
+            finalCtx.drawImage(offscreenCanvas, 0, 0, 256, 256);
+
+            return finalCanvas;
+        }
+
+        /**
+         * Parses a hex string into a Uint8Array.
+         * @param {string} hexString - The string of hexadecimal characters.
+         * @returns {Uint8Array} The parsed byte array.
+         */
+        function parseHex(hexString) {
+            const cleanString = hexString.replace(/\s/g, '');
+            if (cleanString.length % 2 !== 0) {
+                throw new Error("Hex string must have an even number of characters.");
+            }
+            const byteArray = new Uint8Array(cleanString.length / 2);
+            for (let i = 0; i < cleanString.length; i += 2) {
+                byteArray[i / 2] = parseInt(cleanString.substring(i, i + 2), 16);
+            }
+            return byteArray;
+        }
+        
+        /**
+         * Shows an error message in the UI.
+         * @param {string|Error} error - The error to display.
+         */
+        function showError(error) {
+            errorMessage.textContent = error.toString();
+            errorConsole.classList.remove('hidden');
+        }
+
+        /**
+         * Main handler to start the animation generation process.
+         */
+        async function handleGeneration() {
+            generateBtn.disabled = true;
+            outputContainer.classList.add('hidden');
+            loadingIndicator.classList.remove('hidden');
+            statusText.textContent = "Preparing data...";
+            errorConsole.classList.add('hidden');
+
+            let workerScriptUrl = null;
+
+            try {
+                if (circuitFileInput.files.length === 0) {
+                    throw new Error("Please select a circuit (.prg) file.");
+                }
+                const circoUrl = '/circo.circo';
+                const circuitFile = circuitFileInput.files[0];
+                const circuitData = await circuitFile.arrayBuffer();
+
+                const programData = parseHex(programDataTextarea.value);
+                const programSize = programData.length;
+                if (programSize === 0) {
+                    throw new Error("Program data cannot be empty.");
+                }
+                
+                const sizeBuffer = new ArrayBuffer(2);
+                new DataView(sizeBuffer).setUint16(0, programSize, true); // true for little-endian
+
+                const payload = new Uint8Array(circuitData.byteLength + sizeBuffer.byteLength + programData.byteLength);
+                payload.set(new Uint8Array(circuitData), 0);
+                payload.set(new Uint8Array(sizeBuffer), circuitData.byteLength);
+                payload.set(programData, circuitData.byteLength + sizeBuffer.byteLength);
+
+                statusText.textContent = "Sending request to server...";
+                const frames = 0x100; // 256 frames
+                const want = programSize * frames;
+
+                const response = await fetch(circoUrl, {
+                    method: 'POST',
+                    headers: {
+                        "Range": `bytes=0-${want}`
+                    },
+                    body: payload
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server responded with status: ${response.status} ${response.statusText}`);
+                }
+
+                const responseData = new Uint8Array(await response.arrayBuffer());
+
+                statusText.textContent = "Fetching GIF worker...";
+                const workerScriptResponse = await fetch('https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js');
+                if (!workerScriptResponse.ok) {
+                    throw new Error(`Failed to fetch gif.worker.js: ${workerScriptResponse.statusText}`);
+                }
+                const workerScriptText = await workerScriptResponse.text();
+                const workerScriptBlob = new Blob([workerScriptText], { type: 'application/javascript' });
+                workerScriptUrl = URL.createObjectURL(workerScriptBlob);
+
+                statusText.textContent = "Generating GIF frames...";
+                
+                const gif = new GIF({
+                    workers: 2,
+                    quality: 10,
+                    workerScript: workerScriptUrl,
+                    width: 256,
+                    height: 256
+                });
+                
+                gif.on('finished', function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    outputContainer.innerHTML = `<img src="${url}" alt="Generated Animation" class="max-w-full max-h-full object-contain rounded-md">`;
+                    
+                    loadingIndicator.classList.add('hidden');
+                    outputContainer.classList.remove('hidden');
+                    generateBtn.disabled = false;
+                    
+                    if (workerScriptUrl) {
+                        URL.revokeObjectURL(workerScriptUrl);
+                    }
+                });
+                
+                const animationFrameCount = 0xFF; 
+                for (let i = 0; i < animationFrameCount; i++) {
+                    if (i % 10 === 0) {
+                       statusText.textContent = `Processing frame ${i + 1} of ${animationFrameCount}...`;
+                       await new Promise(resolve => setTimeout(resolve, 0));
+                    }
+                     
+                    const pos = programSize * (i + 1);
+                    if (pos + programSize > responseData.length) {
+                        console.warn(`Not enough data for frame ${i}. Stopping GIF generation.`);
+                        break;
+                    }
+                    const frameData = responseData.slice(pos, pos + programSize);
+                    const frameCanvas = get_program_image_canvas(frameData);
+                    gif.addFrame(frameCanvas, { delay: 50 });
+                }
+                
+                statusText.textContent = "Rendering final animation...";
+                gif.render();
+
+            } catch (err) {
+                console.error("Animation generation failed:", err);
+                showError(err);
+                loadingIndicator.classList.add('hidden');
+                outputContainer.classList.remove('hidden');
+                outputContainer.innerHTML = `<p class="text-red-400">Generation Failed. See error below.</p>`;
+                generateBtn.disabled = false;
+
+                // Clean up the worker script blob URL in case of an error
+                if (workerScriptUrl) {
+                    URL.revokeObjectURL(workerScriptUrl);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

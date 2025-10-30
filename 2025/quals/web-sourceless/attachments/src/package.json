@@ -1,0 +1,17 @@
+{
+    "name": "sourceless",
+    "version": "1.0.0",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.mjs",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "terjanq",
+    "license": "ISC",
+    "description": "GoogleCTF challenge",
+    "dependencies": {
+        "express": "^4.21.2",
+        "puppeteer": "^24.9.0"
+    }
+}

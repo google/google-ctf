@@ -1,0 +1,41 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: kctf.dev/v1
+kind: Challenge
+metadata:
+  name: merkurated
+spec:
+  deployed: true
+  powDifficultySeconds: 30
+  network:
+    public: true
+  healthcheck:
+    # TIP: disable the healthcheck during development
+    enabled: true
+    image: europe-west4-docker.pkg.dev/gctf-2025/gctf-2025-kctf-managed-challenges/merkurated-healthcheck:b688cd377482e4d3c3463e78fbe856e628d242e01a3c686bd9a7c5c1a580f797
+  image: europe-west4-docker.pkg.dev/gctf-2025/gctf-2025-kctf-managed-challenges/merkurated-challenge:a98c9a57e76bec950cb626fc6310892e45d008b7ceeb5c5d883551606e4a43fd
+  horizontalPodAutoscalerSpec:
+    maxReplicas: 20
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  podTemplate:
+    template:
+      spec:
+        containers:
+          - name: challenge
+            resources:
+              requests:
+                cpu: "1"
+                memory: "128Mi"

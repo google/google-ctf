@@ -1,0 +1,19 @@
+#!/bin/bash
+
+FLAG="$(cat /home/user/flag.txt)"
+range="${HTTP_RANGE:-}"
+
+if [ -n "$range" ]; then
+    range="${range#bytes=}"
+    start_val="${range%-*}"
+    end_val="${range#*-}"
+    size_val="$((end_val - start_val))"
+    echo Status: 206 Partial Content
+    echo Content-Range: bytes "$start_val-$end_val/*"
+    echo
+    /usr/bin/nsjail --config /home/user/cgi-bin.nsjail.cfg -- /main.final $FLAG | tail -c "+$start_val" | head -c "$size_val" || echo "ERROR"
+else
+    echo Status: 500 That was NOT OK
+    echo
+    echo Missing Range header.
+fi

@@ -1,0 +1,5 @@
+read_verilog -sv program.sv;
+hierarchy -top program
+synth;
+abc -g AND,NAND,OR,NOR,XOR,XNOR;
+write_json program.json;

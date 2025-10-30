@@ -1,0 +1,157 @@
+<%- include('head') %>
+
+  <div class="container p-5">
+    <div class="card mx-auto">
+      <div class="card-header">
+        <h1>Files</h1>
+      </div>
+      <div class="card-body">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <div class="btn-group me-2">
+                <input type="file" class="form-control" id="addFileInput" lang="en">
+              </div>
+              <div class="btn-group">
+                <button class="btn btn-danger" onclick="removeDB()">Delete all files</button>
+              </div>
+
+            </div>
+          </div>
+          <br>
+          <div class="row">
+
+            <div class="col file-list">
+              <div id="filesList" class="list-group"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="previewModal" role="modal" class="modal fade modal-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div>
+            <button onclick=scaleHelper(0.2) class="btn">+</button>
+            <button onclick=scaleHelper(-.2) class="btn">-</button>
+            <span>Scale:</span><span id="scaleSpan">100%</span>
+          </div>
+          <div id="previewIframeDiv"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+
+    const addFileInput = document.querySelector('#addFileInput');
+    const filesList = document.querySelector('#filesList');
+    const previewModalDiv = document.querySelector('#previewModal');
+    const previewIframeDiv = document.querySelector('#previewIframeDiv');
+    const safeFrameModal = new bootstrap.Modal(previewModalDiv);
+    const shadowRoot = previewIframeDiv.attachShadow({mode: "closed"});
+
+    const safeFrameIframe = document.createElement('iframe');
+    safeFrameIframe.sandbox = 'allow-same-origin allow-scripts';
+    safeFrameIframe.style.cssText = 'width: 100%; height: 100%; border: 0; overflow: hidden!important;';
+    shadowRoot.appendChild(safeFrameIframe);
+
+    window.onload = async() => {
+      const db = new DB();
+
+      window.removeDB = async function removeDB() {
+        db.clear().then(() => {
+          location = location.href.split('#')[0];
+        });
+      }
+
+      window.onmessage = async function(e){
+        if(e.data.type == 'share'){
+
+          for(var i=0; i<e.data.files.length; i++){
+            try{
+              var {blob, name, cached = 1} = e.data.files[i];
+              var file = new File([blob], name, {type: blob.type});
+              var id = await generateFileId(file);
+              var fileInfo = await db.addFile({
+                id,
+                isPublic: true,
+                cached,
+                file: file,
+              });
+              appendFileInfo(fileInfo);
+            }catch(e){}
+          }
+
+          if(e.data.files.length === 1){
+            renderFile({id, cached, file}, safeFrameIframe).then(()=>safeFrameModal.show());
+            history.pushState('','','#file-' + id);
+          }
+        }
+        if(e.data.slow){
+          for(i=e.data.slow;i--;);
+        }
+      }
+
+      addFileInput.addEventListener("change", async function () {
+        if (this.files.length > 0) {
+          const fileInfo = await db.addFile({
+            id: await generateFileId(this.files[0]),
+            isPublic: false,
+            cached: true,
+            file: this.files[0],
+          });
+          appendFileInfo(fileInfo);
+        }
+      }, false);
+
+      const processHash = async () => {
+        safeFrameModal.hide();
+        if (location.hash.length <= 1) return;
+        const hash = location.hash.slice(1);
+        if (hash.length < 5) {
+          const id = parseInt(hash);
+          location.hash = filesList.querySelectorAll('a')[id].id;
+          return;
+        }
+        const fileDiv = document.getElementById(hash);
+        if (fileDiv === null || !fileDiv.dataset.id) return;
+        previewIframeDiv.textContent = '';
+        const fileRow = await db.getFile(fileDiv.dataset.id);
+        renderFile(fileRow, safeFrameIframe).then(()=>safeFrameModal.show());
+
+        /* If modal is not shown remove hash */
+        setTimeout(() => {
+          if (!previewModalDiv.classList.contains('show')) {
+            location.hash = '';
+          }
+        }, 2000);
+      }
+
+      window.addEventListener('hashchange', processHash, true);
+
+      previewModalDiv.addEventListener('hide.bs.modal', () => {
+        scaleSpan.innerText = '100%';
+        location.hash = '';
+        previewIframeDiv.textContent = '';
+      });
+
+      const files = await db.getFiles();
+        files.sort((a, b) => a.date - b.date);
+        for (let fileInfo of files) {
+          await appendFileInfo(fileInfo);
+        }
+        processHash();
+    }
+
+    function scaleHelper(val){
+      scaleIframe(val, safeFrameIframe);
+    }
+  </script>
+  <%- include('foot') %>

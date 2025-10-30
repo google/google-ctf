@@ -1,0 +1,83 @@
+--- GoogleCTF2025-CoreNLP/CoreNLP-4.5.8/src/edu/stanford/nlp/classify/SVMLightClassifierFactory.java	2025-05-20 19:01:17.404354510 +0000
++++ CoreNLP-4.5.8/src/edu/stanford/nlp/classify/SVMLightClassifierFactory.java	2024-12-12 21:31:47.000000000 +0000
+@@ -111,12 +111,6 @@
+     this.deleteTempFilesOnExit = deleteTempFilesOnExit;
+   }
+ 
+-   private void readObject(ObjectInputStream ois)
+-    throws IOException, ClassNotFoundException
+-  {
+-    ois.defaultReadObject();
+-    trainClassifierBasic(null);
+-  }
+   /**
+    * Reads in a model file in svm light format.  It needs to know if its multiclass or not
+    * because it affects the number of header lines.  Maybe there is another way to tell and we
+@@ -399,11 +393,9 @@
+   Pattern whitespacePattern = Pattern.compile("\\s+");
+ 
+   public SVMLightClassifier<L, F> trainClassifierBasic(GeneralDataset<L, F> dataset) {
+-    if(dataset != null) {
+     Index<L> labelIndex = dataset.labelIndex();
+     Index<F> featureIndex = dataset.featureIndex;
+-	}
+-    boolean multiclass = true; // (dataset.numClasses() > 2);
++    boolean multiclass = (dataset.numClasses() > 2);
+     try {
+ 
+       // this is the file that the model will be saved to
+@@ -420,9 +412,9 @@
+       }
+ 
+       // print the dataset
+-      /*PrintWriter pw = new PrintWriter(new FileWriter(dataFile));
++      PrintWriter pw = new PrintWriter(new FileWriter(dataFile));
+       dataset.printSVMLightFormat(pw);
+-      pw.close();*/
++      pw.close();
+ 
+       // -v 0 makes it not verbose
+       // -m 400 gives it a larger cache, for faster training
+@@ -473,13 +465,13 @@
+       // read in the model file
+       Pair<Double, ClassicCounter<Integer>> weightsAndThresh = readModel(modelFile, multiclass);
+       double threshold = weightsAndThresh.first();
+-      //ClassicCounter<Pair<F, L>> weights = convertWeights(weightsAndThresh.second(), featureIndex, labelIndex, multiclass);
++      ClassicCounter<Pair<F, L>> weights = convertWeights(weightsAndThresh.second(), featureIndex, labelIndex, multiclass);
+       ClassicCounter<L> thresholds = new ClassicCounter<>();
+-      /*if (!multiclass) {
++      if (!multiclass) {
+         thresholds.setCount(labelIndex.get(0), -threshold);
+         thresholds.setCount(labelIndex.get(1), threshold);
+-      }*/
+-      //SVMLightClassifier<L, F> classifier = new SVMLightClassifier<>(weights, thresholds);
++      }
++      SVMLightClassifier<L, F> classifier = new SVMLightClassifier<>(weights, thresholds);
+       if (doEval) {
+         File predictFile = File.createTempFile("svm-", ".pred2");
+         if (deleteTempFilesOnExit) {
+@@ -488,20 +480,20 @@
+         PrintWriter pw2 = new PrintWriter(predictFile);
+         NumberFormat nf = NumberFormat.getNumberInstance();
+         nf.setMaximumFractionDigits(5);
+-        /*for (Datum<L,F> datum:dataset) {
++        for (Datum<L,F> datum:dataset) {
+           Counter<L> scores = classifier.scoresOf(datum);
+           pw2.println(Counters.toString(scores, nf));
+-        }*/
++        }
+         pw2.close();
+       }
+ 
+       if (useSigmoid) {
+         if (verbose) System.out.print("fitting sigmoid...");
+-        //classifier.setPlatt(fitSigmoid(classifier, dataset));
++        classifier.setPlatt(fitSigmoid(classifier, dataset));
+         if (verbose) System.out.println("done");
+       }
+ 
+-      return null; //classifier;
++      return classifier;
+     } catch (Exception e) {
+       throw new RuntimeException(e);
+     }

