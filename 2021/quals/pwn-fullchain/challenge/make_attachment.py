@@ -56,7 +56,7 @@ def main():
 
     print(f'HTTP URL https://storage.cloud.google.com/{args.bucket}/{digest}')
     print(f'GS URL gs://{args.bucket}/{digest}')
-    print(f'Now run \'gsutil cp {digest} gs://{args.bucket}/')
+    print(f'Now run \'gcloud storage cp {digest} gs://{args.bucket}/')
     print("Don't forget to update metadata.yaml and download_files_from_gcs.sh")
 
 if __name__ == '__main__':

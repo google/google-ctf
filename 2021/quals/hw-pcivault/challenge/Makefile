@@ -19,7 +19,7 @@ all: upload_player_image
 
 upload_player_image: player-image.tar.gz
 	HASH="$$(sha512sum player-image.tar.gz | awk '{print $$1}')"; \
-	gsutil cp player-image.tar.gz "gs://gctf-2021-attachments-project/$${HASH}"; \
+	gcloud storage cp player-image.tar.gz "gs://gctf-2021-attachments-project/$${HASH}"; \
 	sed -i -e "s/HASH=[0-9a-f]*/HASH=$${HASH}/" run_local.sh
 
 #player-image.tar.gz: upload_build_tar
@@ -32,7 +32,7 @@ player-image.tar.gz:
 
 upload_build_tar: build.tar.gz
 	HASH="$$(sha512sum build.tar.gz | awk '{print $$1}')"; \
-	gsutil cp build.tar.gz "gs://gctf-2021-attachments-project/$${HASH}"; \
+	gcloud storage cp build.tar.gz "gs://gctf-2021-attachments-project/$${HASH}"; \
 	sed -i -e "s/ENV HASH=[0-9a-f]*/ENV HASH=$${HASH}/" player-image.dockerfile; \
 	sed -i -e "s/ENV HASH=[0-9a-f]*/ENV HASH=$${HASH}/" Dockerfile
 
@@ -62,4 +62,3 @@ kernel: build.dockerfile firmware/firmware.c xv6-riscv.patch
 
 fs.img: kernel
 firmware.elf: kernel
-
