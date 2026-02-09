@@ -537,15 +537,21 @@ function kctf_cluster_start_gce {
   "${KCTF_BIN}/kubectl" create serviceaccount --namespace kctf-system ${GCS_KSA_NAME} --save-config --dry-run=client -o yaml | "${KCTF_BIN}/kubectl" apply -f - || return
   "${KCTF_BIN}/kubectl" annotate serviceaccount --namespace kctf-system ${GCS_KSA_NAME} iam.gke.io/gcp-service-account=${GCS_GSA_EMAIL} --overwrite || return
 
-  if ! gsutil du "gs://${BUCKET_NAME}/"; then
-    gsutil mb -l eu "gs://${BUCKET_NAME}/" || return
+  if ! gcloud storage du "gs://${BUCKET_NAME}/"; then
+    gcloud storage buckets create --location=eu "gs://${BUCKET_NAME}/" || return
   fi
 
-  if gsutil uniformbucketlevelaccess get "gs://${BUCKET_NAME}" | grep -q "Enabled: True"; then
-    gsutil iam ch "serviceAccount:${GCS_GSA_EMAIL}:roles/storage.legacyBucketOwner" "gs://${BUCKET_NAME}" || return
-    gsutil iam ch "serviceAccount:${GCS_GSA_EMAIL}:roles/storage.legacyObjectOwner" "gs://${BUCKET_NAME}" || return
+  if gcloud storage buckets describe "gs://${BUCKET_NAME}" | grep -q "uniform_bucket_level_access: true" ;  then
+    gcloud storage buckets add-iam-policy-binding "gs://${BUCKET_NAME}" \
+      --member="serviceAccount:${GCS_GSA_EMAIL}" \
+      --role="roles/storage.legacyBucketOwner" || return
+
+    gcloud storage buckets add-iam-policy-binding "gs://${BUCKET_NAME}" \
+      --member="serviceAccount:${GCS_GSA_EMAIL}" \
+      --role="roles/storage.legacyObjectOwner" || return
   else
-    gsutil acl ch -u "${GCS_GSA_EMAIL}:O" "gs://${BUCKET_NAME}" || return
+    gcloud storage buckets update "gs://${BUCKET_NAME}" \
+    --add-acl-grant=entity=user-${GCS_GSA_EMAIL},role=OWNER || return
   fi
 
   "${KCTF_BIN}/kubectl" create configmap gcsfuse-config --from-literal=gcs_bucket="${BUCKET_NAME}" --namespace kctf-system --dry-run=client -o yaml | "${KCTF_BIN}/kubectl" apply -f - || return
