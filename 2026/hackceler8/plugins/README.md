@@ -19,3 +19,7 @@ Replay a partial solution and record into a new file (keep playing after the rec
 ```
 RECORDING=my-wip-solution-2.mlen REPLAY=my-wip-solution-1.mlen mame genesis -cart hx8.md -autoboot_script plugins/replay-record.lua
 ```
+
+# Converting to the replayer hardware's format
+
+See plugins/example.py and the replayer hardware manual.
