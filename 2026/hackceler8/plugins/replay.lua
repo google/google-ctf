@@ -1,66 +1,74 @@
--- Usage: mame genesis -cart <path> -autoboot_script plugins/replay.lua
-package.path = package.path .. ";./plugins/?.lua"
-
-local controller = require('controller')
-local writer = require('writer')
 local c = require('common')
 
 local cpu = manager.machine.devices[":maincpu"]
 local mem = cpu.spaces["program"]
-local path = os.getenv('REPLAY') or 'output.mlen'
-local f = io.open(path, 'rb')
 
-if f == nil then
-  emu.print_error('Could not open file: ' .. path)
-  manager.machine:exit()
-end
-assert(f ~= nil)
+local function new(w, next_frame_callback, end_callback)
+  local next_frame, next_keys = next_frame_callback()
+  local r = {
+    w = w,
+    next_frame_callback = next_frame_callback,
+    end_callback = end_callback,
+    frame = 0,
+    next_frame = next_frame,
+    next_keys = next_keys,
+    read_tap = nil,
+    write_tap = nil
+  }
 
-local function read_next_frame(input)
-  local raw_frame_number = input:read(4)
-  if raw_frame_number == nil then
-    return nil, nil
+  function r.advance(self)
+    self.next_frame, self.next_keys = next_frame_callback()
+    self.frame = -1
   end
 
-  local keys = c.from_storage(c.unpack_dword(input:read(4)))
-  return c.unpack_dword(raw_frame_number), keys
-end
-
-local w = writer.new(controller.new(c.IO_DATA, c.IO_CTRL))
-local frame = 0
-local next_frame, next_keys = read_next_frame(f)
-assert(next_keys ~= nil)
-
-local function handle_write(address, data, mask)
-  w:on_write(address, data, mask)
-end
-
-local function handle_read(address, data, mask)
-  if next_frame == nil then
-    return nil
+  function r.handle_write(self, address, data, mask)
+    self.w:on_write(address, data, mask)
   end
 
-  if frame == next_frame then
-    io.write(string.format('frame=%d down=%s up=%s left=%s right=%s start=%s a=%s b=%s c=%s\n',
-      next_frame, next_keys.down, next_keys.up, next_keys.left, next_keys.right, next_keys.start, next_keys.a,
-      next_keys.b, next_keys.c))
-    w:set_keys(next_keys)
-    next_frame, next_keys = read_next_frame(f)
-    if next_frame == nil then
-      emu.pause()
+  function r.handle_read(self, address, data, mask)
+    if self.next_frame == nil then
+      self.end_callback()
+      return nil
     end
+
+    if self.frame == self.next_frame then
+      io.write(string.format('frame=%d down=%s up=%s left=%s right=%s start=%s a=%s b=%s c=%s\n',
+        self.next_frame, self.next_keys.down, self.next_keys.up, self.next_keys.left, self.next_keys.right,
+        self.next_keys.start, self.next_keys.a,
+        self.next_keys.b, self.next_keys.c))
+      self.w:set_keys(self.next_keys)
+      self.next_frame, self.next_keys = self.next_frame_callback()
+      if self.next_frame == nil then
+        self.end_callback()
+        return nil
+      end
+    end
+    local value = self.w:on_read(address, data, mask)
+    if self.w.ready then
+      self.frame = self.frame + 1
+    end
+    return value
   end
-  local value = w:on_read(address, data, mask)
-  if w.ready then
-    frame = frame + 1
+
+  function r.bind(self)
+    self.read_tap = mem:install_read_tap(c.IO_BASE_START, c.IO_BASE_END, "replay read",
+      function(address, data, mask) return self:handle_read(address, data, mask) end)
+    self.write_tap = mem:install_write_tap(c.IO_BASE_START, c.IO_BASE_END, "replay write",
+      function(address, data, mask) return self:handle_write(address, data, mask) end)
   end
-  return value
+
+  function r.unbind(self)
+    --- @diagnostic disable-next-line: undefined-field
+    self.read_tap:remove()
+    self.read_tap = nil
+    ---@diagnostic disable-next-line: undefined-field
+    self.write_tap:remove()
+    self.write_tap = nil
+  end
+
+  return r
 end
 
-_G.replay_tap1 = mem:install_read_tap(c.IO_BASE_START, c.IO_BASE_END, "replay read", handle_read)
-_G.replay_tap2 = mem:install_write_tap(c.IO_BASE_START, c.IO_BASE_END, "replay write", handle_write)
-_G.replay_exit_hook = emu.register_stop(function()
-  if f ~= nil then
-    f:close()
-  end
-end)
+return {
+  new = new
+}

@@ -23,6 +23,7 @@ pub use portal::CARTRIDGE_ID_VALUE;
 pub use portal::KOTH_FRAMES_MAX;
 pub use portal::KOTH_NO_RECORD;
 pub use portal::KOTH_RECORD_SLOTS;
+pub use portal::PERSISTENT_STORAGE_WORDS;
 pub use ports::Serial;
 pub use renderer::Renderer;
 pub use rng::PseudoRng;

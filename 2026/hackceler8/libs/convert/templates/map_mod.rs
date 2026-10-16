@@ -6,6 +6,7 @@ use crate::res::palettes::PaletteContext;
 {{/each}}
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
+#[repr(u8)]
 pub enum MapType {
 {{#each map}}    {{this.1}},
 {{/each}}

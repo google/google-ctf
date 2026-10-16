@@ -16,23 +16,6 @@ local function bool_to_bit(val, bit)
   end
 end
 
-function mod.unpack_dword(bytes)
-  local val = 0
-  for i = 4, 1, -1 do
-    val = (val << 8) + string.byte(bytes:sub(i, i))
-  end
-  return val
-end
-
-function mod.pack_dword(n)
-  local bytes = {}
-  for _ = 1, 4 do
-    table.insert(bytes, string.char(n & 0xff))
-    n = n >> 8
-  end
-  return table.concat(bytes)
-end
-
 function mod.to_storage(keys)
   return bool_to_bit(keys.b, 0) |
       bool_to_bit(keys.c, 1) |
@@ -83,6 +66,42 @@ function mod.from_bits(high_bits, low_bits)
     a = not bit_to_bool(low_bits, 4),
     start = not bit_to_bool(low_bits, 5),
   }
+end
+
+function mod.unpack(bytes, width)
+  assert(width > 0, "width must be positive, but was " .. width)
+  assert(#bytes == width, "expected the length of input to be " .. width .. ", but was " .. #bytes)
+  local val = 0
+  for i = width, 1, -1 do
+    val = (val << 8) + string.byte(bytes:sub(i, i))
+  end
+  return val
+end
+
+function mod.pack(n, width)
+  assert(width > 0, "width must be positive, but was " .. width)
+  local bytes = {}
+  for _ = 1, width do
+    table.insert(bytes, string.char(n & 0xff))
+    n = n >> 8
+  end
+  return table.concat(bytes)
+end
+
+function mod.unpack_byte(bytes)
+  return mod.unpack(bytes, 1)
+end
+
+function mod.pack_byte(n)
+  return mod.pack(n, 1)
+end
+
+function mod.unpack_dword(bytes)
+  return mod.unpack(bytes, 4)
+end
+
+function mod.pack_dword(n)
+  return mod.pack(n, 4)
 end
 
 return mod

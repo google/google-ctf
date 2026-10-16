@@ -93,16 +93,18 @@ impl Inventory {
     }
 
     // Adds an item to the inventory.
-    pub fn add(&mut self, item_type: ItemType) {
+    pub fn add(ctx: &mut Ctx, item_type: ItemType) {
         // Group multiple instances of items together.
-        for i in &mut self.items {
+        for i in &mut ctx.map.inventory.items {
             if i.item_type == item_type {
                 i.amount += 1;
                 return;
             }
         }
 
-        self.items
+        ctx.map
+            .inventory
+            .items
             .push(InventoryItem {
                 item_type,
                 amount: 1,
@@ -263,14 +265,16 @@ impl InventoryScene {
         let mut x = 2;
         Self::draw_label("Flag score speed:", x, 7, ctx);
 
-        for (i, &map_type) in crate::res::maps::ALL_MAP_TYPES.iter().enumerate() {
+        for &map_type in crate::res::maps::ALL_MAP_TYPES {
             let name = Self::map_name(map_type);
             Self::draw_label(name, x, 8, ctx);
+            // The cartridge records are the source of truth: they also hold the solves the server restored after a reset.
+            let record = ctx.portal.get_challenge_record(crate::game::challenge_id(map_type));
             let mut frame_str: String<8> = String::new();
-            if ctx.flag_frames[i] > 0 {
-                let _ = write!(frame_str, "{}", ctx.flag_frames[i]);
-            } else {
+            if record == KOTH_NO_RECORD {
                 let _ = write!(frame_str, "-");
+            } else {
+                let _ = write!(frame_str, "{}", record);
             }
             Self::draw_label(&frame_str, x, 9, ctx);
             // max(6) is because the frame count can use 6 chars (e.g. 108000 for 30 mins run)

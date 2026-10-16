@@ -158,7 +158,9 @@ pub struct Game<C: Controllers, R: Renderer, V: Vdp, P: Portal> {
     renderer: R,
     pub controller: C,
 
-    pub frame: u32,
+    /// Frames used for calculating the flag score. Incremented on every in-game frame.
+    pub score_frame: u32,
+
     pub player: Player,
     pub map: Map,
     pub ui: UI,
@@ -170,7 +172,6 @@ pub struct Game<C: Controllers, R: Renderer, V: Vdp, P: Portal> {
 
     /// Number of flags the player captured. The player can capture flags by defeating minibosses.
     pub captured_flags: u16,
-    pub flag_frames: [u32; MAP_COUNT],
 
     state: GameState,
     pub dialogue: Option<Dialogue>,
@@ -260,8 +261,7 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp, TargetPortal> {
             ui: ui,
             defeated_minibosses: defeated_minibosses,
             captured_flags: captured_flags,
-            flag_frames: [0; MAP_COUNT],
-            frame: 0,
+            score_frame: 0,
             player: player,
             state: GameState::StageSelect,
             dialogue: None,
@@ -368,9 +368,9 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp, TargetPortal> {
         self.block_if_server_paused();
         self.controller.update();
 
-        self.frame = self.frame.wrapping_add(1);
+        self.score_frame = self.score_frame.wrapping_add(1);
         self.portal.inform_game_tick();
-        if self.frame % 500 == 0 {
+        if self.score_frame % 500 == 0 {
             // Save state every 10s.
             self.save_persistent_state();
         }
@@ -404,7 +404,7 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp, TargetPortal> {
                     &self.player,
                     &self.map,
                     self.captured_flags,
-                    self.frame,
+                    self.score_frame,
                     &mut self.vdp,
                 );
                 if let Some(dialogue) = &mut self.dialogue {
@@ -467,7 +467,7 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp, TargetPortal> {
     pub fn trigger_win(&mut self) {
         fader::fade(self, fader::FadeMode::Out, fader::FadeColor::White);
         self.state = GameState::Win;
-        self.win_scene = Some(YouWin::new(self.frame));
+        self.win_scene = Some(YouWin::new(self.score_frame));
         self.draw();
         fader::fade(self, fader::FadeMode::Out, fader::FadeColor::Black);
     }
@@ -522,22 +522,21 @@ impl Game<TargetControllers, TargetRenderer, TargetVdp, TargetPortal> {
         fader::fade(self, fader::FadeMode::Out, fader::FadeColor::Black);
     }
 
-    /// The local palette type of the current game context
+    /// The local palette of the current game context
     /// (e.g. the loaded map or scene).
-    pub fn palette_type(&self, palette: Palette) -> palettes::PaletteContext {
-        if matches!(self.state, GameState::Paused) {
-            return palettes::PaletteContext::Inventory;
-        }
-        if self.stage_select_scene.is_some() {
-            return palettes::PaletteContext::StageSelect;
-        }
-        if self.game_over_scene.is_some() || self.win_scene.is_some() {
-            return palettes::PaletteContext::GameOver;
-        }
-        if matches!(palette, Palette::A) {
-            return self.player.palette_type();
-        }
-        maps::palette_type(self.map.map_type)
+    pub fn palette(&self, palette: Palette) -> [u16; 16] {
+        let palette_type = if matches!(self.state, GameState::Paused) {
+            palettes::PaletteContext::Inventory
+        } else if self.stage_select_scene.is_some() {
+            palettes::PaletteContext::StageSelect
+        } else if self.game_over_scene.is_some() || self.win_scene.is_some() {
+            palettes::PaletteContext::GameOver
+        } else if matches!(palette, Palette::A) {
+            return self.player.palette;
+        } else {
+            maps::palette_type(self.map.map_type)
+        };
+        palettes::get_palette(palette, palette_type)
     }
 
     pub fn boss_unlocked(&self) -> bool {

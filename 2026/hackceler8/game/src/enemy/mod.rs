@@ -183,10 +183,6 @@ impl Enemy {
                     if enemy.is_miniboss() && ctx.defeated_minibosses & enemy.enemy_type as u32 == 0
                     {
                         ctx.defeated_minibosses |= enemy.enemy_type as u32;
-                        let map_idx = ctx.map.map_type as usize;
-                        if ctx.flag_frames[map_idx] == 0 || ctx.flag_frames[map_idx] > ctx.frame {
-                            ctx.flag_frames[map_idx] = ctx.frame;
-                        }
                         // Deferred to the tail block
                         // so the record lands before trigger_win ends
                         // the game on the boss.
@@ -216,7 +212,7 @@ impl Enemy {
                     // Less than 1px per frame
                     // So instead we move 1px every N frames
                     let frame_per_pixel = 64 / enemy.stats.speed as u32;
-                    if ctx.frame % frame_per_pixel == 0 {
+                    if ctx.map.play_frame % frame_per_pixel == 0 {
                         speed_per_frame = 1;
                     }
                 }
@@ -236,7 +232,8 @@ impl Enemy {
                     player.on_hit(enemy.facing, enemy.stats.strength);
                 }
 
-                if enemy.stats.shoots && ctx.frame % (shooter::SHOOT_FREQUENCY as u32) == 0 {
+                if enemy.stats.shoots && ctx.map.play_frame % (shooter::SHOOT_FREQUENCY as u32) == 0
+                {
                     enemy.face_player(player);
                     enemy.status = Status::Shooting {
                         cooldown: shooter::SHOOT_COOLDOWN,

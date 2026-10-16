@@ -17,3 +17,10 @@ nvram
 target.docker
 game/src/res
 persistent
+persistent.koth
+challenges
+__pycache__
+*.bak.png
+.features
+output.mlen
+replay.nspace

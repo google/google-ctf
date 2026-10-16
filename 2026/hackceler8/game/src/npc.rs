@@ -80,7 +80,7 @@ impl Npc {
     /// Runs an NPC tick.
     pub fn update(ctx: &mut Ctx, npc_id: usize) {
         let mut dialogue_id = None;
-        {
+        if ctx.player.is_alive() {
             let npc = &mut ctx.map.npcs[npc_id];
             let hitbox = npc.hitbox();
             let player_hitbox = &mut ctx.player.hitbox();

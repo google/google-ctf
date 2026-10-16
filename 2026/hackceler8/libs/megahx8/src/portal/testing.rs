@@ -1,18 +1,20 @@
 use crate::portal::KothShadow;
+use crate::portal::PERSISTENT_STORAGE_WORDS;
 
 pub struct Portal {
-    // Wide enough for the KotH save payload (magic, then a word pair
-    // for the frame count and for each record), which
-    // save_to_persistent_storage truncates to.
-    pub storage: [u16; 32],
+    /// As wide as the cartridge's save area, so a payload that would
+    /// fit on hardware is not silently truncated here.
+    pub storage: [u16; PERSISTENT_STORAGE_WORDS],
     pub koth: KothShadow,
+    pub save_revision: u8,
 }
 
 impl Portal {
     pub fn new() -> Self {
         Self {
-            storage: [0; 32],
+            storage: [0; PERSISTENT_STORAGE_WORDS],
             koth: KothShadow::new(),
+            save_revision: 0,
         }
     }
 }
@@ -27,10 +29,20 @@ impl crate::portal::Portal for Portal {
     fn save_to_persistent_storage(&mut self, data: &[u16]) {
         let len = data.len().min(self.storage.len());
         self.storage[..len].copy_from_slice(&data[..len]);
+        self.save_revision = self.save_revision.wrapping_add(1);
     }
     fn load_from_persistent_storage(&self, buffer: &mut [u16]) {
         let len = buffer.len().min(self.storage.len());
         buffer[..len].copy_from_slice(&self.storage[..len]);
+    }
+    fn read_back_persistent_storage(&self, buffer: &mut [u16]) {
+        self.load_from_persistent_storage(buffer);
+    }
+    fn save_revision(&self) -> u8 {
+        self.save_revision
+    }
+    fn acked_save_revision(&self) -> u8 {
+        self.save_revision
     }
     fn request_console_reset(&mut self) {
         self.koth.reset();

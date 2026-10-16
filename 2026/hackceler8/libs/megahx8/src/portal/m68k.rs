@@ -6,6 +6,7 @@ use super::ServerState;
 use super::CARTRIDGE_ID_VALUE;
 use super::KOTH_NO_RECORD;
 use super::KOTH_RECORD_SLOTS;
+use super::PERSISTENT_STORAGE_WORDS;
 
 /// Base of the cartridge's "TIME" window.
 const CARTRIDGE_MMIO: usize = 0xA13000;
@@ -29,7 +30,7 @@ const CARTRIDGE_RNG: *const u16 = word(0x03) as _;
 /// bit 0: Game initialized
 /// bit 1: Game paused
 /// bit 2 - 7: Team ID
-/// bit 8 - 5: Save revision
+/// bit 8 - 15: Save revision
 const CARTRIDGE_SERVER_STATE: *const u16 = word(0x4C) as _;
 
 /// Game state known by the game:
@@ -65,7 +66,7 @@ const CARTRIDGE_SERVER_SAVE_DATA: *const u16 = word(0x1A) as _;
 
 /// Misc persistent storage data to be sent to the server.
 const CARTRIDGE_GAME_SAVE_DATA: *mut u16 = word(0x4E) as _;
-const CARTRIDGE_SAVE_DATA_CAPACITY_WORDS: usize = 50;
+const CARTRIDGE_SAVE_DATA_CAPACITY_WORDS: usize = PERSISTENT_STORAGE_WORDS;
 
 impl From<u16> for ServerState {
     fn from(value: u16) -> Self {
@@ -262,6 +263,32 @@ impl super::Portal for Portal {
         for i in 0..buffer.len().min(CARTRIDGE_SAVE_DATA_CAPACITY_WORDS) {
             buffer[i] = unsafe { read_volatile(CARTRIDGE_SERVER_SAVE_DATA.offset(i as isize)) };
         }
+    }
+
+    fn read_back_persistent_storage(&self, buffer: &mut [u16]) {
+        if !self.running_on_console() {
+            // Nothing was written in the first place, so report that
+            // rather than a shadow that would look like success.
+            for i in 0..buffer.len().min(CARTRIDGE_SAVE_DATA_CAPACITY_WORDS) {
+                buffer[i] = 0;
+            }
+            return;
+        }
+
+        for i in 0..buffer.len().min(CARTRIDGE_SAVE_DATA_CAPACITY_WORDS) {
+            buffer[i] = unsafe { read_volatile(CARTRIDGE_GAME_SAVE_DATA.offset(i as isize)) };
+        }
+    }
+
+    fn save_revision(&self) -> u8 {
+        self.save_data_revision
+    }
+
+    fn acked_save_revision(&self) -> u8 {
+        if !self.running_on_console() {
+            return self.save_data_revision;
+        }
+        (unsafe { read_volatile(CARTRIDGE_SERVER_STATE) } >> 8 & 0xFF) as u8
     }
 }
 

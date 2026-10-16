@@ -18,7 +18,7 @@ class Buttons(enum.IntEnum):
 
 
 @enum.unique
-class TraceFlags(enum.Enum):
+class TraceFlags(enum.IntEnum):
     """Flags that the replayer applies to the trace."""
 
     # Starts the replay of the trace immediately.
@@ -52,6 +52,31 @@ class Trace:
         return struct.pack("<BI", self.flags.value, len(self.frames)) + b"".join(
             f.build() for f in self.frames
         )
+
+    def __add__(self, other):
+        """Concatenates two traces taking flags from the first one."""
+        if not isinstance(other, Trace):
+            raise ValueError("Other value must also be a trace")
+        if len(self) == 0:
+            return other
+        elif len(other) == 0:
+            return self
+        else:
+            # Stages begin at frame 0, so add one to the offset to prevent
+            # having duplicate keys for one frame.
+            offset = self.frames[-1].frame + 1
+            return Trace(
+                flags=self.flags,
+                frames=self.frames
+                + [
+                    Frame(frame=f.frame + offset, buttons=f.buttons)
+                    for f in other.frames
+                ],
+            )
+
+    def __or__(self, other):
+        """Concatenates two traces taking flags from the first one."""
+        return self + other
 
 
 class Replay(Trace):

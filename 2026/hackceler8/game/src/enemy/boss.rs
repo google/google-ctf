@@ -45,9 +45,9 @@ fn stats(_enemy_type: EnemyType) -> Stats {
         shoots: false,
         hitbox: Hitbox {
             x: 6,
-            y: 12,
-            w: 52,
-            h: 63,
+            y: 27,
+            w: 51,
+            h: 47,
         },
     }
 }

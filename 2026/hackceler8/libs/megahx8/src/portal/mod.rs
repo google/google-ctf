@@ -17,6 +17,12 @@ pub const KOTH_NO_RECORD: u32 = 0xFFFF_FFFF;
 /// saturated run stays distinguishable from "no record yet".
 pub const KOTH_FRAMES_MAX: u32 = 0xFFFF_FFFE;
 
+/// Words of persistent storage the cartridge carries in each
+/// direction: the server->game half that `load_from_persistent_storage`
+/// reads and the game->server half that `save_to_persistent_storage`
+/// writes. Must match the RAM halves in cartridge/rtl/mmio.py.
+pub const PERSISTENT_STORAGE_WORDS: usize = 50;
+
 /// Word the custom cartridge answers at its detect address, returned by
 /// `Portal::cartridge_id`.
 /// Must match CARTRIDGE_ID in cartridge/rtl/mmio.py.
@@ -106,7 +112,31 @@ pub trait Portal {
     fn save_to_persistent_storage(&mut self, data: &[u16]);
 
     /// Loads data from the persistent storage into the given buffer.
+    ///
+    /// This reads the server->game half, i.e. what the server echoed
+    /// back after picking up a save, *not* what the game last wrote.
     fn load_from_persistent_storage(&self, buffer: &mut [u16]);
+
+    /// Reads the game->server half of the persistent storage back.
+    ///
+    /// This is what `save_to_persistent_storage` actually left in the
+    /// cartridge, before the server has done anything with it. Only
+    /// the bring-up ROM has a use for it: comparing it against both
+    /// the written data and `load_from_persistent_storage` separates a
+    /// console write that never landed from a server that never picked
+    /// it up.
+    fn read_back_persistent_storage(&self, buffer: &mut [u16]);
+
+    /// The save revision the game has most recently published.
+    /// Incremented by every `save_to_persistent_storage`.
+    fn save_revision(&self) -> u8;
+
+    /// The save revision the server has acknowledged. It catches up
+    /// with `save_revision` once the server has read a save out of the
+    /// cartridge and echoed it into the half the game loads from, so
+    /// the two being equal is what "the save round trip completed"
+    /// looks like from the game's side.
+    fn acked_save_revision(&self) -> u8;
 
     /// Get a random integer from the cartridge.
     fn get_random_int(&mut self) -> u32;

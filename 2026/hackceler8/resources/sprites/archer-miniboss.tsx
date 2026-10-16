@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.2" name="archer-miniboss" tilewidth="32" tileheight="32" tilecount="20" columns="5">
- <image source="archer-miniboss.png" width="160" height="128"/>
+<tileset version="1.10" tiledversion="1.10.2" name="archer-miniboss" tilewidth="32" tileheight="32" tilecount="10" columns="5">
+ <image source="archer-miniboss.png" width="160" height="64"/>
  <tile id="0">
   <properties>
    <property name="animation" value="idle"/>
@@ -44,13 +44,13 @@
    <frame tileid="0" duration="125"/>
   </animation>
  </tile>
- <tile id="15">
+ <tile id="8">
   <properties>
    <property name="animation" value="die"/>
    <property name="loop" type="bool" value="true"/>
   </properties>
   <animation>
-   <frame tileid="18" duration="1000"/>
+   <frame tileid="7" duration="1000"/>
   </animation>
  </tile>
 </tileset>

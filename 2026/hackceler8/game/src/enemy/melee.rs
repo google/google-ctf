@@ -31,19 +31,19 @@ pub(crate) fn new() -> EnemyImpl {
 
 fn stats(enemy_type: EnemyType) -> Stats {
     let hitbox = match enemy_type {
-        EnemyType::Octopus => Hitbox {
+        EnemyType::Octopus | EnemyType::OctopusMiniboss => Hitbox {
             x: 6,
             y: 0,
             w: 20,
             h: 32,
         },
-        EnemyType::Blob => Hitbox {
+        EnemyType::Blob | EnemyType::BlobMiniboss => Hitbox {
             x: 3,
             y: 0,
             w: 26,
             h: 32,
         },
-        EnemyType::Angel => Hitbox {
+        EnemyType::Angel | EnemyType::AngelMiniboss => Hitbox {
             x: 9,
             y: 0,
             w: 14,
@@ -51,7 +51,7 @@ fn stats(enemy_type: EnemyType) -> Stats {
         },
         _ => Hitbox {
             x: 6,
-            y: 0,
+            y: -1,
             w: 20,
             h: 32,
         },

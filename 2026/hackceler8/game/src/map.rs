@@ -78,6 +78,9 @@ pub struct Map {
     /// In absolute xy pixel count
     pub scroll_offset: (i16, i16),
 
+    /// Playthrough frames, incremented on every map tick.
+    pub play_frame: u32,
+
     pub map_data: MapData,
     pub enemies: heapless::Vec<Enemy, 16>,
     pub enemies_loaded: Bitmask,
@@ -145,6 +148,7 @@ impl Map {
                 map_type: map_type,
                 plane_window: PlaneWindow::new(),
                 scroll_offset: (0, 0),
+                play_frame: 0,
                 map_data: maps::map_data(map_type),
                 enemies: heapless::Vec::new(),
                 enemies_loaded: Bitmask::new(),
@@ -363,6 +367,8 @@ impl Map {
     }
 
     pub fn update(ctx: &mut Ctx) {
+        ctx.map.play_frame = ctx.map.play_frame.wrapping_add(1);
+
         for enemy_id in 0..ctx.map.enemies.len() {
             if Enemy::update(ctx, enemy_id) {
                 ctx.map.enemies_defeated.set(ctx.map.enemies[enemy_id].id);
@@ -392,11 +398,11 @@ impl Map {
 
         for item_id in 0..ctx.map.items.len() {
             let (id, item_type) = Item::update(ctx, item_id);
+            if let Some(item_type) = item_type {
+                Inventory::add(ctx, item_type);
+            }
             if let Some(id) = id {
                 ctx.map.items_collected.set(id);
-            }
-            if let Some(item_type) = item_type {
-                ctx.map.inventory.add(item_type);
             }
             if ctx.map.items[item_id].should_unload() {
                 ctx.map.items_loaded.clear(ctx.map.items[item_id].id);

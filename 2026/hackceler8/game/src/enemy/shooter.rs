@@ -73,10 +73,16 @@ pub fn get_projectile_start_offset(enemy_type: EnemyType, direction: Direction) 
 
 fn stats(enemy_type: EnemyType) -> Stats {
     let hitbox = match enemy_type {
-        EnemyType::Flameboi => Hitbox {
+        EnemyType::Flameboi | EnemyType::FlameboiMiniboss => Hitbox {
             x: 5,
             y: 0,
             w: 14,
+            h: 32,
+        },
+        EnemyType::Goblin | EnemyType::GoblinMiniboss => Hitbox {
+            x: 6,
+            y: -1,
+            w: 20,
             h: 32,
         },
         _ => Hitbox {

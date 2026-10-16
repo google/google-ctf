@@ -16,7 +16,6 @@ use megahx8::*;
 
 
 use crate::game::Ctx;
-use crate::res::palettes;
 
 #[derive(Copy, Clone)]
 pub enum FadeMode {
@@ -35,10 +34,10 @@ pub enum FadeColor {
 }
 
 pub fn fade(ctx: &mut Ctx, mode: FadeMode, color: FadeColor) {
-    let mut palettes = [(Palette::A, palettes::PaletteContext::GameOver); 4];
+    let mut palettes = [(Palette::A, [0u16; 16]); 4];
     let p = [Palette::A, Palette::B, Palette::C, Palette::D];
     for i in 0..p.len() {
-        palettes[i] = (p[i], ctx.palette_type(p[i]));
+        palettes[i] = (p[i], ctx.palette(p[i]));
     }
     for t in 0..32 {
         let mul = match mode {
@@ -50,28 +49,35 @@ pub fn fade(ctx: &mut Ctx, mode: FadeMode, color: FadeColor) {
     }
 }
 
-// Fade the specified palettes with the specified amount (0 means completely black, 32 means completely visible).
+/// Fades a single 16-color palette by the specified amount.
+/// (0 means completely black, 32 means completely visible / base brightness).
+pub fn fade_palette(color: &[u16; 16], fade_color: FadeColor, fade_amount: u16) -> [u16; 16] {
+    let mut result = [0u16; 16];
+    for i in 1..color.len() {
+        let mut new_color = 0;
+        for offs in [0, 4, 8] {
+            // r, g, b offsets
+            let mut comp = (color[i] >> offs) & 0xF;
+            comp = match fade_color {
+                FadeColor::Black => (comp * fade_amount) >> 5,
+                FadeColor::White => (comp + fade_amount / 2).min(0xF),
+            };
+            new_color |= comp << offs;
+        }
+        result[i] = new_color;
+    }
+    result
+}
+
+/// Fade the specified palettes with the specified amount (0 means completely black, 32 means completely visible).
 pub fn fade_palettes(
     fade_color: FadeColor,
-    palettes: &[(Palette, palettes::PaletteContext)],
+    palettes: &[(Palette, [u16; 16])],
     fade_amount: u16,
     vdp: &mut TargetVdp,
 ) {
-    for (p, t) in palettes {
-        let mut color = palettes::get_palette(*p, *t);
-        for i in 0..color.len() {
-            let mut new_color = 0;
-            for offs in [0, 4, 8] {
-                // r, g, b offsets
-                let mut comp = (color[i] >> offs) & 0xF;
-                comp = match fade_color {
-                    FadeColor::Black => (comp * fade_amount) >> 5,
-                    FadeColor::White => (comp + fade_amount / 2).min(0xF),
-                };
-                new_color |= comp << offs;
-            }
-            color[i] = new_color;
-        }
-        vdp.set_palette(*p, &color);
+    for (p, color) in palettes {
+        let faded = fade_palette(color, fade_color, fade_amount);
+        vdp.set_palette(*p, &faded);
     }
 }

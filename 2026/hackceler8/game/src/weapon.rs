@@ -78,6 +78,11 @@ impl WeaponType {
         }
     }
 
+    /// Whether this weapon supports charged attacks.
+    pub fn can_charge(&self) -> bool {
+        *self == WeaponType::Gun
+    }
+
     pub fn tiles_idx(&self) -> Option<usize> {
         match self {
             WeaponType::Sword => Some(crate::res::sprites::player_sword::TILES_IDX),

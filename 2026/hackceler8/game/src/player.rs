@@ -17,7 +17,7 @@ use resources::MapTileAttribute;
 
 use crate::big_sprite::BigSprite;
 use crate::entity::*;
-use crate::fader::fade_palettes;
+use crate::fader::fade_palette;
 use crate::fader::FadeColor;
 use crate::game::Ctx;
 use crate::get_map_data;
@@ -104,6 +104,8 @@ pub struct Player {
     pub invulnerability_timer: u16,
     /// Speed of slipping on the ground on the Arctic stage.
     slip_speed: i16,
+    /// Active player sprite palette in CRAM.
+    pub palette: [u16; 16],
 }
 
 #[cfg_attr(feature = "tests", derive(Debug))]
@@ -165,6 +167,7 @@ impl Player {
             charge_timer: 0,
             invulnerability_timer: 0,
             slip_speed: 0,
+            palette: [0; 16],
         }
     }
 
@@ -215,6 +218,7 @@ impl Player {
         self.charge_timer = 0;
         self.invulnerability_timer = 0;
         self.slip_speed = 0;
+        self.palette = palettes::get_palette(Palette::A, self.palette_type());
     }
 
     pub fn on_hit(&mut self, direction: Direction, damage: u16) {
@@ -252,7 +256,7 @@ impl Player {
     }
 
     pub fn update(ctx: &mut Ctx) {
-        let frame = ctx.frame;
+        let frame = ctx.map.play_frame;
         let input = &mut ctx.controller.controller_state(0);
 
         let enemies = &mut ctx.map.enemies;
@@ -267,6 +271,7 @@ impl Player {
         // to avoid double mut borrows.
         let mut trigger_attack = false;
         let mut enemies_to_hit = 0;
+        let weapon = ctx.player.weapon;
 
         let player = &mut ctx.player;
         let map = get_map_data!(ctx);
@@ -359,12 +364,12 @@ impl Player {
                     // Flicker = +2 to brightness every 8 frames, for 8 frames
                     let flicker = ((frame as u16 >> 3) % 2) * 2;
                     let fade_amount = (player.charge_timer >> 2).min(8 + flicker);
-                    fade_palettes(
+                    player.palette = fade_palette(
+                        &palettes::get_palette(Palette::A, player.palette_type()),
                         FadeColor::White,
-                        &[(Palette::A, player.palette_type())],
                         fade_amount,
-                        &mut ctx.vdp,
                     );
+                    ctx.vdp.set_palette(Palette::A, &player.palette);
                 }
 
                 if let Some(input) = input {
@@ -765,10 +770,11 @@ impl Player {
         player.update_weapon_sprite();
         player.update_explosion_sprites();
 
-        let weapon = player.weapon;
         if trigger_attack {
             weapon.on_attack()(ctx);
-            ctx.player.charge_timer = 0;
+            if ctx.player.weapon.can_charge() {
+                ctx.player.charge_timer = 0;
+            }
         }
         if enemies_to_hit != 0 {
             for i in 0..32 {
@@ -1021,6 +1027,8 @@ impl Player {
 
     pub fn set_weapon(&mut self, weapon: WeaponType, res_state: &mut State, vdp: &mut TargetVdp) {
         self.weapon = weapon;
+        self.palette = palettes::get_palette(Palette::A, self.palette_type());
+        vdp.set_palette(Palette::A, &self.palette);
         if let (Some(sprite), Some(tiles_idx)) = (&mut self.weapon_sprite, weapon.tiles_idx()) {
             res_state.switch_sprite_tiles(sprite, tiles_idx);
         } else {
