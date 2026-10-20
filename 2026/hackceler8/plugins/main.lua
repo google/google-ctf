@@ -78,7 +78,8 @@ end
 
 local function menu_callback(trace_name)
   assert(recording ~= nil)
-  trace = recording.stages[stage][trace_name].frames
+  local t = recording.stages[stage][trace_name]
+  trace = t.frames
 
   if stage == #recording.stages and extend_last_stage then
     extend = true
@@ -89,7 +90,14 @@ local function menu_callback(trace_name)
     _G.r:bind()
     first_time = false
   else
-    _G.r:advance()
+    if t.flags & 1 and stage > 1 then
+      _G.r:advance(true)
+      assert(manager.machine.debugger ~= nil,
+        "Resetting the machine requires the debugger. Append -debug to the mame command.")
+      manager.machine.debugger:command("do pc = d@4")
+    else
+      _G.r:advance(false)
+    end
   end
 end
 

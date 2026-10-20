@@ -16,9 +16,13 @@ local function new(w, next_frame_callback, end_callback)
     write_tap = nil
   }
 
-  function r.advance(self)
+  function r.advance(self, is_reset)
     self.next_frame, self.next_keys = next_frame_callback()
-    self.frame = -1
+    if is_reset then
+      self.frame = 0
+    else
+      self.frame = -1
+    end
   end
 
   function r.handle_write(self, address, data, mask)

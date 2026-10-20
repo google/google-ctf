@@ -11,9 +11,6 @@ supported by the hardware replayer. This format can be only used for replays and
 it is the default format the replayer will expect when the input file is not
 explicitly specified. For more details see the hardware manual of the replayer.
 
-NOTE: the plugin does not simulate the wait for reset and this flag is currently
-simply ignored.
-
 In addition to it the plugin supports replaying and recording the raw traces in
 the `.mlen` format, which stores key frames and the bitmask of pressed buttons.
 This is the only format that the plugin supports as the output. For
@@ -42,8 +39,25 @@ recording.
 
 Example:
 
-```text
+```sh
 REPLAY=my-solution.mlen mame genesis -cart hx8.md -autoboot_script plugins/main.lua
+```
+
+### Replaying from reset
+
+Stages that have `WAIT_FOR_RESET` flag set (except for the first stage) require
+passing additional flags to mame command. Failure to do so will terminate the
+replay.
+
+Unfortunately the Lua API tears down the autoboot script context during the
+reset and starts over from scratch, so instead the reset is simulated through
+the debug interface, but it needs to be enabled first. In order to do that,
+append `-debug` to mame command line.
+
+Example:
+
+```sh
+REPLAY=my-solution.mlen mame genesis -cart hx8.md -autoboot_script plugins/main.lua -debug
 ```
 
 ## Recording
@@ -53,8 +67,8 @@ atomatically pick it up and replay it before switching to the record mode.
 
 The plugin can reach the record mode in two ways:
 
-- the specified input file doesn't exist;
-- the plugin has replayed all stages of the recording.
+* the specified input file doesn't exist;
+* the plugin has replayed all stages of the recording.
 
 In the first case the recording will begin immediately and will continue until
 the emulator is closed. The output will be stored in the filename specified in
@@ -65,11 +79,11 @@ recording a new stage after the user unpauses the emulator.
 
 Example:
 
-```text
+```sh
 RECORDING=my-solution.mlen mame genesis -cart hx8.md -autoboot_script plugins/main.lua
 ```
 
-## Extending a recording
+### Extending a recording
 
 In addition to recording new stages the replayer also supports extending the
 last stage of the existing recording. Note that it will still be recorded as the
@@ -78,13 +92,13 @@ last stage of the existing recording. Note that it will still be recorded as the
 
 Replay a partial solution and record into a new file:
 
-```text
+```sh
 EXTEND_LAST_STAGE=true RECORDING=my-wip-solution-2.mlen REPLAY=my-wip-solution-1.mlen mame genesis -cart hx8.md -autoboot_script plugins/main.lua
 ```
 
 ## Converting to the replayer hardware's format
 
-See plugins/example.py and the replayer hardware manual.
+See `plugins/example.py` and the replayer hardware manual.
 
 ## Example workflows
 
@@ -99,14 +113,17 @@ See plugins/example.py and the replayer hardware manual.
   * Wait for replay to finish and the game to pause
   * Unpause and continue playing to record second half
   * wip-2.mlen now contains the full playthrough.
-* Convert to a 1-stage .nspace file that starts on reset: Modify plugins/example.py with
-```
+* Convert to a 1-stage .nspace file that starts on reset: Modify
+  plugins/example.py with
+
+```py
 from builder import File, Stage, Replay, TraceFlags
 
 with open("../my-solution.nspace", "wb") as f:
     r = File([Stage(a=Replay("../wip-2.mlen", flags=TraceFlags.WAIT_FOR_RESET))])
     f.write(r.build())
 ```
+
 * Try on emulator:
   * `REPLAY=my-solution.nspace mame genesis -cart hx8.md -autoboot_script plugins/main.lua`
   * Select branch A for stage 1 in the menu
@@ -128,13 +145,15 @@ with open("../my-solution.nspace", "wb") as f:
   * `REPLAY=stage-1.mlen RECORDING=stage-2b.mlen mame genesis -cart hx8.md -autoboot_script plugins/main.lua`
   * Start playing, then exit emulation
 * Assemble into a branched .nspace file: Modify plugins/example.py with
-```
+
+```py
 from builder import File, Stage, Replay, TraceFlags
 
 with open("../my-solution.nspace", "wb") as f:
     r = File([Stage(a=Replay("../stage-1.mlen", flags=TraceFlags.WAIT_FOR_RESET)), Stage(a=Replay("../stage-2a.mlen"), b=Replay("../stage-2b.mlen"))])
     f.write(r.build())
 ```
+
 * Try on emulator:
   * `REPLAY=my-solution.nspace mame genesis -cart hx8.md -autoboot_script plugins/main.lua`
   * Select branch A for stage 1 in the menu
@@ -146,5 +165,6 @@ with open("../my-solution.nspace", "wb") as f:
   * Load my-solution.nspace onto replayer filesystem
   * Press A to queue the only branch of the 1st stage
   * Press reset on the console to start the replay
-  * During the replay of stage 1, press B on the console to queue branch B of stage 2
+  * During the replay of stage 1, press B on the console to queue branch B of
+    stage 2
   * Once stage 1 has finished, branch B of stage 2 will automatically play
