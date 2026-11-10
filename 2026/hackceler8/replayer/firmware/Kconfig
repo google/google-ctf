@@ -1,0 +1,70 @@
+# Copyright (c) 2026 Google LLC
+# SPDX-License-Identifier: Apache-2.0
+
+menu "Replayer"
+
+config TRACE_STORAGE_DISK_SECTORS
+	int "Size of the trace upload drive in 512 byte sectors"
+	default 384
+	range 64 8192
+	help
+	  Size of the RAM disk which is exposed to the host as a USB mass
+	  storage device, in 512 byte sectors. The default is 192 KiB.
+
+	  The disk has to be large enough to hold the FAT metadata, the README
+	  and the file the user uploads (plus whatever the host decides to
+	  write on it), and it is allocated statically.
+
+config TRACE_STORAGE_MAX_FILE_SIZE
+	int "Maximum size in bytes of an uploaded file"
+	default 131072
+	help
+	  Files bigger than this are ignored instead of being handed to the
+	  parser. Nothing of that size is allocated: the file is read off the
+	  drive as it is parsed, so this only bounds how long the firmware is
+	  willing to spend looking at what the user dropped in.
+
+	  The default leaves room for a file holding REPLAY_MAX_INPUTS inputs
+	  spread over REPLAY_MAX_STAGES stages, which is the most the parser
+	  accepts anyway.
+
+config REPLAY_MAX_STAGES
+	int "Maximum number of stages in a replay file"
+	default 255
+	range 1 255
+	help
+	  Files with more stages than this are rejected. Each stage costs
+	  three struct replay_trace of statically allocated memory.
+
+config REPLAY_MAX_INPUTS
+	int "Maximum number of inputs in a replay file"
+	default 16000
+	range 1 65535
+	help
+	  Total number of controller state changes a replay file may contain,
+	  across all of its stages and traces. Files with more inputs than this
+	  are rejected. Each input costs 4 bytes of statically allocated
+	  memory.
+
+config TRACE_STORAGE_THREAD_STACK_SIZE
+	int "Stack size of the trace storage thread"
+	default 4096
+	help
+	  The thread which mounts the FAT volume and reads the uploaded file
+	  out of it. FatFs needs a fair amount of stack.
+
+config STATUS_LED_THREAD_STACK_SIZE
+    int "Stack size of the status LED threads"
+    default 4096
+	help
+	  The threads which manage the status LEDs, one per LED.
+
+config REPLAYER_DEBUG_IMAGE
+	bool "Build a debug image"
+	default n
+	help
+	  Build an image which runs from XIP and enables the debug port.
+
+endmenu
+
+source "Kconfig.zephyr"

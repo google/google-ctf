@@ -1,0 +1,21 @@
+description: Sega Mega Drive Controller Port Replayer via RP2350 PIO
+
+compatible: "google,megadrive-replayer-pio"
+
+properties:
+  pio:
+    type: phandle
+    required: true
+    description: Phandle to the PIO controller node (e.g. &pio0)
+
+  select-gpios:
+    type: phandle-array
+    required: true
+    description: SELECT pin input from the Mega Drive console
+
+  data-gpios:
+    type: phandle-array
+    required: true
+    description: |
+      Array of 6 GPIO pins connected to the Mega Drive controller output lines
+      in order: B_A, C_START, DOWN, LEFT, RIGHT, UP.

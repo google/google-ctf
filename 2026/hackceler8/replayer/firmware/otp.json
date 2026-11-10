@@ -1,0 +1,21 @@
+{
+    "boot_flags0": {
+        "disable_bootsel_uart_boot": 1,
+        "disable_bootsel_usb_picoboot_ifc": 1,
+        "enable_bootsel_led": 1
+    },
+    "bootsel_led_cfg": {
+        "activelow": 1,
+        "pin": 35
+    },
+    "boot_flags1": {
+        "key_invalid": 12,
+        "key_valid": 3
+    },
+    "crit1": {
+        "secure_boot_enable": 1,
+        "debug_disable": 1
+    },
+    "bootkey0": [91, 135, 113, 202, 215, 20, 248, 114, 138, 176, 28, 17, 238, 151, 40, 138, 95, 158, 61, 171, 179, 37, 151, 21, 222, 76, 195, 251, 44, 200, 165, 10],
+    "bootkey1": [116, 172, 43, 20, 239, 170, 253, 214, 95, 7, 38, 126, 4, 66, 189, 72, 246, 89, 103, 55, 53, 11, 115, 19, 78, 32, 49, 51, 78, 153, 192, 5]
+}

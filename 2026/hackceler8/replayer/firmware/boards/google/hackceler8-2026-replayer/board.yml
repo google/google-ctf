@@ -1,0 +1,6 @@
+board:
+  name: hackceler8-2026-replayer
+  full_name: Hackceler8 2026 Replayer
+  vendor: google
+  socs:
+    - name: rp2350b

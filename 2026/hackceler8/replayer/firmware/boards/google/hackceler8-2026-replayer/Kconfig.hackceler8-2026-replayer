@@ -1,0 +1,5 @@
+# Copyright (c) 2026 Google LLC
+# SPDX-License-Identifier: Apache-2.0
+
+config BOARD_HACKCELER8_2026_REPLAYER
+	select SOC_RP2350B_M33 if BOARD_HACKCELER8_2026_REPLAYER_RP2350B_M33

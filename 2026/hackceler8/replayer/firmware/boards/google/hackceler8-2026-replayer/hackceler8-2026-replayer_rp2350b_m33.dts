@@ -1,0 +1,207 @@
+/*
+ * Copyright (c) 2026 Google LLC
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/dts-v1/;
+
+#include <raspberrypi/rpi_pico/rp2350b.dtsi>
+#include <zephyr/dt-bindings/pinctrl/rpi-pico-rp2350b-pinctrl.h>
+#include <raspberrypi/rpi_pico/m33.dtsi>
+#include <freq.h>
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+#include <zephyr/dt-bindings/led/led.h>
+#include <zephyr/dt-bindings/pwm/pwm.h>
+#include <raspberrypi/partitions_0x0_default_2M.dtsi>
+
+/ {
+	model = "Hackceler8 2026 Replayer";
+	compatible = "google,hackceler8-2026-replayer", "raspberrypi,rp2350";
+
+	chosen {
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+		zephyr,flash-controller = &qmi;
+		zephyr,code-partition = &code_partition;
+		zephyr,entropy = &rng;
+	};
+
+	aliases {
+		watchdog0 = &wdt0;
+
+		/* Pushbutton aliases */
+		sw0 = &button_b3;
+		sw1 = &button_start;
+		sw2 = &button_b4;
+		sw3 = &button_stop;
+
+		/* Replayer alias */
+		replayer0 = &replayer_port1;
+	};
+
+	/* Pushbuttons: B3, START, B4, STOP (Active Low with internal pull-up) */
+	buttons {
+		compatible = "gpio-keys";
+
+		button_b3: button_b3 {
+			gpios = <&gpio0 30 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "B3";
+			zephyr,code = <INPUT_KEY_1>;
+		};
+
+		button_start: button_start {
+			gpios = <&gpio0 31 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "START";
+			zephyr,code = <INPUT_KEY_0>;
+		};
+
+		button_b4: button_b4 {
+			gpios = <&gpio0_hi 0 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "B4";
+			zephyr,code = <INPUT_KEY_2>;
+		};
+
+		button_stop: button_stop {
+			gpios = <&gpio0_hi 1 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "STOP";
+			zephyr,code = <INPUT_KEY_S>;
+		};
+	};
+
+    /* RGB status LEDs */
+	status1_pwm_leds: status1-pwm-leds {
+	    compatible = "pwm-leds";
+		status1_red: led-0 {
+		    pwms = <&pwm 20 PWM_USEC(200) PWM_POLARITY_NORMAL>;
+		};
+		status1_green: led-1 {
+		    pwms = <&pwm 18 PWM_USEC(200) PWM_POLARITY_NORMAL>;
+		};
+		status1_blue: led-2 {
+		    pwms = <&pwm 19 PWM_USEC(200) PWM_POLARITY_NORMAL>;
+		};
+	};
+	status2_pwm_leds: status2-pwm-leds {
+	    compatible = "pwm-leds";
+		status2_red: led-0 {
+		    pwms = <&pwm 16 PWM_USEC(200) PWM_POLARITY_NORMAL>;
+		};
+		status2_green: led-1 {
+		    pwms = <&pwm 22 PWM_USEC(200) PWM_POLARITY_NORMAL>;
+		};
+		status2_blue: led-2 {
+		    pwms = <&pwm 23 PWM_USEC(200) PWM_POLARITY_NORMAL>;
+		};
+	};
+	status_led1: status-led-1 {
+	    compatible = "leds-group-multicolor";
+		leds = <&status1_red>, <&status1_green>, <&status1_blue>;
+		color-mapping = <LED_COLOR_ID_RED>, <LED_COLOR_ID_GREEN>, <LED_COLOR_ID_BLUE>;
+	};
+	status_led2: status-led-2 {
+	    compatible = "leds-group-multicolor";
+		leds = <&status2_red>, <&status2_green>, <&status2_blue>;
+		color-mapping = <LED_COLOR_ID_RED>, <LED_COLOR_ID_GREEN>, <LED_COLOR_ID_BLUE>;
+	};
+
+	/* Sega Mega Drive Controller Port 1 PIO Replayer */
+	replayer_port1: replayer_port1 {
+		compatible = "google,megadrive-replayer-pio";
+		pio = <&pio0>;
+		select-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
+		data-gpios = <&gpio0 0 GPIO_ACTIVE_LOW>,
+			     <&gpio0 1 GPIO_ACTIVE_LOW>,
+			     <&gpio0 2 GPIO_ACTIVE_LOW>,
+			     <&gpio0 3 GPIO_ACTIVE_LOW>,
+			     <&gpio0 4 GPIO_ACTIVE_LOW>,
+			     <&gpio0 5 GPIO_ACTIVE_LOW>;
+		status = "okay";
+	};
+
+	/* Application-specific GPIO definitions */
+	zephyr,user {
+		replay-en-gpios = <&gpio0 28 GPIO_ACTIVE_HIGH>;
+		serial-en-gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
+	};
+};
+
+/* Internal 2MB QSPI Flash (RP2354B) */
+&flash0 {
+	reg = <0x10000000 DT_SIZE_M(2)>;
+	ranges = <0x0 0x10000000 DT_SIZE_M(2)>;
+};
+
+/* Enable lower 32 GPIOs (GPIO 0-31) */
+&gpio0 {
+	status = "okay";
+};
+
+/* Enable upper 16 GPIOs (GPIO 32-47) */
+&gpio0_hi {
+	status = "okay";
+};
+
+/* Hardware Timer */
+&timer0 {
+	status = "okay";
+};
+
+/* Watchdog */
+&wdt0 {
+	status = "okay";
+};
+
+/* Core Voltage Regulator */
+&vreg {
+	status = "okay";
+};
+
+/* Hardware Random Number Generator */
+&rng {
+	status = "okay";
+};
+
+/* Programmable I/O (PIO) Blocks */
+&pio0 {
+	status = "okay";
+};
+
+&pio1 {
+	status = "okay";
+};
+
+&pio2 {
+	status = "okay";
+};
+
+/* USB 1.1 Device Controller (RP2350 internal PHY connected to USB-C) */
+zephyr_udc0: &usbd {
+	status = "okay";
+};
+
+/*
+ * Configure the pin mux to give the PWM access to the LED pins.
+ * Status1: GPIO34 G, GPIO35 B, GPIO36 R
+ * Status2: GPIO38 G, GPIO39 B, GPIO40 R
+ */
+&pinctrl {
+	pwm_rgb_default: pwm_rgb_default {
+		group1 {
+			pinmux = <PWM_9A_P34>, <PWM_9B_P35>, <PWM_10A_P36>,
+			    <PWM_11A_P38>, <PWM_11B_P39>, <PWM_8A_P40>;
+			/*
+			 * The LEDs are on when the pins are low because they are connected
+			 * to the cathodes.
+			 */
+			raspberrypi,out-override = <RP2_GPIO_OVERRIDE_INVERT>;
+		};
+	};
+};
+
+&pwm {
+	status = "okay";
+	pinctrl-0 = <&pwm_rgb_default>;
+	pinctrl-names = "default";
+};

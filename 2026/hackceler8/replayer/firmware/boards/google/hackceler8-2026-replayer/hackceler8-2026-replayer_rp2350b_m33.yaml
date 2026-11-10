@@ -1,0 +1,15 @@
+identifier: hackceler8-2026-replayer/rp2350b/m33
+name: Hackceler8 2026 Replayer (Cortex-M33)
+type: mcu
+arch: arm
+flash: 2048
+ram: 520
+toolchain:
+  - zephyr
+  - gnuarmemb
+supported:
+  - gpio
+  - pico_gpio
+  - usbd
+  - counter
+  - clock
