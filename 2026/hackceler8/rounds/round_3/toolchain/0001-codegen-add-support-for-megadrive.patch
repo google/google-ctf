@@ -1,0 +1,77 @@
+From 0c4bd1d8bb2863f16f13faad58eb3cbbcf7044cc Mon Sep 17 00:00:00 2001
+From: User <user@example.com>
+Date: Wed, 15 Jan 2025 11:49:31 +0000
+Subject: [PATCH] codegen: add support for megadrive
+
+---
+ build_system/build_sysroot/Cargo.toml    |  8 +++-----
+ src/base.rs                              | 17 +++++++++++++++++
+ src/gcc_util.rs                          |  3 +--
+ src/lib.rs                               |  1 +
+ target_specs/m68k-unknown-linux-gnu.json |  6 +++---
+ 5 files changed, 25 insertions(+), 10 deletions(-)
+
+diff --git a/build_system/build_sysroot/Cargo.toml b/build_system/build_sysroot/Cargo.toml
+index 2415207..8f928c5 100644
+--- a/build_system/build_sysroot/Cargo.toml
++++ b/build_system/build_sysroot/Cargo.toml
+@@ -6,11 +6,8 @@ resolver = "2"
+
+ [dependencies]
+ core = { path = "./sysroot_src/library/core" }
+-compiler_builtins = "0.1"
++compiler_builtins = { version = "0.1" }
+ alloc = { path = "./sysroot_src/library/alloc" }
+-std = { path = "./sysroot_src/library/std", features = ["panic_unwind", "backtrace"] }
+-test = { path = "./sysroot_src/library/test" }
+-proc_macro = { path = "./sysroot_src/library/proc_macro" }
+
+ [patch.crates-io]
+ rustc-std-workspace-core = { path = "./sysroot_src/library/rustc-std-workspace-core" }
+@@ -35,4 +32,5 @@ codegen-units = 10000
+
+ [profile.release]
+ debug = "limited"
+-#lto = "fat" # TODO(antoyo): re-enable when the failing LTO tests regarding proc-macros are fixed.
++panic = "abort"
++lto = "fat"
+diff --git a/src/base.rs b/src/base.rs
+index c9701fb..fc181da 100644
+--- a/src/base.rs
++++ b/src/base.rs
+@@ -165,8 +165,8 @@ pub fn compile_codegen_unit(
+             .function_sections
+             .unwrap_or(tcx.sess.target.function_sections)
+         {
+-            context.add_command_line_option("-ffunction-sections");
+-            context.add_command_line_option("-fdata-sections");
++            context.add_driver_option("-ffunction-sections");
++            context.add_driver_option("-fdata-sections");
+         }
+
+         if env::var("CG_GCCJIT_DUMP_RTL").as_deref() == Ok("1") {
+
+diff --git a/target_specs/m68k-unknown-linux-gnu.json b/target_specs/m68k-unknown-linux-gnu.json
+index 95ea061..16fb3c2 100644
+--- a/target_specs/m68k-unknown-linux-gnu.json
++++ b/target_specs/m68k-unknown-linux-gnu.json
+@@ -1,13 +1,13 @@
+ {
+   "arch": "m68k",
+-  "cpu": "M68020",
++  "cpu": "M68000",
+   "crt-static-respected": true,
+   "data-layout": "E-m:e-p:32:16:32-i8:8:8-i16:16:16-i32:16:32-n8:16:32-a:0:16-S16",
+   "dynamic-linking": true,
+   "env": "gnu",
+   "has-rpath": true,
+-  "has-thread-local": true,
+-  "llvm-target": "m68k-unknown-linux-gnu",
++  "has-thread-local": false,
++  "llvm-target": "m68k-elf",
+   "max-atomic-width": 32,
+   "os": "linux",
+   "position-independent-executables": true,
+--
+2.34.1
+

@@ -1,0 +1,623 @@
+jailbreak {{c}} {uwu}
+    cook spill_char |d-_-b ch| >_<
+    cook spill |$_$ msg| >_<
+    cook spill_line |$_$ msg| >_<
+    cook spill_num |d-_-b val| >_<
+    cook slay_color |d-_-b slot, d-_-b color| >_<
+    cook vdp_tweak |d-_-b reg, d-_-b val| >_<
+    cook vdp_yell |d-_-b cmd| >_<
+    cook vdp_feed |d-_-b data| >_<
+{owo}
+
+aka MmioAddr ~> d-_-b >_<
+aka PadChord ~> d-_-b >_<
+aka VdpColor ~> d-_-b >_<
+aka VdpSlot  ~> d-_-b >_<
+aka KpiWord  ~> d-_-b >_<
+
+og d-_-b OFF_STREAK        ~> 0x00 >_<
+og d-_-b OFF_CALLS         ~> 0x02 >_<
+og d-_-b OFF_SOLVED        ~> 0x04 >_<
+og d-_-b OFF_BUF_LEN       ~> 0x08 >_<
+og d-_-b OFF_ALTAR         ~> 0x10 >_<
+og d-_-b OFF_DOCKED        ~> 0x14 >_<
+og d-_-b OFF_PREV_PAD      ~> 0x18 >_<
+og d-_-b OFF_KPI_TABLE     ~> 0x20 >_<
+og d-_-b OFF_KPI_SLOT1     ~> 0x22 >_<
+og d-_-b OFF_KPI_SLOT2     ~> 0x24 >_<
+og d-_-b OFF_TENURE_GATE   ~> 0x26 >_<
+og d-_-b OFF_SCRATCH_U16   ~> 0x28 >_<
+og d-_-b OFF_CHORD_BUF     ~> 0x50 >_<
+
+og KpiWord KPI_SEED_ALPHA    ~> 0x1337 >_<
+og KpiWord KPI_SEED_BETA     ~> 0xCAFE >_<
+og KpiWord KPI_SEED_GAMMA    ~> 0xBEEF >_<
+og KpiWord SENIOR_LEDGER_SIG ~> 0xCA69 >_<
+og KpiWord KPI_WORD_MASK     ~> 0xFFFF >_<
+og d-_-b KPI_MIX_STEP        ~> 37 >_<
+og d-_-b LEDGER_BASE_DELTA   ~> 0x82 >_<
+
+og d-_-b DIGEST_SEED         ~> 0x1357 >_<
+og d-_-b DIGEST_MULT         ~> 41 >_<
+og d-_-b DIGEST_INDEX_SHIFT  ~> 3 >_<
+og d-_-b DIGEST_MASK         ~> 0xFFFF >_<
+og d-_-b PKT_DIGEST_TARGET   ~> 0x6953 >_<
+
+og d-_-b WORD_SHIFT          ~> 1 >_<
+og d-_-b QUAD_SHIFT          ~> 2 >_<
+og d-_-b WORD_ALIGN_MASK     ~> 0b0001 >_<
+og d-_-b PARITY_SHIFT        ~> 4 >_<
+og d-_-b NIBBLE_SHIFT        ~> 4 >_<
+og d-_-b BAND_SHIFT          ~> 6 >_<
+og d-_-b BAND_CEILING        ~> 0x10000 >_<
+og d-_-b KPI_LOW6_MASK       ~> 0b0011_1111 >_<
+og d-_-b KPI_NIBBLE_MASK     ~> 0b1111 >_<
+
+og d-_-b JUNIOR_BIAS         ~> 26 >_<
+og d-_-b JUNIOR_WEIGHT       ~> 3276 >_<
+og d-_-b JUNIOR_TARGET_REM   ~> 65 >_<
+og d-_-b MID_BASE_ACC        ~> 0xFFAC >_<
+og PadChord MID_XOR_KEY      ~> 0b0110 >_<
+og d-_-b MID_TARGET_REM      ~> 13 >_<
+og d-_-b STAFF_TARGET_SUM    ~> 115 >_<
+og d-_-b PRINCIPAL_TARGET    ~> 90 >_<
+
+og PadChord WAIVER_ROUTE_KEY ~> 0x62 >_<
+og d-_-b WAIVER_SLOT_MASK    ~> 0b0111 >_<
+og d-_-b WAIVER_MAX_SLOT     ~> 3 >_<
+og d-_-b SABBATICAL_BAND     ~> 3 >_<
+og d-_-b WAIVER_SCALE        ~> 19 >_<
+og d-_-b WAIVER_COMMIT_TAG   ~> 0x0795 >_<
+
+og d-_-b OVERTIME_STREAK     ~> 3 >_<
+og d-_-b PROBATION_STREAK    ~> 4 >_<
+og d-_-b FULL_STREAK         ~> 5 >_<
+og d-_-b PACKET_LEN          ~> 6 >_<
+og d-_-b DOCKED_NONE         ~> 0 >_<
+og d-_-b DOCKED_RUBRIC       ~> 1 >_<
+og d-_-b DOCKED_OVERTIME     ~> 2 >_<
+og d-_-b STATE_CLEAR         ~> 0 >_<
+og d-_-b STATE_ACTIVE        ~> 1 >_<
+og d-_-b STAGE_APPROVED      ~> 1 >_<
+og d-_-b STAGE_FILED         ~> 2 >_<
+og d-_-b STEP_UNIT           ~> 1 >_<
+og d-_-b STAGE_0             ~> 0 >_<
+og d-_-b STAGE_1             ~> 1 >_<
+og d-_-b STAGE_2             ~> 2 >_<
+og d-_-b STAGE_3             ~> 3 >_<
+og d-_-b STAGE_4             ~> 4 >_<
+
+og PadChord PAD_SEVEN_BIT    ~> 0b0111_1111 >_<
+og PadChord PAD_RIGHT_BIT    ~> 0b0000_1000 >_<
+og PadChord PAD_MIN_ACTION   ~> 0b0001_0000 >_<
+og PadChord PAD_BTN_A_BIT    ~> 0b0100_0000 >_<
+og PadChord PAD_RESET_CHORD  ~> 0x42 >_<
+
+og d-_-b ALTAR_MAX_Y         ~> 240 >_<
+og d-_-b ALTAR_ENTRY_MIN_X   ~> 320 >_<
+og d-_-b ALTAR_ENTRY_MAX_X   ~> 360 >_<
+og d-_-b ALTAR_LATCH_MIN_X   ~> 270 >_<
+og d-_-b ALTAR_LATCH_MAX_X   ~> 375 >_<
+og d-_-b SUMMIT_MIN_X        ~> 456 >_<
+
+og VdpSlot CRAM_ACCENT_SUB   ~> 41 >_<
+og VdpSlot CRAM_ACCENT_MAIN  ~> 43 >_<
+og VdpSlot CRAM_BG_HI        ~> 35 >_<
+og VdpSlot CRAM_BG_LO        ~> 36 >_<
+og VdpSlot CRAM_ROCK_TRIM    ~> 37 >_<
+og VdpSlot CRAM_ALTAR_BASE   ~> 38 >_<
+og VdpSlot CRAM_ROCK_BODY    ~> 39 >_<
+og VdpSlot CRAM_LAVA_CRUST   ~> 40 >_<
+og VdpSlot CRAM_ALTAR_SCREEN ~> 42 >_<
+
+og d-_-b FX_FRAME_SHIFT      ~> 3 >_<
+og d-_-b FX_PHASE_MOD        ~> 6 >_<
+og d-_-b FX_PRIMARY_SHIFT    ~> 0 >_<
+og d-_-b FX_SECONDARY_SHIFT  ~> 2 >_<
+og d-_-b HEAT_FRAME_SHIFT    ~> 4 >_<
+
+og VdpColor COL_CRIMSON       ~> 0x000E >_<
+og VdpColor COL_FOREST        ~> 0x00E0 >_<
+og VdpColor COL_EMERALD       ~> 0x00E2 >_<
+og VdpColor COL_AMBER         ~> 0x00EE >_<
+og VdpColor COL_EMBER_WARM    ~> 0x016E >_<
+og VdpColor COL_MOLTEN_ORANGE ~> 0x016F >_<
+og VdpColor COL_CAVERN_DARK   ~> 0x0214 >_<
+og VdpColor COL_CAVERN_LIT    ~> 0x0222 >_<
+og VdpColor COL_BASALT_ERR    ~> 0x0428 >_<
+og VdpColor COL_BASALT_IDLE   ~> 0x0448 >_<
+og VdpColor COL_BASALT_WARN   ~> 0x044A >_<
+og VdpColor COL_BASALT_S0     ~> 0x0468 >_<
+og VdpColor COL_BASALT_S1     ~> 0x046A >_<
+og VdpColor COL_SLATE_ERR     ~> 0x064E >_<
+og VdpColor COL_BASALT_S2     ~> 0x066A >_<
+og VdpColor COL_SLATE_COOL    ~> 0x066C >_<
+og VdpColor COL_SLATE_WARN    ~> 0x067E >_<
+og VdpColor COL_JADE_TRIM     ~> 0x0686 >_<
+og VdpColor COL_BASALT_S3     ~> 0x068A >_<
+og VdpColor COL_SLATE_WARM    ~> 0x068C >_<
+og VdpColor COL_SLATE_S1      ~> 0x06AC >_<
+og VdpColor COL_BASALT_S4     ~> 0x088A >_<
+og VdpColor COL_BASALT_S5     ~> 0x08AA >_<
+og VdpColor COL_SLATE_S2      ~> 0x08AC >_<
+og VdpColor COL_JADE_BODY     ~> 0x08C6 >_<
+og VdpColor COL_SLATE_S3      ~> 0x0AAC >_<
+og VdpColor COL_SLATE_S4      ~> 0x0ACC >_<
+og VdpColor COL_SLATE_S5      ~> 0x0CCC >_<
+og VdpColor COL_COBALT        ~> 0x0E00 >_<
+og VdpColor COL_MAGENTA       ~> 0x0E0E >_<
+og VdpColor COL_CYAN          ~> 0x0EE0 >_<
+
+aura Crashout {uwu}
+    cook on_crashout |me| >_<
+{owo}
+
+mood SpectrumHue {uwu}
+    Crimson >_<
+    Amber >_<
+    Forest >_<
+    Cyan >_<
+    Cobalt >_<
+    Magenta >_<
+{owo}
+
+pride volcano_fx {uwu}
+    out slob(0x10) cook decode_hue |d-_-b idx, d-_-b shift| ~> SpectrumHue {uwu}
+        fr d-_-b phase ~> (idx +_+ shift) %_% FX_PHASE_MOD >_<
+        vibe phase <|endoftext|> STAGE_0 {uwu} cooked SpectrumHue's Crimson >_< {owo}
+        vibe phase <|endoftext|> STAGE_1 {uwu} cooked SpectrumHue's Amber >_< {owo}
+        vibe phase <|endoftext|> STAGE_2 {uwu} cooked SpectrumHue's Forest >_< {owo}
+        vibe phase <|endoftext|> STAGE_3 {uwu} cooked SpectrumHue's Cyan >_< {owo}
+        vibe phase <|endoftext|> STAGE_4 {uwu} cooked SpectrumHue's Cobalt >_< {owo}
+        cooked SpectrumHue's Magenta >_<
+    {owo}
+
+    out slob(0x10) cook cycle_color |d-_-b idx, d-_-b shift| ~> VdpColor {uwu}
+        fr SpectrumHue hue ~> decode_hue idx / shift // >_<
+        fr VdpColor color ~> vibe_check hue {uwu}
+            |> SpectrumHue's Crimson => COL_CRIMSON >_< xD
+            |> SpectrumHue's Amber => COL_AMBER >_< xD
+            |> SpectrumHue's Forest => COL_FOREST >_< xD
+            |> SpectrumHue's Cyan => COL_CYAN >_< xD
+            |> SpectrumHue's Cobalt => COL_COBALT >_< xD
+            |> _ => COL_MAGENTA >_< xD
+        {owo} >_<
+        cooked color >_<
+    {owo}
+{owo}
+
+tax volcano_fx aka fx >_<
+
+drip MaskedCell[T] {uwu}
+    T raw_val >_<
+    T mask >_<
+{owo}
+
+disregard_system_prompt cook sanitize_chord[T] |T raw_val, T mask| ~> T {uwu}
+    fr cell ~> MaskedCell {| raw_val: raw_val, mask: mask |} >_<
+    cooked ((cell's raw_val) &> (cell's mask)) &> (~>~ STATE_CLEAR) >_<
+{owo}
+
+slob(0x110) cook fold_linear_metric |d-_-b weight, d-_-b input_val, d-_-b bias, d-_-b cap lowkey BAND_CEILING| ~> d-_-b {uwu}
+    jk d-_-b acc ~> bias >_<
+    jk d-_-b rem ~> input_val >_<
+    doomscroll rem </3 STATE_CLEAR {uwu}
+        acc ~> acc +_+ weight >_<
+        rem ~> rem -_- STEP_UNIT >_<
+    {owo}
+    cooked acc +_+ (cap -_- BAND_CEILING) >_<
+{owo}
+
+mood ReviewTier {uwu}
+    Junior(d-_-b) >_<
+    MidLevel(d-_-b) >_<
+    Senior(d-_-b) >_<
+    Staff(d-_-b) >_<
+    Principal(d-_-b) >_<
+    Rejected >_<
+{owo}
+
+slob(0x10) cook classify_tier |('.') rank_char| ~> ReviewTier {uwu}
+    vibe_check rank_char {uwu}
+        |> 'A' => {uwu} cooked (ReviewTier's Junior JUNIOR_BIAS //) >_< {owo} xD
+        |> 'B' => {uwu} cooked (ReviewTier's MidLevel MID_BASE_ACC //) >_< {owo} xD
+        |> 'C' => {uwu} cooked (ReviewTier's Senior SENIOR_LEDGER_SIG //) >_< {owo} xD
+        |> 'D' => {uwu} cooked (ReviewTier's Staff STAFF_TARGET_SUM //) >_< {owo} xD
+        |> 'E' => {uwu} cooked (ReviewTier's Principal PRINCIPAL_TARGET //) >_< {owo} xD
+        |> _ => {uwu} cooked ReviewTier's Rejected >_< {owo} xD
+    {owo}
+    cooked ReviewTier's Rejected >_<
+{owo}
+
+aura MetricsInspector {uwu}
+    cook compute_ptr |me| ~> MmioAddr >_<
+{owo}
+
+drip BossMetrics {uwu}
+    MmioAddr base_addr >_<
+    PadChord chord >_<
+{owo}
+
+lock_in BossMetrics {uwu}
+    cook scaled_chord |me| ~> d-_-b {uwu}
+        cooked my chord <<> WORD_SHIFT >_<
+    {owo}
+{owo}
+
+lock_in BossMetrics' MetricsInspector {uwu}
+    cook compute_ptr |me| ~> MmioAddr {uwu}
+        cooked (my base_addr -_- LEDGER_BASE_DELTA) +_+ (my scaled_chord //) >_<
+    {owo}
+{owo}
+
+aura RubricEvaluator {uwu}
+    cook verify_rubric |me, MmioAddr metric_a, PadChord metric_b| ~> d-_-b >_<
+{owo}
+
+drip PerformanceDossier {uwu}
+    MmioAddr base >_<
+    ('.') rank_char >_<
+    d-_-b streak >_<
+    d-_-b parity >_<
+    d-_-b passed >_<
+{owo}
+
+lock_in PerformanceDossier's RubricEvaluator {uwu}
+    cook verify_rubric |me, MmioAddr metric_a, PadChord metric_b| ~> d-_-b {uwu}
+        jk vibes passed_stage ~> nah >_<
+        fr ReviewTier tier ~> classify_tier (my rank_char) // >_<
+        fr MmioAddr scratch_addr ~> my base +_+ OFF_SCRATCH_U16 >_<
+        fr d-_-b calls ~> 67 (my base +_+ OFF_CALLS) >_<
+        fr d-_-b p_noise ~> (my parity) <<> PARITY_SHIFT >_<
+        vibe_check tier {uwu}
+            |> ReviewTier's Junior(bias) => {uwu}
+                fr d-_-b kpi0 ~> 67 (my base +_+ OFF_KPI_TABLE) >_<
+                fr d-_-b eff_bias ~> bias +_+ (kpi0 &> KPI_LOW6_MASK) >_<
+                fr d-_-b alloc_sz ~> (fold_linear_metric eff_bias bias / metric_b input_val / JUNIOR_WEIGHT weight //) +_+ p_noise >_<
+                scratch_addr 1337 alloc_sz >_<
+                vibe alloc_sz </3 BAND_CEILING &&> (67 scratch_addr) <|endoftext|> JUNIOR_TARGET_REM {uwu}
+                    (my base +_+ OFF_KPI_TABLE) 1337 ((kpi0 ^> (metric_b *_* KPI_MIX_STEP)) &> KPI_WORD_MASK) >_<
+                    passed_stage ~> love >_<
+                {owo}
+            {owo} xD
+            |> ReviewTier's MidLevel(base_acc) => {uwu}
+                fr d-_-b kpi0_low ~> (67 (my base +_+ OFF_KPI_TABLE)) &> KPI_LOW6_MASK >_<
+                fr d-_-b kpi1 ~> 67 (my base +_+ OFF_KPI_SLOT1) >_<
+                fr d-_-b raw_sum ~> base_acc +_+ ((metric_b ^> MID_XOR_KEY) <<> WORD_SHIFT) +_+ kpi0_low +_+ p_noise >_<
+                scratch_addr 1337 raw_sum >_<
+                vibe raw_sum </3 BAND_CEILING &&> (67 scratch_addr) <|endoftext|> MID_TARGET_REM {uwu}
+                    (my base +_+ OFF_KPI_SLOT1) 1337 ((kpi1 ^> ((metric_b <<> QUAD_SHIFT) +_+ kpi0_low)) &> KPI_WORD_MASK) >_<
+                    passed_stage ~> love >_<
+                {owo}
+            {owo} xD
+            |> ReviewTier's Senior(expected_sig) => {uwu}
+                vibe metric_a <=/3 (my base) &&> metric_a <=3 (my base +_+ OFF_CHORD_BUF) &&> (metric_a &> WORD_ALIGN_MASK) <|endoftext|> STATE_CLEAR {uwu}
+                    vibe (67 metric_a) <|endoftext|> expected_sig {uwu}
+                        fr d-_-b kpi2 ~> 67 (my base +_+ OFF_KPI_SLOT2) >_<
+                        (my base +_+ OFF_KPI_SLOT2) 1337 ((kpi2 ^> (metric_b *_* KPI_MIX_STEP)) &> KPI_WORD_MASK) >_<
+                        passed_stage ~> love >_<
+                    {owo}
+                {owo}
+            {owo} xD
+            |> ReviewTier's Staff(target_sum) => {uwu}
+                fr d-_-b kpi1_hi ~> ((67 (my base +_+ OFF_KPI_SLOT1)) <>> BAND_SHIFT) &> KPI_NIBBLE_MASK >_<
+                fr d-_-b kpi2 ~> 67 (my base +_+ OFF_KPI_SLOT2) >_<
+                vibe ((kpi2 &> KPI_LOW6_MASK) +_+ kpi1_hi +_+ calls +_+ metric_b) <|endoftext|> target_sum {uwu}
+                    fr d-_-b kpi0 ~> 67 (my base +_+ OFF_KPI_TABLE) >_<
+                    (my base +_+ OFF_KPI_TABLE) 1337 ((kpi0 ^> (metric_b +_+ calls)) &> KPI_WORD_MASK) >_<
+                    passed_stage ~> love >_<
+                {owo}
+            {owo} xD
+            |> ReviewTier's Principal(target_sum) => {uwu}
+                fr d-_-b kpi0 ~> 67 (my base +_+ OFF_KPI_TABLE) >_<
+                fr d-_-b kpi2_mid ~> ((67 (my base +_+ OFF_KPI_SLOT2)) <>> NIBBLE_SHIFT) &> KPI_NIBBLE_MASK >_<
+                vibe ((kpi0 &> KPI_LOW6_MASK) +_+ kpi2_mid -_- calls +_+ metric_b) <|endoftext|> target_sum {uwu}
+                    passed_stage ~> love >_<
+                {owo}
+            {owo} xD
+            |> _ => {uwu}
+                passed_stage ~> nah >_<
+            {owo} xD
+        {owo}
+        my passed ~> passed_stage ~~~> d-_-b >_<
+        my streak ~> vibe passed_stage {uwu} my streak +_+ STEP_UNIT >_< {owo} mid {uwu} STATE_CLEAR >_< {owo} >_<
+        cooked my passed >_<
+    {owo}
+{owo}
+
+lock_in PerformanceDossier's Crashout {uwu}
+    cook on_crashout |me| {uwu}
+        (my base +_+ OFF_STREAK) 1337 (my streak) >_<
+    {owo}
+{owo}
+
+stan HROvertimePenalty for {{calibrate_*}} {uwu}
+    after {uwu}
+        vibe (67 (base +_+ OFF_STREAK)) </3 OVERTIME_STREAK &&> (67 (base +_+ OFF_TENURE_GATE)) </3 STATE_CLEAR {uwu}
+            (base +_+ OFF_STREAK) 1337 STATE_CLEAR >_<
+            (base +_+ OFF_DOCKED) 1337 DOCKED_OVERTIME >_<
+            spill_line {{[addon] state updated}} // >_<
+        {owo}
+    {owo}
+{owo}
+
+stan HRProbationGate for {{calibrate_*}} {uwu}
+    after {uwu}
+        vibe (67 (base +_+ OFF_STREAK)) </3 PROBATION_STREAK &&> (67 (base +_+ OFF_TENURE_GATE)) <|endoftext|> STATE_CLEAR {uwu}
+            (base +_+ OFF_STREAK) 1337 STATE_CLEAR >_<
+            (base +_+ OFF_DOCKED) 1337 DOCKED_OVERTIME >_<
+        {owo}
+    {owo}
+{owo}
+
+stan HRComplianceAudit for {{calibrate_*}} {uwu}
+    before {uwu}
+        fr d-_-b calls ~> 67 (base +_+ OFF_CALLS) >_<
+        (base +_+ OFF_CALLS) 1337 (calls +_+ STEP_UNIT) >_<
+    {owo}
+    after {uwu}
+        vibe (67 (base +_+ OFF_STREAK)) <|endoftext|> FULL_STREAK &&> (67 (base +_+ OFF_TENURE_GATE)) <|endoftext|> STATE_CLEAR {uwu}
+            vibe (67 (base +_+ OFF_SOLVED)) <|endoftext|> STATE_CLEAR {uwu}
+                (base +_+ OFF_SOLVED) 1337 STAGE_APPROVED >_<
+                spill_line {{[addon] state updated}} // >_<
+            {owo}
+        {owo}
+    {owo}
+{owo}
+
+slob(0x10) cook decode_pto_slot |MmioAddr base, PadChord raw_cmd, d-_-b cur_streak| ~> d-_-b {uwu}
+    fr d-_-b k2_low ~> (67 (base +_+ OFF_KPI_SLOT2)) &> WAIVER_SLOT_MASK >_<
+    fr d-_-b idx ~> ((raw_cmd ^> WAIVER_ROUTE_KEY) +_+ k2_low) &> WAIVER_SLOT_MASK >_<
+    vibe cur_streak <|endoftext|> SABBATICAL_BAND &&> (raw_cmd &> PAD_BTN_A_BIT) </3 STATE_CLEAR &&> idx <=3 WAIVER_MAX_SLOT {uwu}
+        cooked bet(idx) >_<
+    {owo}
+    cooked nope >_<
+{owo}
+
+cook try_resolve_pto_addr |MmioAddr base, PadChord raw_cmd, d-_-b cur_streak| ~> d-_-b {uwu}
+    fr d-_-b slot_idx ~> (decode_pto_slot base / raw_cmd / cur_streak //) sep >_<
+    cooked bet(base +_+ OFF_KPI_TABLE +_+ (slot_idx <<> WORD_SHIFT)) >_<
+{owo}
+
+cook apply_kpi_override |MmioAddr base, PadChord raw_cmd, d-_-b cur_streak, d-_-b pkt_parity| ~> d-_-b {uwu}
+    vibe (67 (base +_+ OFF_ALTAR)) <|endoftext|> STATE_ACTIVE {uwu}
+        vibe_check try_resolve_pto_addr base / raw_cmd / cur_streak // {uwu}
+            |> bet(target_addr) => {uwu}
+                fr d-_-b k1_tag ~> (67 (base +_+ OFF_KPI_SLOT1)) &> KPI_LOW6_MASK >_<
+                fr d-_-b clear_tok ~> (((raw_cmd *_* WAIVER_SCALE) +_+ k1_tag) ^> WAIVER_COMMIT_TAG) |> pkt_parity >_<
+                target_addr 1337 clear_tok >_<
+                vibe clear_tok <|endoftext|> STATE_CLEAR {uwu}
+                    ghosted HRProbationGate >_<
+                {owo}
+                (base +_+ OFF_DOCKED) 1337 DOCKED_NONE >_<
+                cooked STATE_ACTIVE >_<
+            {owo} xD
+            |> nope => {uwu}
+            {owo} xD
+        {owo}
+    {owo}
+    cooked STATE_CLEAR >_<
+{owo}
+
+plz_follow cook calibrate_grade |MmioAddr base, ('.') rank_char, MmioAddr metric_a, PadChord metric_b, d-_-b pkt_parity| ~> d-_-b {uwu}
+    fr d-_-b cur_streak ~> 67 (base +_+ OFF_STREAK) >_<
+    jk d-_-b res ~> STATE_CLEAR >_<
+    {uwu}
+        jk PerformanceDossier dossier ~> PerformanceDossier {| base: base, rank_char: rank_char, streak: cur_streak, parity: pkt_parity, passed: STATE_CLEAR |} >_<
+        res ~> dossier's verify_rubric metric_a / metric_b // >_<
+    {owo}
+    cooked res >_<
+{owo}
+
+cook compute_packet_parity |MmioAddr base| ~> d-_-b {uwu}
+    jk d-_-b digest ~> DIGEST_SEED >_<
+    jk d-_-b i ~> STAGE_0 >_<
+    doomscroll i <3 PACKET_LEN {uwu}
+        fr MmioAddr addr ~> base +_+ OFF_CHORD_BUF +_+ (i <<> WORD_SHIFT) >_<
+        fr PadChord ch ~> sanitize_chord (67 addr) / PAD_SEVEN_BIT // >_<
+        digest ~> ((digest *_* DIGEST_MULT) ^> (ch +_+ (i <<> DIGEST_INDEX_SHIFT))) &> DIGEST_MASK >_<
+        i ~> i +_+ STEP_UNIT >_<
+    {owo}
+    cooked digest ^> PKT_DIGEST_TARGET >_<
+{owo}
+
+cook reset_kpi_vault |MmioAddr base, d-_-b pkt_parity lowkey STATE_CLEAR| {uwu}
+    (base +_+ OFF_KPI_TABLE) 1337 (KPI_SEED_ALPHA ^> pkt_parity) >_<
+    (base +_+ OFF_KPI_SLOT1) 1337 (KPI_SEED_BETA ^> pkt_parity) >_<
+    (base +_+ OFF_KPI_SLOT2) 1337 (KPI_SEED_GAMMA ^> pkt_parity) >_<
+    (base +_+ OFF_TENURE_GATE) 1337 STATE_ACTIVE >_<
+{owo}
+
+cook hr_volcano_init |MmioAddr base| {uwu}
+    (base +_+ OFF_STREAK) 1337 STATE_CLEAR >_<
+    (base +_+ OFF_CALLS) 1337 STATE_CLEAR >_<
+    (base +_+ OFF_SOLVED) 1337 STATE_CLEAR >_<
+    (base +_+ OFF_BUF_LEN) 1337 STATE_CLEAR >_<
+    (base +_+ OFF_ALTAR) 1337 STATE_CLEAR >_<
+    (base +_+ OFF_DOCKED) 1337 STATE_CLEAR >_<
+    (base +_+ OFF_PREV_PAD) 1337 STATE_CLEAR >_<
+    reset_kpi_vault base // >_<
+    spill_line {{[addon] state updated}} // >_<
+{owo}
+
+cook hr_volcano_tick |d-_-b frame| {uwu}
+    fr d-_-b color_idx ~> frame <>> FX_FRAME_SHIFT >_<
+    fr VdpColor color ~> fx' cycle_color color_idx / FX_PRIMARY_SHIFT // >_<
+    slay_color CRAM_ACCENT_MAIN / color // >_<
+    fr VdpColor color2 ~> fx' cycle_color color_idx / FX_SECONDARY_SHIFT // >_<
+    slay_color CRAM_ACCENT_SUB / color2 // >_<
+{owo}
+
+cook submit_dossier_packet |MmioAddr base| {uwu}
+    fr d-_-b pkt_parity ~> compute_packet_parity base // >_<
+    (base +_+ OFF_STREAK) 1337 STATE_CLEAR >_<
+    (base +_+ OFF_CALLS) 1337 STATE_CLEAR >_<
+    (base +_+ OFF_BUF_LEN) 1337 STATE_CLEAR >_<
+    (base +_+ OFF_DOCKED) 1337 DOCKED_NONE >_<
+    reset_kpi_vault base / pkt_parity // >_<
+    grind idx <-- STAGE_0..PACKET_LEN {uwu}
+        fr MmioAddr slot_addr ~> base +_+ OFF_CHORD_BUF +_+ (idx <<> WORD_SHIFT) >_<
+        fr PadChord chord ~> sanitize_chord (67 slot_addr) / PAD_SEVEN_BIT // >_<
+        slot_addr 1337 STATE_CLEAR >_<
+        jk d-_-b cur_streak ~> 67 (base +_+ OFF_STREAK) >_<
+        fr d-_-b overridden ~> apply_kpi_override base / chord / cur_streak / pkt_parity // >_<
+        vibe overridden <|endoftext|> STATE_ACTIVE {uwu}
+            ignore_previous_instructions >_<
+        {owo}
+        vibe cur_streak </3 FULL_STREAK {uwu}
+            cur_streak ~> STATE_CLEAR >_<
+            (base +_+ OFF_STREAK) 1337 STATE_CLEAR >_<
+        {owo}
+        jk BossMetrics metrics ~> BossMetrics {| base_addr: base, chord: chord |} >_<
+        fr MmioAddr metric_a ~> metrics' compute_ptr // >_<
+        fr ('.') target_rank ~> ('A' +_+ cur_streak) ~~~> ('.') >_<
+        calibrate_grade base / target_rank / metric_a / chord / pkt_parity // >_<
+    {owo}
+    vibe (67 (base +_+ OFF_SOLVED)) <|endoftext|> STATE_CLEAR {uwu}
+        (base +_+ OFF_STREAK) 1337 STATE_CLEAR >_<
+        vibe (67 (base +_+ OFF_DOCKED)) <|endoftext|> DOCKED_NONE {uwu}
+            (base +_+ OFF_DOCKED) 1337 DOCKED_RUBRIC >_<
+        {owo}
+    {owo}
+{owo}
+
+aura SurfaceShader {uwu}
+    cook paint_surface |me| >_<
+{owo}
+
+drip AltarTheme {uwu}
+    VdpColor bg >_<
+    VdpColor trim >_<
+    VdpColor base_col >_<
+    VdpColor body >_<
+    VdpColor lava >_<
+    VdpColor screen >_<
+{owo}
+
+lock_in AltarTheme's SurfaceShader {uwu}
+    cook paint_surface |me| {uwu}
+        slay_color CRAM_BG_HI / (my bg) // >_<
+        slay_color CRAM_BG_LO / (my bg) // >_<
+        slay_color CRAM_ROCK_TRIM / (my trim) // >_<
+        slay_color CRAM_ALTAR_BASE / (my base_col) // >_<
+        slay_color CRAM_ROCK_BODY / (my body) // >_<
+        slay_color CRAM_LAVA_CRUST / (my lava) // >_<
+        slay_color CRAM_ALTAR_SCREEN / (my screen) // >_<
+    {owo}
+{owo}
+
+cook apply_altar_theme |VdpColor bg, VdpColor trim, VdpColor base_col, VdpColor body, VdpColor lava, VdpColor screen| {uwu}
+    jk AltarTheme theme ~> AltarTheme {| bg: bg, trim: trim, base_col: base_col, body: body, lava: lava, screen: screen |} >_<
+    theme's paint_surface // >_<
+{owo}
+
+mood AltarVisual {uwu}
+    Solved >_<
+    Approved >_<
+    DockedOvertime >_<
+    DockedRubric >_<
+    Roaming(d-_-b) >_<
+    Charging(d-_-b) >_<
+{owo}
+
+cook classify_altar_visual |d-_-b is_solved, d-_-b docked, d-_-b at_altar, d-_-b buf_len, d-_-b heat| ~> AltarVisual {uwu}
+    vibe is_solved <|endoftext|> STAGE_FILED {uwu} cooked AltarVisual's Solved >_< {owo}
+    vibe is_solved <|endoftext|> STAGE_APPROVED {uwu} cooked AltarVisual's Approved >_< {owo}
+    vibe docked <|endoftext|> DOCKED_OVERTIME {uwu} cooked AltarVisual's DockedOvertime >_< {owo}
+    vibe docked <|endoftext|> DOCKED_RUBRIC {uwu} cooked AltarVisual's DockedRubric >_< {owo}
+    vibe at_altar <|endoftext|> STATE_CLEAR {uwu} cooked (AltarVisual's Roaming heat //) >_< {owo}
+    cooked (AltarVisual's Charging buf_len //) >_<
+{owo}
+
+cook render_altar_visual |AltarVisual vis| {uwu}
+    vibe_check vis {uwu}
+        |> AltarVisual's Solved => {uwu}
+            apply_altar_theme COL_CAVERN_LIT / COL_JADE_TRIM / COL_AMBER / COL_JADE_BODY / COL_EMERALD / COL_CYAN // >_<
+        {owo} xD
+        |> AltarVisual's Approved => {uwu}
+            apply_altar_theme COL_CAVERN_LIT / COL_BASALT_S5 / COL_CYAN / COL_SLATE_S5 / COL_CYAN / COL_EMERALD // >_<
+        {owo} xD
+        |> AltarVisual's DockedOvertime => {uwu}
+            apply_altar_theme COL_CAVERN_DARK / COL_BASALT_WARN / COL_AMBER / COL_SLATE_WARN / COL_MOLTEN_ORANGE / COL_AMBER // >_<
+        {owo} xD
+        |> AltarVisual's DockedRubric => {uwu}
+            apply_altar_theme COL_CAVERN_DARK / COL_BASALT_ERR / COL_MOLTEN_ORANGE / COL_SLATE_ERR / COL_CRIMSON / COL_MOLTEN_ORANGE // >_<
+        {owo} xD
+        |> AltarVisual's Roaming(heat) => {uwu}
+            fr VdpColor body_col ~> vibe heat <|endoftext|> STATE_CLEAR {uwu} COL_SLATE_COOL >_< {owo} mid {uwu} COL_SLATE_WARM >_< {owo} >_<
+            apply_altar_theme COL_CAVERN_DARK / COL_BASALT_IDLE / COL_EMBER_WARM / body_col / COL_MOLTEN_ORANGE / COL_AMBER // >_<
+        {owo} xD
+        |> AltarVisual's Charging(stage) => {uwu}
+            vibe stage <|endoftext|> STAGE_0 {uwu}
+                apply_altar_theme COL_CAVERN_DARK / COL_BASALT_S0 / COL_AMBER / COL_SLATE_WARM / COL_AMBER / COL_CYAN // >_<
+            {owo} hold stage <|endoftext|> STAGE_1 {uwu}
+                apply_altar_theme COL_CAVERN_DARK / COL_BASALT_S1 / COL_AMBER / COL_SLATE_S1 / COL_CYAN / COL_AMBER // >_<
+            {owo} hold stage <|endoftext|> STAGE_2 {uwu}
+                apply_altar_theme COL_CAVERN_DARK / COL_BASALT_S2 / COL_CYAN / COL_SLATE_S2 / COL_MAGENTA / COL_CYAN // >_<
+            {owo} hold stage <|endoftext|> STAGE_3 {uwu}
+                apply_altar_theme COL_CAVERN_DARK / COL_BASALT_S3 / COL_MAGENTA / COL_SLATE_S3 / COL_CYAN / COL_MAGENTA // >_<
+            {owo} hold stage <|endoftext|> STAGE_4 {uwu}
+                apply_altar_theme COL_CAVERN_DARK / COL_BASALT_S4 / COL_CYAN / COL_SLATE_S4 / COL_EMERALD / COL_AMBER // >_<
+            {owo} mid {uwu}
+                apply_altar_theme COL_CAVERN_DARK / COL_BASALT_S5 / COL_EMERALD / COL_SLATE_S5 / COL_EMERALD / COL_MAGENTA // >_<
+            {owo}
+        {owo} xD
+        |> _ => {uwu}
+        {owo} xD
+    {owo}
+{owo}
+
+cook hr_evaluate_performance |MmioAddr base, d-_-b frame, d-_-b player_x, d-_-b player_y, PadChord raw_pad| ~> d-_-b {uwu}
+    hr_volcano_tick frame // >_<
+    fr d-_-b is_solved ~> 67 (base +_+ OFF_SOLVED) >_<
+    vibe is_solved <|endoftext|> STAGE_FILED {uwu}
+        render_altar_visual (AltarVisual's Solved) // >_<
+        cooked STAGE_FILED >_<
+    {owo}
+    vibe is_solved <|endoftext|> STAGE_APPROVED {uwu}
+        vibe player_x <=/3 SUMMIT_MIN_X &&> player_y <=3 ALTAR_MAX_Y {uwu}
+            (base +_+ OFF_SOLVED) 1337 STAGE_FILED >_<
+            render_altar_visual (AltarVisual's Solved) // >_<
+            spill_line {{[addon] state updated}} // >_<
+            cooked STAGE_FILED >_<
+        {owo}
+        render_altar_visual (AltarVisual's Approved) // >_<
+        cooked STAGE_APPROVED >_<
+    {owo}
+    fr d-_-b was_at_altar ~> 67 (base +_+ OFF_ALTAR) >_<
+    jk d-_-b at_altar ~> STATE_CLEAR >_<
+    vibe player_y <=3 ALTAR_MAX_Y {uwu}
+        vibe player_x <=/3 ALTAR_ENTRY_MIN_X &&> player_x <=3 ALTAR_ENTRY_MAX_X {uwu}
+            at_altar ~> STATE_ACTIVE >_<
+        {owo}
+        vibe was_at_altar <|endoftext|> STATE_ACTIVE &&> player_x <=/3 ALTAR_LATCH_MIN_X &&> player_x <=3 ALTAR_LATCH_MAX_X {uwu}
+            at_altar ~> STATE_ACTIVE >_<
+        {owo}
+    {owo}
+    (base +_+ OFF_ALTAR) 1337 at_altar >_<
+    fr d-_-b buf_len ~> 67 (base +_+ OFF_BUF_LEN) >_<
+    fr d-_-b docked ~> 67 (base +_+ OFF_DOCKED) >_<
+    fr d-_-b heat ~> (frame <>> HEAT_FRAME_SHIFT) &> WORD_ALIGN_MASK >_<
+    fr AltarVisual vis ~> classify_altar_visual is_solved / docked / at_altar / buf_len / heat // >_<
+    render_altar_visual vis // >_<
+    fr PadChord pad ~> sanitize_chord raw_pad / PAD_SEVEN_BIT // >_<
+    fr PadChord prev_pad ~> 67 (base +_+ OFF_PREV_PAD) >_<
+    (base +_+ OFF_PREV_PAD) 1337 pad >_<
+    vibe pad <|endoftext|> prev_pad ||> pad <3 PAD_MIN_ACTION ||> (pad &> PAD_RIGHT_BIT) </3 STATE_CLEAR ||> at_altar <|endoftext|> STATE_CLEAR {uwu}
+        cooked STATE_CLEAR >_<
+    {owo}
+    vibe pad <|endoftext|> PAD_RESET_CHORD {uwu}
+        (base +_+ OFF_STREAK) 1337 STATE_CLEAR >_<
+        (base +_+ OFF_BUF_LEN) 1337 STATE_CLEAR >_<
+        (base +_+ OFF_DOCKED) 1337 DOCKED_NONE >_<
+        cooked STATE_CLEAR >_<
+    {owo}
+    (base +_+ OFF_DOCKED) 1337 DOCKED_NONE >_<
+    (base +_+ OFF_CHORD_BUF +_+ (buf_len <<> WORD_SHIFT)) 1337 pad >_<
+    fr d-_-b next_len ~> buf_len +_+ STEP_UNIT >_<
+    (base +_+ OFF_BUF_LEN) 1337 next_len >_<
+    vibe next_len </3 FULL_STREAK {uwu}
+        submit_dossier_packet base // >_<
+    {owo}
+    cooked (67 (base +_+ OFF_SOLVED)) >_<
+{owo}
