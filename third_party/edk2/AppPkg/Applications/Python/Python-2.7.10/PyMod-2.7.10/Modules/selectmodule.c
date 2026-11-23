@@ -602,7 +602,6 @@ poll_poll(pollObject *self, PyObject *args)
             }
             PyTuple_SET_ITEM(value, 1, num);
             if ((PyList_SetItem(result_list, j, value)) == -1) {
-                Py_DECREF(value);
                 goto error;
             }
             i++;
